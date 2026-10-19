@@ -80,9 +80,9 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omurgası analizinin önerisi). Öneri SQL'i: `supabase/proposed/20261019010000_age_bands.sql` (uygulanana kadar canlıda eski kural geçerli: A 6–9 / B 10–12).
+Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omurgası analizinin önerisi). SQL: `supabase/migrations/20261019010000_age_bands.sql` (19 Ekim 2026'da uygulandı).
 
-| Değer | Oyun (`AgeBand.cs`) | ParentApp etiketi (`ageBands.ts`) | SQL önerisi (`suggest_age_band`) |
+| Değer | Oyun (`AgeBand.cs`) | ParentApp etiketi (`ageBands.ts`) | SQL (`suggest_age_band`) |
 |---|---|---|---|
 | `A` | A | "6–8 yaş" | doğum günü yok **ya da** yaş < 9 |
 | `B` | B | "9–12 yaş" | 9 ≤ yaş < 13 |
