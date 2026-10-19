@@ -148,7 +148,7 @@ Kod biçimi:
 
 ---
 
-## 8. Bildirim (öneri, uygulanmadı)
+## 8. Bildirim (19 Ekim 2026'da uygulandı)
 
 | Alan | Değerler |
 |---|---|

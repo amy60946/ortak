@@ -179,9 +179,9 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 
 ---
 
-## 7. Bildirimler (öneri, uygulanmadı)
+## 7. Bildirimler (19 Ekim 2026'da uygulandı)
 
-> SQL: `supabase/proposed/20261019130000_notifications.sql`. Bildirim satırlarını **yalnız sunucu tetikleyicileri** yazar; uygulamalar okur, okundu işaretler (`mark_notifications_read`), siler.
+> SQL: `supabase/migrations/20261019130000_notifications.sql`. Bildirim satırlarını **yalnız sunucu tetikleyicileri** yazar; uygulamalar okur, okundu işaretler (`mark_notifications_read`), siler.
 > İşlemi yapan kişiye bildirim gitmez. Uzmana yalnız rızalı (`active`) paylaşım bildirilir; posta ve coin uzmana bildirilmez.
 
 | Olay | Kimden → kime | `kind` | Uygulama (`app`) |
@@ -207,9 +207,9 @@ Teslim yolları:
 - **ClinicApp (web):** uygulama içi liste + Realtime; web push sonra.
 - `data` alanı: ilgili kimlikler (`task_id`, `child_id`, `date`, `message_id`, `suggestion_id`, `links` …) + push'ta `kind`, `notification_id`. Uygulama dokununca ekranı buna göre açar.
 
-## 8. Uzmanla birden çok çocuk paylaşma (öneri, uygulanmadı)
+## 8. Uzmanla birden çok çocuk paylaşma (19 Ekim 2026'da uygulandı)
 
-> SQL: `supabase/proposed/20261019120000_clinic_children.sql`.
+> SQL: `supabase/migrations/20261019120000_clinic_children.sql`.
 
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|

@@ -4,9 +4,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
-- [ ] Supabase'e uygulanacak (kullanıcı, SQL Editor): `proposed/20261019120000_clinic_children.sql`, `proposed/20261019130000_notifications.sql`.
 - [ ] Pofi Adası (oyun penceresi): `notifications` tablosunu okuyup göster (app='child': yeni görev, onay/ret, mektup); Realtime ya da senkronda yoklama; push için iOS cihaz anahtarını `register_push_token(token, 'child', 'ios')` ile kaydet (gönderim hazır: `push-apns`).
-- [ ] Supabase: Edge Function `push-apns` yayınla + secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (kullanıcı).
 - [ ] ClinicApp (klinik penceresi): `notifications` (app='clinic') listesi + Realtime; paylaşımlar artık çoklu (aynı aileden birden çok çocuk).
 - [ ] Pofi Adası: yaş bantları iki banda indi (A 6–8 / B 9–12); oyunda C profili kaldırılmalı / `C` gelirse B sayılmalı, A/B ayarları yeni aralıklara göre gözden geçirilmeli (oyun penceresi).
 - [ ] Omurga analizi Ö1–Ö7 (Güneş Taşı, XP/beceri yıldızı, bakım, hikâye, ilk gün, posta kutusu, gerçek ödül dükkânı) onaylanırsa önce burada şema/kural, sonra uygulamalar.
@@ -16,6 +14,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · tümü · **Uygulandı** (kullanıcı): `20261019120000_clinic_children.sql`, `20261019130000_notifications.sql` → `migrations/`; Edge Function `push-apns` yayında (JWT doğrulaması kapalı, dışarıdan denendi) + secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID`. Bildirimler canlıda. · **Oyun / Klinik pencereleri:** bildirim listesini göster; oyun push için `register_push_token(token,'child','ios')`.
 - 2026-10-19 · tümü · **Bildirim sistemi** önerisi (13 olay, üç uygulama; sunucu tetikleyicileri yazar, ParentApp'e Expo push) ve **tek kodla birden çok çocuk + kodsuz ekle/çıkar** önerisi; testler `test_notifications.sql`, `test_clinic_children.sql` (hepsi geçti). Sözleşme: `akislar.md` 7–8, `durumlar.md` 8, `veritabani.md` 5. · ParentApp güncellendi. **Kullanıcı:** iki SQL'i uygula + Edge Function `push-apns` + APNs secret'ları (Expo sertifika istediği için Expo yolu bırakıldı; push doğrudan Supabase → Apple). **Oyun / Klinik pencereleri:** bildirim listesini göster (Açık işler).
 - 2026-10-19 · ParentApp · TestFlight giriş hatası ("sunucu bulunamadı") çözüldü: Xcode'un JS paketleme adımı `.env`'i okumuyordu, Supabase adresi pakete girmiyordu → değerler ortam değişkeni olarak da veriliyor, derleme JS paketini denetliyor. Apple geliştirme sertifikası sınırı doldu → CI kendi açtığı ("Created via API") eski sertifikaları iptal ediyor (kullanıcı onayı). Yeni sürüm (Uzmanım ekranlarıyla) TestFlight'a yüklendi. · **Oyun penceresi:** aynı Apple hesabı; oyun derlemesinde de "maximum number of certificates" görülürse aynı temizlik gerekir.
 - 2026-10-19 · ParentApp · Uzmanım ekranları (klinik paylaşımı, öneriler, zor an) `claude/claude-durum-review-c6ss0j` dalına alındı; giriş/kayıt hata mesajları netleşti, iOS derlemesi Supabase adresini JS paketinde denetliyor. Yeni TestFlight derlemesi bekliyor. · Diğer ürünleri etkilemez.

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Bildirim sistemi: üç uygulama (öneri, 19 Ekim 2026)
+-- Bildirim sistemi: üç uygulama (19 Ekim 2026; uygulandı)
 --   notifications : kime (user_id), hangi uygulama (app), tür (kind), başlık/metin, veri (data), okundu (read_at).
 --                   Satırları YALNIZ sunucu tetikleyicileri yazar; kullanıcı kendi satırını okur, okundu işaretler, siler.
 --                   Realtime yayınında: uygulama açıkken anında gelir.

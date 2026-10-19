@@ -178,9 +178,9 @@ Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`
 
 ---
 
-## 5. Bildirimler ve çoklu çocuk paylaşımı (öneri, uygulanmadı)
+## 5. Bildirimler ve çoklu çocuk paylaşımı (19 Ekim 2026'da uygulandı)
 
-SQL: `supabase/proposed/20261019120000_clinic_children.sql`, `20261019130000_notifications.sql`. Akış: `akislar.md` 7–8.
+SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_notifications.sql`. Akış: `akislar.md` 7–8.
 
 | Tablo | Ne | Alanlar | Yazar | Okur |
 |---|---|---|---|---|

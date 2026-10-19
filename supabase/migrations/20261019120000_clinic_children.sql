@@ -1,5 +1,5 @@
 -- =====================================================================
--- Uzman paylaşımı: birden fazla çocuk + çocuk ekle/çıkar (öneri, 19 Ekim 2026)
+-- Uzman paylaşımı: birden fazla çocuk + çocuk ekle/çıkar (19 Ekim 2026; uygulandı)
 --   Sorun: uzman kodu tek kullanımlık; ikinci çocuk aynı kodla paylaşılamıyordu.
 --   1. redeem_clinic_invite_children(kod, çocuklar[]): tek kodla seçilen bütün çocuklar aynı anda paylaşılır.
 --   2. clinic_share_child(klinik, çocuk): ailenin o klinikle etkin paylaşımı varsa yeni kod gerekmeden
