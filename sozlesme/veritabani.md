@@ -1,16 +1,16 @@
 # Veritabanı sözleşmesi (tablolar, fonksiyonlar, erişim kuralları)
 
-Üç uygulama (Pofi Adası oyunu, ParentApp, ClinicApp) **tek bir Supabase projesini** kullanır:
+Üç uygulama (GameApp oyunu, ParentApp, ClinicApp) **tek bir Supabase projesini** kullanır:
 `https://uhelhxqgpcjemadhsifx.supabase.co`. Aralarındaki bütün iletişim bu veritabanı üzerinden olur.
 
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql` (temel şema)
 - `parent-app/supabase/migrations/20261014000000_task_repeat_order.sql` (görev tekrarı ve sırası)
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (oyun eklemeleri, M4; 15 Ekim 2026'da uygulandı)
-- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (klinik önerisi, **uygulanmadı**), `src/lib/clinic.ts`
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (oyun eklemeleri, M4; 15 Ekim 2026'da uygulandı)
+- `ortak/supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı); `parent-app/src/lib/clinic.ts`, `clinic-app/src/lib/clinic.ts`
 - `parent-app/src/store.tsx`, `parent-app/src/lib/auth.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseGameService.cs`, `SupabaseAuthService.cs`
-- `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`, `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseGameService.cs`, `SupabaseAuthService.cs`
+- `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`, `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`
 
 Son güncelleme: 2026-10-19
 
@@ -20,9 +20,9 @@ Son güncelleme: 2026-10-19
 
 | Kavram | Anlamı |
 |---|---|
-| **Oyun** | Pofi Adası (GameApp, Unity C#). Çocuk **anonim Supabase oturumu** açar, giriş koduyla bir `children` satırına bağlanır (`children.user_id = auth.uid()`). |
+| **Oyun** | GameApp (GameApp, Unity C#). Çocuk **anonim Supabase oturumu** açar, giriş koduyla bir `children` satırına bağlanır (`children.user_id = auth.uid()`). |
 | **ParentApp** | Ebeveyn uygulaması (Expo). E-posta/şifre ile giriş; her ebeveyn bir `profiles` satırıdır ve bir aileye (`family_id`) bağlıdır. |
-| **ClinicApp** | Uzman paneli (web; henüz yazılmadı). Tabloları yalnız klinik önerisinde var (**öneri, uygulanmadı**). |
+| **ClinicApp** | Uzman paneli (Expo: web + iPad). Tabloları aşağıda 4. bölümde (uygulandı). |
 | `my_family_id()` | Oturumdaki **ebeveynin** ailesi (`profiles.family_id`). |
 | `my_child_id()` | Oturumdaki **çocuğun** kimliği (`children.user_id = auth.uid()`). |
 | `my_any_family_id()` | Ebeveyn ya da çocuk fark etmeksizin oturumun ailesi. |
@@ -36,7 +36,7 @@ Anahtarlar: istemcilere yalnız **publishable/anon** anahtar girer. `service_rol
 
 ## 1. Uygulanmış — tablolar
 
-"Yazar / Okur" sütunları: **O** = Oyun, **P** = ParentApp, **K** = ClinicApp (yalnız klinik önerisi uygulanırsa; aşağıda 3. bölüm).
+"Yazar / Okur" sütunları: **O** = Oyun, **P** = ParentApp, **K** = ClinicApp (aşağıda 4. bölüm).
 "Sunucu" = yalnızca tetikleyici/fonksiyon yazar, istemci doğrudan yazamaz.
 
 ### 1.1 Temel şema (ParentApp göçleri)
@@ -127,13 +127,13 @@ Notlar:
 
 ---
 
-## 4. Öneri — uygulanmadı (ClinicApp)
+## 4. Klinik (ClinicApp) — uygulandı
 
-> **Öneri, uygulanmadı.** Kaynak: `parent-app` dalı `origin/claude/project-thread-vwahaf`, `supabase/proposed/20261019000000_clinic.sql`.
+> **Uygulandı (19 Ekim 2026).** Kaynak: `supabase/migrations/20261019000000_clinic.sql`.
 > Önkoşul: 1–2. bölümdeki şema. ParentApp'in "Aile › Hesap › Uzmanım" ekranı (aynı dalda, `src/lib/clinic.ts`) bu tabloları kullanır.
 > İlkeler (SQL başlığından): uzman çocuğun verisini **yalnız ebeveynin açık rızasıyla** (`clinic_links.status = 'active'`) görür; ebeveyn rızayı her an geri alır; uzman **yalnız okur** (görev, tamamlama, ABC) ve görev **önerir**; Posta ve coin defteri uzmanla paylaşılmaz; klinik notları ve hedef puanları ailede görünmez.
 
-### 4.1 Tablolar (öneri, uygulanmadı)
+### 4.1 Tablolar
 
 | Tablo | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
@@ -145,14 +145,14 @@ Notlar:
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
 | `abc_events` | Zor an kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
-| `clinic_task_suggestions` | Uzmanın aileye görev önerisi | `link_id`, `family_id`, `child_id`, `title`, `emoji`, `skill`, `difficulty` (`easy`/`medium`/`hard`), `recurring` (varsayılan true), `note` (≤ 300), `status` (`pending`/`accepted`/`declined`), `decided_at` | K (ekler, `pending` iken geri çeker); P yalnız `status`, `decided_at` | K, P |
+| `clinic_task_suggestions` | Uzmanın aileye görev önerisi | `link_id`, `family_id`, `child_id`, `title`, `emoji`, `skill`, `difficulty` (`easy`/`medium`/`hard`), `recurring` (varsayılan true), `note` (≤ 300), `status` (`pending`/`accepted`/`declined`), `decided_at`, `task_id` (kabulde oluşan görev; yalnız aynı ailenin görevi) | K (ekler, `pending` iken geri çeker); P yalnız `status`, `decided_at`, `task_id` | K, P |
 | `family_subscriptions` | Aile aboneliği | `family_id` (PK), `plan` (`free`/`premium`), `source` (`store`/`web`/`manual`), `period_end` | Sunucu (service role) | P (kendi ailesi) |
 | `completions.child_done_at` (yeni sütun) | Çocuğun "Yaptım"/"Yapamam" dediği an | tetikleyici `completions_child_done_at` doldurur | Sunucu | P, K |
-| `completions.decline_reason` (yeni sütun) | "Yapamam" nedeni | `hard`/`no_time`/`did_not_want`/`other`/null | **Henüz yazan yok** (oyun göndermiyor; bkz. `durumlar.md`) | P, K |
+| `completions.decline_reason` (yeni sütun) | "Yapamam" nedeni | `hard`/`no_time`/`did_not_want`/`other`/null | O (`child_set_decline_reason`; oyun henüz çağırmıyor, çağırmazsa null kalır) | P, K |
 
 Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`.
 
-### 4.2 Fonksiyonlar (öneri, uygulanmadı)
+### 4.2 Fonksiyonlar
 
 | Fonksiyon | Dönüş | Çağıran | Ne yapar |
 |---|---|---|---|
@@ -166,9 +166,10 @@ Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`
 | `clinic_active(p_clinic_id)` | `boolean` | iç | Plan `small`/`business`/`custom` ya da `trial` ve deneme süresi bitmemiş. |
 | `family_premium(p_family_id default null)` | `boolean` | P (doğrulanmalı: ParentApp'te çağrı bulunamadı) | Aile kendi aboneliğiyle premium **ya da** etkin bir kliniğe bağlı çocuğu var. |
 | `handle_new_user()` (değişir) | — | iç | `raw_user_meta_data.account = 'clinician'` ise aile yerine klinik oluşturur (`owner`) ya da `team_code` ile ekibe katılır (`member`; koltuk sınırı denetlenir). Ebeveyn davranışı aynı kalır. |
-| `completions_child_done_at()` (tetikleyici) | — | iç | Durum `pending`/`approved`/`declined`'e geçince ve `child_done_at` boşsa `now()` yazar. |
+| `completions_child_done_at()` (tetikleyici) | — | iç | `child_done_at` boşsa ve durum `pending`/`declined`'e (ya da **çocuğun** yazdığı `approved`'a) geçince `now()` yazar; ebeveynin doğrudan onayı "Yaptım" anı sayılmaz. Durum `declined` değilse `decline_reason`'ı siler. |
+| `child_set_decline_reason(p_task_id uuid, p_date date, p_reason text)` | `void` | O | "Yapamam"dan sonra nedeni yazar (`hard`/`no_time`/`did_not_want`/`other`/null). Yalnız çocuğun kendi `declined` kaydına; yoksa hata. `child_set_status` değişmez. |
 
-### 4.3 RLS ilkeleri (öneri, uygulanmadı)
+### 4.3 RLS ilkeleri
 
 | Kim | Ne görür / ne yapar |
 |---|---|

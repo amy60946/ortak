@@ -49,6 +49,14 @@ insert into public.completions (task_id, child_id, family_id, date, status)
   select '00000000-0000-0000-0000-000000007a51', '00000000-0000-0000-0000-00000000c0de', family_id, current_date, 'pending'
   from public.profiles where id = '00000000-0000-0000-0000-0000000000a1';
 select tst.check((select child_done_at is not null from public.completions limit 1), 'tamamlamada çocuğun "Yaptım" anı kaydedilir');
+insert into public.completions (task_id, child_id, family_id, date, status)
+  select '00000000-0000-0000-0000-000000007a51', '00000000-0000-0000-0000-00000000c0de', family_id, current_date - 1, 'approved'
+  from public.profiles where id = '00000000-0000-0000-0000-0000000000a1';
+select tst.check((select child_done_at is null from public.completions where date = current_date - 1), 'ebeveynin doğrudan onayı "Yaptım" anı sayılmaz');
+delete from public.completions where date = current_date - 1;
+-- Başka ailenin görevi (öneri ↔ görev bağı testi için)
+insert into public.tasks (id, family_id, title, start_date)
+  values ('00000000-0000-0000-0000-000000007a99', (select family_id from public.profiles where id = '00000000-0000-0000-0000-0000000000e1'), 'Yabancı görev', current_date);
 
 set role authenticated;
 
@@ -162,6 +170,13 @@ select tst.check((select count(*) from public.clinic_task_suggestions where stat
 select tst.fails($$update public.clinic_task_suggestions set title = 'x'$$, 'aile öneri metnini değiştiremez');
 update public.clinic_task_suggestions set status = 'accepted', decided_at = now();
 select tst.check((select status from public.clinic_task_suggestions) = 'accepted', 'aile öneriyi kabul eder');
+select tst.fails($$update public.clinic_task_suggestions set task_id = '00000000-0000-0000-0000-000000007a99'$$, 'öneri başka ailenin görevine bağlanamaz');
+update public.clinic_task_suggestions set task_id = '00000000-0000-0000-0000-000000007a51';
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check((select task_id from public.clinic_task_suggestions) = '00000000-0000-0000-0000-000000007a51', 'uzman kabul edilen önerinin görevini görür');
+update public.clinic_task_suggestions set task_id = null;   -- RLS: uzmanın güncelleme politikası yok → 0 satır
+select tst.check((select task_id is not null from public.clinic_task_suggestions), 'uzman öneri-görev bağını değiştiremez');
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 
 -- ------------------------------------------------ rızanın geri alınması
 select tst.as_user('00000000-0000-0000-0000-0000000000e1');

@@ -86,6 +86,15 @@ select tst.check((public.child_me() ->> 'balance')::int = 5, 'incelemesiz görev
 -- geri al / yapamam
 select tst.check(public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date - 1, 'declined') = 'declined', 'yapamam');
 select tst.check(public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date - 1, 'assigned') = 'assigned', 'geri al');
+-- "Yapamam" nedeni (klinik önerisi: child_set_decline_reason)
+select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date - 3, 'declined');
+select public.child_set_decline_reason('00000000-0000-0000-0000-000000007a51', current_date - 3, 'hard');
+select tst.check((select decline_reason from public.completions where task_id = '00000000-0000-0000-0000-000000007a51' and date = current_date - 3) = 'hard', 'yapamam nedeni yazılır');
+select tst.fails($$select public.child_set_decline_reason('00000000-0000-0000-0000-000000007a51', current_date - 3, 'tembellik')$$, 'tanımsız neden reddedilir');
+select tst.fails($$select public.child_set_decline_reason('00000000-0000-0000-0000-000000007a51', current_date, 'hard')$$, 'neden yalnız yapamam kaydına yazılır');
+select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date - 3, 'pending');
+select tst.check((select decline_reason is null from public.completions where task_id = '00000000-0000-0000-0000-000000007a51' and date = current_date - 3), 'yaptım denince neden silinir');
+select tst.check((select child_done_at is not null from public.completions where task_id = '00000000-0000-0000-0000-000000007a52' and date = current_date), 'çocuğun incelemesiz onayı "Yaptım" anı sayılır');
 select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date + 5, 'pending')$$, 'gelecek gün işaretlenemez');
 select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date, 'approved')$$, 'çocuk kendini onaylayamaz');
 -- çocuk defteri doğrudan yazamaz

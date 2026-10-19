@@ -4,13 +4,13 @@ Bu dosyadaki sayılar iki ya da daha fazla uygulamanın **aynı** kabul etmesi g
 yapılır, sonra oyun verisi (`Resources/Data/*.json`) ve ParentApp güncellenir.
 
 Kaynak:
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı: `coin_ledger`, `completions_coin_trigger`, `spend_coins`, `game_items`)
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı: `coin_ledger`, `completions_coin_trigger`, `spend_coins`, `game_items`)
 - `parent-app/supabase/migrations/20261013000000_init.sql` (`task_assignments.coins`)
 - `parent-app/src/theme.ts` (`difficultyMeta`), `src/screens/TaskDetailsScreen.tsx`, `src/screens/CreateTaskScreen.tsx`, `src/store.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Economy/Wallet.cs`, `Economy/XpSystem.cs`, `Progression/Progression.cs`, `Pet/PetStats.cs`, `Pet/PetCare.cs`, `Profile/AgeBand.cs`, `Shop/ShopRules.cs`, `State/SyncCoordinator.cs`, `App/StarterKit.cs`, `App/TestAccess.cs`, `App/DemoParent.cs`, `Services/Mock/MockBackend.cs`, `MiniGames/MiniGames.cs`, `MiniGames/Expeditions.cs`, `Cards/CardGameFramework.cs`, `Fishing/Fishing.cs`, `Garden/Garden.cs`, `Island/Gathering.cs`, `Island/Events.cs`
-- `pofi-adasi/Assets/_Pofi/Scripts/Runtime/Core/GameBootstrap.cs`, `Runtime/Screens/MapScreen.cs`, `Runtime/Screens/ShopScreen.cs`
-- `pofi-adasi/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
-- `pofi-adasi/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Economy/Wallet.cs`, `Economy/XpSystem.cs`, `Progression/Progression.cs`, `Pet/PetStats.cs`, `Pet/PetCare.cs`, `Profile/AgeBand.cs`, `Shop/ShopRules.cs`, `State/SyncCoordinator.cs`, `App/StarterKit.cs`, `App/TestAccess.cs`, `App/DemoParent.cs`, `Services/Mock/MockBackend.cs`, `MiniGames/MiniGames.cs`, `MiniGames/Expeditions.cs`, `Cards/CardGameFramework.cs`, `Fishing/Fishing.cs`, `Garden/Garden.cs`, `Island/Gathering.cs`, `Island/Events.cs`
+- `game-app/Assets/_Pofi/Scripts/Runtime/Core/GameBootstrap.cs`, `Runtime/Screens/MapScreen.cs`, `Runtime/Screens/ShopScreen.cs`
+- `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
+- `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
 Son güncelleme: 2026-10-19
 
@@ -215,4 +215,4 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
 | E6 | Onay sonrası ödül değişimi | Geri alma, o anki `task_assignments.coins` kadar düşer (bkz. 2.2). |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
-| E8 | Klinik paylaşımı | Klinik önerisine göre coin defteri uzmanla **paylaşılmaz** (öneri, uygulanmadı). |
+| E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |

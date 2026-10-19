@@ -4,16 +4,16 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 
 | Ürün | Kim | Depo | Pencere |
 |---|---|---|---|
-| Pofi Adası (GameApp) | Çocuk | `amy60946/pofi-adasi` (Unity, C#) | "Oyun" |
+| GameApp | Çocuk | `amy60946/game-app` (Unity, C#) | "Oyun" |
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
-| ClinicApp | Uzman | `amy60946/clinic-app` (web + iPad; teknoloji kararı bekliyor) | "Klinik" |
+| ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
 
 ## İçerik
 
 | Yol | Ne |
 |---|---|
 | `supabase/migrations/` | Supabase'e **uygulanmış** SQL göçleri, sırayla. Canlı veritabanının tarifi budur. |
-| `supabase/proposed/` | Henüz **uygulanmamış** öneriler (ör. klinik). Kullanıcı onayı + test olmadan uygulanmaz. |
+| `supabase/proposed/` | Henüz **uygulanmamış** öneriler (şu an boş). Kullanıcı onayı + test olmadan uygulanmaz. |
 | `supabase/test/` | Yerel PostgreSQL testleri (`run.sh`): her test temiz veritabanında; göçler + öneriler (iki kez) + test. |
 | `sozlesme/veritabani.md` | Tablolar, RPC'ler, hangi uygulama neyi okur/yazar, satır düzeyi güvenlik. |
 | `sozlesme/durumlar.md` | Durum adları ve sabit değerler (tam yazımlarıyla). |
@@ -21,7 +21,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
-> Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `pofi-adasi/...`); SQL artık bu depodaki `supabase/` altındadır.
+> Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.
 
 ## Kurallar (üç pencere için de)
 
@@ -37,7 +37,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 - Kullanıcı yazılımcı değil: Türkçe, sade, adım adım; nereye tıklayacağını söyle. Belirsiz kararda kısa soru sor; kapsam dışına çıkma.
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
-- Adlandırma: "Fidan" adı kullanılmaz. Ürünler: Pofi Adası (GameApp), ParentApp, ClinicApp.
+- Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.
 - Klinik sınır: hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir; uzman verisi yalnız ebeveyn rızasıyla ve geri alınabilir şekilde paylaşılır.
 
 ## Referanslar

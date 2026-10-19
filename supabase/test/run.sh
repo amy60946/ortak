@@ -3,6 +3,7 @@
 # uygulanmış göçler + öneriler (her öneri iki kez: tekrar çalıştırmak zarar vermemeli) + test.
 # Gerekenler: psql ve çalışan bir sunucu (PGHOST/PGPORT/PGUSER).
 set -euo pipefail
+shopt -s nullglob   # proposed/ boş olabilir
 here="$(cd "$(dirname "$0")" && pwd)"
 for t in "$here"/test_*.sql; do
   db="ortak_$(basename "$t" .sql)"

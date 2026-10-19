@@ -1,7 +1,7 @@
 -- =====================================================================
--- Klinik SaaS (ClinicApp) – sunucu eklemeleri (ÖNERİ, henüz uygulanmadı)
--- Üç ürün aynı Supabase projesini kullanır: Pofi Adası (çocuk), ParentApp (ebeveyn), ClinicApp (uzman).
--- Önkoşul: supabase/migrations/* ve pofi-adasi M4 SQL'i (20261015000000_pofi_game.sql) uygulanmış olmalı.
+-- Klinik SaaS (ClinicApp) – sunucu eklemeleri (19 Ekim 2026'da Supabase'e uygulandı)
+-- Üç ürün aynı Supabase projesini kullanır: GameApp (çocuk), ParentApp (ebeveyn), ClinicApp (uzman).
+-- Önkoşul: bu klasördeki önceki göçler (init, task_repeat_order, 20261015000000_pofi_game) uygulanmış olmalı.
 -- Uygulama: Supabase panelinde SQL Editor > New query > bu dosyanın tamamı > Run. Tekrar çalıştırmak zarar vermez.
 --
 -- İlkeler
@@ -138,6 +138,8 @@ create table if not exists public.clinic_task_suggestions (
   decided_at  timestamptz
 );
 create index if not exists clinic_task_suggestions_family_idx on public.clinic_task_suggestions (family_id, status);
+-- Kabul edilen önerinin dönüştüğü görev (ParentApp görevi oluşturunca yazar; uzman izler)
+alter table public.clinic_task_suggestions add column if not exists task_id uuid references public.tasks (id) on delete set null;
 
 -- Gelir modeli 1: aile aboneliği. Mağaza/ödeme olayları sunucu tarafında (service role) yazılır.
 create table if not exists public.family_subscriptions (
@@ -159,18 +161,44 @@ begin
   end if;
 end $$;
 
+-- Yalnız çocuğun kendi işareti sayılır: 'pending'/'declined' ya da çocuğun incelemesiz görevde yazdığı 'approved'.
+-- Ebeveynin kayıt yokken doğrudan onayı "Yaptım" anı değildir.
 create or replace function public.completions_child_done_at()
 returns trigger language plpgsql set search_path = '' as $$
 begin
-  if new.status in ('pending', 'approved', 'declined') and new.child_done_at is null
+  if new.child_done_at is null
+     and (new.status in ('pending', 'declined') or (new.status = 'approved' and public.my_child_id() is not null))
      and (tg_op = 'INSERT' or old.status is distinct from new.status) then
     new.child_done_at := now();
+  end if;
+  if new.status <> 'declined' then
+    new.decline_reason := null;
   end if;
   return new;
 end $$;
 drop trigger if exists completions_child_done_at on public.completions;
-create trigger completions_child_done_at before insert or update of status on public.completions
+create trigger completions_child_done_at before insert or update of status, decline_reason on public.completions
   for each row execute function public.completions_child_done_at();
+
+-- Oyun: "Yapamam" dedikten sonra nedeni yazar (child_set_status değişmez; eski oyun sürümü bunu çağırmazsa neden null kalır).
+-- Yalnız çocuğun kendi 'declined' kaydına; ebeveyn karar verdiyse ('rejected'/'approved') kayıt zaten 'declined' değildir.
+create or replace function public.child_set_decline_reason(p_task_id uuid, p_date date, p_reason text)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  me uuid := public.my_child_id();
+begin
+  if me is null then
+    raise exception 'Bağlantı yok' using errcode = '42501';
+  end if;
+  if p_reason is not null and p_reason not in ('hard', 'no_time', 'did_not_want', 'other') then
+    raise exception 'Geçersiz neden';
+  end if;
+  update public.completions set decline_reason = p_reason
+   where task_id = p_task_id and child_id = me and date = p_date and status = 'declined';
+  if not found then raise exception 'Yapamam kaydı bulunamadı'; end if;
+end $$;
+revoke execute on function public.child_set_decline_reason(uuid, date, text) from public, anon;
+grant execute on function public.child_set_decline_reason(uuid, date, text) to authenticated;
 
 -- ---------------------------------------------------------------------
 -- Yardımcı fonksiyonlar
@@ -480,9 +508,11 @@ create policy "öneri: aile okur" on public.clinic_task_suggestions for select t
   using (family_id = public.my_family_id());
 drop policy if exists "öneri: aile karar verir" on public.clinic_task_suggestions;
 create policy "öneri: aile karar verir" on public.clinic_task_suggestions for update to authenticated
-  using (family_id = public.my_family_id()) with check (family_id = public.my_family_id());
+  using (family_id = public.my_family_id())
+  with check (family_id = public.my_family_id()
+    and (task_id is null or public.task_family(task_id) = family_id));
 revoke update on public.clinic_task_suggestions from authenticated;
-grant update (status, decided_at) on public.clinic_task_suggestions to authenticated;
+grant update (status, decided_at, task_id) on public.clinic_task_suggestions to authenticated;
 
 drop policy if exists "abonelik: aile okur" on public.family_subscriptions;
 create policy "abonelik: aile okur" on public.family_subscriptions for select to authenticated
