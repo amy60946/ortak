@@ -140,9 +140,9 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 ### 5.4 Uzmanın görev önerisi
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman rızalı bağlantı için görev önerir (başlık, emoji, beceri, zorluk, tekrarlı mı, not). `pending` iken geri çekebilir. | `clinic_task_suggestions` insert (`status='pending'`) |
+| 1 | [K] | Uzman rızalı bağlantı için görev önerir. Form ParentApp "Görev Oluştur" ile **birebir aynı**: şablon (kategori, ara) ya da özel görev; açıklama; zorluk + ödül (0–50); başlangıç; tek seferlik / tekrarlayan (her gün · haftalık günler · aylık günler) + son tarih; hatırlatma saati; inceleme gerekli; ebeveyne not. `pending` iken **günceller** (`clinic_update_suggestion`) ya da geri çeker. | `clinic_task_suggestions` insert (`status='pending'`) |
 | 2 | [P] | Görevler ekranında bekleyen öneri bildirimi; Uzmanım'da kabul/ret. | `clinic_task_suggestions` select (`status='pending'`) |
-| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur: bugünden başlar, tekrarlıysa `daily`, inceleme gerekir, coin zorluğun varsayılanı (5/10/20). | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert; ardından öneriye `task_id` yazılır |
+| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur. Öneri alanları göreve birebir taşınır: `title`, `emoji`, `skill`, `description`, `recurring`, `repeat_kind`, `repeat_days`, `end_date`, `reminder`, `requires_review`; atamada `difficulty` ve `coins` (null ise zorluğun varsayılanı 5/10/20); `start_date` null ya da geçmişse bugün. Ebeveyn kabul etmeden önce görev ekranında bunları değiştirebilir. (Eski öneriler — yeni sütunlar boş — için önceki varsayılanlar: bugün, `daily`, inceleme gerekli.) | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert; ardından öneriye `task_id` yazılır |
 | 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
 | 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
 
