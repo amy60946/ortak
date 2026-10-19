@@ -145,3 +145,15 @@ Kod biçimi:
 | K1 | `decline_reason` yazılamıyor | Oyunun `child_set_status(p_task_id, p_date, p_status)` imzasında neden parametresi yok; C# da göndermiyor. Sütun eklenirse ya RPC'ye `p_reason` eklenmeli ya da alan hep null kalır. |
 | K2 | `child_done_at` anlamı | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
 | K3 | Kabul edilen öneri ↔ görev bağı | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
+
+---
+
+## 8. Bildirim (öneri, uygulanmadı)
+
+| Alan | Değerler |
+|---|---|
+| `notifications.app` | `parent` / `child` / `clinic` |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined` (anlamları: `akislar.md` 7) |
+| `push_tokens.app` | `parent` / `child` / `clinic` |
+| `push_tokens.platform` | `ios` / `android` / `web` |
+| Push gönderilen anahtar biçimi | yalnız `ExponentPushToken[...]` (Expo) |

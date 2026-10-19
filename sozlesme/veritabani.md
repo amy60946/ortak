@@ -175,3 +175,24 @@ Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`
 | **Uzman** | Kendi kliniği, ekip arkadaşları, kendi davetleri, kendi kliniğinin bağlantıları/notları/hedefleri/puanları/önerileri. Rızalı (`active`) bağlantısı olan çocuğun `children`, `tasks` (atanmış), `task_assignments`, `completions`, `abc_events` satırlarını **yalnız okur**. `messages`, `coin_ledger`, `game_saves` erişimi **yoktur**. Plan/koltuk sütunlarını değiştiremez. |
 | **Ebeveyn** | Kendi ailesinin `clinic_links`, `clinic_task_suggestions` (yalnız `status`/`decided_at` günceller), `abc_events` (tam erişim), `family_subscriptions` (yalnız okur). `clinic_notes`, `clinic_goals`, `goal_ratings` **görmez**. |
 | **Çocuk (oyun)** | Klinik tablolarının hiçbirine erişimi yok. |
+
+---
+
+## 5. Bildirimler ve çoklu çocuk paylaşımı (öneri, uygulanmadı)
+
+SQL: `supabase/proposed/20261019120000_clinic_children.sql`, `20261019130000_notifications.sql`. Akış: `akislar.md` 7–8.
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at` | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
+| `push_tokens` | Cihaz push anahtarı | `token` (PK), `user_id`, `app`, `platform`, `updated_at` | Yalnız RPC | Kendi satırları |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `register_push_token(p_token, p_app, p_platform)` | O, P, K | Anahtarı bu kullanıcıya bağlar (cihaz hesap değiştirdiyse taşınır) |
+| `unregister_push_token(p_token)` | O, P, K | Çıkışta / bildirim kapatılınca |
+| `mark_notifications_read(p_ids bigint[] default null)` | O, P, K | Verilenleri ya da hepsini okundu yapar; sayı döndürür |
+| `redeem_clinic_invite_children(p_code, p_child_ids uuid[])` | P | Tek kodla birden çok çocuk; `{link_ids, clinic_id}` |
+| `clinic_share_child(p_clinic_id, p_child_id)` | P | O klinikle etkin paylaşım varsa kodsuz çocuk ekler |
+| `family_clinic_links()` | P | Dönüşe `clinic_id` eklendi |
+| İç: `notify`, `notify_parents`, `notify_child`, `notify_clinic`, `child_name`, olay tetikleyicileri, `notifications_push` (pg_net → Expo) | — | İstemci çağıramaz |

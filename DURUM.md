@@ -4,6 +4,9 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] Supabase'e uygulanacak (kullanıcı, SQL Editor): `proposed/20261019120000_clinic_children.sql`, `proposed/20261019130000_notifications.sql`.
+- [ ] Pofi Adası (oyun penceresi): `notifications` tablosunu okuyup göster (app='child': yeni görev, onay/ret, mektup); Realtime ya da senkronda yoklama; gerçek push (APNs) için karar.
+- [ ] ClinicApp (klinik penceresi): `notifications` (app='clinic') listesi + Realtime; paylaşımlar artık çoklu (aynı aileden birden çok çocuk).
 - [ ] Pofi Adası: yaş bantları iki banda indi (A 6–8 / B 9–12); oyunda C profili kaldırılmalı / `C` gelirse B sayılmalı, A/B ayarları yeni aralıklara göre gözden geçirilmeli (oyun penceresi).
 - [ ] Omurga analizi Ö1–Ö7 (Güneş Taşı, XP/beceri yıldızı, bakım, hikâye, ilk gün, posta kutusu, gerçek ödül dükkânı) onaylanırsa önce burada şema/kural, sonra uygulamalar.
 - [ ] Sözleşme taramasında bulunan tutarsızlıklar (ayrıntı `sozlesme/durumlar.md`, `ekonomi.md`): `assigned`/"kaçırıldı" yalnız istemcide; geçmiş tarih kuralı oyun/sunucu farklı (saat dilimi dahil); `spend_coins` `min_level` denetlemiyor, fiyat 0 kuralı farklı; sunucuda kod deneme sınırı yok; klinik önerisinde `decline_reason` RPC'den yazılamıyor, kabul edilen öneri ↔ görev bağı yok. Her biri önce burada karara bağlanacak.
@@ -12,6 +15,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · tümü · **Bildirim sistemi** önerisi (13 olay, üç uygulama; sunucu tetikleyicileri yazar, ParentApp'e Expo push) ve **tek kodla birden çok çocuk + kodsuz ekle/çıkar** önerisi; testler `test_notifications.sql`, `test_clinic_children.sql` (hepsi geçti). Sözleşme: `akislar.md` 7–8, `durumlar.md` 8, `veritabani.md` 5. · ParentApp güncellendi. **Kullanıcı:** iki SQL'i uygula + Expo'ya APNs anahtarı. **Oyun / Klinik pencereleri:** bildirim listesini göster (Açık işler).
 - 2026-10-19 · ParentApp · TestFlight giriş hatası ("sunucu bulunamadı") çözüldü: Xcode'un JS paketleme adımı `.env`'i okumuyordu, Supabase adresi pakete girmiyordu → değerler ortam değişkeni olarak da veriliyor, derleme JS paketini denetliyor. Apple geliştirme sertifikası sınırı doldu → CI kendi açtığı ("Created via API") eski sertifikaları iptal ediyor (kullanıcı onayı). Yeni sürüm (Uzmanım ekranlarıyla) TestFlight'a yüklendi. · **Oyun penceresi:** aynı Apple hesabı; oyun derlemesinde de "maximum number of certificates" görülürse aynı temizlik gerekir.
 - 2026-10-19 · ParentApp · Uzmanım ekranları (klinik paylaşımı, öneriler, zor an) `claude/claude-durum-review-c6ss0j` dalına alındı; giriş/kayıt hata mesajları netleşti, iOS derlemesi Supabase adresini JS paketinde denetliyor. Yeni TestFlight derlemesi bekliyor. · Diğer ürünleri etkilemez.
 - 2026-10-19 · tümü · **Uygulandı** (kullanıcı, SQL Editor): `20261019000000_clinic.sql`, `20261019100000_task_rewards.sql`, `20261019110000_age_bands.sql` → `migrations/`'a taşındı; sözleşmedeki "uygulanmadı" notları kaldırıldı. Canlıda: ödül 0–50, geri almada verilen coin düşülür, yaş bantları A 6–8 / B 9–12 (eski C kayıtları B oldu), klinik tabloları hazır. · **Oyun penceresi:** C bandı artık sunucudan gelmez; oyunda C profilini kaldır. **ClinicApp:** tablolar/RPC'ler kullanılabilir.

@@ -176,3 +176,44 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 | 1 | [P] | Ebeveyn Storage dosyalarını siler, sonra hesabı siler. | Storage `mail`; `delete_account()` |
 | 2 | [S] | Ailede başka ebeveyn yoksa aile ve bağlı her şey (çocuklar, görevler, tamamlamalar, mesajlar, coin defteri, oyun yedekleri) silinir. | `families` → cascade |
 | 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür; yerel kayıt kalır. | `Revoked` |
+
+---
+
+## 7. Bildirimler (öneri, uygulanmadı)
+
+> SQL: `supabase/proposed/20261019130000_notifications.sql`. Bildirim satırlarını **yalnız sunucu tetikleyicileri** yazar; uygulamalar okur, okundu işaretler (`mark_notifications_read`), siler.
+> İşlemi yapan kişiye bildirim gitmez. Uzmana yalnız rızalı (`active`) paylaşım bildirilir; posta ve coin uzmana bildirilmez.
+
+| Olay | Kimden → kime | `kind` | Uygulama (`app`) |
+|---|---|---|---|
+| Çocuk "Yaptım" (inceleme bekliyor ya da incelemesiz onay) | Oyun → ailenin bütün ebeveynleri | `task_done` | parent |
+| Çocuk "Yapamam" | Oyun → ebeveynler | `task_declined` | parent |
+| Ebeveyn onayladı / reddetti | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` | child |
+| Yeni görev atandı (yalnız yeni atama; düzenleme bildirim üretmez) | ParentApp → çocuk | `task_assigned` | child |
+| Posta | çocuk → ebeveynler / ebeveyn → çocuk | `message` | parent / child |
+| Çocuğun cihazı koda bağlandı | Oyun → ebeveynler | `device_linked` | parent |
+| İkinci ebeveyn aileye katıldı | ParentApp → diğer ebeveynler | `parent_joined` | parent |
+| Aile çocuk(lar)ı uzmanla paylaştı (aynı anda paylaşılanlar **tek** bildirimde, adlarıyla) | ParentApp → sorumlu uzman (yoksa kliniğin uzmanları) | `clinic_shared` | clinic |
+| Paylaşım durduruldu | aile durdurduysa → uzman; uzman durdurduysa → ebeveynler | `clinic_revoked` | clinic / parent |
+| Uzman görev önerdi | ClinicApp → ebeveynler | `clinic_suggestion` | parent |
+| Ebeveyn öneriye karar verdi | ParentApp → öneriyi yapan uzman | `suggestion_decided` | clinic |
+| Zor an kaydı | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
+| Ekibe yeni uzman katıldı | ClinicApp → klinik sahipleri | `team_joined` | clinic |
+
+Teslim yolları:
+- **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
+- **Telefona push — ParentApp:** cihaz `register_push_token(token, 'parent', 'ios')` ile Expo anahtarını kaydeder; sunucu her yeni bildirimde Expo Push API'ye gönderir (pg_net). Çıkışta `unregister_push_token`. Expo hesabında iOS push anahtarı (APNs) tanımlı olmalı.
+- **Pofi Adası (Unity):** Expo anahtarı yok. Uygulama içi liste + Realtime/yoklama ile; açıkken yerel bildirim. Gerçek push (APNs) için sunucu tarafı ayrıca gerekir (karar bekliyor). `push_tokens` tablosu `app='child'` anahtarlarını saklar ama sunucu yalnız `ExponentPushToken[...]` biçimine gönderir.
+- **ClinicApp (web):** uygulama içi liste + Realtime; web push sonra.
+- `data` alanı: ilgili kimlikler (`task_id`, `child_id`, `date`, `message_id`, `suggestion_id`, `links` …) + push'ta `kind`, `notification_id`. Uygulama dokununca ekranı buna göre açar.
+
+## 8. Uzmanla birden çok çocuk paylaşma (öneri, uygulanmadı)
+
+> SQL: `supabase/proposed/20261019120000_clinic_children.sql`.
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Kod girilir, uzman önizlenir, **birden çok çocuk** seçilip tek onayla paylaşılır. Kod yine tek kullanımlık. | `redeem_clinic_invite_children(kod, çocuklar[])` (tek INSERT → uzmana tek bildirim) |
+| 2 | [P] | Uzmanım'da her uzmanın altında ailenin bütün çocukları: paylaşılanda "Çıkar", paylaşılmayanda "Ekle". Ekle açık rıza ister, kod gerekmez (o uzmanla etkin paylaşım varsa). | `clinic_share_child(klinik, çocuk)` / `revoke_clinic_link(link)` |
+| 3 | [P] | Liste klinik başına gruplanır. | `family_clinic_links()` artık `clinic_id` de döndürür |
+| 4 | [K] | Uzman çıkarılan çocuğu hemen göremez (RLS `active` bağlantıya bakar). | — |
