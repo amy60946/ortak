@@ -37,7 +37,7 @@ Son güncelleme: 2026-10-19
 | `medium` (Orta) | **10** | Evet |
 | `hard` (Zor) | **20** | Evet |
 
-- Sınır: **0–50** (öneri `20261019100000_task_rewards.sql`, **uygulanmadı**; uygulanana kadar sunucuda yalnız `coins >= 0`). ParentApp girişi yalnız rakam kabul eder ve 0–50'ye sıkıştırır. Var olan 50 üstü satırlara dokunulmaz (kısıt `not valid`).
+- Sınır: **0–50** (`20261019100000_task_rewards.sql`, 19 Ekim 2026'da uygulandı). ParentApp girişi yalnız rakam kabul eder ve 0–50'ye sıkıştırır. Var olan 50 üstü satırlara dokunulmaz (kısıt `not valid`).
 - Coin **görev başına değil, atama (görev × çocuk) başına** tutulur; aynı görev iki çocuğa farklı ödülle atanabilir.
 - `coins = 0` ise onayda deftere satır yazılmaz.
 - Sahte arka uç (yalnız oyun önizlemesi, `MockBackend.ParentAssign`) ödülü **1–50** aralığına sıkıştırır; demo görevler 5 / 10 / 10 / 5 / 20 coin (`DemoParent.Samples`). Üst sınır gerçek sunucuyla aynı (50).
@@ -51,7 +51,7 @@ Son güncelleme: 2026-10-19
 | Görev ya da atama silinir (silme zinciri) | yazılmaz: kazanılmış coin çocukta kalır |
 | Diğer geçişler (`pending`↔`declined` vb.) | yazılmaz |
 
-- Onayda tutar **o anki** `task_assignments.coins`'tir. Geri almada "verilen" = o tamamlama için defterde kalan net tutar (`task` − `task_undo`); onaydan sonra ödül değişse de verilen kadar düşülür. (Karar 19 Ekim 2026, öneri `20261019100000_task_rewards.sql`; uygulanana kadar canlıda eski kural geçerli: o anki ödül düşülür.)
+- Onayda tutar **o anki** `task_assignments.coins`'tir. Geri almada "verilen" = o tamamlama için defterde kalan net tutar (`task` − `task_undo`); onaydan sonra ödül değişse de verilen kadar düşülür. (Karar ve uygulama 19 Ekim 2026, `20261019100000_task_rewards.sql`.)
 - Geri alma, çocuk coini harcadıysa bakiyeyi eksiye düşürebilir (bilinçli: onay geri alınınca hak edilmemiş coin geri gelir).
 - ParentApp onayı ve reddi **ikisi de** `review_completion` ile yapar.
 - `ref = '<completion_id>:<epoch>'`; `unique (child_id, reason, ref)`.
@@ -214,11 +214,11 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 
 | # | Konu | Ayrıntı |
 |---|---|---|
-| E1 | ~~Görev ödülü üst sınırı~~ | **Karar (19 Ekim):** 0–50. SQL kısıtı önerildi (uygulanmadı), ParentApp girişi sıkıştırıyor. |
+| E1 | ~~Görev ödülü üst sınırı~~ | **Karar (19 Ekim):** 0–50. SQL kısıtı uygulandı, ParentApp girişi sıkıştırıyor. |
 | E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. |
 | E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. |
 | E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. |
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
-| E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Öneri uygulanana kadar canlıda eski davranış. |
+| E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
-| E8 | Klinik paylaşımı | Klinik önerisine göre coin defteri uzmanla **paylaşılmaz** (öneri, uygulanmadı). |
+| E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz**. |

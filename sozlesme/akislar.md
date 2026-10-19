@@ -8,7 +8,7 @@ Simgeler: **[P]** ParentApp (ebeveyn) · **[O]** Oyun (Pofi Adası, çocuk) · *
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
 - `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
-- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
+- `supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı), `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
 - `parent-app/src/store.tsx`, `src/lib/auth.tsx`, `src/screens/ReviewScreen.tsx`, `src/screens/TasksScreen.tsx`, `src/screens/TaskDetailsScreen.tsx`
 - `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
 - `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
@@ -73,7 +73,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 8 | [P] | Realtime ile değişiklik gelir; **İnceleme** ekranında `pending` olanlar listelenir; Görevler'de durum etiketi (Onay bekliyor / Tamamlandı / Yapamadı / Reddedildi). | `completions` (Realtime) |
 | 9a | [P] | **Onay:** kayıt `approved` yapılır. | `review_completion(..., 'approved')` (19 Ekim kararı; önceden doğrudan `completions` update) |
 | 9b | [P] | **Ret:** ebeveyn isterse not yazar ("Yatak dağınık kalmış"); kayıt silinmez. | `review_completion(task, child, date, 'rejected', note)` |
-| 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) verilen tutar düşülür; görev/atama silinirse kazanılan coin kalır (öneri, uygulanmadı). | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
+| 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) verilen tutar düşülür; görev/atama silinirse kazanılan coin kalır. | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
 | 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
 | 12 | [O] | Bakiye sunucudan alınır, artış "kazanılan coin" olarak kutlanır. Aynı gün ilk onayda görev serisi bonusu XP'si verilir (coin değil). | `child_me().balance`; `TaskStreak` |
 | 13 | [P] | Ebeveyn çocuğun bakiyesini görür. | `child_balance(child_id)` |
@@ -106,9 +106,9 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 
 ---
 
-## 5. Uzman (klinik) paylaşımı — öneri, uygulanmadı
+## 5. Uzman (klinik) paylaşımı
 
-> **Öneri, uygulanmadı.** SQL: `supabase/proposed/20261019000000_clinic.sql` (`parent-app` dalı `origin/claude/project-thread-vwahaf`).
+> **Uygulandı (19 Ekim 2026).** SQL: `supabase/migrations/20261019000000_clinic.sql`. ParentApp ekranları (`lib/clinic.ts`, `ClinicShare.tsx`) henüz `parent-app` dalı `claude/project-thread-vwahaf`'ta.
 > ParentApp tarafı aynı dalda "Aile › Hesap › Uzmanım" (`ClinicShare.tsx`, `lib/clinic.ts`). ClinicApp henüz yazılmadı.
 
 ### 5.1 Uzman hesabı ve ekip

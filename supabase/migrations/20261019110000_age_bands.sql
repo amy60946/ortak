@@ -1,5 +1,5 @@
 -- =====================================================================
--- Yaş bantları: iki bant (öneri, 19 Ekim 2026; kullanıcı kararı)
+-- Yaş bantları: iki bant (19 Ekim 2026; kullanıcı kararı; uygulandı)
 --   A: 6–8 yaş · B: 9–12 yaş. C bandı (13–15) kaldırılır.
 --   - Var olan 'C' kayıtları 'B' yapılır (en büyük bant).
 --   - Doğum gününden öneri: <9 → A, 9+ → B. Doğum günü yoksa en güvenli bant A.

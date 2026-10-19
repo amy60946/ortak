@@ -6,7 +6,7 @@ yalnız `gender` Türkçe). Yeni bir değer eklenecekse önce bu dosya ve SQL g�
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
 - `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
-- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`
+- `supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı), `src/lib/clinic.ts`
 - `pofi-adasi/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
 - `parent-app/src/store.tsx`, `src/theme.ts`, `src/data/ageBands.ts`, `src/data/templates.ts`, `src/screens/TasksScreen.tsx`, `src/screens/ReviewScreen.tsx`
 - `pofi-adasi/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
@@ -67,8 +67,8 @@ Ek kurallar:
 |---|---|---|---|---|
 | `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
 | `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | **öneri, uygulanmadı** |
-| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | **öneri, uygulanmadı** |
+| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | uygulandı |
+| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
@@ -80,7 +80,7 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-**Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL önerisi `supabase/proposed/20261019110000_age_bands.sql` (**uygulanmadı**).
+**Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL `supabase/migrations/20261019110000_age_bands.sql` (19 Ekim 2026'da uygulandı).
 
 | Değer | Yaş | ParentApp etiketi (`ageBands.ts`) | SQL `suggest_age_band` |
 |---|---|---|---|
@@ -89,7 +89,7 @@ Kod biçimi:
 | `null` | — | — | sunucu yanıtlarında `coalesce(age_band, suggest_age_band(birthday))` ile dolu gelir |
 
 - `C` (eski 13–15) **kaldırıldı**: kısıt `age_band in ('A', 'B')`; var olan `C` kayıtları göçle `B` yapılır; `set_child_age_band` `C`'yi reddeder.
-- Öneri uygulanana kadar canlıda eski kural geçerli (A <10, B 10–12, C 13+). ParentApp yalnız A/B yazar (eski kuralda da geçerli) ve sunucudan gelen `C`'yi `B` gösterir.
+- ParentApp yalnız A/B yazar ve (eski sürümden kalma) `C` gelirse `B` gösterir.
 - Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
 - Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`pofi-adasi/docs/PLAN.md` §9).
@@ -123,7 +123,7 @@ Kod biçimi:
 
 ---
 
-## 7. Öneri — uygulanmadı (ClinicApp)
+## 7. ClinicApp (19 Ekim 2026'da uygulandı)
 
 | Alan | Değerler | Anlamı |
 |---|---|---|
@@ -139,7 +139,7 @@ Kod biçimi:
 | `abc_events.intensity` | 1 … 5 (varsayılan 3) | Zor anın şiddeti. |
 | Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title` | Uzman kaydı (aile oluşturulmaz). |
 
-### 7.1 Öneriyle ilgili tutarsızlıklar
+### 7.1 Klinikle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
 |---|---|---|
 | K1 | `decline_reason` yazılamıyor | Oyunun `child_set_status(p_task_id, p_date, p_status)` imzasında neden parametresi yok; C# da göndermiyor. Sütun eklenirse ya RPC'ye `p_reason` eklenmeli ya da alan hep null kalır. |

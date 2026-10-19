@@ -1,4 +1,4 @@
--- Görev ödülü kuralları (öneri 20261019100000_task_rewards.sql): geri alma tutarı, silme, üst sınır.
+-- Görev ödülü kuralları (20261019100000_task_rewards.sql): geri alma tutarı, silme, üst sınır.
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

@@ -13,7 +13,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | Yol | Ne |
 |---|---|
 | `supabase/migrations/` | Supabase'e **uygulanmış** SQL göçleri, sırayla. Canlı veritabanının tarifi budur. |
-| `supabase/proposed/` | Henüz **uygulanmamış** öneriler (ör. klinik). Kullanıcı onayı + test olmadan uygulanmaz. |
+| `supabase/proposed/` | Henüz **uygulanmamış** öneriler. Kullanıcı onayı + test olmadan uygulanmaz. |
 | `supabase/test/` | Yerel PostgreSQL testleri (`run.sh`): her test temiz veritabanında; göçler + öneriler (iki kez) + test. |
 | `sozlesme/veritabani.md` | Tablolar, RPC'ler, hangi uygulama neyi okur/yazar, satır düzeyi güvenlik. |
 | `sozlesme/durumlar.md` | Durum adları ve sabit değerler (tam yazımlarıyla). |

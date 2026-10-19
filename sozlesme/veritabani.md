@@ -7,7 +7,7 @@ Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql` (temel şema)
 - `parent-app/supabase/migrations/20261014000000_task_repeat_order.sql` (görev tekrarı ve sırası)
 - `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (oyun eklemeleri, M4; 15 Ekim 2026'da uygulandı)
-- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (klinik önerisi, **uygulanmadı**), `src/lib/clinic.ts`
+- `supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı; ilk kaynak `parent-app` dalı `claude/project-thread-vwahaf`), `src/lib/clinic.ts`
 - `parent-app/src/store.tsx`, `parent-app/src/lib/auth.tsx`
 - `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseGameService.cs`, `SupabaseAuthService.cs`
 - `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`, `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`
@@ -22,7 +22,7 @@ Son güncelleme: 2026-10-19
 |---|---|
 | **Oyun** | Pofi Adası (GameApp, Unity C#). Çocuk **anonim Supabase oturumu** açar, giriş koduyla bir `children` satırına bağlanır (`children.user_id = auth.uid()`). |
 | **ParentApp** | Ebeveyn uygulaması (Expo). E-posta/şifre ile giriş; her ebeveyn bir `profiles` satırıdır ve bir aileye (`family_id`) bağlıdır. |
-| **ClinicApp** | Uzman paneli (web; henüz yazılmadı). Tabloları yalnız klinik önerisinde var (**öneri, uygulanmadı**). |
+| **ClinicApp** | Uzman paneli (web; henüz yazılmadı). Tabloları Supabase'de hazır (19 Ekim 2026'da uygulandı). |
 | `my_family_id()` | Oturumdaki **ebeveynin** ailesi (`profiles.family_id`). |
 | `my_child_id()` | Oturumdaki **çocuğun** kimliği (`children.user_id = auth.uid()`). |
 | `my_any_family_id()` | Ebeveyn ya da çocuk fark etmeksizin oturumun ailesi. |
@@ -47,7 +47,7 @@ Anahtarlar: istemcilere yalnız **publishable/anon** anahtar girer. `service_rol
 | `profiles` | Ebeveyn profili (auth.users ile bire bir) | `id` (= auth.users.id), `family_id`, `nickname` (`'Ben'`), `name`, `avatar` (`'erkek'`) | Sunucu (kayıt, `join_family`); P yalnız `nickname`, `name`, `avatar` | P (kendisi + aynı ailedeki ebeveynler) |
 | `children` | Çocuk | `id`, `family_id`, `name` (1–60 karakter), `avatar`, `gender` (`'kız'`/`'erkek'`/null), `birthday`, `user_id` (oyunun anonim oturumu; unique), `age_band` (M4) | P (ekle/düzenle/sil; `user_id` hariç); `user_id` yalnız `redeem_child_code` / `unlink_child_device` ile | P (aile), O (yalnız kendi satırı: `user_id = auth.uid()`) |
 | `tasks` | Görev (tekrarlı görev **tek satır**) | `title` (1–120), `emoji` (`'⭐'`), `skill`, `description`, `start_date`, `recurring`, `end_date`, `reminder` (`HH:MM`), `requires_review` (varsayılan `true`), `repeat_kind`, `repeat_days`, `sort_order` | P | P, O (yalnız kendisine atanmışlar; oyun pratikte `child_tasks` RPC'si üzerinden okur) |
-| `task_assignments` | Görev ↔ çocuk ataması ve ödülü | PK (`task_id`, `child_id`), `family_id`, `difficulty` (`easy`/`medium`/`hard`), `coins` (0–50; üst sınır öneride, uygulanmadı) | P | P, O (kendi atamaları) |
+| `task_assignments` | Görev ↔ çocuk ataması ve ödülü | PK (`task_id`, `child_id`), `family_id`, `difficulty` (`easy`/`medium`/`hard`), `coins` (0–50) | P | P, O (kendi atamaları) |
 | `completions` | Bir görevin bir gündeki durumu | `task_id`, `child_id`, `date`, `status`, `parent_note` (M4, ≤ 300), `reviewed_at`, `reviewed_by`, `created_at`; **unique (`task_id`, `child_id`, `date`)** | O (`child_set_status` RPC'si), P (doğrudan + `review_completion`) | P, O (kendi satırları) |
 | `messages` | Posta (ebeveyn ↔ çocuk) | `child_id`, `sender` (`parent`/`child`), `sender_id`, `kind` (`text`/`image`/`audio`), `body` (≤ 2000), `media_path`, `duration_ms` | P (sender=`parent`); çocuk (sender=`child`) RLS ile izinli | P, çocuk (kendi mesajları) |
 | `saved_templates` | Kaydedilen hazır/özel görev şablonları | `template_key` (ör. `t1`), `is_custom`, `saved`, `title`, `emoji`, `category` (`home`/`mind`/`learn`/`self`), `difficulty`, `skill` | P | P |
@@ -63,7 +63,7 @@ Notlar:
 
 | Tablo / sütun | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
-| `children.age_band` | Yaş bandı | `'A'` (6–8) / `'B'` (9–12) / null (null ise doğum gününden önerilir). `'C'` öneriyle kaldırılıyor (uygulanmadı) | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
+| `children.age_band` | Yaş bandı | `'A'` (6–8) / `'B'` (9–12) / null (null ise doğum gününden önerilir). `'C'` 19 Ekim 2026'da kaldırıldı | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
 | `completions.parent_note` | Ebeveynin ret/onay notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
 | `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
@@ -109,7 +109,7 @@ Notlar:
 | `suggest_age_band(p_birthday date)` | `text` | iç (istemciye açık ama kullanılmıyor) | Doğum günü yok → `A`; yaş < 10 → `A`; < 13 → `B`; aksi `C`. |
 | `child_age_band(uuid)`, `coin_balance(uuid)` | `text` / `integer` | iç | İstemciye kapalı. |
 | `task_occurs_on(t tasks, d date)` | `boolean` | iç | Görev o gün var mı (tek seferlik: başlangıç günü; tekrarlı: günlük / haftanın / ayın günleri; ayda olmayan gün → ayın son günü). |
-| `completions_coin_trigger()` (tetikleyici `completions_coin`) | — | iç | `approved`'a geçişte `+coins` (`reason='task'`), `approved`'dan çıkışta ya da silinişte `-coins` (`reason='task_undo'`). Onayda tutar o andaki `task_assignments.coins`; geri almada o tamamlama için verilmiş net tutar, görev/atama silinmişse geri alma yok (öneri `20261019100000_task_rewards.sql`, uygulanmadı). Ayrıntı: `ekonomi.md`. |
+| `completions_coin_trigger()` (tetikleyici `completions_coin`) | — | iç | `approved`'a geçişte `+coins` (`reason='task'`), `approved`'dan çıkışta ya da silinişte `-coins` (`reason='task_undo'`). Onayda tutar o andaki `task_assignments.coins`; geri almada o tamamlama için verilmiş net tutar, görev/atama silinmişse geri alma yok (`20261019100000_task_rewards.sql`, uygulandı). Ayrıntı: `ekonomi.md`. |
 
 ### 2.3 Oyunun doğrudan tablo okuması
 - `GET /rest/v1/children?select=id&user_id=eq.<uid>`: Oyun bağlantının hâlâ açık olup olmadığını böyle denetler (`SupabaseAuthService.ValidateAsync`). Boş liste = bağlantı kaldırıldı (`Revoked`).
@@ -127,13 +127,13 @@ Notlar:
 
 ---
 
-## 4. Öneri — uygulanmadı (ClinicApp)
+## 4. ClinicApp (19 Ekim 2026'da uygulandı)
 
-> **Öneri, uygulanmadı.** Kaynak: `parent-app` dalı `origin/claude/project-thread-vwahaf`, `supabase/proposed/20261019000000_clinic.sql`.
+> **Uygulandı (19 Ekim 2026).** SQL: `supabase/migrations/20261019000000_clinic.sql`.
 > Önkoşul: 1–2. bölümdeki şema. ParentApp'in "Aile › Hesap › Uzmanım" ekranı (aynı dalda, `src/lib/clinic.ts`) bu tabloları kullanır.
 > İlkeler (SQL başlığından): uzman çocuğun verisini **yalnız ebeveynin açık rızasıyla** (`clinic_links.status = 'active'`) görür; ebeveyn rızayı her an geri alır; uzman **yalnız okur** (görev, tamamlama, ABC) ve görev **önerir**; Posta ve coin defteri uzmanla paylaşılmaz; klinik notları ve hedef puanları ailede görünmez.
 
-### 4.1 Tablolar (öneri, uygulanmadı)
+### 4.1 Tablolar
 
 | Tablo | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
@@ -152,7 +152,7 @@ Notlar:
 
 Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`.
 
-### 4.2 Fonksiyonlar (öneri, uygulanmadı)
+### 4.2 Fonksiyonlar
 
 | Fonksiyon | Dönüş | Çağıran | Ne yapar |
 |---|---|---|---|
@@ -168,7 +168,7 @@ Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`
 | `handle_new_user()` (değişir) | — | iç | `raw_user_meta_data.account = 'clinician'` ise aile yerine klinik oluşturur (`owner`) ya da `team_code` ile ekibe katılır (`member`; koltuk sınırı denetlenir). Ebeveyn davranışı aynı kalır. |
 | `completions_child_done_at()` (tetikleyici) | — | iç | Durum `pending`/`approved`/`declined`'e geçince ve `child_done_at` boşsa `now()` yazar. |
 
-### 4.3 RLS ilkeleri (öneri, uygulanmadı)
+### 4.3 RLS ilkeleri
 
 | Kim | Ne görür / ne yapar |
 |---|---|

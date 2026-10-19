@@ -1,4 +1,4 @@
--- Yaş bantları (öneri 20261019110000_age_bands.sql): A 6–8, B 9–12; C yok.
+-- Yaş bantları (20261019110000_age_bands.sql): A 6–8, B 9–12; C yok.
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -49,7 +49,7 @@ reset role;
 -- var olan C kaydı göçle B olur (göç ikinci kez çalıştırılınca da)
 alter table public.children drop constraint children_age_band_check;
 update public.children set age_band = 'C' where id = '00000000-0000-0000-0000-00000000c0de';
-\ir ../proposed/20261019110000_age_bands.sql
+\ir ../migrations/20261019110000_age_bands.sql
 select tst.check((select age_band from public.children where id = '00000000-0000-0000-0000-00000000c0de') = 'B', 'eski C kaydı B olur');
 select tst.check(public.child_age_band('00000000-0000-0000-0000-00000000c0de') = 'B', 'child_age_band B');
 

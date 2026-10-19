@@ -1,5 +1,5 @@
 -- =====================================================================
--- Görev ödülü kuralları (öneri, 19 Ekim 2026)
+-- Görev ödülü kuralları (19 Ekim 2026; uygulandı)
 --   1. Onay geri alınınca, o görev için gerçekten verilmiş coin kadar düşülür
 --      (önceden: o anki task_assignments.coins kadar; ödül sonradan değiştiyse yanlış tutar).
 --   2. Görev ya da atama silinince kazanılmış coin geri alınmaz

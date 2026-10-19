@@ -1,5 +1,5 @@
 -- =====================================================================
--- Klinik SaaS (ClinicApp) – sunucu eklemeleri (ÖNERİ, henüz uygulanmadı)
+-- Klinik SaaS (ClinicApp) – sunucu eklemeleri (19 Ekim 2026'da uygulandı)
 -- Üç ürün aynı Supabase projesini kullanır: Pofi Adası (çocuk), ParentApp (ebeveyn), ClinicApp (uzman).
 -- Önkoşul: supabase/migrations/* ve pofi-adasi M4 SQL'i (20261015000000_pofi_game.sql) uygulanmış olmalı.
 -- Uygulama: Supabase panelinde SQL Editor > New query > bu dosyanın tamamı > Run. Tekrar çalıştırmak zarar vermez.
