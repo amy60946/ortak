@@ -148,6 +148,6 @@ Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. 
 ### 7.1 Öneriyle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
 |---|---|---|
-| K1 | `decline_reason` yazılamıyor | Oyunun `child_set_status(p_task_id, p_date, p_status)` imzasında neden parametresi yok; C# da göndermiyor. Sütun eklenirse ya RPC'ye `p_reason` eklenmeli ya da alan hep null kalır. |
-| K2 | `child_done_at` anlamı | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
-| K3 | Kabul edilen öneri ↔ görev bağı | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
+| K1 | ~~`decline_reason` yazılamıyor~~ **çözüldü (öneride)** | Ayrı RPC `child_set_decline_reason(p_task_id, p_date, p_reason)`; `child_set_status` imzası değişmedi (eski oyun sürümü bozulmaz). Oyunun "Yapamam"dan sonra bunu çağırması gerekir; çağırmazsa neden null kalır. |
+| K2 | ~~`child_done_at` anlamı~~ **çözüldü (öneride)**: tetikleyici artık yalnız çocuğun işaretinde doldurur | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
+| K3 | ~~Kabul edilen öneri ↔ görev bağı~~ **çözüldü (öneride)**: `clinic_task_suggestions.task_id` | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |

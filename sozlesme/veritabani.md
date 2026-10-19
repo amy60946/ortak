@@ -145,10 +145,10 @@ Notlar:
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
 | `abc_events` | Zor an kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
-| `clinic_task_suggestions` | Uzmanın aileye görev önerisi | `link_id`, `family_id`, `child_id`, `title`, `emoji`, `skill`, `difficulty` (`easy`/`medium`/`hard`), `recurring` (varsayılan true), `note` (≤ 300), `status` (`pending`/`accepted`/`declined`), `decided_at` | K (ekler, `pending` iken geri çeker); P yalnız `status`, `decided_at` | K, P |
+| `clinic_task_suggestions` | Uzmanın aileye görev önerisi | `link_id`, `family_id`, `child_id`, `title`, `emoji`, `skill`, `difficulty` (`easy`/`medium`/`hard`), `recurring` (varsayılan true), `note` (≤ 300), `status` (`pending`/`accepted`/`declined`), `decided_at`, `task_id` (kabulde oluşan görev; yalnız aynı ailenin görevi) | K (ekler, `pending` iken geri çeker); P yalnız `status`, `decided_at`, `task_id` | K, P |
 | `family_subscriptions` | Aile aboneliği | `family_id` (PK), `plan` (`free`/`premium`), `source` (`store`/`web`/`manual`), `period_end` | Sunucu (service role) | P (kendi ailesi) |
 | `completions.child_done_at` (yeni sütun) | Çocuğun "Yaptım"/"Yapamam" dediği an | tetikleyici `completions_child_done_at` doldurur | Sunucu | P, K |
-| `completions.decline_reason` (yeni sütun) | "Yapamam" nedeni | `hard`/`no_time`/`did_not_want`/`other`/null | **Henüz yazan yok** (oyun göndermiyor; bkz. `durumlar.md`) | P, K |
+| `completions.decline_reason` (yeni sütun) | "Yapamam" nedeni | `hard`/`no_time`/`did_not_want`/`other`/null | O (`child_set_decline_reason`; oyun henüz çağırmıyor, çağırmazsa null kalır) | P, K |
 
 Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`.
 
@@ -166,7 +166,8 @@ Realtime'a eklenecekler: `clinic_links`, `clinic_task_suggestions`, `abc_events`
 | `clinic_active(p_clinic_id)` | `boolean` | iç | Plan `small`/`business`/`custom` ya da `trial` ve deneme süresi bitmemiş. |
 | `family_premium(p_family_id default null)` | `boolean` | P (doğrulanmalı: ParentApp'te çağrı bulunamadı) | Aile kendi aboneliğiyle premium **ya da** etkin bir kliniğe bağlı çocuğu var. |
 | `handle_new_user()` (değişir) | — | iç | `raw_user_meta_data.account = 'clinician'` ise aile yerine klinik oluşturur (`owner`) ya da `team_code` ile ekibe katılır (`member`; koltuk sınırı denetlenir). Ebeveyn davranışı aynı kalır. |
-| `completions_child_done_at()` (tetikleyici) | — | iç | Durum `pending`/`approved`/`declined`'e geçince ve `child_done_at` boşsa `now()` yazar. |
+| `completions_child_done_at()` (tetikleyici) | — | iç | `child_done_at` boşsa ve durum `pending`/`declined`'e (ya da **çocuğun** yazdığı `approved`'a) geçince `now()` yazar; ebeveynin doğrudan onayı "Yaptım" anı sayılmaz. Durum `declined` değilse `decline_reason`'ı siler. |
+| `child_set_decline_reason(p_task_id uuid, p_date date, p_reason text)` | `void` | O | "Yapamam"dan sonra nedeni yazar (`hard`/`no_time`/`did_not_want`/`other`/null). Yalnız çocuğun kendi `declined` kaydına; yoksa hata. `child_set_status` değişmez. |
 
 ### 4.3 RLS ilkeleri (öneri, uygulanmadı)
 

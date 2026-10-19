@@ -142,11 +142,11 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 |---|---|---|---|
 | 1 | [K] | Uzman rızalı bağlantı için görev önerir (başlık, emoji, beceri, zorluk, tekrarlı mı, not). `pending` iken geri çekebilir. | `clinic_task_suggestions` insert (`status='pending'`) |
 | 2 | [P] | Görevler ekranında bekleyen öneri bildirimi; Uzmanım'da kabul/ret. | `clinic_task_suggestions` select (`status='pending'`) |
-| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur: bugünden başlar, tekrarlıysa `daily`, inceleme gerekir, coin zorluğun varsayılanı (5/10/20). | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert |
+| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur: bugünden başlar, tekrarlıysa `daily`, inceleme gerekir, coin zorluğun varsayılanı (5/10/20). | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert; ardından öneriye `task_id` yazılır |
 | 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
 | 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
 
-Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanmalı; bkz. `durumlar.md` K3).
+Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
 
 ### 5.5 Zor an (ABC) kaydı
 | # | Uygulama | Adım | Veritabanı |
