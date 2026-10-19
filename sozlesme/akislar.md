@@ -7,11 +7,11 @@ Simgeler: **[P]** ParentApp (ebeveyn) · **[O]** Oyun (Pofi Adası, çocuk) · *
 
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
 - `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
 - `parent-app/src/store.tsx`, `src/lib/auth.tsx`, `src/screens/ReviewScreen.tsx`, `src/screens/TasksScreen.tsx`, `src/screens/TaskDetailsScreen.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
-- `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
+- `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
 
 Son güncelleme: 2026-10-19
 

@@ -5,11 +5,11 @@ yalnız `gender` Türkçe). Yeni bir değer eklenecekse önce bu dosya ve SQL g�
 
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
 - `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
+- `game-app/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
 - `parent-app/src/store.tsx`, `src/theme.ts`, `src/data/ageBands.ts`, `src/data/templates.ts`, `src/screens/TasksScreen.tsx`, `src/screens/ReviewScreen.tsx`
-- `pofi-adasi/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
+- `game-app/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
 
 Son güncelleme: 2026-10-19
 
@@ -96,7 +96,7 @@ Kod biçimi:
 | Oyun kodu, SQL, ParentApp, `M4_SUNUCU_ONERISI.md` | **A 6–9 / B 10–12 / C 13–15** |
 | "Pofi Adası oyun omurgası analizi" araştırma belgesi (Claude Docs) | **6–8 / 9–12** öneriyor (görevi veren oturumun aktarımı; belge bu çalışmada okunmadı — doğrulanmalı) |
 | `clinic-app/CLAUDE.md` | Pofi Adası kitlesi "Çocuk (6–12, oyun)" yazıyor → C bandı (13–15) ile çelişiyor |
-| `pofi-adasi/docs/PLAN.md` §9 | Apple Kids Category bantları "5 ve altı / 6–8 / 9–11" (mağaza notu; oyun bantlarından farklı) |
+| `game-app/docs/PLAN.md` §9 | Apple Kids Category bantları "5 ve altı / 6–8 / 9–11" (mağaza notu; oyun bantlarından farklı) |
 
 Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. Bant sınırı değişirse aynı anda değişmesi gerekenler: `suggest_age_band` (SQL), `ageBands.ts` (etiket + `suggestAgeBand`), oyun yorumları/varsayılanları.
 

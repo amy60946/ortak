@@ -6,11 +6,11 @@
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql` (temel şema)
 - `parent-app/supabase/migrations/20261014000000_task_repeat_order.sql` (görev tekrarı ve sırası)
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (oyun eklemeleri, M4; 15 Ekim 2026'da uygulandı)
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (oyun eklemeleri, M4; 15 Ekim 2026'da uygulandı)
 - `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (klinik önerisi, **uygulanmadı**), `src/lib/clinic.ts`
 - `parent-app/src/store.tsx`, `parent-app/src/lib/auth.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseGameService.cs`, `SupabaseAuthService.cs`
-- `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`, `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseGameService.cs`, `SupabaseAuthService.cs`
+- `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`, `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`
 
 Son güncelleme: 2026-10-19
 
