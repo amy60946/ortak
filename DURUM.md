@@ -4,6 +4,11 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] Supabase'e uygulanacak (kullanıcı): `proposed/20261019140000_parent_features.sql` (6 kategori, görev gün bölümü, çok çocuklu + sesli zor an).
+- [ ] ClinicApp (klinik penceresi): zor an arşivi listesi (çocuk ve tarih süzgeciyle; `group_id` aynı olanlar birlikte), sesli kaydı dinleme (`storage.from('abc').createSignedUrl(audio_path)`), gün bölümü için `abc_events.day_part` alanını kullan (saatten hesaplama yerine).
+- [ ] **Hatırlatıcı:** uzmanın, ebeveynin ilettiği zor ana sistem üzerinden yanıt vermesi (şimdilik yazılmayacak; kullanıcı kararı 19 Ekim).
+- [ ] **Hatırlatıcı:** Görev Oluştur'da "Akıllı öneri" (smart recommendation) filtresi (şimdilik yazılmayacak).
+- [ ] Pofi Adası: `tasks.day_part` oyunda gösterilebilir (`child_tasks` dönüşüne eklenmesi ayrı karar).
 - [ ] Pofi Adası (oyun penceresi): `notifications` tablosunu okuyup göster (app='child': yeni görev, onay/ret, mektup); Realtime ya da senkronda yoklama; push için iOS cihaz anahtarını `register_push_token(token, 'child', 'ios')` ile kaydet (gönderim hazır: `push-apns`).
 - [ ] ClinicApp (klinik penceresi): `notifications` (app='clinic') listesi + Realtime; paylaşımlar artık çoklu (aynı aileden birden çok çocuk).
 - [ ] Pofi Adası: yaş bantları iki banda indi (A 6–8 / B 9–12); oyunda C profili kaldırılmalı / `C` gelirse B sayılmalı, A/B ayarları yeni aralıklara göre gözden geçirilmeli (oyun penceresi).
@@ -14,6 +19,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · ParentApp + ortak · Öneri `20261019140000_parent_features.sql` + `test_parent_features.sql` (geçti): 6 görev kategorisi, görev gün bölümü, zor an: gün bölümü seçimi, çok çocuk (ortak `group_id`), sesli kayıt (kova `abc`, uzman yalnız rızayla dinler), uzmana tek bildirim. Sözleşme `durumlar.md` 9. · **Klinik penceresi:** zor an arşivi + ses dinleme + `day_part`. **Kullanıcı:** SQL'i uygula.
 - 2026-10-19 · tümü · **Uygulandı** (kullanıcı): `20261019120000_clinic_children.sql`, `20261019130000_notifications.sql` → `migrations/`; Edge Function `push-apns` yayında (JWT doğrulaması kapalı, dışarıdan denendi) + secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID`. Bildirimler canlıda. · **Oyun / Klinik pencereleri:** bildirim listesini göster; oyun push için `register_push_token(token,'child','ios')`.
 - 2026-10-19 · tümü · **Bildirim sistemi** önerisi (13 olay, üç uygulama; sunucu tetikleyicileri yazar, ParentApp'e Expo push) ve **tek kodla birden çok çocuk + kodsuz ekle/çıkar** önerisi; testler `test_notifications.sql`, `test_clinic_children.sql` (hepsi geçti). Sözleşme: `akislar.md` 7–8, `durumlar.md` 8, `veritabani.md` 5. · ParentApp güncellendi. **Kullanıcı:** iki SQL'i uygula + Edge Function `push-apns` + APNs secret'ları (Expo sertifika istediği için Expo yolu bırakıldı; push doğrudan Supabase → Apple). **Oyun / Klinik pencereleri:** bildirim listesini göster (Açık işler).
 - 2026-10-19 · ParentApp · TestFlight giriş hatası ("sunucu bulunamadı") çözüldü: Xcode'un JS paketleme adımı `.env`'i okumuyordu, Supabase adresi pakete girmiyordu → değerler ortam değişkeni olarak da veriliyor, derleme JS paketini denetliyor. Apple geliştirme sertifikası sınırı doldu → CI kendi açtığı ("Created via API") eski sertifikaları iptal ediyor (kullanıcı onayı). Yeni sürüm (Uzmanım ekranlarıyla) TestFlight'a yüklendi. · **Oyun penceresi:** aynı Apple hesabı; oyun derlemesinde de "maximum number of certificates" görülürse aynı temizlik gerekir.

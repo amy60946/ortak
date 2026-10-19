@@ -157,3 +157,17 @@ Kod biçimi:
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
+
+---
+
+## 9. Kategori, gün bölümü, zor an (öneri, uygulanmadı — `proposed/20261019140000_parent_features.sql`)
+
+| Alan | Değerler | Etiket (ParentApp) |
+|---|---|---|
+| `saved_templates.category` (ve şablon kategorisi) | `home` / `mind` / `learn` / `health` / `focus` / `relation` (`self` → `health` taşındı) | Ev İşleri / Ruh Sağlığı / Öğrenme ve Eğitim / Sağlık ve Spor / Odak ve Öz Denetim / İlişki Kurma |
+| `tasks.day_part` | `morning` / `noon` / `evening` / `null` | Sabah / Öğlen / Akşam / Herhangi (Anytime) |
+| `abc_events.day_part` | `morning` / `noon` / `evening` / `night` | Sabah / Öğlen / Akşam / Gece |
+| `abc_events.occurred_at` | seçilen gün + gün bölümünün temsil saati: 08:00 / 13:00 / 19:00 / 22:00 (yerel) | — |
+| Gün bölümü saat aralığı (eski kayıtlar ve hatırlatma saatinden öneri) | sabah 05–11, öğle 11–16, akşam 16–21, gece 21–05 | — |
+| `abc_events.group_id` | aynı olay birden çok çocuğu ilgilendiriyorsa ortak kimlik (her çocuğa bir satır) | — |
+| Storage kovası `abc` | ses: `<family_id>/<dosya>.m4a`; uzman yalnız rızalı çocuğun kaydına bağlı sesi okur | — |
