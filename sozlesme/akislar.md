@@ -1,0 +1,178 @@
+# Uygulamalar arası akışlar
+
+Her adımda **hangi uygulamanın** ne yaptığı ve hangi tablo/fonksiyonun kullanıldığı yazılıdır.
+Uygulamalar birbirleriyle doğrudan konuşmaz; her şey ortak Supabase veritabanı üzerinden olur.
+
+Simgeler: **[P]** ParentApp (ebeveyn) · **[O]** Oyun (Pofi Adası, çocuk) · **[K]** ClinicApp (uzman) · **[S]** Sunucu (Supabase fonksiyonu/tetikleyicisi)
+
+Kaynak:
+- `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
+- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
+- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
+- `parent-app/src/store.tsx`, `src/lib/auth.tsx`, `src/screens/ReviewScreen.tsx`, `src/screens/TasksScreen.tsx`, `src/screens/TaskDetailsScreen.tsx`
+- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
+- `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
+
+Son güncelleme: 2026-10-19
+
+---
+
+## 1. Ebeveyn kaydı ve aile
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Ebeveyn e-posta + şifreyle kayıt olur (meta: `nickname`, `name`, `avatar`). | `auth.users` |
+| 2 | [S] | Anonim olmayan yeni kullanıcı için aile + profil oluşturulur. | tetikleyici `handle_new_user` → `families`, `profiles` |
+| 3 | [P] | Ebeveyn çocuk ekler (ad, avatar, cinsiyet, doğum günü) ve isterse yaş bandını seçer. | `children` insert; ardından `set_child_age_band` |
+
+### 1.1 İkinci ebeveyn daveti
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **24 saat** |
+| 2 | [P] (ebeveyn 2) | Kendi hesabıyla Aile › Hesap › "Aileye katıl" bölümüne kodu yazar. | `join_family(code)` |
+| 3 | [S] | Profil yeni aileye taşınır, kod tüketilir. Ebeveyn 2'nin eski ailesinde başka ebeveyn yoksa eski aile **ve tüm verisi silinir** (uygulama önce uyarır). | `profiles.family_id`, `invite_codes.used_at` |
+
+---
+
+## 2. Çocuğu oyuna bağlama (giriş kodu)
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **24 saat**, tek kullanım |
+| 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). | — |
+| 3 | [O] | Çocuk kodu yazar. Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
+| 4 | [O] | Oturum yoksa **anonim oturum** açar. | `POST /auth/v1/signup` (anonim). Supabase'de "Anonymous Sign-Ins" açık olmalı. |
+| 5 | [O → S] | Kodu kullanır. | `redeem_child_code(code)` → `{child_id, family_id, name, avatar, age_band}` |
+| 6 | [S] | `children.user_id = auth.uid()` yapılır, kod tüketilir. Ebeveyn hesabıyla çağrılırsa reddedilir. | `children`, `invite_codes` |
+| 7 | [O] | Yenileme anahtarı ve çocuk bilgisi cihazda güvenli saklanır; sonraki açılışlarda sessizce yenilenir. | `pofi.refresh_token`, `pofi.child` |
+| 8 | [O] | İlk senkrondan **önce** sunucudaki oyun yedeğine bakar: yereldeki kayıt boşsa ya da yedek daha yeniyse yedeği alır (telefon değişimi). | `game_save_get()`; `SaveRestore` |
+| 9 | [P] | Realtime ile çocuğun "bağlı" olduğu görünür (`linked` = `user_id` dolu). | `children` (Realtime) |
+
+Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider; bu akışı kullanmaz.
+
+### 2.1 Bağlantıyı kaldırma
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Aile › çocuk › "Cihaz bağlantısını kaldır". | `unlink_child_device(child_id)` → `children.user_id = null` |
+| 2 | [O] | Sonraki denetimde kendi `children` satırını göremez → "Bağlantın kapatıldı, yeni kod iste". Yerel oyun kaydı **silinmez**. | `GET children?user_id=eq.<uid>` boş → `Revoked`; `child_me` → `42501` |
+| 3 | [P] + [O] | Yeniden bağlanmak için 2. bölümdeki akış yeni kodla tekrarlanır. | |
+
+---
+
+## 3. Görev → çocuk tamamlar → ebeveyn inceler → coin
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Ebeveyn görev oluşturur (hazır şablondan ya da özel): başlık, emoji, açıklama, başlangıç, tekrar (`daily`/`weekly`/`monthly` + günler), bitiş, hatırlatma, **inceleme gereksin mi** (varsayılan evet). | `tasks` insert |
+| 2 | [P] | Görevi bir ya da daha çok çocuğa atar; her atamada zorluk ve coin (varsayılan Kolay 5 / Orta 10 / Zor 20, elle değişir). | `task_assignments` insert |
+| 3 | [O] | Senkronda (zamanlaması Unity katmanında; doğrulanmalı) dünden 7 gün sonrasına kadar görev örneklerini çeker. Tekrarlar sunucuda açılır. Kaydı olmayan örnek `assigned`. | `child_tasks(from, to)` |
+| 4 | [O] | Yeni görev için oyunda rozet + pet'ten bildirim. | `TaskEvent.NewTask` |
+| 5 | [O] | Çocuk "Yaptım" ya da "Yapamam" der. Ekranda hemen görünür; ağ yoksa kuyrukta bekler (aynı görev için yalnız son niyet gönderilir). Gün geçtiyse ("kaçırıldı") işaretlenemez. | yerel `TaskBoard.Outbox` |
+| 6 | [O → S] | Kuyruk gönderilir. | `child_set_status(task_id, date, 'pending' \| 'declined' \| 'assigned')` |
+| 7 | [S] | `requires_review = true` → `pending` yazılır. `requires_review = false` → doğrudan `approved` (**coin hemen**, adım 10'a atla). `declined` → yalnız kayıt. `assigned` → kayıt silinir (geri al). Ebeveyn karar verdiyse değişmez. | `completions` |
+| 8 | [P] | Realtime ile değişiklik gelir; **İnceleme** ekranında `pending` olanlar listelenir; Görevler'de durum etiketi (Onay bekliyor / Tamamlandı / Yapamadı / Reddedildi). | `completions` (Realtime) |
+| 9a | [P] | **Onay:** kayıt `approved` yapılır. | doğrudan `completions` update (`status`, `reviewed_at`, `reviewed_by`) |
+| 9b | [P] | **Ret:** ebeveyn isterse not yazar ("Yatak dağınık kalmış"); kayıt silinmez. | `review_completion(task, child, date, 'rejected', note)` |
+| 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) aynı tutar düşülür. | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
+| 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
+| 12 | [O] | Bakiye sunucudan alınır, artış "kazanılan coin" olarak kutlanır. Aynı gün ilk onayda görev serisi bonusu XP'si verilir (coin değil). | `child_me().balance`; `TaskStreak` |
+| 13 | [P] | Ebeveyn çocuğun bakiyesini görür. | `child_balance(child_id)` |
+
+### 3.1 Coin harcama (oyun içi, ebeveyn adımı yok)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [O] | Çocuk dükkânda eşya seçer; seviye kilidi, sahiplik, pete uyum ve bakiye oyunda denetlenir. Coin yerelde "bekleyen" olarak düşer, eşya hemen envantere girer. | `ShopRules.Buy`, `Wallet.TrySpend` |
+| 2 | [O → S] | Harcama, istemcinin işlem kimliğiyle gönderilir (çevrimdışıysa kuyrukta kalır). | `spend_coins(tx, item_id, qty)` |
+| 3 | [S] | Fiyat `game_items`'tan; aynı işlem iki kez düşülmez; bakiye yetmezse reddedilir. | `coin_ledger` (`spend`) |
+| 4 | [O] | Kabul → kesinleşir. Ret (`not_enough_coins` / `unknown_item`) → eşya envanterden geri alınır, bakiye sunucudakine eşitlenir. | `Wallet.Acknowledge/Reject` |
+| 5 | [P] | Ebeveynin gördüğü bakiye düşer (bir sonraki `child_balance` çağrısında). | |
+
+### 3.2 Oyun kaydı yedeği
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [O] | Her başarılı senkronun sonunda oyun durumu (pet, envanter, XP, seviye, ev …) sunucuya yazılır. | `game_save_put(data)` (≤ 262 144 bayt) |
+| 2 | [P] | Okuma izni var; ParentApp bugün kullanmıyor. | `game_saves` |
+
+---
+
+## 4. Posta (mesajlar)
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Ebeveyn çocuğa yazı, fotoğraf ya da sesli mesaj gönderir. Fotoğraf/ses önce Storage'a yüklenir, sonra mesaj kaydı eklenir (kayıt başarısızsa dosya silinir). | Storage `mail/<family_id>/<id>.<uzantı>`; `messages` insert (`sender='parent'`, `kind` `text`/`image`/`audio`) |
+| 2 | [P] | Diğer ebeveyn Realtime ile anında görür. | `messages` (Realtime) |
+| 3 | [O] | **Henüz yok.** Oyun kodunda `messages` kullanımı bulunamadı. RLS çocuğun kendi mesajlarını okumasına ve `sender='child'` ile göndermesine, Storage'a aile klasörüne yüklemesine izin verir. | — |
+| 4 | [K] | Erişim **yok** (klinik önerisinde de Posta uzmanla paylaşılmaz). | — |
+
+---
+
+## 5. Uzman (klinik) paylaşımı — öneri, uygulanmadı
+
+> **Öneri, uygulanmadı.** SQL: `supabase/proposed/20261019000000_clinic.sql` (`parent-app` dalı `origin/claude/project-thread-vwahaf`).
+> ParentApp tarafı aynı dalda "Aile › Hesap › Uzmanım" (`ClinicShare.tsx`, `lib/clinic.ts`). ClinicApp henüz yazılmadı.
+
+### 5.1 Uzman hesabı ve ekip
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Uzman kayıt olur; meta `account='clinician'`, `name`, `title`, `clinic_name`. | `auth.users` |
+| 2 | [S] | Aile **oluşturulmaz**; yeni klinik (`plan='trial'`, 14 gün, 3 koltuk) + uzman (`role='owner'`). | `handle_new_user` → `clinics`, `clinicians` |
+| 3 | [K] (sahip) | Ekip daveti üretir. | `clinic_create_invite('clinician')` → **7 gün** |
+| 4 | [K] (yeni uzman) | Kayıtta `team_code` verir; koltuk doluysa reddedilir. | `handle_new_user` → `clinicians` (`member`) |
+
+### 5.2 Aile paylaşımı (ebeveynin açık rızası)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **7 gün** |
+| 2 | [K → ebeveyn] | Kodu aileye verir (uygulama dışı). | — |
+| 3 | [P] | Ebeveyn Uzmanım › kodu yazar; **rıza vermeden önce** klinik adı, uzman adı ve unvanını görür. | `clinic_invite_preview(code)` |
+| 4 | [P] | Paylaşılacak çocuğu seçer, "Onaylıyorum, paylaş". | `redeem_clinic_invite(code, child_id)` |
+| 5 | [S] | Rıza kaydı oluşur (`status='active'`, `consent_by`, `consent_at`), kod tüketilir. | `clinic_links` |
+| 6 | [K] | Uzman o çocuğun görevlerini, atamalarını, tamamlamalarını ve ABC kayıtlarını **yalnız okur**. Posta, coin defteri, oyun kaydı görünmez. | RLS `clinic_sees_child` |
+| 7 | [P] | Ebeveyn etkin paylaşımlarını görür. | `family_clinic_links()` |
+
+### 5.3 Rızayı geri alma
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] ya da [K] | "Paylaşımı durdur". | `revoke_clinic_link(link_id)` → `status='revoked'`, `revoked_at`, `revoked_by` |
+| 2 | [S] | Uzmanın o çocuğa erişimi **hemen** biter (politikalar yalnız `active` bağlantıya bakar). Uzmanın kendi notları/hedefleri klinikte kalır. | — |
+| 3 | [P] | Paylaşımı biten bağlantının bekleyen önerileri ParentApp'te gösterilmez. | `lib/clinic.ts` süzgeci |
+
+### 5.4 Uzmanın görev önerisi
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Uzman rızalı bağlantı için görev önerir (başlık, emoji, beceri, zorluk, tekrarlı mı, not). `pending` iken geri çekebilir. | `clinic_task_suggestions` insert (`status='pending'`) |
+| 2 | [P] | Görevler ekranında bekleyen öneri bildirimi; Uzmanım'da kabul/ret. | `clinic_task_suggestions` select (`status='pending'`) |
+| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur: bugünden başlar, tekrarlıysa `daily`, inceleme gerekir, coin zorluğun varsayılanı (5/10/20). | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert |
+| 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
+| 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
+
+Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanmalı; bkz. `durumlar.md` K3).
+
+### 5.5 Zor an (ABC) kaydı
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Ebeveyn zor bir anı kaydeder: Öncesi, Davranış (zorunlu), Sonucu, şiddet 1–5. | `abc_events` insert |
+| 2 | [K] | Rızalı bağlantısı olan uzman okur. | `abc_events` (RLS `clinic_sees_child`) |
+
+### 5.6 Uzmanın kendi çalışma alanı (aile görmez)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Not yazar. | `clinic_notes` |
+| 2 | [K] | Hedef (GAS) tanımlar, haftalık −2 … +2 puan verir. | `clinic_goals`, `goal_ratings` |
+
+### 5.7 Abonelik (öneri)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [S] (service role) | Mağaza/web ödemesi aile aboneliğini yazar. | `family_subscriptions` (`free`/`premium`) |
+| 2 | [S] | Aile, kendi aboneliği **ya da** etkin (deneme süresinde ya da ücretli) bir kliniğe bağlı çocuğu varsa premium sayılır. | `family_premium()`, `clinic_active()` |
+| 3 | [S] (service role) | Klinik planı ödeme entegrasyonuyla yazılır. | `clinics.plan`, `seat_limit` |
+
+---
+
+## 6. Hesap silme
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Ebeveyn Storage dosyalarını siler, sonra hesabı siler. | Storage `mail`; `delete_account()` |
+| 2 | [S] | Ailede başka ebeveyn yoksa aile ve bağlı her şey (çocuklar, görevler, tamamlamalar, mesajlar, coin defteri, oyun yedekleri) silinir. | `families` → cascade |
+| 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür; yerel kayıt kalır. | `Revoked` |

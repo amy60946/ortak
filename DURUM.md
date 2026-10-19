@@ -5,8 +5,9 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 ## Açık işler
 
 - [ ] Klinik SQL'i (`supabase/proposed/20261019000000_clinic.sql`) gözden geçirilip kullanıcı onayıyla Supabase'e uygulanacak; sonra `migrations/`'a taşınacak.
-- [ ] Yaş bantları tutarsız: oyun kodu A 6–9 / B 10–12 (+ C 13–15), omurga analizi 6–8 / 9–12 öneriyor. Kullanıcıyla karar.
+- [ ] Yaş bantları: oyun kodu, SQL `suggest_age_band` ve ParentApp aynı (A 6–9 / B 10–12 / C 13–15); omurga analizi 6–8 / 9–12 öneriyor, Apple Kids bantları 6–8 / 9–11. Kullanıcıyla karar.
 - [ ] Omurga analizi Ö1–Ö7 (Güneş Taşı, XP/beceri yıldızı, bakım, hikâye, ilk gün, posta kutusu, gerçek ödül dükkânı) onaylanırsa önce burada şema/kural, sonra uygulamalar.
+- [ ] Sözleşme taramasında bulunan tutarsızlıklar (ayrıntı `sozlesme/durumlar.md`, `ekonomi.md`): `assigned`/"kaçırıldı" yalnız istemcide; ParentApp onay (doğrudan güncelleme) ve ret (`review_completion`) farklı yollardan; geçmiş tarih kuralı oyun/sunucu farklı (saat dilimi dahil); görev ödülüne sunucuda üst sınır yok (oyun sahte arka ucu 1–50); `spend_coins` `min_level` denetlemiyor, fiyat 0 kuralı farklı; onay geri alınınca o anki ödül düşülüyor; sunucuda kod deneme sınırı yok; klinik önerisinde `decline_reason` RPC'den yazılamıyor, kabul edilen öneri ↔ görev bağı yok. Her biri önce burada karara bağlanacak.
 - [ ] "Quests" ve "Güneş Taşı" için kalıcı Türkçe adlar.
 - [ ] ClinicApp teknoloji kararı (öneri: Expo + web).
 
