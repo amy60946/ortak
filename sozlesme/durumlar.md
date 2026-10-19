@@ -113,6 +113,21 @@ Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omur
 
 ---
 
+## 5A. Güneş Taşı defteri nedeni (`sun_stone_ledger.reason`, öneri `20261019030000_sun_stones`)
+
+| Değer | Anlam | Yazan | İşaret | `ref` biçimi |
+|---|---|---|---|---|
+| `task` | Ebeveyn onayı | Tetikleyici `completions_sun_stone` | + (1/2/3) | `<completion_id>:<epoch>` |
+| `task_undo` | Onay geri alındı | Tetikleyici | − (o tamamlamanın net taşı) | `<completion_id>:<epoch>` |
+| `adjust` | Elle düzeltme (yönetici) | SQL | ± | serbest |
+
+## 5B. Kalıcı adlar (karar: 19 Ekim 2026, kullanıcı)
+
+| Kavram | Ad | Not |
+|---|---|---|
+| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
+| Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
+
 ## 6. Diğer sabit değerler (uygulanmış)
 
 | Alan | Değerler |

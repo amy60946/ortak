@@ -135,6 +135,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 ### 5.2 XP kaynakları (koddaki sayılar)
 | Kaynak | XP | Sınıra sayılır mı |
 |---|---|---|
+| **Gerçek görev onayı** (Ö2, `RealTaskRewards.Xp`; karar 19 Ekim) | Zorluğa göre (`task_assignments.difficulty`): kolay **20**, orta **35**, zor **50**. Her onaylı görev örneği bir kez. | Hayır |
 | Gerçek görev serisi (`TaskStreak.Bonus`): art arda günlerde en az bir **onaylı** görev | 1. gün 10, her gün +5, 7. günden sonra **40**'ta sabit (10, 15, 20, 25, 30, 35, 40). Aynı gün ikinci onay bonus vermez; seri kırılırsa 1'den başlar, ceza yok. | Hayır |
 | Mini oyun (`MiniGameXp.For`) | `min(40, 5 + skor × puanBaşı)`; hindistan cevizi puanBaşı 1, mağara 2 | Evet |
 | "Pet'e yardım" mini oyunu | `max(10, 25 − 2 × deneme)` | Evet |
@@ -150,6 +151,29 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (`tasks_approved` sayacı) bağlıdır; yani ParentApp onayı oyunda XP'yi de dolaylı etkiler.
 
 ---
+
+## 5A. Güneş Taşı (Ö1; öneri `20261019030000_sun_stones`, karar 19 Ekim 2026)
+
+- **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
+- Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
+- **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
+- ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
+
+## 5B. Beceriler (Ö2; karar 19 Ekim 2026)
+
+Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun ve raporlar aşağıdaki **tek sözlüğe** eşler (`SkillCatalog`); eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+
+| Anahtar | Ad (Türkçe) | Eşlenen etiketler (bugünkü ParentApp şablonları dahil) |
+|---|---|---|
+| `focus` | Odak | Odak, Odaklanma |
+| `kindness` | Nezaket | Nezaket, Empati, Minnettarlık |
+| `responsibility` | Sorumluluk | Sorumluluk, Takım Çalışması |
+| `independence` | Bağımsızlık | Bağımsızlık |
+| `calm` | Sakinlik | Sakinlik, Sakinleşme |
+| `self_care` | Öz Bakım | Öz Bakım |
+
+- Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
+- Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 

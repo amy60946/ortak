@@ -4,6 +4,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] Güneş Taşı önerisi (`supabase/proposed/20261019030000_sun_stones.sql`) kullanıcı onayıyla Supabase'e uygulanacak (sunucu kuralları önerisinden sonra).
 - [ ] Sunucu kuralları önerisi (`supabase/proposed/20261019020000_server_rules.sql`) kullanıcı onayıyla Supabase'e uygulanacak. ParentApp: görev ödülü girişine 50 sınırı.
 - [ ] Klinik SQL'i (`supabase/proposed/20261019000000_clinic.sql`) gözden geçirilip kullanıcı onayıyla Supabase'e uygulanacak; sonra `migrations/`'a taşınacak.
 - [ ] Yaş bandı önerisi (`supabase/proposed/20261019010000_age_bands.sql`, A 6–8 / B 9–12 / C 13–15) kullanıcı onayıyla Supabase'e uygulanacak; sonra `migrations/`'a taşınacak. ParentApp `ageBands.ts` (etiket + `suggestAgeBand`) aynı anda güncellenecek.
@@ -13,6 +14,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · ortak + Oyun · Omurga Ö1 + Ö2 + Ö5 onaylandı (kullanıcı). Şema: `sun_stone_ledger` (taş yalnız ebeveyn onayıyla: kolay 1 / orta 2 / zor 3), `child_me.sun_stones`, `child_tasks` + `skill`/`difficulty`. Beceri sözlüğü (6 beceri + ParentApp etiket eşlemesi) ve gerçek görev XP'si (20/35/50) `ekonomi.md` 5A/5B; kalıcı adlar **Ev Görevleri** (eski "Quests") ve **Güneş Taşı** (`durumlar.md` 5B). Öneri + `test_sun_stones.sql` (geçti). · ParentApp: taş toplamını gösterebilir; şablon becerilerini altı ada çekmek (öneri). Klinik: beceri dili raporlarda aynı. Kullanıcı: SQL'i uygulamak.
 - 2026-10-19 · ortak + Oyun · Oyun/sunucu farkları kapatıldı (kullanıcı onayı): ödül ≤ 50, sunucu seviye kilidi (`level_locked`, `game_levels` + kayıttaki XP), çocuk yalnız bugün/dünü işaretler, kod deneme sınırı (15 dk'da 10 → 429), onay geri alınınca verilen tutar düşer, fiyat > 0. Öneri + `test_server_rules.sql` (geçti), sözleşme güncellendi. Oyun: 429 → bekleme, adet 1–20, harcamadan önce kayıt yedeği. · ParentApp: ödül girişine 50 sınırı; hatalı kod yanıtı artık 400 gövdesi `{error}` (ParentApp redeem kullanmıyor). Kullanıcı: SQL'i uygulamak.
 - 2026-10-19 · Oyun · Araştırma belgelerinin (Joon iş modeli kanvası, oyun omurgası analizi) takibi Oyun penceresine geçti: güncelleme ve Claude'a gönderilen yorumlar bu pencereyi uyandırır. Omurga belgesinin "Karar soruları"na yaş kararı işlendi. · Diğer pencereler belgeyi okuyabilir; yorum cevabı Oyun penceresinden.
 - 2026-10-19 · Oyun + ortak · Yaş bandı kararı (kullanıcı): **A 6–8 / B 9–12 / C 13–15**. Bant yalnız oyun zorluğu/arayüzü; raporlar gerçek yaşı (`birthday`) kullanır. Mağaza: Kids Category dışı, 4+, Kids kurallarına gönüllü uyum; yaşı ebeveyn ParentApp'te girer. SQL önerisi + test (`test_age_bands.sql`, geçti), `sozlesme/durumlar.md` §4 güncellendi. · ParentApp penceresi: `ageBands.ts` etiketleri ve `suggestAgeBand` (< 9 → A). Kullanıcı: öneri SQL'ini Supabase'e uygulamak. Oyun: yorum/deneme metinleri güncellendi (game-app).
