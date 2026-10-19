@@ -74,13 +74,13 @@ Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
 - Oyun girişi (`ChildCode.Normalize`): küçük harf büyütülür, harf/rakam dışı karakterler atılır, uzunluk tam 6 olmalı. ParentApp: `trim().toUpperCase()`.
 - Oyunun deneme kodları `A1A1A1`, `B2B2B2`, `C3C3C3`: `ServerConfig.DemoCodes = true` iken `RoutedAuthService` bunları sahte arka uca yönlendirir (sunucuya gitmez). `A1A1A1` sunucu alfabesinde olmayan `1` içerdiği için gerçek bir kodla çakışamaz; `B2B2B2` ve `C3C3C3` ise sunucu alfabesine uyar, yani çok düşük olasılıkla gerçek bir kodla aynı olabilir ve o durumda oyun gerçek kodu sahte arka uca gönderir. Mağaza sürümünde `DemoCodes` kapatılmalı (doğrulanmalı).
-- Oyunda hatalı kod beklemesi (istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucu** (öneri `20261019020000_server_rules`): oturum başına 15 dakikada 10 hatalı deneme → HTTP 429 `{"error":"too_many_attempts"}`; hatalı kod → HTTP 400 `{"error":"invalid_code"}` (artık hata fırlatılmaz ki deneme sayılabilsin). Oyun 429'u `Throttled` sayar.
+- Oyunda hatalı kod beklemesi (istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucu** (`20261019020000_server_rules`, uygulandı 19 Ekim): oturum başına 15 dakikada 10 hatalı deneme → HTTP 429 `{"error":"too_many_attempts"}`; hatalı kod → HTTP 400 `{"error":"invalid_code"}` (artık hata fırlatılmaz ki deneme sayılabilsin). Oyun 429'u `Throttled` sayar.
 
 ---
 
 ## 4. Yaş bandı (`children.age_band`)
 
-Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omurgası analizinin önerisi). Öneri SQL'i: `supabase/proposed/20261019010000_age_bands.sql` (uygulanana kadar canlıda eski kural geçerli: A 6–9 / B 10–12).
+Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omurgası analizinin önerisi). SQL: `supabase/migrations/20261019010000_age_bands.sql` (uygulandı 19 Ekim 2026).
 
 | Değer | Oyun (`AgeBand.cs`) | ParentApp etiketi (`ageBands.ts`) | SQL önerisi (`suggest_age_band`) |
 |---|---|---|---|
@@ -109,11 +109,11 @@ Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omur
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
 
-`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (öneri `20261019020000_server_rules`). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
+`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
 
 ---
 
-## 5A. Güneş Taşı defteri nedeni (`sun_stone_ledger.reason`, öneri `20261019030000_sun_stones`)
+## 5A. Güneş Taşı defteri nedeni (`sun_stone_ledger.reason`, `20261019030000_sun_stones` (uygulandı))
 
 | Değer | Anlam | Yazan | İşaret | `ref` biçimi |
 |---|---|---|---|---|

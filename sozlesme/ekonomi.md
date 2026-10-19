@@ -37,7 +37,7 @@ Son güncelleme: 2026-10-19
 | `medium` (Orta) | **10** | Evet |
 | `hard` (Zor) | **20** | Evet |
 
-- SQL sınırı: `coins >= 0` ve (öneri `20261019020000_server_rules`) `coins <= 50`. ParentApp girişi yalnız rakam kabul eder, `Math.max(0, …)`; 50 sınırı ParentApp'e de eklenmeli.
+- SQL sınırı: `coins >= 0` ve (`20261019020000_server_rules`, uygulandı 19 Ekim) `coins <= 50`. ParentApp girişi yalnız rakam kabul eder, `Math.max(0, …)`; 50 sınırı ParentApp'e de eklenmeli.
 - Coin **görev başına değil, atama (görev × çocuk) başına** tutulur; aynı görev iki çocuğa farklı ödülle atanabilir.
 - `coins = 0` ise onayda deftere satır yazılmaz.
 - Sahte arka uç (yalnız oyun önizlemesi, `MockBackend.ParentAssign`) ödülü **1–50** aralığına sıkıştırır; demo görevler 5 / 10 / 10 / 5 / 20 coin (`DemoParent.Samples`). Gerçek sunucuda böyle bir sınır yoktur (bkz. 8. bölüm, E1).
@@ -50,7 +50,7 @@ Son güncelleme: 2026-10-19
 | `approved` kayıt silinir | `−coins`, `reason='task_undo'` |
 | Diğer geçişler (`pending`↔`declined` vb.) | yazılmaz |
 
-- Onayda tutar **o anki** `task_assignments.coins` değeridir. Geri almada (öneri `20261019020000_server_rules`) o tamamlama için defterde kalan net tutar düşülür; ödül sonradan değişse de doğru tutar geri alınır.
+- Onayda tutar **o anki** `task_assignments.coins` değeridir. Geri almada (`20261019020000_server_rules`, uygulandı 19 Ekim) o tamamlama için defterde kalan net tutar düşülür; ödül sonradan değişse de doğru tutar geri alınır.
 - `ref = '<completion_id>:<epoch>'`; `unique (child_id, reason, ref)`.
 - İnceleme gerektirmeyen görevde (`requires_review = false`) çocuğun "Yaptım"ı doğrudan `approved` yazılır → coin hemen gelir.
 
@@ -71,7 +71,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (öneri `20261019020000_server_rules`; seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -152,7 +152,7 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 
 ---
 
-## 5A. Güneş Taşı (Ö1; öneri `20261019030000_sun_stones`, karar 19 Ekim 2026)
+## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
 
 - **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
