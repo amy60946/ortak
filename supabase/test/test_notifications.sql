@@ -61,7 +61,8 @@ select tst.check(tst.n('00000000-0000-0000-0000-0000000000a2', 'parent_joined') 
 -- push anahtarı (Anne)
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select public.register_push_token('ExponentPushToken[anne-telefon]', 'parent', 'ios');
-select tst.check((select count(*) from public.push_tokens) = 1, 'kendi push anahtarını görür');
+select public.register_push_token('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4', 'parent', 'ios');
+select tst.check((select count(*) from public.push_tokens) = 2, 'kendi push anahtarlarını görür');
 select tst.fails($$insert into public.push_tokens (token, user_id, app) values ('ExponentPushToken[x]', auth.uid(), 'parent')$$, 'tabloya doğrudan yazılamaz');
 
 -- çocuk cihazı bağlanır → iki ebeveyne
@@ -70,6 +71,7 @@ select tst.as_user('00000000-0000-0000-0000-0000000000c1');
 select public.redeem_child_code((select v from tst.kv where k = 'ccode'));
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a1', 'device_linked') = 1 and tst.n('00000000-0000-0000-0000-0000000000a2', 'device_linked') = 1, 'cihaz bağlanınca iki ebeveyne');
 select tst.check(exists (select 1 from tst.push_calls where body -> 0 ->> 'to' = 'ExponentPushToken[anne-telefon]' and body -> 0 ->> 'title' like 'Nazlı oyuna%'), 'Anne''ye push gönderildi (Expo)');
+select tst.check(exists (select 1 from tst.push_calls where url like '%/functions/v1/push-apns' and (body ->> 'notification_id') is not null), 'Apple anahtarı için push-apns çağrıldı');
 
 -- görev atanır → çocuğa; düzenleme (upsert) yeni bildirim üretmez
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
@@ -171,6 +173,7 @@ select tst.fails($$update public.notifications set title = 'değişti'$$, 'başl
 delete from public.notifications where kind = 'parent_joined';
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a1', 'parent_joined') = 0, 'kendi bildirimini siler');
 select public.unregister_push_token('ExponentPushToken[anne-telefon]');
+select public.unregister_push_token('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
 select tst.check((select count(*) from public.push_tokens) = 0, 'push anahtarı kaldırılır');
 
 reset role;

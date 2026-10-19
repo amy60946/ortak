@@ -202,8 +202,8 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
-- **Telefona push — ParentApp:** cihaz `register_push_token(token, 'parent', 'ios')` ile Expo anahtarını kaydeder; sunucu her yeni bildirimde Expo Push API'ye gönderir (pg_net). Çıkışta `unregister_push_token`. Expo hesabında iOS push anahtarı (APNs) tanımlı olmalı.
-- **Pofi Adası (Unity):** Expo anahtarı yok. Uygulama içi liste + Realtime/yoklama ile; açıkken yerel bildirim. Gerçek push (APNs) için sunucu tarafı ayrıca gerekir (karar bekliyor). `push_tokens` tablosu `app='child'` anahtarlarını saklar ama sunucu yalnız `ExponentPushToken[...]` biçimine gönderir.
+- **Telefona push (iOS, ParentApp ve Pofi Adası):** cihaz Apple (APNs) cihaz anahtarını `register_push_token(token, 'parent'|'child', 'ios')` ile kaydeder. Her yeni bildirimde tetikleyici pg_net ile Edge Function `push-apns`'e yalnız bildirim kimliğini yollar; fonksiyon .p8 anahtarıyla Apple'a gönderir (konu: parent → `com.parentapp.ios`, child → `com.gameapp.ios`), geçersiz anahtarı siler, bildirimi `apns_sent_at` ile işaretler. Çıkışta `unregister_push_token`. Kod: `supabase/functions/push-apns/index.ts`; secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (Supabase'de). Expo anahtarı (`ExponentPushToken[...]`) gelirse Expo Push API'ye gider (yedek yol).
+- **Pofi Adası (Unity):** uygulama içi liste + Realtime/yoklama; push için iOS cihaz anahtarını `app='child'` ile kaydetmesi yeterli.
 - **ClinicApp (web):** uygulama içi liste + Realtime; web push sonra.
 - `data` alanı: ilgili kimlikler (`task_id`, `child_id`, `date`, `message_id`, `suggestion_id`, `links` …) + push'ta `kind`, `notification_id`. Uygulama dokununca ekranı buna göre açar.
 

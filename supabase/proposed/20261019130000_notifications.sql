@@ -3,8 +3,9 @@
 --   notifications : kime (user_id), hangi uygulama (app), tür (kind), başlık/metin, veri (data), okundu (read_at).
 --                   Satırları YALNIZ sunucu tetikleyicileri yazar; kullanıcı kendi satırını okur, okundu işaretler, siler.
 --                   Realtime yayınında: uygulama açıkken anında gelir.
---   push_tokens   : cihazın anlık bildirim (push) anahtarı. Expo anahtarlarına (ParentApp) sunucu Expo Push API ile
---                   gönderir (pg_net). Diğer anahtarlar (Unity APNs, web) saklanır; gönderimleri ilgili uygulamanın işi.
+--   push_tokens   : cihazın anlık bildirim (push) anahtarı. Apple (APNs) cihaz anahtarlarına Edge Function `push-apns`
+--                   gönderir (ortak/supabase/functions/push-apns; .p8 anahtarı Supabase secret'ında). pg_net yalnız bildirim
+--                   kimliğini o fonksiyona iletir. Expo anahtarları (ExponentPushToken[...]) gelirse Expo Push API'ye gider.
 --   Kural: işlemi yapan kişiye bildirim gitmez (auth.uid() = alıcı ise atlanır).
 --   Klinik sınırı: uzmana giden bildirimlerde yalnız rızalı (active) paylaşım; posta ve coin uzmana bildirilmez.
 -- Tekrar çalıştırılabilir.
@@ -31,8 +32,10 @@ create table if not exists public.notifications (
   family_id   uuid references public.families (id) on delete cascade,
   child_id    uuid references public.children (id) on delete cascade,
   created_at  timestamptz not null default now(),
-  read_at     timestamptz
+  read_at     timestamptz,
+  apns_sent_at timestamptz   -- push-apns gönderdi (aynı bildirim iki kez gönderilmez)
 );
+alter table public.notifications add column if not exists apns_sent_at timestamptz;
 create index if not exists notifications_user_idx on public.notifications (user_id, created_at desc);
 alter table public.notifications enable row level security;
 drop policy if exists "bildirim: kendi okur" on public.notifications;
@@ -340,7 +343,8 @@ create trigger clinicians_notify_join after insert on public.clinicians
   for each row execute function public.clinicians_notify_join();
 
 -- ---------------------------------------------------------------------
--- Anlık bildirim (push): Expo anahtarlarına Expo Push API (pg_net, arka planda; hata işlemi bozmaz)
+-- Anlık bildirim (push), arka planda (pg_net, işlem bittikten sonra; hata işlemi bozmaz):
+--   Apple cihaz anahtarı varsa → Edge Function push-apns'e yalnız bildirim kimliği; Expo anahtarı varsa → Expo Push API.
 -- ---------------------------------------------------------------------
 create or replace function public.notifications_push() returns trigger
 language plpgsql security definer set search_path = '' as $$
@@ -353,6 +357,15 @@ begin
     return null;
   end if;
   select count(*) into unread from public.notifications where user_id = new.user_id and read_at is null;
+  if exists (select 1 from public.push_tokens where user_id = new.user_id and platform = 'ios' and token not like 'ExponentPushToken[%') then
+    begin
+      execute 'select net.http_post(url := $1, body := $2, headers := $3)'
+        using 'https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/push-apns',
+              jsonb_build_object('notification_id', new.id), '{"Content-Type": "application/json"}'::jsonb;
+    exception when others then
+      raise warning 'push-apns çağrılamadı: %', sqlerrm;
+    end;
+  end if;
   select jsonb_agg(jsonb_build_object('to', token, 'title', new.title, 'body', new.body, 'sound', 'default', 'badge', unread,
                                       'data', new.data || jsonb_build_object('kind', new.kind, 'notification_id', new.id)))
     into msgs
