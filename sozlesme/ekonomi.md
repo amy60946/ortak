@@ -215,4 +215,4 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
 | E6 | Onay sonrası ödül değişimi | Geri alma, o anki `task_assignments.coins` kadar düşer (bkz. 2.2). |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
-| E8 | Klinik paylaşımı | Klinik önerisine göre coin defteri uzmanla **paylaşılmaz** (öneri, uygulanmadı). |
+| E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |

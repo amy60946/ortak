@@ -6,7 +6,7 @@ yalnız `gender` Türkçe). Yeni bir değer eklenecekse önce bu dosya ve SQL g�
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
 - `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
-- `parent-app` dalı `origin/claude/project-thread-vwahaf`: `supabase/proposed/20261019000000_clinic.sql` (**öneri, uygulanmadı**), `src/lib/clinic.ts`
+- `ortak/supabase/migrations/20261019000000_clinic.sql` (uygulandı); `parent-app`, `src/lib/clinic.ts`
 - `game-app/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
 - `parent-app/src/store.tsx`, `src/theme.ts`, `src/data/ageBands.ts`, `src/data/templates.ts`, `src/screens/TasksScreen.tsx`, `src/screens/ReviewScreen.tsx`
 - `game-app/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
@@ -67,8 +67,8 @@ Ek kurallar:
 |---|---|---|---|---|
 | `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
 | `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | **öneri, uygulanmadı** |
-| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | **öneri, uygulanmadı** |
+| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | uygulandı |
+| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
@@ -94,8 +94,8 @@ Kod biçimi:
 | Kaynak | Bantlar |
 |---|---|
 | Oyun kodu, SQL, ParentApp, `M4_SUNUCU_ONERISI.md` | **A 6–9 / B 10–12 / C 13–15** |
-| "Pofi Adası oyun omurgası analizi" araştırma belgesi (Claude Docs) | **6–8 / 9–12** öneriyor (görevi veren oturumun aktarımı; belge bu çalışmada okunmadı — doğrulanmalı) |
-| `clinic-app/CLAUDE.md` | Pofi Adası kitlesi "Çocuk (6–12, oyun)" yazıyor → C bandı (13–15) ile çelişiyor |
+| "GameApp oyun omurgası analizi" araştırma belgesi (Claude Docs) | **6–8 / 9–12** öneriyor (görevi veren oturumun aktarımı; belge bu çalışmada okunmadı — doğrulanmalı) |
+| `clinic-app/CLAUDE.md` | GameApp kitlesi "Çocuk (6–12, oyun)" yazıyor → C bandı (13–15) ile çelişiyor |
 | `game-app/docs/PLAN.md` §9 | Apple Kids Category bantları "5 ve altı / 6–8 / 9–11" (mağaza notu; oyun bantlarından farklı) |
 
 Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. Bant sınırı değişirse aynı anda değişmesi gerekenler: `suggest_age_band` (SQL), `ageBands.ts` (etiket + `suggestAgeBand`), oyun yorumları/varsayılanları.
@@ -129,7 +129,7 @@ Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. 
 
 ---
 
-## 7. Öneri — uygulanmadı (ClinicApp)
+## 7. Klinik (ClinicApp) — uygulandı
 
 | Alan | Değerler | Anlamı |
 |---|---|---|
@@ -148,6 +148,6 @@ Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. 
 ### 7.1 Öneriyle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
 |---|---|---|
-| K1 | ~~`decline_reason` yazılamıyor~~ **çözüldü (öneride)** | Ayrı RPC `child_set_decline_reason(p_task_id, p_date, p_reason)`; `child_set_status` imzası değişmedi (eski oyun sürümü bozulmaz). Oyunun "Yapamam"dan sonra bunu çağırması gerekir; çağırmazsa neden null kalır. |
-| K2 | ~~`child_done_at` anlamı~~ **çözüldü (öneride)**: tetikleyici artık yalnız çocuğun işaretinde doldurur | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
-| K3 | ~~Kabul edilen öneri ↔ görev bağı~~ **çözüldü (öneride)**: `clinic_task_suggestions.task_id` | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
+| K1 | ~~`decline_reason` yazılamıyor~~ **çözüldü** | Ayrı RPC `child_set_decline_reason(p_task_id, p_date, p_reason)`; `child_set_status` imzası değişmedi (eski oyun sürümü bozulmaz). Oyunun "Yapamam"dan sonra bunu çağırması gerekir; çağırmazsa neden null kalır. |
+| K2 | ~~`child_done_at` anlamı~~ **çözüldü**: tetikleyici artık yalnız çocuğun işaretinde doldurur | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
+| K3 | ~~Kabul edilen öneri ↔ görev bağı~~ **çözüldü**: `clinic_task_suggestions.task_id` | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
