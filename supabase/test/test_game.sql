@@ -90,7 +90,7 @@ select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-00000
 select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date, 'approved')$$, 'çocuk kendini onaylayamaz');
 -- çocuk defteri doğrudan yazamaz
 select tst.fails($$insert into public.coin_ledger (family_id, child_id, amount, reason, ref) values (public.my_any_family_id(), public.my_child_id(), 999, 'adjust', 'hile')$$, 'çocuk coin ekleyemez');
-update public.children set age_band = 'C' where user_id = auth.uid();   -- RLS: çocuk kendi kaydını güncelleyemez → 0 satır
+update public.children set age_band = 'A' where user_id = auth.uid();   -- RLS: çocuk kendi kaydını güncelleyemez → 0 satır
 select tst.check((select age_band from public.children where user_id = auth.uid()) is null, 'çocuk yaş bandını değiştiremez');
 update public.completions set status = 'approved' where child_id = public.my_child_id();   -- RLS: güncelleme politikası yok → 0 satır
 select tst.check((select count(*) from public.completions where status = 'approved' and task_id = '00000000-0000-0000-0000-000000007a51') = 0, 'RLS: güncelleme etkisiz');
@@ -109,11 +109,11 @@ select public.review_completion('00000000-0000-0000-0000-000000007a51', '0000000
 select tst.check(public.child_balance('00000000-0000-0000-0000-00000000c0de') = 15, 'aynı onay iki kez coin vermez');
 select public.review_completion('00000000-0000-0000-0000-000000007a51', '00000000-0000-0000-0000-00000000c0de', current_date - 2, 'rejected', 'Yatak dağınık kalmış');
 select tst.check(public.child_balance('00000000-0000-0000-0000-00000000c0de') = 15, 'ret coin vermez');
-select public.set_child_age_band('00000000-0000-0000-0000-00000000c0de', 'C');
+select public.set_child_age_band('00000000-0000-0000-0000-00000000c0de', 'A');
 
 -- ---------------------------------------------------------------- çocuk: sonuç ve harcama
 select tst.as_user('00000000-0000-0000-0000-0000000000c1');
-select tst.check((public.child_me() ->> 'age_band') = 'C', 'ebeveynin seçtiği bant geçerli');
+select tst.check((public.child_me() ->> 'age_band') = 'A', 'ebeveynin seçtiği bant geçerli');
 select tst.check((select status from public.child_tasks(current_date - 2, current_date - 2) where task_id = '00000000-0000-0000-0000-000000007a51') = 'rejected', 'ret çocuğa görünür');
 select tst.check((select parent_note from public.child_tasks(current_date - 2, current_date - 2) where task_id = '00000000-0000-0000-0000-000000007a51') = 'Yatak dağınık kalmış', 'ret notu');
 select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-000000007a51', current_date, 'assigned')$$, 'onaylanan görev geri alınamaz');

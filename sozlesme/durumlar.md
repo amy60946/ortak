@@ -40,7 +40,7 @@ Ek kurallar:
 | # | Konu | Ayrıntı |
 |---|---|---|
 | D1 | `assigned` hiç saklanmaz | `'assigned'` yalnız RPC girdisi/çıktısıdır; `completions` kısıtında yoktur. ClinicApp raporlarında "atanmış" = **kayıt yok** olarak hesaplanmalı. |
-| D2 | Onay iki farklı yolla | ParentApp onayı **doğrudan** `completions` güncellemesiyle (`status='approved'`, `reviewed_at`, `reviewed_by`; `parent_note` yazılmaz), reddi `review_completion` RPC'siyle yapar. Doğrudan güncelleme yalnız var olan satırı değiştirir. İkisi de tetikleyiciyi çalıştırır. |
+| D2 | ~~Onay iki farklı yolla~~ | **Karar (19 Ekim):** ParentApp onayı da reddi de `review_completion` ile yapar (ParentApp güncellendi; sunucu değişikliği gerekmez). |
 | D3 | Tarih sınırı farklı | Oyun "kaçırıldı" görevi (geçmiş gün) işaretletmez; sunucu `child_set_status` yalnız **gelecek** günü (`p_date > current_date + 1`) reddeder, geçmiş günlere sınır koymaz. `current_date` sunucu saat dilimine göredir (doğrulanmalı: Supabase varsayılanı UTC), oyun yerel tarihi kullanır. |
 | D4 | ParentApp `toggleCompletion` | `store.tsx`'te ebeveynin kendi adına `pending`/`approved` yazdığı bir fonksiyon var ama hiçbir ekranda kullanılmıyor (Görevler'deki tamamla yuvarlağı kaldırıldı, `DURUM.md`). |
 | D5 | Ret sonrası coin | `rejected` coin vermez; daha önce `approved` olan bir kayıt `rejected`'a çekilirse tetikleyici coini geri düşer (`task_undo`). |
@@ -80,25 +80,19 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-| Değer | Oyun (`AgeBand.cs`) | ParentApp etiketi (`ageBands.ts`) | SQL önerisi (`suggest_age_band`) |
+**Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL önerisi `supabase/proposed/20261019110000_age_bands.sql` (**uygulanmadı**).
+
+| Değer | Yaş | ParentApp etiketi (`ageBands.ts`) | SQL `suggest_age_band` |
 |---|---|---|---|
-| `A` | A | "6–9 yaş" | doğum günü yok **ya da** yaş < 10 |
-| `B` | B | "10–12 yaş" | 10 ≤ yaş < 13 |
-| `C` | C | "13–15 yaş" | yaş ≥ 13 |
+| `A` | 6–8 | "6–8 yaş" | doğum günü yok **ya da** yaş < 9 |
+| `B` | 9–12 | "9–12 yaş" | yaş ≥ 9 (13+ da B) |
 | `null` | — | — | sunucu yanıtlarında `coalesce(age_band, suggest_age_band(birthday))` ile dolu gelir |
 
-- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). ParentApp `suggestAgeBand` sunucuyla aynı kuralı kullanır.
+- `C` (eski 13–15) **kaldırıldı**: kısıt `age_band in ('A', 'B')`; var olan `C` kayıtları göçle `B` yapılır; `set_child_age_band` `C`'yi reddeder.
+- Öneri uygulanana kadar canlıda eski kural geçerli (A <10, B 10–12, C 13+). ParentApp yalnız A/B yazar (eski kuralda da geçerli) ve sunucudan gelen `C`'yi `B` gösterir.
+- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
-
-### 4.1 Açık tutarsızlık (karar bekliyor)
-| Kaynak | Bantlar |
-|---|---|
-| Oyun kodu, SQL, ParentApp, `M4_SUNUCU_ONERISI.md` | **A 6–9 / B 10–12 / C 13–15** |
-| "Pofi Adası oyun omurgası analizi" araştırma belgesi (Claude Docs) | **6–8 / 9–12** öneriyor (görevi veren oturumun aktarımı; belge bu çalışmada okunmadı — doğrulanmalı) |
-| `clinic-app/CLAUDE.md` | Pofi Adası kitlesi "Çocuk (6–12, oyun)" yazıyor → C bandı (13–15) ile çelişiyor |
-| `pofi-adasi/docs/PLAN.md` §9 | Apple Kids Category bantları "5 ve altı / 6–8 / 9–11" (mağaza notu; oyun bantlarından farklı) |
-
-Karar verilene kadar sözleşme değeri: **A/B/C = 6–9 / 10–12 / 13–15**. Bant sınırı değişirse aynı anda değişmesi gerekenler: `suggest_age_band` (SQL), `ageBands.ts` (etiket + `suggestAgeBand`), oyun yorumları/varsayılanları.
+- Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`pofi-adasi/docs/PLAN.md` §9).
 
 ---
 

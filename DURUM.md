@@ -4,15 +4,16 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
-- [ ] Klinik SQL'i (`supabase/proposed/20261019000000_clinic.sql`) gözden geçirilip kullanıcı onayıyla Supabase'e uygulanacak; sonra `migrations/`'a taşınacak.
-- [ ] Yaş bantları: oyun kodu, SQL `suggest_age_band` ve ParentApp aynı (A 6–9 / B 10–12 / C 13–15); omurga analizi 6–8 / 9–12 öneriyor, Apple Kids bantları 6–8 / 9–11. Kullanıcıyla karar.
+- [ ] Supabase'e uygulanacak öneriler (kullanıcı, SQL Editor; sonra `migrations/`'a taşınacak): `20261019000000_clinic.sql`, `20261019100000_task_rewards.sql`, `20261019110000_age_bands.sql`.
+- [ ] Pofi Adası: yaş bantları iki banda indi (A 6–8 / B 9–12); oyunda C profili kaldırılmalı / `C` gelirse B sayılmalı, A/B ayarları yeni aralıklara göre gözden geçirilmeli (oyun penceresi).
 - [ ] Omurga analizi Ö1–Ö7 (Güneş Taşı, XP/beceri yıldızı, bakım, hikâye, ilk gün, posta kutusu, gerçek ödül dükkânı) onaylanırsa önce burada şema/kural, sonra uygulamalar.
-- [ ] Sözleşme taramasında bulunan tutarsızlıklar (ayrıntı `sozlesme/durumlar.md`, `ekonomi.md`): `assigned`/"kaçırıldı" yalnız istemcide; ParentApp onay (doğrudan güncelleme) ve ret (`review_completion`) farklı yollardan; geçmiş tarih kuralı oyun/sunucu farklı (saat dilimi dahil); görev ödülüne sunucuda üst sınır yok (oyun sahte arka ucu 1–50); `spend_coins` `min_level` denetlemiyor, fiyat 0 kuralı farklı; onay geri alınınca o anki ödül düşülüyor; sunucuda kod deneme sınırı yok; klinik önerisinde `decline_reason` RPC'den yazılamıyor, kabul edilen öneri ↔ görev bağı yok. Her biri önce burada karara bağlanacak.
+- [ ] Sözleşme taramasında bulunan tutarsızlıklar (ayrıntı `sozlesme/durumlar.md`, `ekonomi.md`): `assigned`/"kaçırıldı" yalnız istemcide; geçmiş tarih kuralı oyun/sunucu farklı (saat dilimi dahil); `spend_coins` `min_level` denetlemiyor, fiyat 0 kuralı farklı; sunucuda kod deneme sınırı yok; klinik önerisinde `decline_reason` RPC'den yazılamıyor, kabul edilen öneri ↔ görev bağı yok. Her biri önce burada karara bağlanacak.
 - [ ] "Quests" ve "Güneş Taşı" için kalıcı Türkçe adlar.
 - [ ] ClinicApp teknoloji kararı (öneri: Expo + web).
 
 ## Günlük
 
+- 2026-10-19 · ParentApp + ortak · **Görev ödülü kuralları** (kullanıcı onayı): onay da ret de `review_completion` ile (ParentApp güncellendi); onay geri alınınca *verilen* coin düşülür (o anki ödül değil); görev/atama silinince kazanılmış coin kalır; ödül 0–50 (SQL kısıtı + ParentApp girişi). **Yaş bantları** (kullanıcı kararı): iki bant A 6–8 / B 9–12, C kaldırıldı; eski C kayıtları B olur. SQL önerileri `proposed/20261019100000_task_rewards.sql`, `20261019110000_age_bands.sql` + testleri; `run.sh` dört test de geçti. Sözleşme: `ekonomi.md` 2.1–2.2, `durumlar.md` D2 + 4, `veritabani.md`, `akislar.md`. · ParentApp değişikliği eski ve yeni şemayla çalışır. **Kullanıcı:** iki öneriyi SQL Editor'da çalıştırmalı. **Oyun penceresi:** C bandını kaldır / B say; sahte arka uç sınırı 1–50 zaten uyumlu. **ClinicApp:** kitle 6–12 yazımı artık doğru.
 - 2026-10-19 · ortak · Depo kuruldu. Uygulanmış göçler (`init`, `task_repeat_order` ParentApp'ten; `pofi_game` oyun deposundan, 15 Ekim'de uygulandı) ve klinik önerisi (ParentApp `claude/project-thread-vwahaf` dalından, uygulanmadı) burada toplandı. Testler: `supabase/test/run.sh` (oyun + klinik, ikisi de geçti). · Uygulama depolarındaki `supabase/` klasörleri artık kaynak değil; ortak değişiklikler burada yapılır.
 - 2026-10-19 · tümü · Elle App Store imzası (geçici dağıtım sertifikası + profil) kuruldu; ParentApp ve Pofi Adası TestFlight'a yüklendi.
 - 2026-10-19 · tümü · İş modeli kararı: hem aile aboneliği (ParentApp) hem klinik kanalı (ClinicApp, klinisyen başına ücret). Üç ürün, tek Supabase. Raporlar iki okuyucuya (ebeveyn + uzman).
