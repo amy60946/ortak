@@ -4,7 +4,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 
 | Ürün | Kim | Depo | Pencere |
 |---|---|---|---|
-| Pofi Adası (GameApp) | Çocuk | `amy60946/pofi-adasi` (Unity, C#) | "Oyun" |
+| Pofi Adası (GameApp) | Çocuk | `amy60946/game-app` (Unity, C#) | "Oyun" |
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
 | ClinicApp | Uzman | `amy60946/clinic-app` (web + iPad; teknoloji kararı bekliyor) | "Klinik" |
 
@@ -21,7 +21,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
-> Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `pofi-adasi/...`); SQL artık bu depodaki `supabase/` altındadır.
+> Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.
 
 ## Kurallar (üç pencere için de)
 

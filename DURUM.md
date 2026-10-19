@@ -13,6 +13,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · tümü · Oyun deposunun adı `pofi-adasi` → `game-app` (GitHub eski adresi yönlendirir). Üç pencere düzeni: Oyun (`game-app` + `ortak`), Ebeveyn (`parent-app` + `ortak`), Klinik (`clinic-app` + `ortak`). ParentApp'te klinik paylaşımı dalı (`project-thread-vwahaf`) ana dala alınmak üzere hazırlandı; SQL kopyaları ParentApp'ten çıkarıldı (kaynak burası).
 - 2026-10-19 · ortak · Depo kuruldu. Uygulanmış göçler (`init`, `task_repeat_order` ParentApp'ten; `pofi_game` oyun deposundan, 15 Ekim'de uygulandı) ve klinik önerisi (ParentApp `claude/project-thread-vwahaf` dalından, uygulanmadı) burada toplandı. Testler: `supabase/test/run.sh` (oyun + klinik, ikisi de geçti). · Uygulama depolarındaki `supabase/` klasörleri artık kaynak değil; ortak değişiklikler burada yapılır.
 - 2026-10-19 · tümü · Elle App Store imzası (geçici dağıtım sertifikası + profil) kuruldu; ParentApp ve Pofi Adası TestFlight'a yüklendi.
 - 2026-10-19 · tümü · İş modeli kararı: hem aile aboneliği (ParentApp) hem klinik kanalı (ClinicApp, klinisyen başına ücret). Üç ürün, tek Supabase. Raporlar iki okuyucuya (ebeveyn + uzman).
