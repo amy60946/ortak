@@ -13,6 +13,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · Oyun · Araştırma belgelerinin (Joon iş modeli kanvası, oyun omurgası analizi) takibi Oyun penceresine geçti: güncelleme ve Claude'a gönderilen yorumlar bu pencereyi uyandırır. Omurga belgesinin "Karar soruları"na yaş kararı işlendi. · Diğer pencereler belgeyi okuyabilir; yorum cevabı Oyun penceresinden.
 - 2026-10-19 · Oyun + ortak · Yaş bandı kararı (kullanıcı): **A 6–8 / B 9–12 / C 13–15**. Bant yalnız oyun zorluğu/arayüzü; raporlar gerçek yaşı (`birthday`) kullanır. Mağaza: Kids Category dışı, 4+, Kids kurallarına gönüllü uyum; yaşı ebeveyn ParentApp'te girer. SQL önerisi + test (`test_age_bands.sql`, geçti), `sozlesme/durumlar.md` §4 güncellendi. · ParentApp penceresi: `ageBands.ts` etiketleri ve `suggestAgeBand` (< 9 → A). Kullanıcı: öneri SQL'ini Supabase'e uygulamak. Oyun: yorum/deneme metinleri güncellendi (game-app).
 - 2026-10-19 · ortak · Depo kuruldu. Uygulanmış göçler (`init`, `task_repeat_order` ParentApp'ten; `pofi_game` oyun deposundan, 15 Ekim'de uygulandı) ve klinik önerisi (ParentApp `claude/project-thread-vwahaf` dalından, uygulanmadı) burada toplandı. Testler: `supabase/test/run.sh` (oyun + klinik, ikisi de geçti). · Uygulama depolarındaki `supabase/` klasörleri artık kaynak değil; ortak değişiklikler burada yapılır.
 - 2026-10-19 · tümü · Elle App Store imzası (geçici dağıtım sertifikası + profil) kuruldu; ParentApp ve Pofi Adası TestFlight'a yüklendi.
