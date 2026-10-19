@@ -1,4 +1,4 @@
--- Yaş bandı önerisi: A 6–8 · B 9–12 · C 13–15 (proposed/20261019010000_age_bands.sql).
+-- Yaş bandı önerisi: A 6–8 · B 9–12 · C 13–15 (migrations/20261019010000_age_bands.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
