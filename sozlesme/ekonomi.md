@@ -37,7 +37,7 @@ Son güncelleme: 2026-10-19
 | `medium` (Orta) | **10** | Evet |
 | `hard` (Zor) | **20** | Evet |
 
-- SQL sınırı: `coins >= 0` (üst sınır **yok**). ParentApp girişi yalnız rakam kabul eder, `Math.max(0, …)`; üst sınır yok.
+- SQL sınırı: `coins >= 0` ve (öneri `20261019020000_server_rules`) `coins <= 50`. ParentApp girişi yalnız rakam kabul eder, `Math.max(0, …)`; 50 sınırı ParentApp'e de eklenmeli.
 - Coin **görev başına değil, atama (görev × çocuk) başına** tutulur; aynı görev iki çocuğa farklı ödülle atanabilir.
 - `coins = 0` ise onayda deftere satır yazılmaz.
 - Sahte arka uç (yalnız oyun önizlemesi, `MockBackend.ParentAssign`) ödülü **1–50** aralığına sıkıştırır; demo görevler 5 / 10 / 10 / 5 / 20 coin (`DemoParent.Samples`). Gerçek sunucuda böyle bir sınır yoktur (bkz. 8. bölüm, E1).
@@ -50,7 +50,7 @@ Son güncelleme: 2026-10-19
 | `approved` kayıt silinir | `−coins`, `reason='task_undo'` |
 | Diğer geçişler (`pending`↔`declined` vb.) | yazılmaz |
 
-- Tutar, **o anda** `task_assignments.coins` değeridir. Onaydan sonra ödül değiştirilirse geri alma farklı tutar düşer; atama silinmişse geri alma 0 olur ve yazılmaz (kodun davranışı; bilinçli karar mı — doğrulanmalı).
+- Onayda tutar **o anki** `task_assignments.coins` değeridir. Geri almada (öneri `20261019020000_server_rules`) o tamamlama için defterde kalan net tutar düşülür; ödül sonradan değişse de doğru tutar geri alınır.
 - `ref = '<completion_id>:<epoch>'`; `unique (child_id, reason, ref)`.
 - İnceleme gerektirmeyen görevde (`requires_review = false`) çocuğun "Yaptım"ı doğrudan `approved` yazılır → coin hemen gelir.
 
@@ -71,7 +71,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | **Sunucu denetlemez** (sütun var, `spend_coins` kullanmıyor). Kilit yalnız oyunda (`ShopRules`, `item.Level`). |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (öneri `20261019020000_server_rules`; seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -208,11 +208,11 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 
 | # | Konu | Ayrıntı |
 |---|---|---|
-| E1 | Görev ödülü üst sınırı | SQL ve ParentApp: üst sınır yok (`coins >= 0`). Oyunun sahte arka ucu 1–50'ye sıkıştırır. Gerçek sınır istenirse SQL kısıtı + ParentApp girişi birlikte değişmeli. |
-| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. |
-| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. |
-| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. |
+| E1 | Görev ödülü üst sınırı | SQL ve ParentApp: üst sınır yok (`coins >= 0`). Oyunun sahte arka ucu 1–50'ye sıkıştırır. Gerçek sınır istenirse SQL kısıtı + ParentApp girişi birlikte değişmeli. **Karar: en çok 50** (`task_assignments_coins_max`, NOT VALID: eski kayıtlar korunur). ParentApp girişi 50'yi aşmamalı. |
+| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. **Karar: fiyat > 0** (`game_items_price_positive`). |
+| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. **Karar: oyun da 1–20 denetler** (`Wallet.TrySpend`). |
+| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. **Karar: sunucu denetler** — seviye, oyun kaydındaki `Xp.TotalXp` ve `game_levels` eşiklerinden (`child_level`); hata `level_locked`. Oyun harcamadan önce kaydı yedekler. |
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
-| E6 | Onay sonrası ödül değişimi | Geri alma, o anki `task_assignments.coins` kadar düşer (bkz. 2.2). |
+| E6 | Onay sonrası ödül değişimi | Geri alma, o anki `task_assignments.coins` kadar düşer (bkz. 2.2). **Karar: onayda verilen tutar düşülür** (defterdeki net tutar). |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Klinik önerisine göre coin defteri uzmanla **paylaşılmaz** (öneri, uygulanmadı). |
