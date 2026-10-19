@@ -12,8 +12,9 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-19 · Oyun · Pofi Adası TestFlight'a yüklendi (iOS iş akışı 14. çalıştırma başarılı, elle App Store imzası). Sunucu şeması değişmedi. · ParentApp/ClinicApp etkilenmez. Kullanıcı: App Store Connect → TestFlight'ta derlemenin işlenmesini bekleyip test edenleri ekler.
 - 2026-10-19 · ortak · Depo kuruldu. Uygulanmış göçler (`init`, `task_repeat_order` ParentApp'ten; `pofi_game` oyun deposundan, 15 Ekim'de uygulandı) ve klinik önerisi (ParentApp `claude/project-thread-vwahaf` dalından, uygulanmadı) burada toplandı. Testler: `supabase/test/run.sh` (oyun + klinik, ikisi de geçti). · Uygulama depolarındaki `supabase/` klasörleri artık kaynak değil; ortak değişiklikler burada yapılır.
-- 2026-10-19 · tümü · Elle App Store imzası (geçici dağıtım sertifikası + profil) kuruldu; ParentApp TestFlight'a yüklendi. Oyun yüklemesi sürüyor.
+- 2026-10-19 · tümü · Elle App Store imzası (geçici dağıtım sertifikası + profil) kuruldu; ParentApp TestFlight'a yüklendi. Oyun yüklemesi sürüyor (aynı gün tamamlandı, üstte).
 - 2026-10-19 · tümü · İş modeli kararı: hem aile aboneliği (ParentApp) hem klinik kanalı (ClinicApp, klinisyen başına ücret). Üç ürün, tek Supabase. Raporlar iki okuyucuya (ebeveyn + uzman).
 - 2026-10-16 · tümü · İki ayrı uygulama: Pofi Adası `com.gameapp.ios`, ParentApp `com.parentapp.ios`. "Fidan" adı kaldırıldı.
 - 2026-10-15 · Oyun + ParentApp · Oyun sunucu eklemeleri (coin defteri, oyun eşyaları, kayıt, çocuk RPC'leri) Supabase'e uygulandı.
