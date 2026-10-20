@@ -12,6 +12,8 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-20 · Oyun · Tek pet **Okti** (`pet_13`, ahtapot; çocuk/ergen/yetişkin evre modelleri); eski 12 pet seçimden kalktı, eski kayıtlar Okti'ye geçer (ad korunur). Güneş Taşı artık adada sisli yere götürülüp konuyor (panoda değil). Sv1–3 rehberli 12 adımlı zincir. · Sunucu sözleşmesi değişmedi (pet yalnız kayıt yedeğinde). **ParentApp:** pet portresi/adı gösteriliyorsa `pet_13` (Okti) görseli gerekir — Ebeveyn penceresi kontrol etsin.
+
 - 2026-10-19 · Oyun · iOS ses düzeltildi (sahnede AudioListener yoktu); adaya Ayarlar düğmesi (ebeveyn sorusuyla: ses, pet değiştir, çıkış, bağlı çocuğun adı); ada arayüzü v3 yerleşimi; ince sık çim + çimsiz açıklıklar, patikada çakıl/toprak lekesi, solan ayak izleri. TestFlight'a yüklendi. · Sözleşme değişmedi; diğer ürünleri etkilemiyor.
 
 - 2026-10-19 · Oyun · Görsel v3 (kullanıcı onaylı): Meshy ile simge ve arayüz parçaları (5 sayfa, 45 kredi; kalan 889), Baloo 2 yazı tipi, yeni seviye ekranı, haritada Güneş Taşı göstergesi; pet bekleme animasyonu, giydirmede Dükkâna git, XP çubuğu, iOS ses oturumu düzeltmeleri. Sunucu/sözleşme değişmedi. · ParentApp/ClinicApp: etkilenmez; ortak görsel dil istenirse aynı simgeler `game-app/Assets/_Pofi/Resources/Icons` altında.
