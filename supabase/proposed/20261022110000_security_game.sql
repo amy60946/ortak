@@ -6,8 +6,8 @@
 --   Oyun zaten yalnız RPC kullanıyor; ParentApp'teki çocuk ekranı 16 Ekim'de kaldırıldı. Ebeveynin doğrudan yazımı
 --   ("tamamlama: ebeveyn" politikası) değişmez.
 -- H2: çocuk kodu tahmini. Kullanıcı başına sınır (15 dk'da 10) yeni anonim hesap açarak aşılabiliyordu.
---   Ek olarak GENEL sınır: son 10 dakikada tüm hesaplardan 200 hatalı çocuk kodu denemesi varsa yeni deneme 429 alır
---   (gerçek kullanımda neredeyse hiç hatalı deneme olmaz; saldırı birkaç dakikada söner, kodlar 24 saat geçerli).
+--   Ek olarak GENEL sınır: son 10 dakikada tüm hesaplardan 200 hatalı çocuk kodu denemesi varsa, daha önce yanılmış hesabın
+--   yeni denemesi 429 alır (ilk deneme serbest: saldırgan gerçek bağlanmaları kilitleyemez; saldırgana hesap başına 1 deneme kalır).
 -- Not (M5, değişiklik yok): incelemesiz görevde çocuğun "Yaptım"ı ebeveynin önceden verdiği onaydır ve Güneş Taşı verir
 --   (19 Ekim kararı, test_sun_stones). C1 kapanınca bu yol yalnız dün/bugün/yarın ve görevin gerçek günleri için çalışır.
 -- Tekrar çalıştırılabilir.
@@ -42,7 +42,9 @@ begin
 
   delete from public.code_attempts where at < now() - interval '1 day';
   if (select count(*) from public.code_attempts where user_id = uid and at > now() - interval '15 minutes') >= 10
-     or (select count(*) from public.code_attempts where at > now() - interval '10 minutes') >= 200 then
+     or ((select count(*) from public.code_attempts where at > now() - interval '10 minutes') >= 200
+         and exists (select 1 from public.code_attempts where user_id = uid and at > now() - interval '15 minutes')) then
+    -- genel sınır yalnız daha önce yanılmış hesaba: saldırgan herkesi kilitleyemez, doğru kodla ilk deneme hep çalışır
     perform set_config('response.status', '429', true);
     return json_build_object('error', 'too_many_attempts');
   end if;

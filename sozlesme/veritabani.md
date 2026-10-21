@@ -274,7 +274,7 @@ Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anaht
 | Tablo | Kim okur | Kim yazar |
 |---|---|---|
 | `rewards` (id, family_id, child_id?, title, icon, price 1–500, active, created_by, created_at, updated_at) | ebeveyn: kendi ailesi; çocuk: ailesinin etkin ve kendine açık ödülleri | ebeveyn doğrudan (insert/update: yalnız `title, icon, price, active, child_id`; delete). Aile başına ≤ 40 etkin (tetikleyici) |
-| `reward_requests` (id, family_id, child_id, reward_id, title, icon, price, status, tx, requested_at, decided_at, decided_by) | ebeveyn: kendi ailesi; çocuk: kendi istekleri | yalnız RPC (doğrudan yazma yetkisi yok). Realtime yayınında |
+| `reward_requests` (id, family_id, child_id, reward_id, title, icon, price, status, tx, requested_at, decided_at, decided_by) | ebeveyn: kendi ailesi; çocuk: tabloyu okumaz (yalnız `child_request_reward`/`child_rewards`; `decided_by` gizli) | yalnız RPC (doğrudan yazma yetkisi yok). Realtime yayınında |
 
 | RPC | Kim | Ne yapar |
 |---|---|---|

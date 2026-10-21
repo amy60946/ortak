@@ -87,7 +87,7 @@ alter table public.reward_requests enable row level security;
 drop policy if exists "ödül isteği: ebeveyn okur" on public.reward_requests;
 create policy "ödül isteği: ebeveyn okur" on public.reward_requests for select to authenticated using (family_id = public.my_family_id());
 drop policy if exists "ödül isteği: çocuk okur" on public.reward_requests;
-create policy "ödül isteği: çocuk okur" on public.reward_requests for select to authenticated using (child_id = public.my_child_id());
+-- Çocuk tabloyu doğrudan okumaz (decided_by = ebeveyn kimliği görünmesin); oyun child_rewards() ile alır.
 -- Yazma yalnız RPC'lerle.
 revoke insert, update, delete on public.reward_requests from anon, authenticated;
 revoke all on public.reward_requests from anon;
@@ -130,7 +130,9 @@ begin
                           where r.family_id = me.family_id and r.active and (r.child_id is null or r.child_id = me.id)), '[]'::json),
     'requests', coalesce((select json_agg(json_build_object('id', q.id, 'reward_id', q.reward_id, 'title', q.title, 'icon', q.icon, 'price', q.price, 'status', q.status,
                                                           'requested_at', q.requested_at, 'decided_at', q.decided_at) order by q.requested_at desc)
-                            from (select * from public.reward_requests where child_id = me.id order by requested_at desc limit 20) q), '[]'::json));
+                            from (select * from public.reward_requests where child_id = me.id and status = 'pending'
+                                  union all
+                                  (select * from public.reward_requests where child_id = me.id and status <> 'pending' order by requested_at desc limit 20)) q), '[]'::json));
 end $$;
 
 create or replace function public.child_request_reward(p_reward uuid, p_tx text)
@@ -153,6 +155,12 @@ begin
   if not found then return json_build_object('ok', false, 'error', 'unknown_reward'); end if;
   if (select count(*) from public.reward_requests where child_id = me.id and status = 'pending') >= 3 then
     return json_build_object('ok', false, 'error', 'too_many_pending');
+  end if;
+  if exists (select 1 from public.reward_requests where child_id = me.id and reward_id = r.id and status = 'pending') then
+    return json_build_object('ok', false, 'error', 'already_requested');                -- aynı ödül zaten bekliyor
+  end if;
+  if (select count(*) from public.reward_requests where child_id = me.id and requested_at > now() - interval '24 hours') >= 10 then
+    return json_build_object('ok', false, 'error', 'too_many_today');                    -- iste-vazgeç döngüsüyle ebeveyne bildirim yağmasın
   end if;
   bal := public.coin_balance(me.id); held := public.reward_pending_total(me.id);
   if bal - held < r.price then
@@ -225,3 +233,48 @@ grant execute on function public.child_cancel_reward_request(uuid) to authentica
 grant execute on function public.review_reward_request(uuid, boolean) to authenticated;
 -- TRUNCATE satır güvenliğini atlar (bkz. 20261021300000_security_pentest.sql 11)
 revoke truncate on table public.rewards, public.reward_requests from anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- Eşya dükkânı ödüle ayrılmış coin'i harcayamaz (saldırı denemesi 22 Ekim: eski/değiştirilmiş istemci ayrılan coin'i harcayıp
+-- ebeveynin "ver"ini bakiyesiz bırakabiliyordu). spend_coins (20261019020000_server_rules) + bekleyen ödüller.
+-- ---------------------------------------------------------------------
+create or replace function public.spend_coins(p_tx text, p_item_id text, p_quantity integer)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  me public.children%rowtype;
+  it public.game_items%rowtype;
+  total integer;
+  bal integer;
+  avail integer;
+begin
+  select * into me from public.children where user_id = auth.uid() for update;   -- aynı çocuğun eşzamanlı harcamaları/istekleri sıraya girer
+  if not found then
+    raise exception 'Bağlantı yok' using errcode = '42501';
+  end if;
+  if p_tx is null or char_length(p_tx) not between 8 and 64 then
+    raise exception 'Geçersiz işlem kimliği';
+  end if;
+  if exists (select 1 from public.coin_ledger where child_id = me.id and reason = 'spend' and ref = p_tx) then
+    return json_build_object('ok', true, 'error', null, 'balance', public.coin_balance(me.id));
+  end if;
+  select * into it from public.game_items where item_id = p_item_id;
+  if not found or p_quantity is null or p_quantity not between 1 and 20 then
+    return json_build_object('ok', false, 'error', 'unknown_item', 'balance', public.coin_balance(me.id));
+  end if;
+  if it.min_level > public.child_level(me.id) then
+    return json_build_object('ok', false, 'error', 'level_locked', 'balance', public.coin_balance(me.id));
+  end if;
+  total := it.price * p_quantity;
+  bal := public.coin_balance(me.id);
+  avail := bal - public.reward_pending_total(me.id);
+  if total > avail then
+    return json_build_object('ok', false, 'error', 'not_enough_coins', 'balance', bal);
+  end if;
+  if total > 0 then
+    insert into public.coin_ledger (family_id, child_id, amount, reason, ref, item_id, quantity)
+    values (me.family_id, me.id, -total, 'spend', p_tx, p_item_id, p_quantity);
+  end if;
+  return json_build_object('ok', true, 'error', null, 'balance', bal - total);
+end $$;
+revoke execute on function public.spend_coins(text, text, integer) from public, anon;
+grant execute on function public.spend_coins(text, text, integer) to authenticated;

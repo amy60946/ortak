@@ -216,6 +216,6 @@ Kod biçimi:
 | `rewards.icon` | `gift`, `park`, `movie`, `game`, `treat`, `book`, `toy`, `trip`, `star` (oyun aynı adlı simgeyi gösterir) |
 | `rewards.price` | 1–500 coin |
 | `reward_requests.status` | `pending` (çocuk istedi) → `given` (ebeveyn verdi, coin düştü) · `declined` (ebeveyn reddetti, coin düşmedi) · `cancelled` (çocuk vazgeçti) |
-| `child_request_reward` hata kodları | `null` (başarılı), `unknown_reward` (yok/kapalı/başka çocuğa özel), `not_enough_coins` (kullanılabilir coin yetmez), `too_many_pending` (3 bekleyen) |
+| `child_request_reward` hata kodları | `null` (başarılı), `unknown_reward` (yok/kapalı/başka çocuğa özel), `not_enough_coins` (kullanılabilir coin yetmez), `too_many_pending` (3 bekleyen), `already_requested` (aynı ödül zaten bekliyor), `too_many_today` (24 saatte 10 istek; iste-vazgeç döngüsü ebeveyne bildirim yağdırmasın) |
 | `review_reward_request` hata kodları | `null`, `not_enough_coins` (çocuk bu arada harcadı; istek bekler), `already_given` / `already_declined` / `already_cancelled` |
 | Sınırlar | çocuk başına en çok 3 bekleyen istek; aile başına en çok 40 etkin ödül; başlık 1–60 karakter |

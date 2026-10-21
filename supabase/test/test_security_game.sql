@@ -95,7 +95,12 @@ insert into auth.users (id, is_anonymous, raw_user_meta_data) values ('00000000-
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000c9');
 select tst.check((public.redeem_child_code('ZZZZZZ') ->> 'error') = 'invalid_code', 'genel sınırın altında: olağan hata');
-select tst.check((public.redeem_child_code('ZZZZZY') ->> 'error') = 'too_many_attempts', 'genel sınır aşılınca 429');
+select tst.check((public.redeem_child_code('ZZZZZY') ->> 'error') = 'too_many_attempts', 'genel sınır aşılınca yanılmış hesap 429');
+reset role;
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values ('00000000-0000-0000-0000-0000000000c8', true, '{}');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000c8');
+select tst.check((public.redeem_child_code('ZZZZZX') ->> 'error') = 'invalid_code', 'yeni hesabın ilk denemesi kilitlenmez (DoS yok)');
 reset role;
 
 -- L4: kod biçimi ve dağılım (her konumda 31 harfin hepsi görülür; sürüm baytı sabitlemesi yok)
