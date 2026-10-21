@@ -1,5 +1,5 @@
 -- =====================================================================
--- ParentApp istekleri (öneri, 19 Ekim 2026)
+-- ParentApp istekleri (19 Ekim 2026; uygulandı)
 --   1. Görev kategorileri 6'ya çıktı: home, mind, learn, health, focus, relation ('self' → 'health').
 --   2. Görevin gün bölümü: tasks.day_part = morning | noon | evening | null (= herhangi). Görevler ekranı filtresi.
 --   3. Zor an kaydı (abc_events):

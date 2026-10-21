@@ -28,7 +28,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 1. **Önce oku:** Her işe başlamadan önce bu dosyayı, `DURUM.md`'nin son kayıtlarını ve işle ilgili `sozlesme/` dosyasını oku.
 2. **Önce ortak, sonra uygulama:** Ortak bir şey değişecekse (yeni tablo/alan/RPC, yeni durum, coin/XP/seviye kuralı, rıza kuralı) önce burada değiştir: SQL'i `proposed/`'a yaz, testini ekle, `sozlesme/`'yi güncelle, `DURUM.md`'ye satır ekle. Uygulamalar ancak ondan sonra buna göre değişir. Uygulama depolarında ayrı şema kopyası tutulmaz.
 3. **Uygulama:** Bir öneri Supabase'e uygulanınca dosya `proposed/`'dan `migrations/`'a taşınır ve `DURUM.md`'ye "uygulandı" yazılır. Uygulamayı kullanıcı yapar (Supabase → SQL Editor) ya da onaylı bir iş akışı. Göçler tekrar çalıştırılabilir yazılır (`if not exists`, `create or replace`).
-4. **Test:** SQL değişikliğinden sonra `bash supabase/test/run.sh` (yerel psql) geçmeli. Her yeni tabloda satır düzeyi güvenlik (RLS) zorunlu ve testli.
+4. **Test:** SQL değişikliğinden sonra `bash supabase/test/run.sh` (yerel psql) geçmeli. Her yeni tabloda satır düzeyi güvenlik (RLS) zorunlu ve testli. Her yeni fonksiyonda `revoke execute … from public, anon` (+ gerekiyorsa `grant … to authenticated`); `test_security.sql` anon'un çağırabildiği fonksiyon kalmadığını denetler.
 5. **Günlük:** Her oturum sonunda `DURUM.md`'ye bir satır: tarih · ürün · ne değişti · diğer ürünleri etkiliyor mu · kim ne yapmalı.
 6. **Başka ürünün koduna** yalnız okumak için bakılır. Yazmak gerekiyorsa o ürünün penceresi yapar; kullanıcıya söylenir.
 

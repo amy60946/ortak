@@ -150,7 +150,9 @@ Kod biçimi:
 | Alan | Değerler | Anlamı |
 |---|---|---|
 | `clinic_links.status` | `active` (varsayılan) / `revoked` | Rıza etkin / ebeveyn ya da uzman sonlandırdı. Bir klinik–çocuk çifti için en fazla bir `active`. |
-| `clinics.plan` | `trial` (varsayılan, 14 gün) / `small` / `business` / `custom` / `inactive` | Klinisyen başına abonelik. Etkin sayılanlar: `small`, `business`, `custom`, süresi dolmamış `trial`. |
+| `clinics.plan` | `trial` (varsayılan; öneriyle 7 gün, eskiden 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
+| `clinics.billing_source` | `app_store` / `iyzico` / `manual` / null | Ödeme kaynağı (öneri). |
+| `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
 | `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder ve klinik adını değiştirir. |
 | `clinic_task_suggestions.status` | `pending` (varsayılan) / `accepted` / `declined` | Ebeveyn kararı. `accepted` olunca görevi **ParentApp kendisi** oluşturur (sunucu otomatik görev açmaz). |
 | `clinic_task_suggestions.difficulty` | `easy` / `medium` / `hard` (varsayılan `easy`) | Görevdeki ile aynı. |

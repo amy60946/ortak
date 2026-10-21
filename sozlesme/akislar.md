@@ -164,12 +164,24 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 | 1 | [K] | Not yazar. | `clinic_notes` |
 | 2 | [K] | Hedef (GAS) tanımlar, haftalık −2 … +2 puan verir. | `clinic_goals`, `goal_ratings` |
 
-### 5.7 Abonelik (öneri)
+### 5.7 Abonelik
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [S] (service role) | Mağaza/web ödemesi aile aboneliğini yazar. | `family_subscriptions` (`free`/`premium`) |
 | 2 | [S] | Aile, kendi aboneliği **ya da** etkin (deneme süresinde ya da ücretli) bir kliniğe bağlı çocuğu varsa premium sayılır. | `family_premium()`, `clinic_active()` |
-| 3 | [S] (service role) | Klinik planı ödeme entegrasyonuyla yazılır. | `clinics.plan`, `seat_limit` |
+
+### 5.8 ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [S] | Yeni klinik 7 gün ücretsiz dener (kart yok, 10 koltuk). | `clinics.plan='trial'`, `trial_ends_at` |
+| 2 | [K] | Ana ekranda kalan gün; "Üyelik" ekranında iki paket (Bireysel / Klinik), aylık–yıllık, içerik listesi. Yalnız klinik sahibi satın alır. | `billing_plans`, `clinician_me()` |
+| 3a | [K] iPhone/iPad | App Store aboneliği (StoreKit, `appAccountToken` = klinik kimliği) → `clinic-billing/apple-verify` → Apple'dan doğrulanır. Yenileme/iptal/iade Apple bildirimiyle (`apple-notify`). | `billing_apply` |
+| 3b | [K] web | Fatura bilgisi (ad, soyad, T.C. kimlik, cep, şehir, adres) → `clinic-billing/iyzico-start` → iyzico ödeme formu (kart ClinicApp'e gelmez) → `iyzico-callback` → `?billing=ok`. Yenileme `iyzico-webhook`; "Yenilemeyi kapat" `iyzico-cancel`. | `billing_checkouts`, `billing_apply` |
+| 4 | [S] | Deneme/üyelik bitince `clinician_access()` false: çocuk verisi, notlar, hedefler, öneriler, davet kapanır; veriler silinmez. Uygulama panel yerine üyelik ekranını gösterir. | RLS |
+| 5 | [S] | Bireysel pakette yalnız sahip erişir; ekip üyesinin ekranında "Ekip erişimi kapalı". | `clinician_access()` |
+| 6 | [P] | Etkin kliniğe bağlı aile premium sayılmaya devam eder (deneme dahil). | `family_premium()` |
+
+ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{status}`, `membership.choose{plan}`, `membership.checkout{plan}`, `membership.purchased{plan,source}`, `membership.cancel`.
 
 ---
 
@@ -180,6 +192,7 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 | 1 | [P] | Ebeveyn Storage dosyalarını siler, sonra hesabı siler. | Storage `mail`; `delete_account()` |
 | 2 | [S] | Ailede başka ebeveyn yoksa aile ve bağlı her şey (çocuklar, görevler, tamamlamalar, mesajlar, coin defteri, oyun yedekleri) silinir. | `families` → cascade |
 | 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür; yerel kayıt kalır. | `Revoked` |
+| 4 | [K] (öneri, bölüm 9 veritabani.md) | Uzman "Hesabı sil": tek kişilik klinik (paylaşımlar, notlar, hedefler, davetler, üyelik kayıtları) silinir; ekipte başkası varsa klinik kalır, sahiplik en eski üyeye geçer. App Store aboneliği Apple'dan ayrıca kapatılır. | `delete_account()` |
 
 ---
 

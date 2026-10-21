@@ -61,9 +61,9 @@ select tst.check(public.clinician_me() ->> 'invited_by_name' is null, 'kurucunun
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'team2', code from (select public.clinic_create_invite('clinician', '') ->> 'code' as code) x;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
-select tst.fails($$select public.clinic_join_team((select v from tst.kv where k = 'team2'))$$, 'ebeveyn hesabı ekibe katılamaz');
+select tst.rejects($$select public.clinic_join_team((select v from tst.kv where k = 'team2'))$$, 'ebeveyn hesabı ekibe katılamaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000d3');
-select tst.fails($$select public.clinic_join_team('ZZZZZZ')$$, 'geçersiz kod');
+select tst.rejects($$select public.clinic_join_team('ZZZZZZ')$$, 'geçersiz kod');
 select public.clinic_join_team((select v from tst.kv where k = 'team2'));
 select tst.check(public.clinician_me() ->> 'clinic' = 'Mavi Klinik', 'katılan yeni kliniği görür');
 select tst.check(public.clinician_me() ->> 'role' = 'member', 'katılan üye olur');
@@ -73,7 +73,7 @@ select tst.check(not exists (select 1 from public.clinics where id = (select v::
 select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d1' and kind = 'team_joined'
                           and title like 'Can%'), 'sahibe "ekibe katıldı" bildirimi');
 set role authenticated;
-select tst.fails($$select public.clinic_join_team((select v from tst.kv where k = 'team2'))$$, 'kullanılmış kod ikinci kez kullanılamaz');
+select tst.rejects($$select public.clinic_join_team((select v from tst.kv where k = 'team2'))$$, 'kullanılmış kod ikinci kez kullanılamaz');
 
 -- dolu kliniği olan uzman katılamaz (veri kaybı olmasın)
 select tst.as_user('00000000-0000-0000-0000-0000000000d4');
@@ -91,7 +91,7 @@ set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'team3', code from (select public.clinic_create_invite('clinician', '') ->> 'code' as code) x;
 select tst.as_user('00000000-0000-0000-0000-0000000000d4');
-select tst.fails($$select public.clinic_join_team((select v from tst.kv where k = 'team3'))$$, 'danışanı olan klinik bırakılamaz');
+select tst.rejects($$select public.clinic_join_team((select v from tst.kv where k = 'team3'))$$, 'danışanı olan klinik bırakılamaz');
 select tst.check(public.clinician_me() ->> 'clinic' = 'Dolu Klinik', 'dolu klinikte kalır');
 
 -- ---------------------------------------------------------------- takip

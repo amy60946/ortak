@@ -74,7 +74,7 @@ set role authenticated;
 -- Teyze'nin kendi ailesinde çocuk var: katılım reddedilir (kayıt kaybı yok)
 select tst.as_user('00000000-0000-0000-0000-0000000000a3');
 insert into public.children (family_id, name, avatar) values (public.my_family_id(), 'Ece', 'kedi');
-select tst.fails($$select public.join_family((select v from tst.kv where k = 'code2'))$$, 'kendi kaydı olan ebeveyn katılamaz (silinmesin)');
+select tst.rejects($$select public.join_family((select v from tst.kv where k = 'code2'))$$, 'kendi kaydı olan ebeveyn katılamaz (silinmesin)');
 select tst.check((select count(*) from public.children where name = 'Ece') = 1, 'Teyze''nin çocuğu duruyor');
 
 reset role;

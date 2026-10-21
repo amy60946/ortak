@@ -99,9 +99,9 @@ select tst.check((select count(*) from public.clinicians) = 2, 'üye ekibi gör�
 
 -- ------------------------------------------------ ebeveyn rızası
 select tst.as_user('00000000-0000-0000-0000-0000000000e1');
-select tst.fails($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0de')$$, 'yabancı ebeveyn başkasının çocuğunu bağlayamaz');
+select tst.rejects($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0de')$$, 'yabancı ebeveyn başkasının çocuğunu bağlayamaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000d9');
-select tst.fails($$select public.clinic_invite_preview((select v from tst.kv where k = 'fam'))$$, 'uzman aile kodunu önizleyemez');
+select tst.rejects($$select public.clinic_invite_preview((select v from tst.kv where k = 'fam'))$$, 'uzman aile kodunu önizleyemez');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check((public.clinic_invite_preview((select v from tst.kv where k = 'fam')) ->> 'clinician') = 'Dr. Ece', 'ebeveyn rızadan önce uzmanı görür');
@@ -109,7 +109,7 @@ select tst.check(not public.family_premium(), 'bağlantıdan önce aile premium 
 insert into tst.kv values ('link', public.redeem_clinic_invite(lower((select v from tst.kv where k = 'fam')), '00000000-0000-0000-0000-00000000c0de') ->> 'link_id');
 select tst.check((select count(*) from public.family_clinic_links()) = 1, 'ebeveyn etkin paylaşımı listeler');
 select tst.check(public.family_premium(), 'etkin kliniğe bağlı aile premium (klinik üzerinden)');
-select tst.fails($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0d2')$$, 'aile kodu bir kez kullanılır');
+select tst.rejects($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0d2')$$, 'aile kodu bir kez kullanılır');
 
 -- ------------------------------------------------ rıza sonrası: uzman yalnız bağlı çocuğu okur
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
