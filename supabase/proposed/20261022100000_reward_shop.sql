@@ -128,7 +128,7 @@ begin
     'rewards', coalesce((select json_agg(json_build_object('id', r.id, 'title', r.title, 'icon', r.icon, 'price', r.price) order by r.price, r.title)
                            from public.rewards r
                           where r.family_id = me.family_id and r.active and (r.child_id is null or r.child_id = me.id)), '[]'::json),
-    'requests', coalesce((select json_agg(json_build_object('id', q.id, 'title', q.title, 'icon', q.icon, 'price', q.price, 'status', q.status,
+    'requests', coalesce((select json_agg(json_build_object('id', q.id, 'reward_id', q.reward_id, 'title', q.title, 'icon', q.icon, 'price', q.price, 'status', q.status,
                                                           'requested_at', q.requested_at, 'decided_at', q.decided_at) order by q.requested_at desc)
                             from (select * from public.reward_requests where child_id = me.id order by requested_at desc limit 20) q), '[]'::json));
 end $$;
