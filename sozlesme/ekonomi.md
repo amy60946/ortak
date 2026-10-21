@@ -37,20 +37,23 @@ Son güncelleme: 2026-10-19
 | `medium` (Orta) | **10** | Evet |
 | `hard` (Zor) | **20** | Evet |
 
-- SQL sınırı: `coins >= 0` (üst sınır **yok**). ParentApp girişi yalnız rakam kabul eder, `Math.max(0, …)`; üst sınır yok.
+- Sınır: **0–50** (`20261019100000_task_rewards.sql`, 19 Ekim 2026'da uygulandı). ParentApp girişi yalnız rakam kabul eder ve 0–50'ye sıkıştırır. Var olan 50 üstü satırlara dokunulmaz (kısıt `not valid`).
 - Coin **görev başına değil, atama (görev × çocuk) başına** tutulur; aynı görev iki çocuğa farklı ödülle atanabilir.
 - `coins = 0` ise onayda deftere satır yazılmaz.
-- Sahte arka uç (yalnız oyun önizlemesi, `MockBackend.ParentAssign`) ödülü **1–50** aralığına sıkıştırır; demo görevler 5 / 10 / 10 / 5 / 20 coin (`DemoParent.Samples`). Gerçek sunucuda böyle bir sınır yoktur (bkz. 8. bölüm, E1).
+- Sahte arka uç (yalnız oyun önizlemesi, `MockBackend.ParentAssign`) ödülü **1–50** aralığına sıkıştırır; demo görevler 5 / 10 / 10 / 5 / 20 coin (`DemoParent.Samples`). Üst sınır gerçek sunucuyla aynı (50).
 
 ### 2.2 Ne zaman yazılır (tetikleyici `completions_coin`)
 | Olay (`completions`) | Defter satırı |
 |---|---|
 | `status` `approved` olur (INSERT ya da UPDATE) | `+coins`, `reason='task'` |
-| `status` `approved`'dan başka bir değere geçer (ör. `rejected`, `pending`) | `−coins`, `reason='task_undo'` |
-| `approved` kayıt silinir | `−coins`, `reason='task_undo'` |
+| `status` `approved`'dan başka bir değere geçer (ör. `rejected`, `pending`) | `−verilen`, `reason='task_undo'` |
+| `approved` kayıt silinir (görev ve atama duruyor) | `−verilen`, `reason='task_undo'` |
+| Görev ya da atama silinir (silme zinciri) | yazılmaz: kazanılmış coin çocukta kalır |
 | Diğer geçişler (`pending`↔`declined` vb.) | yazılmaz |
 
-- Tutar, **o anda** `task_assignments.coins` değeridir. Onaydan sonra ödül değiştirilirse geri alma farklı tutar düşer; atama silinmişse geri alma 0 olur ve yazılmaz (kodun davranışı; bilinçli karar mı — doğrulanmalı).
+- Onayda tutar **o anki** `task_assignments.coins`'tir. Geri almada "verilen" = o tamamlama için defterde kalan net tutar (`task` − `task_undo`); onaydan sonra ödül değişse de verilen kadar düşülür. (Karar ve uygulama 19 Ekim 2026, `20261019100000_task_rewards.sql`.)
+- Geri alma, çocuk coini harcadıysa bakiyeyi eksiye düşürebilir (bilinçli: onay geri alınınca hak edilmemiş coin geri gelir).
+- ParentApp onayı ve reddi **ikisi de** `review_completion` ile yapar.
 - `ref = '<completion_id>:<epoch>'`; `unique (child_id, reason, ref)`.
 - İnceleme gerektirmeyen görevde (`requires_review = false`) çocuğun "Yaptım"ı doğrudan `approved` yazılır → coin hemen gelir.
 
@@ -71,7 +74,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | **Sunucu denetlemez** (sütun var, `spend_coins` kullanmıyor). Kilit yalnız oyunda (`ShopRules`, `item.Level`). |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -123,11 +126,14 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 ## 5. XP ve günlük sınır (yalnız oyun)
 
 ### 5.1 Yaş bandına göre ayarlar (`AgeBandProfile.For`)
+
+> 19 Ekim kararı: bantlar A 6–8 / B 9–12; C kaldırıldı (`durumlar.md` 4). A/B ayarlarının yeni yaş aralıklarına göre yeniden ayarlanması oyun penceresinin işidir; değerler değişirse önce burası güncellenir.
+
 | Bant | Günlük XP sınırı | Tema | Ses hep açık | Ses varsayılan | Altyazı varsayılan | Mini oyun zorluğu | Düğme ölçeği |
 |---|---|---|---|---|---|---|---|
 | A | **250** | `rounded_icons` | evet | açık | açık | 0.3 | 1.25 |
 | B | **300** | `balanced` | hayır | açık | açık | 0.6 | 1.0 |
-| C | **350** | `compact` | hayır | kapalı | açık | 0.85 | 0.9 |
+| ~~C~~ | ~~350~~ | ~~`compact`~~ | | | | ~~0.85~~ | ~~0.9~~ |
 
 - Gün, cihazın **yerel** tarihine göre döner.
 - Sınıra **sayılan** kaynaklar: `MiniGame`, `CardGame`, `Fishing`, `Garden`, `DailyQuest`. **Sayılmayan**: `TaskStreak` (gerçek görev serisi), `Achievement` (rozet, keşif, etkinlik, kulübe vb.).
@@ -135,6 +141,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 ### 5.2 XP kaynakları (koddaki sayılar)
 | Kaynak | XP | Sınıra sayılır mı |
 |---|---|---|
+| **Gerçek görev onayı** (Ö2, `RealTaskRewards.Xp`; karar 19 Ekim) | Zorluğa göre (`task_assignments.difficulty`): kolay **20**, orta **35**, zor **50**. Her onaylı görev örneği bir kez. | Hayır |
 | Gerçek görev serisi (`TaskStreak.Bonus`): art arda günlerde en az bir **onaylı** görev | 1. gün 10, her gün +5, 7. günden sonra **40**'ta sabit (10, 15, 20, 25, 30, 35, 40). Aynı gün ikinci onay bonus vermez; seri kırılırsa 1'den başlar, ceza yok. | Hayır |
 | Mini oyun (`MiniGameXp.For`) | `min(40, 5 + skor × puanBaşı)`; hindistan cevizi puanBaşı 1, mağara 2 | Evet |
 | "Pet'e yardım" mini oyunu | `max(10, 25 − 2 × deneme)` | Evet |
@@ -150,6 +157,29 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (`tasks_approved` sayacı) bağlıdır; yani ParentApp onayı oyunda XP'yi de dolaylı etkiler.
 
 ---
+
+## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
+
+- **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
+- Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
+- **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
+- ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
+
+## 5B. Beceriler (Ö2; karar 19 Ekim 2026)
+
+Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun ve raporlar aşağıdaki **tek sözlüğe** eşler (`SkillCatalog`); eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+
+| Anahtar | Ad (Türkçe) | Eşlenen etiketler (bugünkü ParentApp şablonları dahil) |
+|---|---|---|
+| `focus` | Odak | Odak, Odaklanma |
+| `kindness` | Nezaket | Nezaket, Empati, Minnettarlık |
+| `responsibility` | Sorumluluk | Sorumluluk, Takım Çalışması |
+| `independence` | Bağımsızlık | Bağımsızlık |
+| `calm` | Sakinlik | Sakinlik, Sakinleşme |
+| `self_care` | Öz Bakım | Öz Bakım |
+
+- Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
+- Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
@@ -208,11 +238,11 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 
 | # | Konu | Ayrıntı |
 |---|---|---|
-| E1 | Görev ödülü üst sınırı | SQL ve ParentApp: üst sınır yok (`coins >= 0`). Oyunun sahte arka ucu 1–50'ye sıkıştırır. Gerçek sınır istenirse SQL kısıtı + ParentApp girişi birlikte değişmeli. |
-| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. |
-| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. |
-| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. |
+| E1 | ~~Görev ödülü üst sınırı~~ | **Karar (19 Ekim):** 0–50. SQL kısıtı uygulandı, ParentApp girişi sıkıştırıyor. |
+| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. **Karar: fiyat > 0** (`game_items_price_positive`). |
+| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. **Karar: oyun da 1–20 denetler** (`Wallet.TrySpend`). |
+| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. **Karar: sunucu denetler** — seviye, oyun kaydındaki `Xp.TotalXp` ve `game_levels` eşiklerinden (`child_level`); hata `level_locked`. Oyun harcamadan önce kaydı yedekler. |
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
-| E6 | Onay sonrası ödül değişimi | Geri alma, o anki `task_assignments.coins` kadar düşer (bkz. 2.2). |
+| E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |

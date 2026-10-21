@@ -11,7 +11,7 @@ for t in "$here"/test_*.sql; do
   run() { psql -q -t -o /dev/null -v ON_ERROR_STOP=1 -d "$db" -f "$1"; }
   run "$here/supabase_stub.sql"
   for f in "$here"/../migrations/*.sql; do run "$f"; done
-  for f in "$here"/../proposed/*.sql; do run "$f"; run "$f"; done
+  for f in "$here"/../proposed/*.sql; do [ -e "$f" ] || continue; run "$f"; run "$f"; done
   run "$t"
   echo "geçti: $(basename "$t")"
 done
