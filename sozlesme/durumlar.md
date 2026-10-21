@@ -160,7 +160,7 @@ Kod biçimi:
 
 ---
 
-## 9. Kategori, gün bölümü, zor an (öneri, uygulanmadı — `proposed/20261019140000_parent_features.sql`)
+## 9. Kategori, gün bölümü, zor an (21 Ekim 2026'da uygulandı — `migrations/20261019140000_parent_features.sql`)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
@@ -180,4 +180,4 @@ Kod biçimi:
 |---|---|---|
 | `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
-| `profiles.invited_by` | davet kodunu üreten ebeveyn | Öneri `20261021000000_family_roles.sql`; uygulamada gösterilmez. |
+| `profiles.invited_by` | davet kodunu üreten ebeveyn | `migrations/20261021000000_family_roles.sql` (uygulandı); uygulamada gösterilmez. |
