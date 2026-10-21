@@ -4,6 +4,9 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] Supabase'e uygulanacak (kullanıcı): `proposed/20261021000000_family_roles.sql` (davet kaydı + kayıt kaybı koruması).
+- [ ] Pofi Adası ve ClinicApp: `children.avatar` `photo:` ile başlıyorsa fotoğraf (oyun: `mail` kovasından imzalı bağlantı) ya da varsayılan avatar göster.
+- [ ] ClinicApp: giriş kutusu etiketlerinde büyük harf + harf aralığı (`letterSpacing`, `toUpperCase`) kaldırılsın; Türkçe "i" bozuluyor (ParentApp'te düzeltildi, kullanıcı isteği).
 - [ ] Supabase'e uygulanacak (kullanıcı): `proposed/20261019140000_parent_features.sql` (6 kategori, görev gün bölümü, çok çocuklu + sesli zor an).
 - [ ] ClinicApp (klinik penceresi): zor an arşivi listesi (çocuk ve tarih süzgeciyle; `group_id` aynı olanlar birlikte), sesli kaydı dinleme (`storage.from('abc').createSignedUrl(audio_path)`), gün bölümü için `abc_events.day_part` alanını kullan (saatten hesaplama yerine).
 - [ ] **Hatırlatıcı:** uzmanın, ebeveynin ilettiği zor ana sistem üzerinden yanıt vermesi (şimdilik yazılmayacak; kullanıcı kararı 19 Ekim).
@@ -19,6 +22,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-21 · ParentApp + ortak · Emojiler kaldırıldı (gün bölümü, görev, kategori), zor an kaydında "Uzmana iletildi", Görev Oluştur üst boşluk, şablon yaş süzgecinde 6 ve altı / 12 ve üzeri, zil her sekmede, çocuk için fotoğraf avatarı (`photo:`), etiket harf aralığı, Posta → Mesajlar. Öneri `20261021000000_family_roles.sql` + test (geçti). · **Oyun/Klinik:** `photo:` avatarı. **Kullanıcı:** SQL'i uygula.
 - 2026-10-19 · ParentApp + ortak · Öneri `20261019140000_parent_features.sql` + `test_parent_features.sql` (geçti): 6 görev kategorisi, görev gün bölümü, zor an: gün bölümü seçimi, çok çocuk (ortak `group_id`), sesli kayıt (kova `abc`, uzman yalnız rızayla dinler), uzmana tek bildirim. Sözleşme `durumlar.md` 9. · **Klinik penceresi:** zor an arşivi + ses dinleme + `day_part`. **Kullanıcı:** SQL'i uygula.
 - 2026-10-19 · tümü · **Uygulandı** (kullanıcı): `20261019120000_clinic_children.sql`, `20261019130000_notifications.sql` → `migrations/`; Edge Function `push-apns` yayında (JWT doğrulaması kapalı, dışarıdan denendi) + secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID`. Bildirimler canlıda. · **Oyun / Klinik pencereleri:** bildirim listesini göster; oyun push için `register_push_token(token,'child','ios')`.
 - 2026-10-19 · tümü · **Bildirim sistemi** önerisi (13 olay, üç uygulama; sunucu tetikleyicileri yazar, ParentApp'e Expo push) ve **tek kodla birden çok çocuk + kodsuz ekle/çıkar** önerisi; testler `test_notifications.sql`, `test_clinic_children.sql` (hepsi geçti). Sözleşme: `akislar.md` 7–8, `durumlar.md` 8, `veritabani.md` 5. · ParentApp güncellendi. **Kullanıcı:** iki SQL'i uygula + Edge Function `push-apns` + APNs secret'ları (Expo sertifika istediği için Expo yolu bırakıldı; push doğrudan Supabase → Apple). **Oyun / Klinik pencereleri:** bildirim listesini göster (Açık işler).
