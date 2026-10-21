@@ -181,6 +181,15 @@ Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun
 - Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
 - Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
 
+## 5C. Gerçek ödüller (Ö7; öneri `20261022100000_reward_shop`, 22 Ekim 2026)
+
+- Ebeveyn ödülü ve fiyatını koyar (1–500 coin). Coin, **ebeveyn ödülü verdiğinde** düşer (`coin_ledger.reason = 'reward'`), istek anında değil.
+- Bekleyen isteklerin toplamı çocuğun **kullanılabilir coin**'inden ayrılır: `available = bakiye − bekleyenler`. Yeni istek `available ≥ fiyat` ister.
+  Oyun dükkânı (`spend_coins`) ayrılmış coin'i bilmez; çocuk bu arada eşya alırsa ebeveyn "ver" dediğinde bakiye yetmeyebilir → `not_enough_coins`, istek bekler, coin eksiye düşmez.
+  Oyun arayüzü bu yüzden eşya dükkânında "ödüle ayrılmış" coin'i ayrıca gösterir.
+- Önerilen fiyat aralığı (ParentApp'te ipucu, kural değil): küçük ödül 10–30, orta 40–80, büyük 100–200 coin. Günlük görev başına ödül ≤ 50 olduğundan büyük ödül birkaç günlük birikim ister.
+- "Önce rutin, sonra oyun" (mini oyunlar sabah rutini bitince açılır) Ö7'nin isteğe bağlı ayarıdır; bu öneriye dahil değil, ayrıca karara bağlanacak.
+
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
 En fazla seviye **15**. Büyüme evresi: Yavru Sv1, Genç **Sv5**, Yetişkin **Sv10**.
