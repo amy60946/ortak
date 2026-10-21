@@ -215,8 +215,8 @@ SQL: `supabase/proposed/20261021130000_codes_15min.sql`, `20261021140000_subscri
 | `app_config` | Uygulama ayarı (`billing`) | `key`, `value` (jsonb) | Yalnız SQL Editor | Giriş yapmış herkes (`billing`) |
 | `messages` (+alan) | `read_at`; `kind` += `sticker` | — | P/O INSERT (politika), `read_at` yalnız RPC | P (aile), O (kendi sohbeti) |
 | `sun_stone_ledger` | Güneş Taşı defteri | `child_id`, `amount`, `reason`, `ref`, `note`, `created_by` | Yalnız tetikleyici/RPC | P (aile), O (kendi) — Realtime |
-| `rewards` | Ebeveynin ödülleri | `title` (1–60), `cost` (1–500), `child_id` (null = hepsi), `active` | P (ücretsiz planda kapalı) | P, O (kendine açık + etkin) — Realtime |
-| `reward_requests` | Ödül istekleri / verilen ödüller | `child_id`, `reward_id`, `title`, `cost`, `source`, `status`, `note`, `decided_*` | Yalnız RPC | P (aile), O (kendi) — Realtime |
+| `rewards` | Ebeveynin ödülleri | `title` (1–60), `kind` (`item` eşya/etkinlik · `exchange` değişim), `cost` (1–500 taş), `unit` (`minute` ekran süresi / `money` TL; yalnız değişim), `unit_amount` (cost taş karşılığı miktar), `child_ids` (boş = hepsi), `icon` (simge anahtarı), `active` | P (ücretsiz planda kapalı) | P, O (kendine açık + etkin) — Realtime |
+| `reward_requests` | Ödül istekleri / verilen ödüller | `child_id`, `reward_id`, `title`, `quantity` (1–20), `cost` (toplam taş), `unit`, `amount` (toplam dakika/TL), `source`, `status`, `note`, `decided_*` | Yalnız RPC | P (aile), O (kendi) — Realtime |
 
 ### 6.2 Fonksiyonlar
 
@@ -232,9 +232,9 @@ SQL: `supabase/proposed/20261021130000_codes_15min.sql`, `20261021140000_subscri
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
 | `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
 | `sun_stone_balance(p_child_id)` | P (aile), O (yalnız kendisi) | Bakiye |
-| `give_reward(p_child_id, p_reward_id)` | P | `{request_id, balance}` |
+| `give_reward(p_child_id, p_reward_id, p_quantity default 1)` | P | `{request_id, balance}` |
 | `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
-| `request_reward(p_reward_id)` | O | `{request_id, status}` |
+| `request_reward(p_reward_id, p_quantity default 1)` | O | `{request_id, status}` |
 | `cancel_reward_request(p_request_id)` | O | Bekleyen isteği geri çeker |
 | `decide_reward_request(p_request_id, p_approve, p_note)` | P | `{status, balance}` |
 | `child_set_status` (değişti) | O | En çok 7 gün geriye işaretlenir |

@@ -231,7 +231,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 |---|---|
 | Kazanç | Yalnız onaylanan gerçek görev: zorluk kolay **1**, orta **2**, zor **3** taş (atamadaki `difficulty`) |
 | Geri alma | Onay geri alınırsa o tamamlama için verilen net taş düşülür; görev/atama silinirse kalır (coin kuralıyla aynı) |
-| Ödül fiyatı | 1–500 taş (ebeveyn belirler); aile başına en çok 100 ödül |
+| Ödül fiyatı | Eşya/etkinlik: 1–500 taş. Değişim: "N taş = M dakika ekran süresi" ya da "N taş = M TL harçlık", 1–20 kez alınır. Ebeveyn belirler; aile başına en çok 100 ödül |
 | Harcama | Ödül verilince/onaylanınca; bakiye eksiye düşmez (çocuk satırı kilitlenerek denetlenir) |
 | Ceza (taş düşme) | Ebeveyn 1–100 taş, isteğe bağlı neden (≤ 200); bakiyeden fazla düşülemez; çocuğa bildirim gider |
 | Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer |

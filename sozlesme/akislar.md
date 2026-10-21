@@ -245,11 +245,11 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|
-| 1 | [P] | Görevler › + › **Ödül**: ödül ekler (ad, taş fiyatı, tek çocuk ya da hepsi). | `rewards` |
+| 1 | [P] | Görevler › + › **Ödül**: önerilen ödüllerden seçer ya da kendi ödülünü oluşturur (tür: eşya/etkinlik ya da değişim; taş fiyatı; hangi çocuklar; simge; ad). | `rewards` |
 | 2 | [S] | Onaylanan görev taş verir (1/2/3). | tetikleyici `completions_stone` |
-| 3a | [P] | Ödülü doğrudan verir → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül)` |
-| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül)` → `decide_reward_request(istek, onay, not)` |
-| 4 | [P] | Taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` |
+| 3a | [P] | Ödülü doğrudan verir (değişimde kaç kez) → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül, adet)` |
+| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `decide_reward_request(istek, onay, not)` |
+| 4 | [P] | Bir ya da birkaç çocuk seçip taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` (çocuk başına) |
 | 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
 
 ## 12. Abonelik (öneri, 21 Ekim 2026)

@@ -81,9 +81,13 @@ select tst.fails($$insert into public.sun_stone_ledger (family_id, child_id, amo
 
 -- ödüller
 insert into public.rewards (id, family_id, title, cost) values ('00000000-0000-0000-0000-0000000000b1', public.my_family_id(), '  Parkta 30 dakika ', 5);
-insert into public.rewards (id, family_id, title, cost, child_id) values ('00000000-0000-0000-0000-0000000000b2', public.my_family_id(), 'Film gecesi', 20, '00000000-0000-0000-0000-00000000c001');
+insert into public.rewards (id, family_id, title, cost, child_ids) values ('00000000-0000-0000-0000-0000000000b2', public.my_family_id(), 'Film gecesi', 20, array['00000000-0000-0000-0000-00000000c001'::uuid]);
 insert into public.rewards (id, family_id, title, cost) values ('00000000-0000-0000-0000-0000000000b4', public.my_family_id(), 'Dondurma', 3);
-insert into public.rewards (id, family_id, title, cost, child_id) values ('00000000-0000-0000-0000-0000000000b3', public.my_family_id(), 'Efe için bisiklet turu', 2, '00000000-0000-0000-0000-00000000c002');
+insert into public.rewards (id, family_id, title, cost, child_ids) values ('00000000-0000-0000-0000-0000000000b3', public.my_family_id(), 'Efe için bisiklet turu', 2, array['00000000-0000-0000-0000-00000000c002'::uuid]);
+insert into public.rewards (id, family_id, title, kind, cost, unit, unit_amount, icon) values ('00000000-0000-0000-0000-0000000000b5', public.my_family_id(), 'Ekran süresi', 'exchange', 1, 'minute', 10, 'phone-portrait');
+select tst.fails($$insert into public.rewards (family_id, title, kind, cost) values (public.my_family_id(), 'Eksik değişim', 'exchange', 1)$$, 'değişim ödülünde birim ve miktar zorunlu');
+select tst.fails($$insert into public.rewards (family_id, title, cost, child_ids) values (public.my_family_id(), 'Yabancı çocuk', 1, array[gen_random_uuid()])$$, 'başka ailenin çocuğu seçilemez');
+select tst.fails($$insert into public.rewards (family_id, title, cost, icon) values (public.my_family_id(), 'Simge', 1, '<script>')$$, 'simge anahtarı yalnız harf/tire');
 select tst.check((select title from public.rewards where id = '00000000-0000-0000-0000-0000000000b1') = 'Parkta 30 dakika', 'başlık kırpılır');
 select tst.check((select created_by from public.rewards limit 1) = auth.uid(), 'ekleyen sunucuda yazılır');
 select tst.fails($$insert into public.rewards (family_id, title, cost) values (public.my_family_id(), 'Pahalı', 501)$$, 'fiyat 1–500');
@@ -103,10 +107,17 @@ select tst.fails($$select public.deduct_sun_stones('00000000-0000-0000-0000-0000
 select tst.fails($$select public.deduct_sun_stones('00000000-0000-0000-0000-00000000c001', 0)$$, 'en az 1');
 select tst.fails($$select public.deduct_sun_stones('00000000-0000-0000-0000-00000000c001', 101)$$, 'en çok 100');
 select tst.check((select note from public.sun_stone_ledger where reason = 'penalty') = 'Kardeşine vurdu', 'neden kayıtta');
+select tst.check((public.give_reward('00000000-0000-0000-0000-00000000c001', '00000000-0000-0000-0000-0000000000b5', 2) ->> 'balance')::int = 1, 'değişim: 2 kez ekran süresi = 2 taş');
+select tst.check((select amount from public.reward_requests where reward_id = '00000000-0000-0000-0000-0000000000b5') = 20, '20 dakika kaydedildi');
+select tst.check((select note from public.sun_stone_ledger where reason = 'reward' order by id desc limit 1) = 'Ekran süresi · 20 dakika', 'hareket notunda miktar');
+select tst.fails($$select public.give_reward('00000000-0000-0000-0000-00000000c001', '00000000-0000-0000-0000-0000000000b1', 2)$$, 'eşya ödülü tek adet verilir');
+-- bakiyeyi geri getir: iki görev onayı (+2)
+select public.review_completion('00000000-0000-0000-0000-000000007a52', '00000000-0000-0000-0000-00000000c001', current_date - 2, 'approved');
+select public.review_completion('00000000-0000-0000-0000-000000007a52', '00000000-0000-0000-0000-00000000c001', current_date - 3, 'approved');
 
 -- çocuk ister, ebeveyn karar verir
 select tst.as_user('00000000-0000-0000-0000-0000000000c1');
-select tst.check((select count(*) from public.rewards) = 3, 'çocuk kendine açık ödülleri görür (kardeşe özel görünmez)');
+select tst.check((select count(*) from public.rewards) = 4, 'çocuk kendine açık ödülleri görür (kardeşe özel görünmez)');
 select tst.check(public.sun_stone_balance('00000000-0000-0000-0000-00000000c001') = 3, 'çocuk bakiyesini görür');
 select tst.fails($$select public.sun_stone_balance('00000000-0000-0000-0000-00000000c002')$$, 'çocuk kardeşinin bakiyesini göremez');
 select tst.check(tst.err($$select public.request_reward('00000000-0000-0000-0000-0000000000b2')$$) like 'Yeterli Güneş Taşı yok%', 'yetmeyen ödül istenemez');
