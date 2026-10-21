@@ -113,7 +113,7 @@ select tst.as_user(null);
 insert into public.messages (family_id, child_id, sender, kind, media_path)
   values ((select v::uuid from tst.kv where k = 'fid'), '00000000-0000-0000-0000-00000000c001', 'child', 'image', 'x/y.jpg');
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a1', 'message') = 1 and tst.n('00000000-0000-0000-0000-0000000000a2', 'message') = 1, 'çocuk mesajı iki ebeveyne');
-select tst.check((select body from public.notifications where kind = 'message' and user_id = '00000000-0000-0000-0000-0000000000a1') = '📷 Fotoğraf', 'fotoğraf önizlemesi');
+select tst.check((select body from public.notifications where kind = 'message' and user_id = '00000000-0000-0000-0000-0000000000a1') = 'Fotoğraf', 'fotoğraf önizlemesi');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 

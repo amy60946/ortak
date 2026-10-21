@@ -197,3 +197,53 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 | `family_clinic_links()` | P | Dönüşe `clinic_id` eklendi |
 | İç: `notify`, `notify_parents`, `notify_child`, `notify_clinic`, `child_name`, olay tetikleyicileri, `notifications_push` (pg_net → Edge Function `push-apns` / Expo) | — | İstemci çağıramaz |
 | Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar |
+
+## 6. Kodlar, abonelik, mesajlar, Güneş Taşı, güvenlik (öneri, 21 Ekim 2026 — uygulanmadı)
+
+SQL: `supabase/proposed/20261021130000_codes_15min.sql`, `20261021140000_subscriptions.sql`, `20261021150000_messages.sql`,
+`20261021160000_sun_stones_rewards.sql`, `20261021170000_whitehat_fixes.sql`. Testler: `test_codes`, `test_subscriptions`,
+`test_messages`, `test_sun_stones`, `test_whitehat`. Akış: `akislar.md` 9–12. Değerler: `durumlar.md` 11–14, `ekonomi.md` 9.
+
+### 6.1 Tablolar
+
+| Tablo / alan | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `code_attempts` | Hatalı kod denemeleri | `user_id`, `ip`, `kind`, `created_at` (1 gün tutulur) | Yalnız fonksiyonlar | Kimse (istemci) |
+| `families.trial_started_at` | Deneme başlangıcı (e-posta doğrulama anı) | — | Sunucu tetikleyicisi | P (`family_access`) |
+| `trial_history` | Deneme almış e-postaların SHA-256 özeti (yeniden kayıtla yeni deneme alınmasın) | `email_hash`, `started_at` | Sunucu | Kimse. Hesap silinince kalır → gizlilik metnine yazılmalı |
+| `family_subscriptions` (+alan) | `billing`, `status`, `product_id`, `store_transaction_id`, `auto_renew`, `started_at` | — | Yalnız service role (`set_family_subscription`) | P (kendi ailesi) |
+| `app_config` | Uygulama ayarı (`billing`) | `key`, `value` (jsonb) | Yalnız SQL Editor | Giriş yapmış herkes (`billing`) |
+| `messages` (+alan) | `read_at`; `kind` += `sticker` | — | P/O INSERT (politika), `read_at` yalnız RPC | P (aile), O (kendi sohbeti) |
+| `sun_stone_ledger` | Güneş Taşı defteri | `child_id`, `amount`, `reason`, `ref`, `note`, `created_by` | Yalnız tetikleyici/RPC | P (aile), O (kendi) — Realtime |
+| `rewards` | Ebeveynin ödülleri | `title` (1–60), `cost` (1–500), `child_id` (null = hepsi), `active` | P (ücretsiz planda kapalı) | P, O (kendine açık + etkin) — Realtime |
+| `reward_requests` | Ödül istekleri / verilen ödüller | `child_id`, `reward_id`, `title`, `cost`, `source`, `status`, `note`, `decided_*` | Yalnız RPC | P (aile), O (kendi) — Realtime |
+
+### 6.2 Fonksiyonlar
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `join_family(p_code)` | P | **Dönüş `json {family_id}`** (önce uuid); kod hatası durumlar 11 |
+| `redeem_child_code`, `clinic_invite_preview`, `redeem_clinic_invite(_children)` | O / P | Kod hatası exception değil, hata gövdesi + 400/429 |
+| `clinic_team_code_status(p_code)` | **girişsiz** (K kayıt öncesi) | `{status:'valid', clinic, expires_at}` ya da hata gövdesi; IP başına deneme sınırı |
+| `family_access()` | P | `{state, full, enforced, trial_started_at, trial_ends_at, days_left, plan, period_end, auto_renew, subscription_status, limits}` |
+| `family_premium(p_family_id)` | P, K | premium / ücretli klinik / deneme sürüyor |
+| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`) |
+| `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
+| `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
+| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
+| `sun_stone_balance(p_child_id)` | P (aile), O (yalnız kendisi) | Bakiye |
+| `give_reward(p_child_id, p_reward_id)` | P | `{request_id, balance}` |
+| `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
+| `request_reward(p_reward_id)` | O | `{request_id, status}` |
+| `cancel_reward_request(p_request_id)` | O | Bekleyen isteği geri çeker |
+| `decide_reward_request(p_request_id, p_approve, p_note)` | P | `{status, balance}` |
+| `child_set_status` (değişti) | O | En çok 7 gün geriye işaretlenir |
+| `register_push_token` (değişti) | O, P, K | Kullanıcı başına en yeni 5 anahtar |
+
+### 6.3 Güvenlik değişiklikleri
+
+- Çocuğun `completions`'a doğrudan INSERT izni kaldırıldı (yalnız `child_set_status`): istediği tarihe "onaylandı" yazıp coin basabiliyordu.
+- Klinik denemesi (trial) aileye premium vermez; yalnız ücretli klinik planı.
+- Klinik "kim yazdı" alanlarını (`clinic_goals.created_by`, `goal_ratings.rated_by`, `clinic_task_suggestions.created_by`) sunucu doldurur; `clinic_links.clinician_id` yalnız aynı klinikten.
+- Uzman hesabı çocuk kodu kullanamaz. Metin alanlarına uzunluk sınırı. Yeni fonksiyonlar varsayılan olarak anon'a kapalı, yeni tablolarda TRUNCATE yok.
+- Edge Function `push-apns`: yalnız son 10 dakikada oluşmuş bildirim; yanıtta cihaz bilgisi yok.

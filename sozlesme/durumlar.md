@@ -65,16 +65,16 @@ Ek kurallar:
 
 | Tablo / alan | Değer | Anlamı | Geçerlilik | Kaynak |
 |---|---|---|---|---|
-| `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
-| `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | uygulandı |
-| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
+| `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 15 dakika (öneri; önce 24 saat), tek kullanım | SQL (uygulandı) |
+| `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 15 dakika (öneri; önce 24 saat), tek kullanım; aynı çocuğa yeni kod eskisinin süresini bitirir | SQL (uygulandı) |
+| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 15 dakika (öneri; önce 7 gün), tek kullanım | uygulandı |
+| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 15 dakika (öneri; önce 7 gün), tek kullanım | uygulandı |
 
 Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
 - Oyun girişi (`ChildCode.Normalize`): küçük harf büyütülür, harf/rakam dışı karakterler atılır, uzunluk tam 6 olmalı. ParentApp: `trim().toUpperCase()`.
 - Oyunun deneme kodları `A1A1A1`, `B2B2B2`, `C3C3C3`: `ServerConfig.DemoCodes = true` iken `RoutedAuthService` bunları sahte arka uca yönlendirir (sunucuya gitmez). `A1A1A1` sunucu alfabesinde olmayan `1` içerdiği için gerçek bir kodla çakışamaz; `B2B2B2` ve `C3C3C3` ise sunucu alfabesine uyar, yani çok düşük olasılıkla gerçek bir kodla aynı olabilir ve o durumda oyun gerçek kodu sahte arka uca gönderir. Mağaza sürümünde `DemoCodes` kapatılmalı (doğrulanmalı).
-- Oyunda hatalı kod beklemesi (yalnız istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucuda deneme sınırı yok** (PLAN.md'de "yeni" olarak planlanmıştı; SQL'de bulunamadı).
+- Oyunda hatalı kod beklemesi (yalnız istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. Sunucu deneme sınırı: öneri `20261021130000_codes_15min.sql` (bölüm 11).
 
 ---
 
@@ -181,3 +181,62 @@ Kod biçimi:
 | `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
 | `profiles.invited_by` | davet kodunu üreten ebeveyn | `migrations/20261021000000_family_roles.sql` (uygulandı); uygulamada gösterilmez. |
+
+## 11. Kod hataları (öneri, 21 Ekim 2026 — `proposed/20261021130000_codes_15min.sql`)
+
+Bütün kodlar **15 dakika** geçerli. Kod kullanan RPC'ler (`join_family`, `redeem_child_code`, `clinic_invite_preview`,
+`redeem_clinic_invite`, `redeem_clinic_invite_children`, `clinic_team_code_status`) kod hatasında exception atmaz:
+denemeyi kaydeder, HTTP durumunu ayarlar ve PostgREST hata biçiminde döner (supabase-js bunu `error` olarak verir):
+`{"code":"P0001","message":"<metin>","details":null,"hint":"<neden>","error":"<neden>"}`.
+
+| `hint` / `error` | HTTP | Metin (sunucu) | Uygulama ne yapar |
+|---|---|---|---|
+| `code_invalid` | 400 | Kod bulunamadı. Harfleri kontrol et ya da yeni kod iste. | Yeniden yazdırır |
+| `code_expired` | 400 | Kodun süresi doldu (kodlar 15 dakika geçerli). Yeni kod iste. | "Yeni kod iste" (ebeveyn/uzman yeni kod üretir) |
+| `code_used` | 400 | Bu kod daha önce kullanıldı. Yeni kod iste. | Aynı |
+| `too_many_attempts` | 429 | Çok fazla hatalı deneme yapıldı. 15 dakika sonra tekrar dene. | Giriş kutusunu 15 dk kilitler |
+
+- Deneme sınırı: oturum (`auth.uid()`) başına 15 dakikada 10, IP başına 30 hatalı deneme. Engel yanıtı sayılmaz.
+- Süresi dolan kod 1 gün tabloda kalır ("süresi doldu" diyebilmek için), sonra silinir.
+- `join_family` dönüşü `uuid` → `json {family_id}` oldu.
+- Oyun (`redeem_child_code`): başarı yanıtı aynı; hata yine HTTP 4xx, metin `message` alanında. Oyun `hint`'e göre ayrı metin gösterebilir.
+- Kod dışı hatalar (ör. "Zaten bu ailedesin", "Ebeveyn hesabıyla çocuk girişi yapılamaz") eskisi gibi exception.
+
+## 12. Abonelik durumu (öneri, 21 Ekim 2026 — `proposed/20261021140000_subscriptions.sql`)
+
+| `family_access().state` | Anlam | Erişim |
+|---|---|---|
+| `pending` | Aileyi kuran ebeveyn e-postasını henüz doğrulamadı (deneme başlamadı) | Tam |
+| `trial` | 7 günlük deneme sürüyor (`trial_ends_at`, `days_left`) | Tam |
+| `premium` | Ücretli abonelik: `plan` = `monthly` / `yearly`; iptal edilse de `period_end`'e kadar | Tam |
+| `clinic` | Ücretli plandaki (`small`/`business`/`custom`) bir kliniğe bağlı çocuğu var | Tam |
+| `expired` | Deneme bitti, abonelik yok | `enforced` ise ücretsiz plan |
+
+- `family_access().full`: kısıt uygulanacak mı (false yalnız `expired` + `enforced`).
+- `app_config.billing`: `enforce` (şimdilik **false**: ödeme bağlanınca true), `trial_days` 7, `free_max_tasks` 3, `free_max_children` 1.
+- Ücretsiz plan sınırı hatası: `hint = 'premium_required'` (uygulama üyelik ekranını açar).
+- `family_subscriptions.status`: `active` / `grace` (ödeme sorunu, ek süre) / `canceled` (yenileme kapalı, dönem sonuna kadar premium) / `expired` / `refunded`. `billing`: `monthly` / `yearly`.
+- Mağaza ürün kimlikleri: `parentapp.premium.monthly`, `parentapp.premium.yearly`.
+
+## 13. Mesaj türleri (öneri, 21 Ekim 2026 — `proposed/20261021150000_messages.sql`)
+
+| `messages.kind` | Kim gönderir | İçerik |
+|---|---|---|
+| `text` | Ebeveyn (≤ 2000), çocuk (≤ 500) | `body` |
+| `sticker` | Ebeveyn, çocuk | `body` = çıkartma anahtarı (aşağıda) |
+| `image` | Yalnız ebeveyn | `media_path` = `<aile>/<dosya>` (kova `mail`) |
+| `audio` | Yalnız ebeveyn | `media_path`, `duration_ms` |
+
+Çıkartma anahtarları ve Türkçe etiketleri: `heart` Kalp, `star` Yıldız, `thumbs_up` Harika, `hug` Sarılma, `smile` Gülümseme,
+`laugh` Kahkaha, `wow` Vay, `sad` Üzgün, `sleepy` Uykulu, `party` Kutlama, `thanks` Teşekkürler, `love_you` Seni seviyorum.
+Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf okudu.
+
+## 14. Güneş Taşı ve ödül (öneri, 21 Ekim 2026 — `proposed/20261021160000_sun_stones_rewards.sql`)
+
+| Alan | Değerler |
+|---|---|
+| `sun_stone_ledger.reason` | `task` (onay), `task_undo` (onay geri alındı), `reward` (ödül verildi/onaylandı), `penalty` (ebeveyn düştü), `adjust` (ileride) |
+| `reward_requests.source` | `child` (oyunda istedi) / `parent` (ebeveyn doğrudan verdi) |
+| `reward_requests.status` | `pending` (bekliyor) / `approved` (verildi, taş düştü) / `rejected` (olmadı) / `canceled` (çocuk vazgeçti) |
+| Hata `hint` | `not_enough_stones`, `too_many_requests` (5 bekleyen istek), `premium_required` |
+| Bildirim `kind` | `reward_request` (ebeveynlere), `reward_given`, `reward_decided`, `stones_deducted` (çocuğa; diğer ebeveyne bilgi) |

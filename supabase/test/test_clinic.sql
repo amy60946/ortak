@@ -100,8 +100,12 @@ select tst.check((public.clinic_invite_preview((select v from tst.kv where k = '
 select tst.check(not public.family_premium(), 'bağlantıdan önce aile premium değil');
 insert into tst.kv values ('link', public.redeem_clinic_invite(lower((select v from tst.kv where k = 'fam')), '00000000-0000-0000-0000-00000000c0de') ->> 'link_id');
 select tst.check((select count(*) from public.family_clinic_links()) = 1, 'ebeveyn etkin paylaşımı listeler');
-select tst.check(public.family_premium(), 'etkin kliniğe bağlı aile premium (klinik üzerinden)');
-select tst.fails($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0d2')$$, 'aile kodu bir kez kullanılır');
+select tst.check(not public.family_premium(), 'deneme sürümündeki klinik aileye premium vermez (güvenlik L3)');
+reset role;
+update public.clinics set plan = 'small';
+set role authenticated;
+select tst.check(public.family_premium(), 'ücretli kliniğe bağlı aile premium (klinik üzerinden)');
+select tst.check(public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0d2') ->> 'error' = 'code_used', 'aile kodu bir kez kullanılır (code_used)');
 
 -- ------------------------------------------------ rıza sonrası: uzman yalnız bağlı çocuğu okur
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');

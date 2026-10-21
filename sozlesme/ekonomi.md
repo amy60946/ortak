@@ -222,3 +222,20 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz**. |
+
+## 9. Güneş Taşı (öneri, 21 Ekim 2026 — `proposed/20261021160000_sun_stones_rewards.sql`)
+
+İkinci para; coin'den ayrı defter (`sun_stone_ledger`). Coin oyun içi dükkân için, Güneş Taşı **gerçek hayat ödülleri** için.
+
+| Kural | Değer |
+|---|---|
+| Kazanç | Yalnız onaylanan gerçek görev: zorluk kolay **1**, orta **2**, zor **3** taş (atamadaki `difficulty`) |
+| Geri alma | Onay geri alınırsa o tamamlama için verilen net taş düşülür; görev/atama silinirse kalır (coin kuralıyla aynı) |
+| Ödül fiyatı | 1–500 taş (ebeveyn belirler); aile başına en çok 100 ödül |
+| Harcama | Ödül verilince/onaylanınca; bakiye eksiye düşmez (çocuk satırı kilitlenerek denetlenir) |
+| Ceza (taş düşme) | Ebeveyn 1–100 taş, isteğe bağlı neden (≤ 200); bakiyeden fazla düşülemez; çocuğa bildirim gider |
+| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer |
+| Başlangıç | 0. Uygulanmadan önce onaylanmış görevler taş vermez (geriye dönük yok) |
+
+Not: Omurga analizinde (Ö1) taşın adaya "yerleştirilmesi" de önerilmişti; ada ilerlemesi için taş harcanıp harcanmayacağı
+oyun penceresiyle ayrıca karara bağlanacak (DURUM hatırlatıcısı). Bugünkü kural: taş yalnız ödüllerde harcanır.

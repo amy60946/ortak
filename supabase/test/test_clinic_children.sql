@@ -53,7 +53,7 @@ select tst.check(json_array_length(public.redeem_clinic_invite_children((select 
   'tek kodla iki çocuk paylaşılır (tekrar eden çocuk bir kez)');
 select tst.check((select count(*) from public.family_clinic_links()) = 2, 'iki paylaşım listelenir');
 select tst.check((select count(distinct clinic_id) from public.family_clinic_links()) = 1, 'listede clinic_id var');
-select tst.fails($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c003'::uuid])$$, 'kod yine tek kullanımlık');
+select tst.check(public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c003'::uuid]) ->> 'error' = 'code_used', 'kod yine tek kullanımlık');
 
 -- kodsuz üçüncü çocuk (aynı klinik, etkin paylaşım var)
 select public.clinic_share_child((select v from tst.kv where k = 'clinic')::uuid, '00000000-0000-0000-0000-00000000c003');

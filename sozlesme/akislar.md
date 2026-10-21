@@ -28,7 +28,7 @@ Son güncelleme: 2026-10-19
 ### 1.1 İkinci ebeveyn daveti
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **24 saat** |
+| 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **15 dakika** (öneri 21 Ekim; önce 24 saat) |
 | 2 | [P] (ebeveyn 2) | Kendi hesabıyla Aile › Hesap › "Aileye katıl" bölümüne kodu yazar. | `join_family(code)` |
 | 3 | [S] | Profil yeni aileye taşınır, kod tüketilir. Ebeveyn 2'nin eski ailesinde başka ebeveyn yoksa eski aile **ve tüm verisi silinir** (uygulama önce uyarır). | `profiles.family_id`, `invite_codes.used_at` |
 
@@ -38,7 +38,7 @@ Son güncelleme: 2026-10-19
 
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **24 saat**, tek kullanım |
+| 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **15 dakika** (öneri; önce 24 saat), tek kullanım; eski kodun süresi biter |
 | 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). | — |
 | 3 | [O] | Çocuk kodu yazar. Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
 | 4 | [O] | Oturum yoksa **anonim oturum** açar. | `POST /auth/v1/signup` (anonim). Supabase'de "Anonymous Sign-Ins" açık olmalı. |
@@ -122,7 +122,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 ### 5.2 Aile paylaşımı (ebeveynin açık rızası)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **7 gün** |
+| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **15 dakika** (öneri; önce 7 gün) |
 | 2 | [K → ebeveyn] | Kodu aileye verir (uygulama dışı). | — |
 | 3 | [P] | Ebeveyn Uzmanım › kodu yazar; **rıza vermeden önce** klinik adı, uzman adı ve unvanını görür. | `clinic_invite_preview(code)` |
 | 4 | [P] | Paylaşılacak çocuğu seçer, "Onaylıyorum, paylaş". | `redeem_clinic_invite(code, child_id)` |
@@ -217,3 +217,49 @@ Teslim yolları:
 | 2 | [P] | Uzmanım'da her uzmanın altında ailenin bütün çocukları: paylaşılanda "Çıkar", paylaşılmayanda "Ekle". Ekle açık rıza ister, kod gerekmez (o uzmanla etkin paylaşım varsa). | `clinic_share_child(klinik, çocuk)` / `revoke_clinic_link(link)` |
 | 3 | [P] | Liste klinik başına gruplanır. | `family_clinic_links()` artık `clinic_id` de döndürür |
 | 4 | [K] | Uzman çıkarılan çocuğu hemen göremez (RLS `active` bağlantıya bakar). | — |
+
+## 9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
+
+| # | Kim | Ne olur | Nerede |
+|---|---|---|---|
+| 1 | [P]/[K] | Kod üretilir; ekranda kalan süre (15:00'dan geri sayım) görünür. | `create_invite_code`, `clinic_create_invite` → `expires_at` |
+| 2 | [P]/[K] | Süre bitince kod soluklaşır, "Süresi doldu" + **Yeni kod al** düğmesi. | uygulama |
+| 3 | Kodu giren | Süresi dolmuş/kullanılmış kodda açık metin: "Kodun süresi doldu… Yeni kod iste." | `hint`: `code_expired` / `code_used` (durumlar 11) |
+| 4 | [S] | 15 dakikada 10 hatalı denemeden sonra 15 dakika engel (429). | `code_attempts` |
+| 5 | [K] kayıt | ClinicApp kayıt ekranı ekip kodunu hesap açmadan önce `clinic_team_code_status(kod)` ile denetler (girişsiz çağrılır). | — |
+
+## 10. Ebeveyn ↔ çocuk mesajları (öneri, 21 Ekim 2026)
+
+| # | Kim | Ne olur | Nerede |
+|---|---|---|---|
+| 1 | [P] | Aile › Mesajlar › çocuk: yazı, fotoğraf, sesli mesaj, çıkartma. | `messages` INSERT (fotoğraf/ses önce `mail` kovasına) |
+| 2 | [S] | Çocuğa bildirim (+ push): "Yeni mesajın var". | `messages_notify` |
+| 3 | [O] | Oyunda mesaj kutusu: `child_messages()` ile sohbet; açınca `mark_messages_read()`. Fotoğraf/ses için `storage.from('mail').createSignedUrl(media_path)`. Realtime: `messages` INSERT (`child_id=eq.<ben>`). | — |
+| 4 | [O] | Çocuk yazı (≤ 500) ya da çıkartma ile yanıtlar. | `child_send_message('text'\|'sticker', body)` |
+| 5 | [S] | İki ebeveyne bildirim: "<Çocuk> mesaj gönderdi". | `messages_notify` |
+| 6 | [P] | Sohbet açılınca çocuğun mesajları okundu. Listede okunmamış sayısı. | `mark_messages_read(child_id)` |
+
+Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; kardeşler birbirinin sohbetini görmez; uzman mesajları göremez.
+
+## 11. Ödüller ve Güneş Taşı (öneri, 21 Ekim 2026)
+
+| # | Kim | Ne olur | Nerede |
+|---|---|---|---|
+| 1 | [P] | Görevler › + › **Ödül**: ödül ekler (ad, taş fiyatı, tek çocuk ya da hepsi). | `rewards` |
+| 2 | [S] | Onaylanan görev taş verir (1/2/3). | tetikleyici `completions_stone` |
+| 3a | [P] | Ödülü doğrudan verir → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül)` |
+| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül)` → `decide_reward_request(istek, onay, not)` |
+| 4 | [P] | Taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` |
+| 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
+
+## 12. Abonelik (öneri, 21 Ekim 2026)
+
+| # | Kim | Ne olur | Nerede |
+|---|---|---|---|
+| 1 | [P] | Kayıt + e-posta doğrulama → 7 günlük deneme başlar. Görevler ekranında "Deneme: N gün kaldı". | `families.trial_started_at`, `family_access()` |
+| 2 | [P] | Deneme bitince uygulama açılışta üyelik ekranını gösterir (Aylık / Yıllık). "Şimdilik ücretsiz devam et" seçilebilir. | uygulama |
+| 3 | [P] | Satın alma mağazada (App Store); ödeme sağlayıcısı (öneri: RevenueCat) olayı sunucuya iletir. | `billing-webhook` → `set_family_subscription` |
+| 4 | [S] | Ücretsiz planda: 3 etkin görev, 1 çocuk; ödül/taş düşme/ebeveyn mesajı/zor an kapalı. Onay, oyun, uzman paylaşımı açık. | tetikleyiciler (`hint = premium_required`) |
+| 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
+
+Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.

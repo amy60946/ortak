@@ -1,0 +1,329 @@
+-- =====================================================================
+-- Güneş Taşı ve gerçek ödüller (öneri, 21 Ekim 2026)
+--   Güneş Taşı: coin'den ayrı ikinci para. Yalnız gerçek görevden gelir: onaylanan her görev zorluğa göre
+--   kolay 1 / orta 2 / zor 3 taş (omurga analizi Ö1). Onay geri alınırsa verilen taş düşülür; görev silinirse kalır.
+--   Ödül: ebeveynin koyduğu gerçek hayat ödülü (ör. "Parkta 30 dakika"), fiyatı 1–500 taş; tek çocuğa ya da hepsine.
+--   Ödül verme: ebeveyn doğrudan verir (give_reward) ya da çocuk oyunda ister (request_reward) → ebeveyn
+--   onaylar/reddeder (decide_reward_request). Onayda taş düşülür; bakiye eksiye düşmez.
+--   Taş düşme (ceza): ebeveyn 1–100 taş, isteğe bağlı nedenle (deduct_sun_stones); bakiyeden fazla düşülemez.
+--   Bütün hareketler sun_stone_ledger'da (istemci yazamaz). Çocuğa ve diğer ebeveyne bildirim gider.
+--   Ücretsiz planda: ödül ekleme/düzenleme, doğrudan verme ve taş düşme kapalı; çocuğun isteğine karar verilebilir.
+-- Tekrar çalıştırılabilir.
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- Defter
+-- ---------------------------------------------------------------------
+create table if not exists public.sun_stone_ledger (
+  id          bigserial primary key,
+  family_id   uuid not null references public.families (id) on delete cascade,
+  child_id    uuid not null references public.children (id) on delete cascade,
+  amount      integer not null check (amount <> 0 and amount between -1000 and 1000),
+  reason      text not null check (reason in ('task', 'task_undo', 'reward', 'penalty', 'adjust')),
+  ref         text not null,
+  note        text check (char_length(note) <= 200),
+  created_by  uuid references auth.users (id) on delete set null,
+  created_at  timestamptz not null default now(),
+  unique (child_id, reason, ref)
+);
+create index if not exists sun_stone_ledger_child_idx on public.sun_stone_ledger (child_id, created_at desc);
+alter table public.sun_stone_ledger enable row level security;
+drop policy if exists "taş: ebeveyn okur" on public.sun_stone_ledger;
+create policy "taş: ebeveyn okur" on public.sun_stone_ledger for select to authenticated
+  using (family_id = public.my_family_id());
+drop policy if exists "taş: çocuk okur" on public.sun_stone_ledger;
+create policy "taş: çocuk okur" on public.sun_stone_ledger for select to authenticated
+  using (child_id = public.my_child_id());
+revoke insert, update, delete, truncate on public.sun_stone_ledger from anon, authenticated;
+
+create or replace function public.stone_balance(p_child_id uuid)
+returns integer language sql stable security definer set search_path = '' as $$
+  select coalesce(sum(amount), 0)::integer from public.sun_stone_ledger where child_id = p_child_id
+$$;
+
+create or replace function public.stones_for(p_difficulty text)
+returns integer language sql immutable set search_path = '' as $$
+  select case p_difficulty when 'hard' then 3 when 'medium' then 2 else 1 end
+$$;
+
+-- Onay → taş; onay geri alınırsa bu tamamlama için verilen net taş düşülür (coin kuralıyla aynı)
+create or replace function public.completions_stone_trigger()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  n integer;
+  was_approved boolean := tg_op in ('UPDATE', 'DELETE') and old.status = 'approved';
+  is_approved boolean := tg_op in ('INSERT', 'UPDATE') and new.status = 'approved';
+  row_ public.completions%rowtype;
+begin
+  if tg_op = 'DELETE' then row_ := old; else row_ := new; end if;
+  if is_approved = was_approved then return null; end if;
+  if is_approved then
+    select public.stones_for(a.difficulty) into n from public.task_assignments a
+     where a.task_id = row_.task_id and a.child_id = row_.child_id;
+    n := coalesce(n, 0);
+  else
+    if tg_op = 'DELETE' and (
+      not exists (select 1 from public.tasks t where t.id = row_.task_id)
+      or not exists (select 1 from public.task_assignments a where a.task_id = row_.task_id and a.child_id = row_.child_id)
+    ) then
+      return null;
+    end if;
+    select coalesce(sum(l.amount), 0)::integer into n from public.sun_stone_ledger l
+     where l.child_id = row_.child_id and l.reason in ('task', 'task_undo') and l.ref like row_.id::text || ':%';
+  end if;
+  if n <= 0 then return null; end if;
+  insert into public.sun_stone_ledger (family_id, child_id, amount, reason, ref)
+  values (row_.family_id, row_.child_id, case when is_approved then n else -n end,
+          case when is_approved then 'task' else 'task_undo' end,
+          row_.id::text || ':' || extract(epoch from clock_timestamp())::text)
+  on conflict do nothing;
+  return null;
+end $$;
+drop trigger if exists completions_stone on public.completions;
+create trigger completions_stone after insert or update of status or delete on public.completions
+  for each row execute function public.completions_stone_trigger();
+
+-- ---------------------------------------------------------------------
+-- Ödüller ve istekler
+-- ---------------------------------------------------------------------
+create table if not exists public.rewards (
+  id          uuid primary key default gen_random_uuid(),
+  family_id   uuid not null references public.families (id) on delete cascade,
+  title       text not null check (char_length(trim(title)) between 1 and 60),
+  cost        integer not null check (cost between 1 and 500),
+  child_id    uuid references public.children (id) on delete cascade,   -- null: bütün çocuklar
+  active      boolean not null default true,
+  created_by  uuid references auth.users (id) on delete set null,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+create index if not exists rewards_family_idx on public.rewards (family_id);
+alter table public.rewards enable row level security;
+drop policy if exists "ödül: ebeveyn" on public.rewards;
+create policy "ödül: ebeveyn" on public.rewards for all to authenticated
+  using (family_id = public.my_family_id())
+  with check (family_id = public.my_family_id()
+    and (child_id is null or public.child_family(child_id) = family_id));
+drop policy if exists "ödül: çocuk okur" on public.rewards;
+create policy "ödül: çocuk okur" on public.rewards for select to authenticated
+  using (public.my_child_id() is not null and family_id = public.my_any_family_id() and active
+    and (child_id is null or child_id = public.my_child_id()));
+revoke insert, update on public.rewards from anon, authenticated;
+grant insert (id, family_id, title, cost, child_id, active) on public.rewards to authenticated;
+grant update (title, cost, child_id, active) on public.rewards to authenticated;
+drop trigger if exists rewards_updated_at on public.rewards;
+create trigger rewards_updated_at before update on public.rewards
+  for each row execute function public.set_updated_at();
+
+create or replace function public.rewards_guard()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  perform public.require_full_access(new.family_id, 'ödüller');
+  if tg_op = 'INSERT' then
+    new.created_by := auth.uid();
+    if (select count(*) from public.rewards r where r.family_id = new.family_id) >= 100 then
+      raise exception 'En çok 100 ödül eklenebilir';
+    end if;
+  end if;
+  new.title := trim(new.title);
+  return new;
+end $$;
+drop trigger if exists rewards_guard on public.rewards;
+create trigger rewards_guard before insert or update on public.rewards
+  for each row execute function public.rewards_guard();
+
+create table if not exists public.reward_requests (
+  id           uuid primary key default gen_random_uuid(),
+  family_id    uuid not null references public.families (id) on delete cascade,
+  child_id     uuid not null references public.children (id) on delete cascade,
+  reward_id    uuid references public.rewards (id) on delete set null,
+  title        text not null,
+  cost         integer not null check (cost between 1 and 500),
+  source       text not null check (source in ('child', 'parent')),
+  status       text not null check (status in ('pending', 'approved', 'rejected', 'canceled')),
+  note         text check (char_length(note) <= 200),
+  created_at   timestamptz not null default now(),
+  decided_at   timestamptz,
+  decided_by   uuid references auth.users (id) on delete set null
+);
+create index if not exists reward_requests_family_idx on public.reward_requests (family_id, created_at desc);
+create index if not exists reward_requests_child_idx on public.reward_requests (child_id, status);
+alter table public.reward_requests enable row level security;
+drop policy if exists "istek: ebeveyn okur" on public.reward_requests;
+create policy "istek: ebeveyn okur" on public.reward_requests for select to authenticated
+  using (family_id = public.my_family_id());
+drop policy if exists "istek: çocuk okur" on public.reward_requests;
+create policy "istek: çocuk okur" on public.reward_requests for select to authenticated
+  using (child_id = public.my_child_id());
+revoke insert, update, delete, truncate on public.reward_requests from anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- RPC'ler
+-- ---------------------------------------------------------------------
+-- Bakiye: ebeveyn (kendi ailesinin çocuğu) ya da çocuk (yalnız kendisi)
+create or replace function public.sun_stone_balance(p_child_id uuid)
+returns integer language plpgsql stable security definer set search_path = '' as $$
+begin
+  if not (public.child_family(p_child_id) is not distinct from public.my_family_id() and public.my_family_id() is not null)
+     and p_child_id is distinct from public.my_child_id() then
+    raise exception 'Yetki yok' using errcode = '42501';
+  end if;
+  return public.stone_balance(p_child_id);
+end $$;
+
+-- İç: ödülü onayla/ver (bakiye kilitli denetlenir)
+create or replace function public.stone_spend(p_child uuid, p_family uuid, p_amount integer, p_reason text, p_ref text, p_note text)
+returns integer language plpgsql security definer set search_path = '' as $$
+declare
+  bal integer;
+begin
+  perform 1 from public.children where id = p_child for update;   -- aynı çocuğa eşzamanlı düşmeleri sırala
+  bal := public.stone_balance(p_child);
+  if bal < p_amount then
+    raise exception 'Yeterli Güneş Taşı yok (bakiye %, gereken %)', bal, p_amount using errcode = 'P0001', hint = 'not_enough_stones';
+  end if;
+  insert into public.sun_stone_ledger (family_id, child_id, amount, reason, ref, note, created_by)
+  values (p_family, p_child, -p_amount, p_reason, p_ref, nullif(left(trim(coalesce(p_note, '')), 200), ''), auth.uid());
+  return bal - p_amount;
+end $$;
+
+-- Ebeveyn: ödülü doğrudan ver
+create or replace function public.give_reward(p_child_id uuid, p_reward_id uuid)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  rw public.rewards%rowtype;
+  rid uuid := gen_random_uuid();
+  bal integer;
+begin
+  if fid is null or public.child_family(p_child_id) is distinct from fid then
+    raise exception 'Çocuk bulunamadı' using errcode = '42501';
+  end if;
+  perform public.require_full_access(fid, 'ödül verme');
+  select * into rw from public.rewards where id = p_reward_id and family_id = fid and active;
+  if not found or (rw.child_id is not null and rw.child_id <> p_child_id) then raise exception 'Ödül bulunamadı'; end if;
+  bal := public.stone_spend(p_child_id, fid, rw.cost, 'reward', rid::text, rw.title);
+  insert into public.reward_requests (id, family_id, child_id, reward_id, title, cost, source, status, decided_at, decided_by)
+  values (rid, fid, p_child_id, rw.id, rw.title, rw.cost, 'parent', 'approved', now(), auth.uid());
+  perform public.notify_child(p_child_id, 'reward_given', 'Ödül kazandın: ' || rw.title,
+                              rw.cost || ' Güneş Taşı karşılığında', jsonb_build_object('request_id', rid));
+  perform public.notify_parents(fid, 'reward_given', public.child_name(p_child_id) || ' ödül aldı', rw.title,
+                                jsonb_build_object('request_id', rid, 'child_id', p_child_id), p_child_id);
+  return json_build_object('request_id', rid, 'balance', bal);
+end $$;
+
+-- Ebeveyn: Güneş Taşı düş (ceza). Bakiyeden fazla düşülemez.
+create or replace function public.deduct_sun_stones(p_child_id uuid, p_amount integer, p_note text default null)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  bal integer;
+  n text := nullif(left(trim(coalesce(p_note, '')), 200), '');
+begin
+  if fid is null or public.child_family(p_child_id) is distinct from fid then
+    raise exception 'Çocuk bulunamadı' using errcode = '42501';
+  end if;
+  if p_amount is null or p_amount not between 1 and 100 then raise exception 'Düşülecek taş 1–100 arası olmalı'; end if;
+  perform public.require_full_access(fid, 'Güneş Taşı düşme');
+  bal := public.stone_spend(p_child_id, fid, p_amount, 'penalty', gen_random_uuid()::text, n);
+  perform public.notify_child(p_child_id, 'stones_deducted', p_amount || ' Güneş Taşı düşüldü',
+                              coalesce(n, ''), jsonb_build_object('amount', p_amount));
+  perform public.notify_parents(fid, 'stones_deducted', public.child_name(p_child_id) || ': ' || p_amount || ' Güneş Taşı düşüldü',
+                                coalesce(n, ''), jsonb_build_object('child_id', p_child_id, 'amount', p_amount), p_child_id);
+  return json_build_object('balance', bal);
+end $$;
+
+-- Çocuk (oyun): ödül iste. Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödül için bekleyen varsa o döner.
+create or replace function public.request_reward(p_reward_id uuid)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  me public.children%rowtype;
+  rw public.rewards%rowtype;
+  rid uuid;
+begin
+  select * into me from public.children where user_id = auth.uid();
+  if not found then raise exception 'Bağlantı yok' using errcode = '42501'; end if;
+  select * into rw from public.rewards where id = p_reward_id and family_id = me.family_id and active
+     and (child_id is null or child_id = me.id);
+  if not found then raise exception 'Ödül bulunamadı'; end if;
+  perform 1 from public.children where id = me.id for update;
+  select id into rid from public.reward_requests where child_id = me.id and reward_id = rw.id and status = 'pending';
+  if rid is not null then return json_build_object('request_id', rid, 'status', 'pending'); end if;
+  if (select count(*) from public.reward_requests where child_id = me.id and status = 'pending') >= 5 then
+    raise exception 'Bekleyen 5 isteğin var; önce onlara karar verilsin' using hint = 'too_many_requests';
+  end if;
+  if public.stone_balance(me.id) < rw.cost then
+    raise exception 'Yeterli Güneş Taşı yok' using errcode = 'P0001', hint = 'not_enough_stones';
+  end if;
+  insert into public.reward_requests (family_id, child_id, reward_id, title, cost, source, status)
+  values (me.family_id, me.id, rw.id, rw.title, rw.cost, 'child', 'pending') returning id into rid;
+  perform public.notify_parents(me.family_id, 'reward_request', me.name || ' bir ödül istiyor',
+                                rw.title || ' · ' || rw.cost || ' Güneş Taşı', jsonb_build_object('request_id', rid, 'child_id', me.id), me.id);
+  return json_build_object('request_id', rid, 'status', 'pending');
+end $$;
+
+-- Çocuk: bekleyen isteğini geri çeker
+create or replace function public.cancel_reward_request(p_request_id uuid)
+returns void language plpgsql security definer set search_path = '' as $$
+begin
+  update public.reward_requests set status = 'canceled', decided_at = now()
+   where id = p_request_id and child_id = public.my_child_id() and status = 'pending';
+  if not found then raise exception 'İstek bulunamadı'; end if;
+end $$;
+
+-- Ebeveyn: çocuğun isteğine karar (onayda taş düşülür)
+create or replace function public.decide_reward_request(p_request_id uuid, p_approve boolean, p_note text default null)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  rq public.reward_requests%rowtype;
+  bal integer;
+  n text := nullif(left(trim(coalesce(p_note, '')), 200), '');
+begin
+  if fid is null then raise exception 'Önce giriş yapmalısın' using errcode = '42501'; end if;
+  select * into rq from public.reward_requests where id = p_request_id and family_id = fid for update;
+  if not found then raise exception 'İstek bulunamadı'; end if;
+  if rq.status <> 'pending' then raise exception 'Bu isteğe zaten karar verildi'; end if;
+  if p_approve then
+    bal := public.stone_spend(rq.child_id, fid, rq.cost, 'reward', rq.id::text, rq.title);
+  else
+    bal := public.stone_balance(rq.child_id);
+  end if;
+  update public.reward_requests set status = case when p_approve then 'approved' else 'rejected' end,
+         note = n, decided_at = now(), decided_by = auth.uid() where id = rq.id;
+  perform public.notify_child(rq.child_id, 'reward_decided',
+    case when p_approve then 'İsteğin onaylandı: ' else 'İsteğin şimdilik olmadı: ' end || rq.title,
+    coalesce(n, ''), jsonb_build_object('request_id', rq.id, 'approved', p_approve));
+  return json_build_object('status', case when p_approve then 'approved' else 'rejected' end, 'balance', bal);
+end $$;
+
+-- ---------------------------------------------------------------------
+-- Realtime + yetkiler
+-- ---------------------------------------------------------------------
+do $$
+declare t text;
+begin
+  foreach t in array array['sun_stone_ledger', 'rewards', 'reward_requests'] loop
+    if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and tablename = t) then
+      execute format('alter publication supabase_realtime add table public.%I', t);
+    end if;
+  end loop;
+end $$;
+
+revoke execute on function public.stone_balance(uuid) from public, anon, authenticated;
+revoke execute on function public.stones_for(text) from public, anon, authenticated;
+revoke execute on function public.completions_stone_trigger() from public, anon, authenticated;
+revoke execute on function public.rewards_guard() from public, anon, authenticated;
+revoke execute on function public.stone_spend(uuid, uuid, integer, text, text, text) from public, anon, authenticated;
+revoke execute on function public.sun_stone_balance(uuid) from public, anon;
+revoke execute on function public.give_reward(uuid, uuid) from public, anon;
+revoke execute on function public.deduct_sun_stones(uuid, integer, text) from public, anon;
+revoke execute on function public.request_reward(uuid) from public, anon;
+revoke execute on function public.cancel_reward_request(uuid) from public, anon;
+revoke execute on function public.decide_reward_request(uuid, boolean, text) from public, anon;
+grant execute on function public.sun_stone_balance(uuid) to authenticated;
+grant execute on function public.give_reward(uuid, uuid) to authenticated;
+grant execute on function public.deduct_sun_stones(uuid, integer, text) to authenticated;
+grant execute on function public.request_reward(uuid) to authenticated;
+grant execute on function public.cancel_reward_request(uuid) to authenticated;
+grant execute on function public.decide_reward_request(uuid, boolean, text) to authenticated;

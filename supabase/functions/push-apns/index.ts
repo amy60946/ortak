@@ -1,7 +1,8 @@
 // push-apns: bir bildirimi (notifications satırı) alıcının iPhone'larına Apple Push (APNs) ile gönderir.
 // Çağıran: veritabanı tetikleyicisi notifications_push (pg_net) → body {"notification_id": 123}.
 // Aynı bildirim iki kez gönderilmez (apns_sent_at). "Verify JWT" kapalı çalışır; çağrı yalnız henüz gönderilmemiş
-// gerçek bir bildirimi gönderebilir, başka bir şey yapamaz.
+// gerçek bir bildirimi gönderebilir (yalnız son 10 dakikada oluşmuş olanı), başka bir şey yapamaz; yanıt cihaz
+// bilgisi içermez.
 // Secret'lar (Supabase → Edge Functions → Secrets): APNS_KEY_P8 (.p8 dosyasının tüm metni), APNS_KEY_ID, APNS_TEAM_ID.
 // İsteğe bağlı: APNS_SANDBOX=1 (yalnız Xcode'dan kurulan geliştirme sürümleri için; TestFlight/App Store üretimdir).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
@@ -50,12 +51,14 @@ async function send(host: string, token: string, topic: string, payload: unknown
 }
 
 Deno.serve(async (req) => {
+  if (req.method !== 'POST') return new Response('POST', { status: 405 });
   const { notification_id } = await req.json().catch(() => ({}));
-  if (!notification_id) return Response.json({ error: 'notification_id gerekli' }, { status: 400 });
+  if (!Number.isSafeInteger(notification_id) || notification_id <= 0) return Response.json({ error: 'notification_id gerekli' }, { status: 400 });
 
   // Sahiplen: yalnız henüz gönderilmemişse
+  const recent = new Date(Date.now() - 10 * 60e3).toISOString();
   const { data: n } = await db.from('notifications').update({ apns_sent_at: new Date().toISOString() })
-    .eq('id', notification_id).is('apns_sent_at', null).select('*').maybeSingle();
+    .eq('id', notification_id).is('apns_sent_at', null).gte('created_at', recent).select('*').maybeSingle();
   if (!n) return Response.json({ skipped: true });
   const topic = TOPIC[n.app];
   if (!topic) return Response.json({ skipped: 'uygulama için iOS kimliği yok' });
@@ -79,5 +82,7 @@ Deno.serve(async (req) => {
     }
     results.push({ ok: r.ok, reason: r.reason });
   }
-  return Response.json({ sent: results.filter((x) => x.ok).length, results });
+  // Ayrıntılar (cihaz anahtarının geçerli olup olmadığı) yalnız sunucu günlüğünde
+  console.log(JSON.stringify({ notification_id, results }));
+  return Response.json({ sent: results.filter((x) => x.ok).length });
 });
