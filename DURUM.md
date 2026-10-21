@@ -4,6 +4,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] **Hatırlatıcı:** Mesajlar (aile posta kutusu) oyunla birlikte tasarlanınca ParentApp'te yeniden açılacak (ebeveyn → çocuk yazı/ses/foto; çocuk yalnız hazır çıkartmayla yanıt).
 - [ ] **Hatırlatıcı (kullanıcı, 21 Ekim):** şablon süzgecindeki yaş grupları (6 ve altı / 6–8 / 9–12 / 12 ve üzeri) sonra oyunun yaş bandına da yansıtılacak; şimdilik oyunda değişiklik yok.
 - [ ] Pofi Adası ve ClinicApp: `children.avatar` `photo:` ile başlıyorsa fotoğraf (oyun: `mail` kovasından imzalı bağlantı) ya da varsayılan avatar göster.
 - [ ] ClinicApp: giriş kutusu etiketlerinde büyük harf + harf aralığı (`letterSpacing`, `toUpperCase`) kaldırılsın; Türkçe "i" bozuluyor (ParentApp'te düzeltildi, kullanıcı isteği).
@@ -21,6 +22,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Günlük
 
+- 2026-10-21 · ParentApp · Zor an girişi Görevler'de + düğmesine uzun basma (ilk seferde ipucu); giriş ekranında küçük "Davet kodum var" (kod saklanır, kayıt/giriş sonrası `join_family` ile otomatik katılım); Mesajlar sekmesi gizlendi (oyunda posta kutusu yok; sonra "aile posta kutusu" olarak oyunla birlikte tasarlanacak). · Diğer ürünleri etkilemez.
 - 2026-10-21 · ortak · **Uygulandı** (kullanıcı): `20261019140000_parent_features.sql`, `20261021000000_family_roles.sql` → `migrations/`. · Diğer ürünleri etkilemez (oyun için yaş grubu hatırlatıcısı Açık işler'de).
 - 2026-10-21 · ParentApp + ortak · Emojiler kaldırıldı (gün bölümü, görev, kategori), zor an kaydında "Uzmana iletildi", Görev Oluştur üst boşluk, şablon yaş süzgecinde 6 ve altı / 12 ve üzeri, zil her sekmede, çocuk için fotoğraf avatarı (`photo:`), etiket harf aralığı, Posta → Mesajlar. Öneri `20261021000000_family_roles.sql` + test (geçti). · **Oyun/Klinik:** `photo:` avatarı. **Kullanıcı:** SQL'i uygula.
 - 2026-10-19 · ParentApp + ortak · Öneri `20261019140000_parent_features.sql` + `test_parent_features.sql` (geçti): 6 görev kategorisi, görev gün bölümü, zor an: gün bölümü seçimi, çok çocuk (ortak `group_id`), sesli kayıt (kova `abc`, uzman yalnız rızayla dinler), uzmana tek bildirim. Sözleşme `durumlar.md` 9. · **Klinik penceresi:** zor an arşivi + ses dinleme + `day_part`. **Kullanıcı:** SQL'i uygula.
