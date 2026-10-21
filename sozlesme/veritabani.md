@@ -66,7 +66,10 @@ Notlar:
 | `children.age_band` | Yaş bandı | `'A'` (6–8) / `'B'` (9–12) / null (null ise doğum gününden önerilir). `'C'` 19 Ekim 2026'da kaldırıldı | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
 | `completions.parent_note` | Ebeveynin ret/onay notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
 | `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
+| `sun_stone_ledger` | Güneş Taşı defteri (`20261019030000_sun_stones`, uygulandı 19 Ekim). Toplam = `sum(amount)` (en az 0) | `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`adjust`), `ref`; unique (`child_id`, `reason`, `ref`) | yalnız tetikleyici `completions_sun_stone` | P (aile), O (kendi) |
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
+| `game_levels` | Seviye eşikleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `level` (PK), `total_xp` | Sunucu (SQL ile tohumlanır; `levels.json` ile aynı) | Herkes (oturum açmış) |
+| `code_attempts` | Hatalı kod denemeleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `user_id`, `at` | yalnız `redeem_child_code` | kimse (RLS açık, politika yok) |
 | `game_saves` | Oyun kaydı yedeği | `child_id` (PK), `family_id`, `data` (jsonb, en fazla 262 144 bayt), `updated_at` | O (`game_save_put`) | O (`game_save_get`), P (aile; ParentApp bugün okumuyor) |
 
 `game_items` içeriği oyunun `Resources/Data/items.json` dosyasıyla birebir aynıdır (48 eşya; fiyat ve seviye 2026-10-19'da karşılaştırıldı, fark yok). Liste: `ekonomi.md`.
@@ -83,7 +86,7 @@ Notlar:
 |---|---|---|---|
 | `create_invite_code(p_kind text default 'parent', p_child_id uuid default null)` | `table(code text, expires_at timestamptz)` | P | Ebeveyn oturumu gerekir. `parent` (ikinci ebeveyn) ya da `child` (çocuk girişi) kodu üretir. **24 saat** geçerli, tek kullanımlık. `child` türünde aynı çocuğun kullanılmamış eski kodları silinir. Ailenin süresi dolmuş kullanılmamış kodları temizlenir. |
 | `join_family(p_code text)` | `uuid` (yeni aile) | P | İkinci ebeveyn davet koduyla aileye katılır. Eski ailesinde başka ebeveyn yoksa eski aile ve tüm verisi silinir. |
-| `redeem_child_code(p_code text)` | `json {child_id, family_id, name, avatar, age_band}` | O | Anonim oturum gerekir; ebeveyn hesabıyla çağrılamaz. Kodu tüketir, `children.user_id = auth.uid()` yapar (aynı oturumun önceki çocuk bağlantısı kaldırılır). M4 ile yanıta `age_band` eklendi. |
+| `redeem_child_code(p_code text)` | `json {child_id, family_id, name, avatar, age_band}` | O | Anonim oturum gerekir; ebeveyn hesabıyla çağrılamaz. Kodu tüketir, `children.user_id = auth.uid()` yapar (aynı oturumun önceki çocuk bağlantısı kaldırılır). M4 ile yanıta `age_band` eklendi. Öneri `20261019020000_server_rules`: hatalı kod 400 `{error:'invalid_code'}`, 15 dk'da 10 hata → 429 `{error:'too_many_attempts'}` (`code_attempts`, RLS açık, politika yok). |
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
 | `task_family(uuid)`, `child_family(uuid)`, `task_assigned_to_me(uuid)` | `uuid` / `boolean` | iç | Politikalarda tablolar arası kontrol. |
@@ -96,10 +99,10 @@ Notlar:
 
 | Fonksiyon | Dönüş | Çağıran | Ne yapar |
 |---|---|---|---|
-| `child_me()` | `json {child_id, name, avatar, age_band, balance}` | O | Oturumdaki çocuk + coin bakiyesi. Bağlantı yoksa hata `42501` ("Bağlantı yok"). Oyun bakiyeyi buradan alır. |
-| `child_tasks(p_from date, p_to date)` | `table(task_id, date, title, description, emoji, coins, recurring, repeat_kind, requires_review, status, parent_note)` | O | Tarih aralığındaki görev **örnekleri** (en fazla 31 gün). Tekrarlar sunucuda açılır (`task_occurs_on`). Kayıt yoksa `status = 'assigned'`. Sıra: gün, sonra `sort_order`. Oyun dünden 7 gün sonrasına kadar çeker. |
-| `child_set_status(p_task_id uuid, p_date date, p_status text)` | `text` (yazılan durum) | O | Çocuğun niyeti: `pending` (yaptım), `declined` (yapamam), `assigned` (geri al → kaydı siler). Ebeveyn karar verdiyse (`approved`/`rejected`) hata. İnceleme gerektirmeyen görevde `pending` → `approved` yazılır. Gelecek gün (`> current_date + 1`) işaretlenemez. |
-| `spend_coins(p_tx text, p_item_id text, p_quantity integer)` | `json {ok, error, balance}` | O | Harcama. Fiyat `game_items`'tan; `p_tx` 8–64 karakter, aynı `p_tx` ikinci kez düşmez (idempotent); `p_quantity` 1–20; bakiye eksiye düşmez. `error` ∈ `null`/`unknown_item`/`not_enough_coins`. |
+| `child_me()` | `json {child_id, name, avatar, age_band, balance, sun_stones}` (`sun_stones`: `20261019030000_sun_stones` (uygulandı)) | O | Oturumdaki çocuk + coin bakiyesi. Bağlantı yoksa hata `42501` ("Bağlantı yok"). Oyun bakiyeyi buradan alır. |
+| `child_tasks(p_from date, p_to date)` | `table(task_id, date, title, description, emoji, coins, recurring, repeat_kind, requires_review, status, parent_note, skill, difficulty)` (`skill`, `difficulty`: `20261019030000_sun_stones` (uygulandı)) | O | Tarih aralığındaki görev **örnekleri** (en fazla 31 gün). Tekrarlar sunucuda açılır (`task_occurs_on`). Kayıt yoksa `status = 'assigned'`. Sıra: gün, sonra `sort_order`. Oyun dünden 7 gün sonrasına kadar çeker. |
+| `child_set_status(p_task_id uuid, p_date date, p_status text)` | `text` (yazılan durum) | O | Çocuğun niyeti: `pending` (yaptım), `declined` (yapamam), `assigned` (geri al → kaydı siler). Ebeveyn karar verdiyse (`approved`/`rejected`) hata. İnceleme gerektirmeyen görevde `pending` → `approved` yazılır. Gelecek gün (`> current_date + 1`) ve (`20261019020000_server_rules`, uygulandı 19 Ekim) iki gün öncesi ve daha eskisi (`< current_date - 1`) işaretlenemez. |
+| `spend_coins(p_tx text, p_item_id text, p_quantity integer)` | `json {ok, error, balance}` | O | Harcama. Fiyat `game_items`'tan; `p_tx` 8–64 karakter, aynı `p_tx` ikinci kez düşmez (idempotent); `p_quantity` 1–20; bakiye eksiye düşmez. `error` ∈ `null`/`unknown_item`/`not_enough_coins`. Öneri `20261019020000_server_rules`: `min_level > child_level` → `level_locked`. |
 | `game_save_get()` | `jsonb` (yoksa null) | O | Oyun kaydı yedeğini okur. |
 | `game_save_put(p_data jsonb)` | `void` | O | Yedeği yazar (en fazla 262 144 bayt). |
 | `set_child_age_band(p_child_id uuid, p_band text)` | `void` | P | Bandı yazar (`A`/`B`/`C` ya da null). |

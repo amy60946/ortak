@@ -74,13 +74,13 @@ Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
 - Oyun girişi (`ChildCode.Normalize`): küçük harf büyütülür, harf/rakam dışı karakterler atılır, uzunluk tam 6 olmalı. ParentApp: `trim().toUpperCase()`.
 - Oyunun deneme kodları `A1A1A1`, `B2B2B2`, `C3C3C3`: `ServerConfig.DemoCodes = true` iken `RoutedAuthService` bunları sahte arka uca yönlendirir (sunucuya gitmez). `A1A1A1` sunucu alfabesinde olmayan `1` içerdiği için gerçek bir kodla çakışamaz; `B2B2B2` ve `C3C3C3` ise sunucu alfabesine uyar, yani çok düşük olasılıkla gerçek bir kodla aynı olabilir ve o durumda oyun gerçek kodu sahte arka uca gönderir. Mağaza sürümünde `DemoCodes` kapatılmalı (doğrulanmalı).
-- Oyunda hatalı kod beklemesi (yalnız istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucuda deneme sınırı yok** (PLAN.md'de "yeni" olarak planlanmıştı; SQL'de bulunamadı).
+- Oyunda hatalı kod beklemesi (istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucu** (`20261019020000_server_rules`, uygulandı 19 Ekim): oturum başına 15 dakikada 10 hatalı deneme → HTTP 429 `{"error":"too_many_attempts"}`; hatalı kod → HTTP 400 `{"error":"invalid_code"}` (artık hata fırlatılmaz ki deneme sayılabilsin). Oyun 429'u `Throttled` sayar.
 
 ---
 
 ## 4. Yaş bandı (`children.age_band`)
 
-> ⚠️ **Çelişki (21 Ekim 2026, birleştirmede bulundu):** iki göç de "uygulandı" diye kayıtlı: `20261019010000_age_bands.sql` (üç bant A/B/C, oyun penceresi) ve `20261019110000_age_bands.sql` (iki bant A/B, ParentApp penceresi). Dosya sırasıyla son uygulanan iki banttır; canlıda hangisinin son çalıştığı SQL Editor'de doğrulanacak (`select pg_get_constraintdef(oid) from pg_constraint where conname = 'children_age_band_check';`). Karar kullanıcının; aşağıda iki sürüm de duruyor.
+> ⚠️ **Çelişki (21 Ekim 2026, birleştirmede bulundu):** iki göç de "uygulandı" diye kayıtlı: `20261019010000_age_bands.sql` (üç bant A/B/C, oyun penceresi) ve `20261019110000_age_bands.sql` (iki bant A/B, ParentApp penceresi). Dosya sırasıyla son gelen iki banttır, ama kayıt zamanlarına göre üç bant daha sonra uygulanıp doğrulanmış (oyun penceresi, 09:49–09:52; iki bant 09:42). Canlıda hangisinin son çalıştığı SQL Editor'de doğrulanacak (`select pg_get_constraintdef(oid) from pg_constraint where conname = 'children_age_band_check';`). Karar kullanıcının; aşağıda iki sürüm de duruyor.
 
 **Sürüm 1 — iki bant (dosya sırasına göre geçerli):**
 
@@ -131,9 +131,24 @@ Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omur
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
 
-`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`. Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
+`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
 
 ---
+
+## 5A. Güneş Taşı defteri nedeni (`sun_stone_ledger.reason`, `20261019030000_sun_stones` (uygulandı))
+
+| Değer | Anlam | Yazan | İşaret | `ref` biçimi |
+|---|---|---|---|---|
+| `task` | Ebeveyn onayı | Tetikleyici `completions_sun_stone` | + (1/2/3) | `<completion_id>:<epoch>` |
+| `task_undo` | Onay geri alındı | Tetikleyici | − (o tamamlamanın net taşı) | `<completion_id>:<epoch>` |
+| `adjust` | Elle düzeltme (yönetici) | SQL | ± | serbest |
+
+## 5B. Kalıcı adlar (karar: 19 Ekim 2026, kullanıcı)
+
+| Kavram | Ad | Not |
+|---|---|---|
+| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
+| Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
 
 ## 6. Diğer sabit değerler (uygulanmış)
 
