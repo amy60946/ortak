@@ -80,9 +80,7 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-> ⚠️ **Çelişki (21 Ekim 2026, birleştirmede bulundu):** iki göç de "uygulandı" diye kayıtlı: `20261019010000_age_bands.sql` (üç bant A/B/C, oyun penceresi) ve `20261019110000_age_bands.sql` (iki bant A/B, ParentApp penceresi). Dosya sırasıyla son gelen iki banttır, ama kayıt zamanlarına göre üç bant daha sonra uygulanıp doğrulanmış (oyun penceresi, 09:49–09:52; iki bant 09:42). Canlıda hangisinin son çalıştığı SQL Editor'de doğrulanacak (`select pg_get_constraintdef(oid) from pg_constraint where conname = 'children_age_band_check';`). Karar kullanıcının; aşağıda iki sürüm de duruyor.
-
-**Sürüm 1 — iki bant (dosya sırasına göre geçerli):**
+> **Doğrulandı (21 Ekim 2026, kullanıcının SQL Editor sorgusu):** canlıda kısıt `age_band in ('A', 'B')` — **iki bant geçerli**. Üç bantlı `20261019010000_age_bands.sql` daha önce uygulanmış, ardından `20261019110000_age_bands.sql` iki banda indirmiştir (dosya sırası canlıyla aynı).
 
 **Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL `supabase/migrations/20261019110000_age_bands.sql` (19 Ekim 2026'da uygulandı).
 
@@ -97,23 +95,6 @@ Kod biçimi:
 - Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
 - Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`game-app/docs/PLAN.md` §9).
-
-**Sürüm 2 — üç bant (oyun penceresinin kaydı):**
-
-Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omurgası analizinin önerisi). SQL: `supabase/migrations/20261019010000_age_bands.sql` (19 Ekim 2026'da uygulandı).
-
-| Değer | Oyun (`AgeBand.cs`) | ParentApp etiketi (`ageBands.ts`) | SQL (`suggest_age_band`) |
-|---|---|---|---|
-| `A` | A | "6–8 yaş" | doğum günü yok **ya da** yaş < 9 |
-| `B` | B | "9–12 yaş" | 9 ≤ yaş < 13 |
-| `C` | C | "13–15 yaş" | yaş ≥ 13 |
-| `null` | — | — | sunucu yanıtlarında `coalesce(age_band, suggest_age_band(birthday))` ile dolu gelir |
-
-- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). ParentApp `suggestAgeBand` sunucuyla aynı kuralı kullanır.
-- Ebeveynin elle seçtiği bant öneriden önce gelir; kural değişince kayıtlı bantlar kendiliğinden değişmez.
-- Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
-- **Bant yalnız oyunun zorluk/arayüz ayarıdır.** Raporlar, analizler ve uzman çıktıları çocuğun gerçek yaşını (`children.birthday`, ebeveynin ParentApp'te girdiği) kullanır; bant sınırına bağlanmaz.
-- Ana hedef kitle 6–12; C (13–15) desteklenir ama pazarlama hedefi değildir.
 
 ### 4.1 App Store / Google Play
 - Mağaza **Kids Category dışında**, yaş derecelendirmesi en düşük (4+); Kids kurallarına gönüllü uyulur: üçüncü taraf reklam/analitik yok, dış bağlantı ve satın alma ebeveyn kapısının (`ParentGate`) arkasında. Kaynak: `game-app/docs/PLAN.md` §9 (Seçenek A).
@@ -201,7 +182,7 @@ Karar (19 Ekim 2026, kullanıcı): **A 6–8 / B 9–12 / C 13–15** (oyun omur
 
 ---
 
-## 9. Kategori, gün bölümü, zor an (öneri, uygulanmadı — `proposed/20261019140000_parent_features.sql`)
+## 9. Kategori, gün bölümü, zor an (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|

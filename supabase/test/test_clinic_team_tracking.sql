@@ -1,4 +1,4 @@
--- Klinik ekibi + kullanıcı takibi (proposed/20261021100000_clinic_team_tracking.sql)
+-- Klinik ekibi + kullanıcı takibi (migrations/20261021100000_clinic_team_tracking.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
