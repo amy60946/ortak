@@ -8,6 +8,8 @@
 -- H2: çocuk kodu tahmini. Kullanıcı başına sınır (15 dk'da 10) yeni anonim hesap açarak aşılabiliyordu.
 --   Ek olarak GENEL sınır: son 10 dakikada tüm hesaplardan 200 hatalı çocuk kodu denemesi varsa yeni deneme 429 alır
 --   (gerçek kullanımda neredeyse hiç hatalı deneme olmaz; saldırı birkaç dakikada söner, kodlar 24 saat geçerli).
+-- Not (M5, değişiklik yok): incelemesiz görevde çocuğun "Yaptım"ı ebeveynin önceden verdiği onaydır ve Güneş Taşı verir
+--   (19 Ekim kararı, test_sun_stones). C1 kapanınca bu yol yalnız dün/bugün/yarın ve görevin gerçek günleri için çalışır.
 -- Tekrar çalıştırılabilir.
 
 drop policy if exists "tamamlama: çocuk işaretler" on public.completions;
@@ -65,3 +67,34 @@ begin
 end $$;
 revoke execute on function public.redeem_child_code(text) from public, anon;
 grant execute on function public.redeem_child_code(text) to authenticated;
+
+
+-- ---------------------------------------------------------------------
+-- L4. Kod rastgeleliği: mod sapması yok (31 harf; 248 üstü bayt atılır), UUID'nin sabit sürüm/varyant baytları kullanılmaz
+-- ---------------------------------------------------------------------
+create or replace function public.random_code(p_len integer)
+returns text language plpgsql volatile set search_path = '' as $$
+declare
+  chars constant text := 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  n integer := least(greatest(p_len, 4), 16);
+  result text := '';
+  bytes bytea;
+  b integer;
+begin
+  while char_length(result) < n loop
+    bytes := uuid_send(gen_random_uuid());
+    for i in 0..15 loop
+      continue when i in (6, 8);                 -- sürüm ve varyant bitleri sabit
+      b := get_byte(bytes, i);
+      continue when b >= 248;                    -- 248 = 31 × 8: eşit olasılık
+      result := result || substr(chars, (b % 31) + 1, 1);
+      exit when char_length(result) = n;
+    end loop;
+  end loop;
+  return result;
+end $$;
+revoke execute on function public.random_code(integer) from public, anon, authenticated;
+
+create or replace function public.random_code()
+returns text language sql volatile set search_path = '' as $$ select public.random_code(6) $$;
+revoke execute on function public.random_code() from public, anon, authenticated;

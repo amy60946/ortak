@@ -85,6 +85,7 @@ select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 insert into public.completions (family_id, task_id, child_id, date, status)
   values (public.my_family_id(), '00000000-0000-0000-0000-000000007a51', '00000000-0000-0000-0000-00000000c0de', current_date - 3, 'approved');
 select tst.check(tst.bal('00000000-0000-0000-0000-00000000c0de') = 100, 'ebeveyn doğrudan onay yazabilir');
+select tst.check(tst.stones('00000000-0000-0000-0000-00000000c0de') = 6, 'ebeveyn onayı Güneş Taşı verir (zor = 3)');
 
 
 -- H2: genel deneme sınırı (199 sahte hatalı deneme başka hesaplardan)
@@ -96,3 +97,10 @@ select tst.as_user('00000000-0000-0000-0000-0000000000c9');
 select tst.check((public.redeem_child_code('ZZZZZZ') ->> 'error') = 'invalid_code', 'genel sınırın altında: olağan hata');
 select tst.check((public.redeem_child_code('ZZZZZY') ->> 'error') = 'too_many_attempts', 'genel sınır aşılınca 429');
 reset role;
+
+-- L4: kod biçimi ve dağılım (her konumda 31 harfin hepsi görülür; sürüm baytı sabitlemesi yok)
+select tst.check((select bool_and(public.random_code(8) ~ '^[ABCDEFGHJKMNPQRSTUVWXYZ23456789]{8}$') from generate_series(1, 200)), 'kod 8 karakter, izinli harfler');
+select tst.check(char_length(public.random_code()) = 6, 'çocuk kodu 6 karakter');
+select tst.check((select min(c) from (select count(distinct substr(x, p, 1)) c
+                   from (select public.random_code(8) x from generate_series(1, 3000)) s, generate_series(1, 8) p group by p) t) = 31,
+                 'her konumda 31 harfin hepsi çıkar');
