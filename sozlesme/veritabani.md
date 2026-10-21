@@ -85,7 +85,7 @@ Notlar:
 | Fonksiyon | Dönüş | Çağıran | Ne yapar |
 |---|---|---|---|
 | `create_invite_code(p_kind text default 'parent', p_child_id uuid default null)` | `table(code text, expires_at timestamptz)` | P | Ebeveyn oturumu gerekir. `parent` (ikinci ebeveyn) ya da `child` (çocuk girişi) kodu üretir. **24 saat** geçerli, tek kullanımlık. `child` türünde aynı çocuğun kullanılmamış eski kodları silinir. Ailenin süresi dolmuş kullanılmamış kodları temizlenir. |
-| `join_family(p_code text)` | `uuid` (yeni aile) | P | İkinci ebeveyn davet koduyla aileye katılır. Eski ailesinde başka ebeveyn yoksa eski aile ve tüm verisi silinir. |
+| `join_family(p_code text)` | `uuid` (yeni aile); öneride `json {family_id}` + kod deneme sınırı (bölüm 9) | P | İkinci ebeveyn davet koduyla aileye katılır. Eski ailesinde başka ebeveyn yoksa eski aile ve tüm verisi silinir. |
 | `redeem_child_code(p_code text)` | `json {child_id, family_id, name, avatar, age_band}` | O | Anonim oturum gerekir; ebeveyn hesabıyla çağrılamaz. Kodu tüketir, `children.user_id = auth.uid()` yapar (aynı oturumun önceki çocuk bağlantısı kaldırılır). M4 ile yanıta `age_band` eklendi. Öneri `20261019020000_server_rules`: hatalı kod 400 `{error:'invalid_code'}`, 15 dk'da 10 hata → 429 `{error:'too_many_attempts'}` (`code_attempts`, RLS açık, politika yok). |
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
@@ -140,7 +140,7 @@ Notlar:
 
 | Tablo | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
-| `clinics` | Klinik | `name` (1–120), `plan` (`trial`/`small`/`business`/`custom`/`inactive`, varsayılan `trial`), `seat_limit` (varsayılan 3; 1–1000), `trial_ends_at` (varsayılan +14 gün) | Sunucu (kayıtta); K sahibi yalnız `name`; plan/koltuk yalnız service role | K (kendi kliniği) |
+| `clinics` | Klinik | `name` (1–120), `plan` (`trial`/`solo`/`clinic`/`small`/`business`/`custom`/`inactive`, varsayılan `trial`), `seat_limit` (varsayılan 10 öneride; 1–1000), `trial_ends_at` (varsayılan +7 gün öneride; eskiden 14), üyelik alanları bölüm 8 | Sunucu (kayıtta); K sahibi yalnız `name`; plan/koltuk yalnız service role | K (kendi kliniği) |
 | `clinicians` | Uzman (auth.users ile bire bir) | `id`, `clinic_id`, `name` (≤ 80), `title` (≤ 80), `role` (`owner`/`member`) | Sunucu (kayıtta); K yalnız kendi `name`, `title` | K (aynı klinik) |
 | `clinic_invites` | Klinik davet kodları | `code`, `clinic_id`, `clinician_id`, `kind` (`family`/`clinician`), `label` (≤ 60), `expires_at` (varsayılan **+7 gün**), `used_at`, `used_by` | Sunucu (`clinic_create_invite`) | K (kendi kliniği) |
 | `clinic_links` | **Rıza bağlantısı** klinik ↔ çocuk | `clinic_id`, `clinician_id`, `family_id`, `child_id`, `label`, `status` (`active`/`revoked`), `consent_by`, `consent_at`, `revoked_at`, `revoked_by`; bir klinik–çocuk çifti için tek `active` satır | Sunucu (`redeem_clinic_invite`, `revoke_clinic_link`); K yalnız `label`, `clinician_id` | K (kendi kliniği), P (kendi ailesi) |
@@ -223,8 +223,46 @@ Akış: `akislar.md` 5.1 (4a, 5) ve 9.
 
 Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her `auth.users` satırı: e-posta, kayıt, son giriş, tür `parent`/`clinician`/`child`/`other`, aile/klinik, son görülme, uygulama sürümleri), `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`.
 
-## 7. Güvenlik sertleştirmesi (öneri, `proposed/20261021200000_security_hardening.sql`)
+## 7. Güvenlik sertleştirmesi (21 Ekim 2026'da uygulandı, `migrations/20261021200000_security_hardening.sql`)
 
 - Girişsiz rol (`anon`) hiçbir `public` fonksiyonu çağıramaz (bugünkü ve sonraki fonksiyonlar; uzantılar hariç). Bütün uygulamalar girişten sonra çağırır; GameApp önce anonim oturum açar (`authenticated`).
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
+
+## 8. ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+
+Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
+
+| Tablo / alan | Ne | Yazan | Okuyan |
+|---|---|---|---|
+| `clinics.plan` | `trial` / `solo` / `clinic` / (eski: `small`/`business`/`custom` elle, etkin) / `inactive` | Sunucu (`billing_apply`) | K |
+| `clinics.billing_period`, `period_end`, `billing_source` (`app_store`/`iyzico`/`manual`), `auto_renew` | Üyelik dönemi | Sunucu | K (`clinician_me`) |
+| `billing_plans` | Paket kataloğu: `id` (`solo_monthly`, `solo_yearly`, `clinic_monthly`, `clinic_yearly`), `package`, `period`, `seat_limit`, `price_try` (KDV dahil), `apple_product_id` (`com.clinicapp.uzman.<paket>.<dönem>`), `iyzico_plan_ref` | service role (SQL Editor) | K (yalnız `active`) |
+| `billing_subscriptions` | Mağaza/iyzico aboneliği ↔ klinik: `source` + `external_id` (App Store `originalTransactionId` / iyzico abonelik referansı) tekil; `status` (`active`/`canceled`/`expired`/`refunded`/`pending`), `period_end`, `auto_renew` | yalnız `billing_apply` | kimse (RLS açık, politika yok) |
+| `billing_checkouts` | Web ödeme oturumu (iyzico token → klinik, paket); tek kullanımlık | Edge Function | kimse |
+| `billing_events` | Ödeme günlüğü | `billing_apply` | kimse; `analytics.clinic_billing` görünümü SQL Editor'den |
+
+| Fonksiyon | Kim | Ne yapar |
+|---|---|---|
+| `clinician_access()` | iç / K | Oturumdaki uzman paneli kullanabilir mi: klinik etkin **ve** (sahip ya da paket ekibe izin veriyor). `clinic_sees_child`, `clinic_link_mine`, `clinic_clients`, notlar/hedefler/öneriler bunu ister. |
+| `clinic_active(p_clinic_id)` | iç | `trial` süresi bitmemiş, `solo`/`clinic` `period_end` geçmemiş ya da eski elle verilmiş plan. |
+| `clinician_me()` | K | Dönüşe `access`, `status` (`trial`/`active`/`expired`), `billing_period`, `period_end`, `billing_source`, `auto_renew`, `member_count` eklendi. |
+| `billing_apply(source, external_id, clinic_id, plan_id, status, period_end, auto_renew, environment, payload)` | yalnız service role | Doğrulanmış ödemeyi yazar; aynı abonelik başka kliniğe bağlanamaz; kliniğin planını en geniş etkin abonelikten yeniden hesaplar (`billing_recompute`). Elle pilot üyelik: `select billing_apply('manual','pilot-1','<klinik>','clinic_yearly','active', now()+interval '90 days', false);` |
+| `clinic_create_invite` | K | Üyelik etkin olmalı; Bireysel pakette ekip daveti yok. |
+
+Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anahtarıyla ayrıca doğrulanır): `apple-verify` (App Store Server API'den işlemi okur; `appAccountToken` = klinik kimliği olmalı), `apple-notify` (App Store Server Notifications V2; içerik değil Apple'dan yeniden okunan durum yazılır), `iyzico-start` / `iyzico-callback` / `iyzico-webhook` / `iyzico-cancel`. Ödemeyi yalnız klinik sahibi alır/yönetir.
+
+## 9. Sızma denemesi düzeltmeleri (öneri, `proposed/20261022010000_security_pentest.sql`)
+
+- **Kod deneme sınırı:** `join_family`, `clinic_invite_preview`, `redeem_clinic_invite`, `redeem_clinic_invite_children`, `clinic_join_team` hatalı kodda artık exception değil **HTTP 400** + `{"error":"invalid_code","message":"…"}` döner (deneme `code_attempts`'e yazılır); kullanıcı başına 15 dakikada 10 hatalı denemeden sonra **HTTP 429** `{"error":"too_many_attempts"}`. supabase-js bunu yine `error.message` olarak verir. `join_family` dönüşü `uuid` yerine `json {family_id}` (ParentApp yalnız hatayı okuyor).
+- Ekip kodu **8 karakter, 48 saat**; aile kodu 6 karakter, 7 gün.
+- Ekibe katılımda koltuk sayımı klinik satırı kilitlenerek yapılır (yarışla koltuk aşımı yok).
+- `clinic_links.clinician_id` yalnız aynı klinikten bir uzman olabilir.
+- Uzman hesabı `redeem_child_code` kullanamaz.
+- `clinic_notes`: herkes okur; yalnız yazarı ya da klinik sahibi değiştirir/siler; `author_id`/`link_id` değiştirilemez.
+- `clinic_task_suggestions` eklemede `created_by = auth.uid()`, `task_id`/`decided_at` boş olmalı.
+- `track_events`/`track_session`: uygulama adı hesap türüyle eşleşmezse satır yazılmaz.
+- `delete_account()` uzman hesabını da kapsar: tek kişilik klinik bütün verisiyle silinir; ekip varsa klinik kalır, sahiplik en eski üyeye geçer.
+- `notifications_push` Vault'ta `push_secret` varsa `x-push-secret` başlığı gönderir; `push-apns` `PUSH_SECRET` tanımlıysa bu başlığı ister.
+- TRUNCATE `anon`/`authenticated`'dan alınır.
+- Test: `supabase/test/test_security_pentest.sql`.

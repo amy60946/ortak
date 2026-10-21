@@ -1,5 +1,5 @@
 -- =====================================================================
--- İkinci ebeveyn (öneri, 21 Ekim 2026)
+-- İkinci ebeveyn (21 Ekim 2026; uygulandı)
 --   1. Davet edilen ebeveyn uygulamayı eksiksiz kullanır (aynı family_id; bütün RLS buna bakar — değişiklik yok).
 --   2. Aileyi kuran ebeveyn (families.created_by) aileden çıkarılamaz: başka bir ebeveynin profilini, aile sahibini
 --      değiştiren ya da birini aileden çıkaran hiçbir yetki/RPC yoktur (profiles yalnız kendi satırı; families yalnız name).

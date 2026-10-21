@@ -146,7 +146,7 @@ select tst.fails($$select public.clinic_update_suggestion((select v::uuid from t
 select tst.fails($$select public.revoke_clinic_link((select v::uuid from tst.kv where k = 'link1'))$$, 'başka klinik: paylaşımı sonlandıramaz');
 select tst.no_effect($$insert into public.clinic_notes (link_id, clinic_id, author_id, body) values ((select v::uuid from tst.kv where k = 'link1'), (select v::uuid from tst.kv where k = 'k1'), auth.uid(), 'x')$$, 'başka klinik: başka kliniğe not yazamaz');
 select tst.no_effect($$insert into public.clinic_task_suggestions (link_id, clinic_id, family_id, child_id, title, created_by) values ((select v::uuid from tst.kv where k = 'link1'), public.my_clinic_id(), (select v::uuid from tst.kv where k = 'f1'), '00000000-0000-0000-0000-00000000c001', 'spam', auth.uid())$$, 'başka klinik: aileye öneri gönderemez');
-select tst.fails($$select public.clinic_join_team((select v from tst.kv where k = 'team'))$$, 'kullanılmış ekip kodu ikinci kez kullanılamaz');
+select tst.rejects($$select public.clinic_join_team((select v from tst.kv where k = 'team'))$$, 'kullanılmış ekip kodu ikinci kez kullanılamaz');
 
 -- ---------------------------------------------------------------- bağlı klinik sahibi (d1)
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');

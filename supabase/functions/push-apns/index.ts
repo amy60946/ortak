@@ -3,6 +3,7 @@
 // Aynı bildirim iki kez gönderilmez (apns_sent_at). "Verify JWT" kapalı çalışır; çağrı yalnız henüz gönderilmemiş
 // gerçek bir bildirimi gönderebilir, başka bir şey yapamaz.
 // Secret'lar (Supabase → Edge Functions → Secrets): APNS_KEY_P8 (.p8 dosyasının tüm metni), APNS_KEY_ID, APNS_TEAM_ID.
+// İsteğe bağlı: PUSH_SECRET (Vault'taki `push_secret` ile aynı değer) tanımlıysa çağrı `x-push-secret` başlığını taşımalı.
 // İsteğe bağlı: APNS_SANDBOX=1 (yalnız Xcode'dan kurulan geliştirme sürümleri için; TestFlight/App Store üretimdir).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -50,6 +51,8 @@ async function send(host: string, token: string, topic: string, payload: unknown
 }
 
 Deno.serve(async (req) => {
+  const secret = Deno.env.get('PUSH_SECRET');
+  if (secret && req.headers.get('x-push-secret') !== secret) return Response.json({ error: 'yetkisiz' }, { status: 401 });
   const { notification_id } = await req.json().catch(() => ({}));
   if (!notification_id) return Response.json({ error: 'notification_id gerekli' }, { status: 400 });
 
