@@ -222,3 +222,9 @@ Akış: `akislar.md` 5.1 (4a, 5) ve 9.
 | İç: `clinicians_notify_move` | — | Sonradan katılan uzman için sahibe `team_joined` |
 
 Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her `auth.users` satırı: e-posta, kayıt, son giriş, tür `parent`/`clinician`/`child`/`other`, aile/klinik, son görülme, uygulama sürümleri), `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`.
+
+## 7. Güvenlik sertleştirmesi (öneri, `proposed/20261021200000_security_hardening.sql`)
+
+- Girişsiz rol (`anon`) hiçbir `public` fonksiyonu çağıramaz (bugünkü ve sonraki fonksiyonlar; uzantılar hariç). Bütün uygulamalar girişten sonra çağırır; GameApp önce anonim oturum açar (`authenticated`).
+- `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
+- Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
