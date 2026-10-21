@@ -6,7 +6,7 @@
 // İsteğe bağlı: APNS_SANDBOX=1 (yalnız Xcode'dan kurulan geliştirme sürümleri için; TestFlight/App Store üretimdir).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const TOPIC: Record<string, string> = { parent: 'com.parentapp.ios', child: 'com.gameapp.ios' };
+const TOPIC: Record<string, string> = { parent: 'com.parentapp.ios', child: 'com.gameapp.ios', clinic: 'com.clinicapp.uzman' };
 const PROD = 'api.push.apple.com';
 const SANDBOX = 'api.sandbox.push.apple.com';
 
