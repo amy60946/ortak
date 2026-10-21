@@ -40,9 +40,7 @@ reset role;
 select tst.check(not exists (
   select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
-     and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')
-     -- bilerek girişsiz: ClinicApp kayıt öncesi ekip kodu denetimi (IP başına deneme sınırlı)
-     and p.oid <> 'public.clinic_team_code_status(text)'::regprocedure), 'anon izin listesi dışında hiçbir public fonksiyonu çalıştıramaz');
+     and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')), 'anon hiçbir public fonksiyonu çalıştıramaz');
 select tst.check(has_function_privilege('authenticated', 'public.join_family(text)', 'execute'), 'giriş yapan join_family çağırabilir');
 select tst.check(has_function_privilege('authenticated', 'public.clinic_create_invite(text, text)', 'execute'), 'giriş yapan uzman davet üretebilir');
 select tst.check(has_function_privilege('authenticated', 'public.register_push_token(text, text, text)', 'execute'), 'push kaydı çalışır');
@@ -50,7 +48,7 @@ select tst.check(not has_function_privilege('authenticated', 'public.notify(uuid
 select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee in ('anon', 'authenticated') and table_schema = 'public' and privilege_type = 'TRUNCATE'), 'TRUNCATE yetkisi yok');
 
 set role anon;
-select tst.fails($$select public.clinic_invite_preview('ABCDEF')$$, 'anon kod önizleyemez');
+select tst.rejects($$select public.clinic_invite_preview('ABCDEF')$$, 'anon kod önizleyemez');
 select tst.fails($$select public.family_premium()$$, 'anon premium soramaz');
 reset role;
 

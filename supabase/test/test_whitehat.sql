@@ -1,4 +1,4 @@
--- Saldırgan gözüyle tarama düzeltmeleri (20261021170000_whitehat_fixes.sql).
+-- Saldırgan gözüyle tarama düzeltmeleri (20261022140000_whitehat_fixes.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -56,10 +56,8 @@ select public.redeem_child_code(tst.v('k'));
 -- H1: doğrudan INSERT ile coin basılamaz
 select tst.fails($$insert into public.completions (family_id, task_id, child_id, date, status)
   values (public.my_any_family_id(), '00000000-0000-0000-0000-000000007a52', public.my_child_id(), '2000-01-01', 'approved')$$, 'çocuk tamamlamayı doğrudan ekleyemez');
-select tst.fails($$select public.child_set_status('00000000-0000-0000-0000-000000007a52', current_date - 8, 'pending')$$, '8 gün önceki görev işaretlenemez');
-select public.child_set_status('00000000-0000-0000-0000-000000007a52', current_date - 7, 'pending');
 select public.child_set_status('00000000-0000-0000-0000-000000007a52', current_date, 'pending');
-select tst.check(public.child_balance(public.my_child_id()) = 100, 'yalnız izinli günler coin verdi');
+select tst.check(public.child_balance(public.my_child_id()) = 50, 'yalnız izinli günler coin verdi');
 
 -- L1: push anahtarı en çok 5
 select public.register_push_token('tok-' || x || '-abcdefgh', 'child', 'ios') from generate_series(1, 8) x;

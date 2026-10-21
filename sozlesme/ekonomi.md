@@ -4,13 +4,13 @@ Bu dosyadaki sayılar iki ya da daha fazla uygulamanın **aynı** kabul etmesi g
 yapılır, sonra oyun verisi (`Resources/Data/*.json`) ve ParentApp güncellenir.
 
 Kaynak:
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı: `coin_ledger`, `completions_coin_trigger`, `spend_coins`, `game_items`)
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı: `coin_ledger`, `completions_coin_trigger`, `spend_coins`, `game_items`)
 - `parent-app/supabase/migrations/20261013000000_init.sql` (`task_assignments.coins`)
 - `parent-app/src/theme.ts` (`difficultyMeta`), `src/screens/TaskDetailsScreen.tsx`, `src/screens/CreateTaskScreen.tsx`, `src/store.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Economy/Wallet.cs`, `Economy/XpSystem.cs`, `Progression/Progression.cs`, `Pet/PetStats.cs`, `Pet/PetCare.cs`, `Profile/AgeBand.cs`, `Shop/ShopRules.cs`, `State/SyncCoordinator.cs`, `App/StarterKit.cs`, `App/TestAccess.cs`, `App/DemoParent.cs`, `Services/Mock/MockBackend.cs`, `MiniGames/MiniGames.cs`, `MiniGames/Expeditions.cs`, `Cards/CardGameFramework.cs`, `Fishing/Fishing.cs`, `Garden/Garden.cs`, `Island/Gathering.cs`, `Island/Events.cs`
-- `pofi-adasi/Assets/_Pofi/Scripts/Runtime/Core/GameBootstrap.cs`, `Runtime/Screens/MapScreen.cs`, `Runtime/Screens/ShopScreen.cs`
-- `pofi-adasi/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
-- `pofi-adasi/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Economy/Wallet.cs`, `Economy/XpSystem.cs`, `Progression/Progression.cs`, `Pet/PetStats.cs`, `Pet/PetCare.cs`, `Profile/AgeBand.cs`, `Shop/ShopRules.cs`, `State/SyncCoordinator.cs`, `App/StarterKit.cs`, `App/TestAccess.cs`, `App/DemoParent.cs`, `Services/Mock/MockBackend.cs`, `MiniGames/MiniGames.cs`, `MiniGames/Expeditions.cs`, `Cards/CardGameFramework.cs`, `Fishing/Fishing.cs`, `Garden/Garden.cs`, `Island/Gathering.cs`, `Island/Events.cs`
+- `game-app/Assets/_Pofi/Scripts/Runtime/Core/GameBootstrap.cs`, `Runtime/Screens/MapScreen.cs`, `Runtime/Screens/ShopScreen.cs`
+- `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
+- `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
 Son güncelleme: 2026-10-19
 
@@ -74,7 +74,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | **Sunucu denetlemez** (sütun var, `spend_coins` kullanmıyor). Kilit yalnız oyunda (`ShopRules`, `item.Level`). |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -141,6 +141,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 ### 5.2 XP kaynakları (koddaki sayılar)
 | Kaynak | XP | Sınıra sayılır mı |
 |---|---|---|
+| **Gerçek görev onayı** (Ö2, `RealTaskRewards.Xp`; karar 19 Ekim) | Zorluğa göre (`task_assignments.difficulty`): kolay **20**, orta **35**, zor **50**. Her onaylı görev örneği bir kez. | Hayır |
 | Gerçek görev serisi (`TaskStreak.Bonus`): art arda günlerde en az bir **onaylı** görev | 1. gün 10, her gün +5, 7. günden sonra **40**'ta sabit (10, 15, 20, 25, 30, 35, 40). Aynı gün ikinci onay bonus vermez; seri kırılırsa 1'den başlar, ceza yok. | Hayır |
 | Mini oyun (`MiniGameXp.For`) | `min(40, 5 + skor × puanBaşı)`; hindistan cevizi puanBaşı 1, mağara 2 | Evet |
 | "Pet'e yardım" mini oyunu | `max(10, 25 − 2 × deneme)` | Evet |
@@ -156,6 +157,29 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (`tasks_approved` sayacı) bağlıdır; yani ParentApp onayı oyunda XP'yi de dolaylı etkiler.
 
 ---
+
+## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
+
+- **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
+- Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
+- **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
+- ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
+
+## 5B. Beceriler (Ö2; karar 19 Ekim 2026)
+
+Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun ve raporlar aşağıdaki **tek sözlüğe** eşler (`SkillCatalog`); eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+
+| Anahtar | Ad (Türkçe) | Eşlenen etiketler (bugünkü ParentApp şablonları dahil) |
+|---|---|---|
+| `focus` | Odak | Odak, Odaklanma |
+| `kindness` | Nezaket | Nezaket, Empati, Minnettarlık |
+| `responsibility` | Sorumluluk | Sorumluluk, Takım Çalışması |
+| `independence` | Bağımsızlık | Bağımsızlık |
+| `calm` | Sakinlik | Sakinlik, Sakinleşme |
+| `self_care` | Öz Bakım | Öz Bakım |
+
+- Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
+- Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
@@ -215,15 +239,21 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | # | Konu | Ayrıntı |
 |---|---|---|
 | E1 | ~~Görev ödülü üst sınırı~~ | **Karar (19 Ekim):** 0–50. SQL kısıtı uygulandı, ParentApp girişi sıkıştırıyor. |
-| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. |
-| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. |
-| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. |
+| E2 | Sıfır fiyat | SQL `price >= 0` izin verir; oyun `Wallet.TrySpend` `unitPrice <= 0`'ı reddeder ve `GameData.Validate` "fiyat pozitif olmalı" der. Bugün 0 fiyatlı eşya yok. **Karar: fiyat > 0** (`game_items_price_positive`). |
+| E3 | Adet sınırı | Sunucu 1–20; oyun `Wallet` yalnız `> 0` denetler. Bugün dükkân hep 1 alır. **Karar: oyun da 1–20 denetler** (`Wallet.TrySpend`). |
+| E4 | `min_level` | Sunucuda tutulur ama `spend_coins` denetlemez; seviye yalnız oyunda bilinir. **Karar: sunucu denetler** — seviye, oyun kaydındaki `Xp.TotalXp` ve `game_levels` eşiklerinden (`child_level`); hata `level_locked`. Oyun harcamadan önce kaydı yedekler. |
 | E5 | Plan adları eski | `PLAN.md` §3 `child_game_state`, `shop_prices`, `sync_game_state`, `game_config` adlarını kullanır; uygulanan SQL'de bunların yerine `game_saves`, `game_items`, `game_save_get/put` var; `game_config` (uzaktan XP sınırı/fiyat ayarı) **yok**. |
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
-| E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz**. |
+| E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |
 
-## 9. Güneş Taşı (öneri, 21 Ekim 2026 — `proposed/20261021160000_sun_stones_rewards.sql`)
+---
+
+> **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
+
+## P9. Güneş Taşı ile ödüller (öneri, 22 Ekim 2026 — `proposed/20261022130000_sun_stones_rewards.sql`)
+
+Taş kazanma canlıda (GameApp, `migrations/20261019030000_sun_stones.sql`). İki sayı: **kazanılan** (`child_me.sun_stones`, adaya yerleştirme; ödül/ceza değiştirmez) ve **harcanabilir** (`sun_stones_spendable`, `child_me.sun_stones_spendable`; ödüller ve taş düşme bununla).
 
 İkinci para; coin'den ayrı defter (`sun_stone_ledger`). Coin oyun içi dükkân için, Güneş Taşı **gerçek hayat ödülleri** için.
 
@@ -237,5 +267,4 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer |
 | Başlangıç | 0. Uygulanmadan önce onaylanmış görevler taş vermez (geriye dönük yok) |
 
-Not: Omurga analizinde (Ö1) taşın adaya "yerleştirilmesi" de önerilmişti; ada ilerlemesi için taş harcanıp harcanmayacağı
-oyun penceresiyle ayrıca karara bağlanacak (DURUM hatırlatıcısı). Bugünkü kural: taş yalnız ödüllerde harcanır.
+Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki ilerlemeyi geri almaz.

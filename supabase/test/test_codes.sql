@@ -1,4 +1,4 @@
--- 15 dakikalık kodlar + deneme sınırı (20261021130000_codes_15min.sql, 20261021170000_whitehat_fixes.sql L7).
+-- 15 dakikalık kodlar + nedenli ret + IP sınırı (20261022100000_codes_15min.sql; deneme sınırı 20261021300000_security_pentest.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -63,25 +63,26 @@ select tst.check((select expires_at - created_at from public.invite_codes where 
 -- yeni kod eskisini geçersiz kılar: eskisi "süresi doldu" der
 insert into tst.kv select 'child2', code from public.create_invite_code('child', '00000000-0000-0000-0000-00000000c001');
 select tst.as_user('00000000-0000-0000-0000-0000000000c1');
-select tst.check(public.redeem_child_code(tst.v('child1')) ->> 'error' = 'code_expired', 'eski kod: süresi doldu');
+select tst.check(public.redeem_child_code(tst.v('child1')) ->> 'reason' = 'expired', 'eski kod: süresi doldu');
 select tst.check(tst.status($$select public.redeem_child_code('YYYYYY')$$) = '400', 'hata yanıtı HTTP 400');
 select tst.check(public.redeem_child_code(tst.v('child1')) ->> 'message' like 'Kodun süresi doldu%', 'Türkçe metin message alanında');
-select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'error' = 'code_invalid', 'olmayan kod: bulunamadı');
+select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'reason' = 'not_found', 'olmayan kod: bulunamadı');
 select tst.fails($$select count(*) from public.code_attempts$$, 'istemci deneme tablosunu okuyamaz');
+select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'error' = 'invalid_code', 'hata kodu geriye uyumlu (invalid_code)');
 reset role;
-select tst.check((select count(*) from public.code_attempts where user_id = '00000000-0000-0000-0000-0000000000c1') = 4, 'dört hatalı deneme kaydedildi');
+select tst.check((select count(*) from public.code_attempts where user_id = '00000000-0000-0000-0000-0000000000c1') = 5, 'beş hatalı deneme kaydedildi');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000c1');
 -- yeni kod çalışır
 select tst.check(public.redeem_child_code(lower(tst.v('child2'))) ->> 'child_id' = '00000000-0000-0000-0000-00000000c001', 'yeni kod çalışır');
-select tst.check(public.redeem_child_code(tst.v('child2')) ->> 'error' = 'code_used', 'kullanılmış kod: daha önce kullanıldı');
+select tst.check(public.redeem_child_code(tst.v('child2')) ->> 'reason' = 'used', 'kullanılmış kod: daha önce kullanıldı');
 
 -- süresi dolan davet kodu
 reset role;
 update public.invite_codes set expires_at = now() - interval '1 second' where code = tst.v('parent1');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
-select tst.check(public.join_family(tst.v('parent1')) ->> 'error' = 'code_expired', 'süresi dolan davet kodu');
+select tst.check(public.join_family(tst.v('parent1')) ->> 'reason' = 'expired', 'süresi dolan davet kodu');
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 insert into tst.kv select 'parent2', code from public.create_invite_code('parent', null);
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
@@ -94,12 +95,12 @@ select public.redeem_child_code('AAAAA' || x) from generate_series(1, 9) x;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 insert into tst.kv select 'child3', code from public.create_invite_code('child', '00000000-0000-0000-0000-00000000c001');
 select tst.as_user('00000000-0000-0000-0000-0000000000c2');
-select tst.check(public.redeem_child_code('BBBBBB') ->> 'error' = 'code_invalid', '10. hata hâlâ normal');
+select tst.check(public.redeem_child_code('BBBBBB') ->> 'reason' = 'not_found', '10. hata hâlâ normal');
 select tst.check(public.redeem_child_code(tst.v('child3')) ->> 'error' = 'too_many_attempts', '10 hatadan sonra doğru kod da engellenir');
 select tst.check(tst.status($$select public.redeem_child_code(tst.v('child3'))$$) = '429', 'engel HTTP 429');
 reset role;
 select tst.check((select count(*) from public.code_attempts where user_id = '00000000-0000-0000-0000-0000000000c2') = 10, 'engel yanıtı deneme sayısını büyütmez');
-update public.code_attempts set created_at = now() - interval '16 minutes' where user_id = '00000000-0000-0000-0000-0000000000c2';
+update public.code_attempts set at = now() - interval '16 minutes' where user_id = '00000000-0000-0000-0000-0000000000c2';
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000c2');
 select tst.check(public.redeem_child_code(tst.v('child3')) ->> 'child_id' is not null, '15 dakika sonra yeniden denenebilir');
@@ -107,13 +108,13 @@ select tst.check(public.redeem_child_code(tst.v('child3')) ->> 'child_id' is not
 -- IP sınırı: aynı IP'den farklı oturumlar toplam 30 hata
 reset role;
 delete from public.code_attempts;
-insert into public.code_attempts (user_id, ip, kind) select gen_random_uuid(), '203.0.113.7', 'child' from generate_series(1, 30);
+insert into public.code_attempts (user_id, ip) select gen_random_uuid(), '203.0.113.7' from generate_series(1, 30);
 set role authenticated;
 select set_config('request.headers', '{"cf-connecting-ip":"203.0.113.7"}', false);
 select tst.as_user('00000000-0000-0000-0000-0000000000c1');
 select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'error' = 'too_many_attempts', 'aynı IP 30 hatadan sonra engelli');
 select set_config('request.headers', '{"cf-connecting-ip":"198.51.100.1"}', false);
-select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'error' = 'code_invalid', 'başka IP engelli değil');
+select tst.check(public.redeem_child_code('ZZZZZZ') ->> 'reason' = 'not_found', 'başka IP engelli değil');
 select set_config('request.headers', '', false);
 
 -- uzman kodları
@@ -127,19 +128,22 @@ select tst.check(public.clinic_invite_preview(tst.v('fam')) ->> 'clinician' = 'D
 reset role;
 update public.clinic_invites set expires_at = now() - interval '1 minute' where code = tst.v('fam');
 set role authenticated;
-select tst.check(public.clinic_invite_preview(tst.v('fam')) ->> 'error' = 'code_expired', 'süresi dolan uzman kodu önizlenemez');
-select tst.check(public.redeem_clinic_invite_children(tst.v('fam'), array['00000000-0000-0000-0000-00000000c001'::uuid]) ->> 'error' = 'code_expired', 'süresi dolan uzman kodu paylaşım açmaz');
+select tst.check(public.clinic_invite_preview(tst.v('fam')) ->> 'reason' = 'expired', 'süresi dolan uzman kodu önizlenemez');
+select tst.check(public.redeem_clinic_invite_children(tst.v('fam'), array['00000000-0000-0000-0000-00000000c001'::uuid]) ->> 'reason' = 'expired', 'süresi dolan uzman kodu paylaşım açmaz');
 select tst.check(not exists (select 1 from public.clinic_links), 'paylaşım oluşmadı');
 
--- ekip kodu: kayıttan önce girişsiz denetim + kayıtta süre
-set role anon;
-select tst.as_user(null);
-select tst.check(public.clinic_team_code_status(tst.v('team')) ->> 'clinic' = 'Mavi', 'girişsiz ekip kodu denetimi (geçerli)');
-select tst.check(public.clinic_team_code_status('QQQQQQ') ->> 'error' = 'code_invalid', 'girişsiz denetim: bulunamadı');
+-- ekip kodu (giriş yapmış uzman clinic_join_team ile katılır)
 reset role;
+insert into auth.users (id, raw_user_meta_data) values ('00000000-0000-0000-0000-0000000000d2', '{"account":"clinician","name":"Dr. Can"}');
 update public.clinic_invites set expires_at = now() - interval '1 minute' where code = tst.v('team');
-select tst.check(public.clinic_team_code_status(tst.v('team')) ->> 'error' = 'code_expired', 'girişsiz denetim: süresi doldu');
-select tst.check(tst.err($$insert into auth.users (id, raw_user_meta_data) values ('00000000-0000-0000-0000-0000000000d2',
-  jsonb_build_object('account', 'clinician', 'team_code', tst.v('team')))$$) like 'Ekip kodunun süresi doldu%', 'kayıtta süresi dolan ekip kodu açık mesajla reddedilir');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d2');
+select tst.check(public.clinic_join_team(tst.v('team')) ->> 'reason' = 'expired', 'süresi dolan ekip kodu: süresi doldu');
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+insert into tst.kv select 'team2', public.clinic_create_invite('clinician', '') ->> 'code';
+select tst.check(char_length(tst.v('team2')) = 8, 'ekip kodu 8 karakter');
+select tst.as_user('00000000-0000-0000-0000-0000000000d2');
+select tst.check(public.clinic_join_team(tst.v('team2')) ->> 'clinic_id' is not null, 'yeni ekip koduyla katılım');
+reset role;
 
 select 'KOD TESTLERİ GEÇTİ' as sonuc;

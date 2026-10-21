@@ -42,18 +42,18 @@ insert into tst.kv values ('fam', public.clinic_create_invite('family', '') ->> 
 insert into tst.kv values ('clinic', public.clinician_me() ->> 'clinic_id');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000e1');
-select tst.fails($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c001'::uuid])$$, 'yabancı ebeveyn başkasının çocuğunu paylaşamaz');
+select tst.rejects($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c001'::uuid])$$, 'yabancı ebeveyn başkasının çocuğunu paylaşamaz');
 select tst.fails($$select public.clinic_share_child((select v from tst.kv where k = 'clinic')::uuid, '00000000-0000-0000-0000-00000000c001')$$, 'yabancı ebeveyn kodsuz ekleyemez');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
-select tst.fails($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), '{}')$$, 'çocuk seçmeden olmaz');
+select tst.rejects($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), '{}')$$, 'çocuk seçmeden olmaz');
 select tst.fails($$select public.clinic_share_child((select v from tst.kv where k = 'clinic')::uuid, '00000000-0000-0000-0000-00000000c003')$$, 'etkin paylaşım yokken kodsuz eklenemez');
 select tst.check(json_array_length(public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'),
   array['00000000-0000-0000-0000-00000000c001'::uuid, '00000000-0000-0000-0000-00000000c002'::uuid, '00000000-0000-0000-0000-00000000c001'::uuid]) -> 'link_ids') = 2,
   'tek kodla iki çocuk paylaşılır (tekrar eden çocuk bir kez)');
 select tst.check((select count(*) from public.family_clinic_links()) = 2, 'iki paylaşım listelenir');
 select tst.check((select count(distinct clinic_id) from public.family_clinic_links()) = 1, 'listede clinic_id var');
-select tst.check(public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c003'::uuid]) ->> 'error' = 'code_used', 'kod yine tek kullanımlık');
+select tst.rejects($$select public.redeem_clinic_invite_children((select v from tst.kv where k = 'fam'), array['00000000-0000-0000-0000-00000000c003'::uuid])$$, 'kod yine tek kullanımlık');
 
 -- kodsuz üçüncü çocuk (aynı klinik, etkin paylaşım var)
 select public.clinic_share_child((select v from tst.kv where k = 'clinic')::uuid, '00000000-0000-0000-0000-00000000c003');

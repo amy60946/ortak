@@ -3,15 +3,15 @@
 Her adımda **hangi uygulamanın** ne yaptığı ve hangi tablo/fonksiyonun kullanıldığı yazılıdır.
 Uygulamalar birbirleriyle doğrudan konuşmaz; her şey ortak Supabase veritabanı üzerinden olur.
 
-Simgeler: **[P]** ParentApp (ebeveyn) · **[O]** Oyun (Pofi Adası, çocuk) · **[K]** ClinicApp (uzman) · **[S]** Sunucu (Supabase fonksiyonu/tetikleyicisi)
+Simgeler: **[P]** ParentApp (ebeveyn) · **[O]** Oyun (GameApp, çocuk) · **[K]** ClinicApp (uzman) · **[S]** Sunucu (Supabase fonksiyonu/tetikleyicisi)
 
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
-- `supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı), `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
+- `ortak/supabase/migrations/20261019000000_clinic.sql` (uygulandı); `parent-app`, `src/lib/clinic.ts`, `src/components/ClinicShare.tsx`
 - `parent-app/src/store.tsx`, `src/lib/auth.tsx`, `src/screens/ReviewScreen.tsx`, `src/screens/TasksScreen.tsx`, `src/screens/TaskDetailsScreen.tsx`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
-- `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `pofi-adasi/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
+- `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
+- `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
 
 Son güncelleme: 2026-10-19
 
@@ -28,7 +28,7 @@ Son güncelleme: 2026-10-19
 ### 1.1 İkinci ebeveyn daveti
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **15 dakika** (öneri 21 Ekim; önce 24 saat) |
+| 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **24 saat** |
 | 2 | [P] (ebeveyn 2) | Kendi hesabıyla Aile › Hesap › "Aileye katıl" bölümüne kodu yazar. | `join_family(code)` |
 | 3 | [S] | Profil yeni aileye taşınır, kod tüketilir. Ebeveyn 2'nin eski ailesinde başka ebeveyn yoksa eski aile **ve tüm verisi silinir** (uygulama önce uyarır). | `profiles.family_id`, `invite_codes.used_at` |
 
@@ -38,7 +38,7 @@ Son güncelleme: 2026-10-19
 
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **15 dakika** (öneri; önce 24 saat), tek kullanım; eski kodun süresi biter |
+| 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **24 saat**, tek kullanım |
 | 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). | — |
 | 3 | [O] | Çocuk kodu yazar. Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
 | 4 | [O] | Oturum yoksa **anonim oturum** açar. | `POST /auth/v1/signup` (anonim). Supabase'de "Anonymous Sign-Ins" açık olmalı. |
@@ -74,8 +74,10 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 9a | [P] | **Onay:** kayıt `approved` yapılır. | `review_completion(..., 'approved')` (19 Ekim kararı; önceden doğrudan `completions` update) |
 | 9b | [P] | **Ret:** ebeveyn isterse not yazar ("Yatak dağınık kalmış"); kayıt silinmez. | `review_completion(task, child, date, 'rejected', note)` |
 | 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) verilen tutar düşülür; görev/atama silinirse kazanılan coin kalır. | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
+| 10a | [S] | Aynı geçişte **Güneş Taşı** yazılır: kolay 1 / orta 2 / zor 3 (`20261019030000_sun_stones`, uygulandı 19 Ekim). Geri almada o tamamlamanın taşı düşer. | tetikleyici `completions_sun_stone` → `sun_stone_ledger` |
 | 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
 | 12 | [O] | Bakiye sunucudan alınır, artış "kazanılan coin" olarak kutlanır. Aynı gün ilk onayda görev serisi bonusu XP'si verilir (coin değil). | `child_me().balance`; `TaskStreak` |
+| 12a | [O] | Onaylı her görev örneği için bir kez: zorluğa göre XP (20/35/50, sınıra sayılmaz) ve becerisine 1 yıldız (`ekonomi.md` 5B). Taş toplamı `child_me().sun_stones`'tan alınır; çocuk taşları adadaki onarım noktalarına yerleştirir. | `child_tasks` (`skill`, `difficulty`); `child_me().sun_stones` |
 | 13 | [P] | Ebeveyn çocuğun bakiyesini görür. | `child_balance(child_id)` |
 
 ### 3.1 Coin harcama (oyun içi, ebeveyn adımı yok)
@@ -106,9 +108,9 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 
 ---
 
-## 5. Uzman (klinik) paylaşımı
+## 5. Uzman (klinik) paylaşımı — uygulandı
 
-> **Uygulandı (19 Ekim 2026).** SQL: `supabase/migrations/20261019000000_clinic.sql`. ParentApp ekranları (`lib/clinic.ts`, `ClinicShare.tsx`) henüz `parent-app` dalı `claude/project-thread-vwahaf`'ta.
+> **Uygulandı (19 Ekim 2026).** SQL: `supabase/migrations/20261019000000_clinic.sql`.
 > ParentApp tarafı aynı dalda "Aile › Hesap › Uzmanım" (`ClinicShare.tsx`, `lib/clinic.ts`). ClinicApp henüz yazılmadı.
 
 ### 5.1 Uzman hesabı ve ekip
@@ -118,11 +120,13 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 2 | [S] | Aile **oluşturulmaz**; yeni klinik (`plan='trial'`, 14 gün, 3 koltuk) + uzman (`role='owner'`). | `handle_new_user` → `clinics`, `clinicians` |
 | 3 | [K] (sahip) | Ekip daveti üretir. | `clinic_create_invite('clinician')` → **7 gün** |
 | 4 | [K] (yeni uzman) | Kayıtta `team_code` verir; koltuk doluysa reddedilir. | `handle_new_user` → `clinicians` (`member`) |
+| 4a | [K] (giriş yapmış uzman) | Profil › "Ekip koduyla katıl": hesabı varsa kodla katılır. Eski kliniği **boşsa** (başka uzman, paylaşım, not, hedef yok) silinir; doluysa reddedilir. Sahibe `team_joined` bildirimi. | `clinic_join_team(kod)` (`20261021100000`, uygulandı) |
+| 5 | [K] (üye) | Profilinde klinik adı, klinik sahibi ve davet edenin adı görünür; danışan listesi kliniğin bütün etkin paylaşımlarıdır (sahip ile aynı). | `clinician_me()` → `owner_name`, `invited_by_name`, `joined_at` (`20261021100000`, uygulandı) |
 
 ### 5.2 Aile paylaşımı (ebeveynin açık rızası)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **15 dakika** (öneri; önce 7 gün) |
+| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **7 gün** |
 | 2 | [K → ebeveyn] | Kodu aileye verir (uygulama dışı). | — |
 | 3 | [P] | Ebeveyn Uzmanım › kodu yazar; **rıza vermeden önce** klinik adı, uzman adı ve unvanını görür. | `clinic_invite_preview(code)` |
 | 4 | [P] | Paylaşılacak çocuğu seçer, "Onaylıyorum, paylaş". | `redeem_clinic_invite(code, child_id)` |
@@ -140,13 +144,13 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 ### 5.4 Uzmanın görev önerisi
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman rızalı bağlantı için görev önerir (başlık, emoji, beceri, zorluk, tekrarlı mı, not). `pending` iken geri çekebilir. | `clinic_task_suggestions` insert (`status='pending'`) |
+| 1 | [K] | Uzman rızalı bağlantı için görev önerir. Form ParentApp "Görev Oluştur" ile **birebir aynı**: şablon (kategori, ara) ya da özel görev; açıklama; zorluk + ödül (0–50); başlangıç; tek seferlik / tekrarlayan (her gün · haftalık günler · aylık günler) + son tarih; hatırlatma saati; inceleme gerekli; ebeveyne not. `pending` iken **günceller** (`clinic_update_suggestion`) ya da geri çeker. | `clinic_task_suggestions` insert (`status='pending'`) |
 | 2 | [P] | Görevler ekranında bekleyen öneri bildirimi; Uzmanım'da kabul/ret. | `clinic_task_suggestions` select (`status='pending'`) |
-| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur: bugünden başlar, tekrarlıysa `daily`, inceleme gerekir, coin zorluğun varsayılanı (5/10/20). | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert |
+| 3a | [P] | **Kabul:** öneri `accepted` yapılır, ardından ParentApp **kendisi** görev oluşturur. Öneri alanları göreve birebir taşınır: `title`, `emoji`, `skill`, `description`, `recurring`, `repeat_kind`, `repeat_days`, `end_date`, `reminder`, `requires_review`; atamada `difficulty` ve `coins` (null ise zorluğun varsayılanı 5/10/20); `start_date` null ya da geçmişse bugün. Ebeveyn kabul etmeden önce görev ekranında bunları değiştirebilir. (Eski öneriler — yeni sütunlar boş — için önceki varsayılanlar: bugün, `daily`, inceleme gerekli.) | update `status='accepted'`, `decided_at`; `tasks` + `task_assignments` insert; ardından öneriye `task_id` yazılır |
 | 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
 | 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
 
-Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanmalı; bkz. `durumlar.md` K3).
+Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
 
 ### 5.5 Zor an (ABC) kaydı
 | # | Uygulama | Adım | Veritabanı |
@@ -160,12 +164,24 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 | 1 | [K] | Not yazar. | `clinic_notes` |
 | 2 | [K] | Hedef (GAS) tanımlar, haftalık −2 … +2 puan verir. | `clinic_goals`, `goal_ratings` |
 
-### 5.7 Abonelik (öneri)
+### 5.7 Abonelik
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [S] (service role) | Mağaza/web ödemesi aile aboneliğini yazar. | `family_subscriptions` (`free`/`premium`) |
 | 2 | [S] | Aile, kendi aboneliği **ya da** etkin (deneme süresinde ya da ücretli) bir kliniğe bağlı çocuğu varsa premium sayılır. | `family_premium()`, `clinic_active()` |
-| 3 | [S] (service role) | Klinik planı ödeme entegrasyonuyla yazılır. | `clinics.plan`, `seat_limit` |
+
+### 5.8 ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [S] | Yeni klinik 7 gün ücretsiz dener (kart yok, 10 koltuk). | `clinics.plan='trial'`, `trial_ends_at` |
+| 2 | [K] | Ana ekranda kalan gün; "Üyelik" ekranında iki paket (Bireysel / Klinik), aylık–yıllık, içerik listesi. Yalnız klinik sahibi satın alır. | `billing_plans`, `clinician_me()` |
+| 3a | [K] iPhone/iPad | App Store aboneliği (StoreKit, `appAccountToken` = klinik kimliği) → `clinic-billing/apple-verify` → Apple'dan doğrulanır. Yenileme/iptal/iade Apple bildirimiyle (`apple-notify`). | `billing_apply` |
+| 3b | [K] web | Fatura bilgisi (ad, soyad, T.C. kimlik, cep, şehir, adres) → `clinic-billing/iyzico-start` → iyzico ödeme formu (kart ClinicApp'e gelmez) → `iyzico-callback` → `?billing=ok`. Yenileme `iyzico-webhook`; "Yenilemeyi kapat" `iyzico-cancel`. | `billing_checkouts`, `billing_apply` |
+| 4 | [S] | Deneme/üyelik bitince `clinician_access()` false: çocuk verisi, notlar, hedefler, öneriler, davet kapanır; veriler silinmez. Uygulama panel yerine üyelik ekranını gösterir. | RLS |
+| 5 | [S] | Bireysel pakette yalnız sahip erişir; ekip üyesinin ekranında "Ekip erişimi kapalı". | `clinician_access()` |
+| 6 | [P] | Etkin kliniğe bağlı aile premium sayılmaya devam eder (deneme dahil). | `family_premium()` |
+
+ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{status}`, `membership.choose{plan}`, `membership.checkout{plan}`, `membership.purchased{plan,source}`, `membership.cancel`.
 
 ---
 
@@ -176,6 +192,7 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 | 1 | [P] | Ebeveyn Storage dosyalarını siler, sonra hesabı siler. | Storage `mail`; `delete_account()` |
 | 2 | [S] | Ailede başka ebeveyn yoksa aile ve bağlı her şey (çocuklar, görevler, tamamlamalar, mesajlar, coin defteri, oyun yedekleri) silinir. | `families` → cascade |
 | 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür; yerel kayıt kalır. | `Revoked` |
+| 4 | [K] (uygulandı, bölüm 9 veritabani.md) | Uzman "Hesabı sil": tek kişilik klinik (paylaşımlar, notlar, hedefler, davetler, üyelik kayıtları) silinir; ekipte başkası varsa klinik kalır, sahiplik en eski üyeye geçer. App Store aboneliği Apple'dan ayrıca kapatılır. | `delete_account()` |
 
 ---
 
@@ -202,9 +219,9 @@ Not: Öneri ile oluşan görev arasında veritabanında bağ yoktur (doğrulanma
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
-- **Telefona push (iOS, ParentApp ve Pofi Adası):** cihaz Apple (APNs) cihaz anahtarını `register_push_token(token, 'parent'|'child', 'ios')` ile kaydeder. Her yeni bildirimde tetikleyici pg_net ile Edge Function `push-apns`'e yalnız bildirim kimliğini yollar; fonksiyon .p8 anahtarıyla Apple'a gönderir (konu: parent → `com.parentapp.ios`, child → `com.gameapp.ios`), geçersiz anahtarı siler, bildirimi `apns_sent_at` ile işaretler. Çıkışta `unregister_push_token`. Kod: `supabase/functions/push-apns/index.ts`; secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (Supabase'de). Expo anahtarı (`ExponentPushToken[...]`) gelirse Expo Push API'ye gider (yedek yol).
-- **Pofi Adası (Unity):** uygulama içi liste + Realtime/yoklama; push için iOS cihaz anahtarını `app='child'` ile kaydetmesi yeterli.
-- **ClinicApp (web):** uygulama içi liste + Realtime; web push sonra.
+- **Telefona push (iOS, ParentApp ve GameApp):** cihaz Apple (APNs) cihaz anahtarını `register_push_token(token, 'parent'|'child', 'ios')` ile kaydeder. Her yeni bildirimde tetikleyici pg_net ile Edge Function `push-apns`'e yalnız bildirim kimliğini yollar; fonksiyon .p8 anahtarıyla Apple'a gönderir (konu: parent → `com.parentapp.ios`, child → `com.gameapp.ios`, clinic → `com.clinicapp.uzman`), geçersiz anahtarı siler, bildirimi `apns_sent_at` ile işaretler. Çıkışta `unregister_push_token`. Kod: `supabase/functions/push-apns/index.ts`; secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (Supabase'de). Expo anahtarı (`ExponentPushToken[...]`) gelirse Expo Push API'ye gider (yedek yol).
+- **GameApp (Unity):** uygulama içi liste + Realtime/yoklama; push için iOS cihaz anahtarını `app='child'` ile kaydetmesi yeterli.
+- **ClinicApp (iPad/iPhone + web):** uygulama içi liste + Realtime; danışan listesinde çocuk başına okunmamış rozeti; dokununca ilgili danışan sekmesi (`abc_event` → Zor anlar, `suggestion_decided` → Öneriler, `clinic_shared` → danışan, `team_joined` → Ekip). iOS push: `register_push_token(token, 'clinic', 'ios')`, konu `com.clinicapp.uzman` (`push-apns` güncellemesi 21 Ekim 2026 — Edge Function yeniden yayınlanmalı). Web push sonra.
 - `data` alanı: ilgili kimlikler (`task_id`, `child_id`, `date`, `message_id`, `suggestion_id`, `links` …) + push'ta `kind`, `notification_id`. Uygulama dokununca ekranı buna göre açar.
 
 ## 8. Uzmanla birden çok çocuk paylaşma (19 Ekim 2026'da uygulandı)
@@ -218,7 +235,23 @@ Teslim yolları:
 | 3 | [P] | Liste klinik başına gruplanır. | `family_clinic_links()` artık `clinic_id` de döndürür |
 | 4 | [K] | Uzman çıkarılan çocuğu hemen göremez (RLS `active` bağlantıya bakar). | — |
 
-## 9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
+## 9. Kullanıcı kaydı ve takip (21 Ekim 2026'da uygulandı, `migrations/20261021100000_clinic_team_tracking.sql`)
+
+> Birinci taraf; üçüncü taraf analitik/reklam SDK'si **yok**. Olaylarda kişisel veri ya da serbest metin (ad, not, zor an içeriği) **yazılmaz**; yalnız ekran/eylem adı ve kimlik dışı küçük alanlar (`tab`, `kind`, sayı).
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | O, P, K | Açılışta ve öne gelişte oturum bildirilir (dakikada en çok bir oturum sayılır; gün değişince aktif gün +1). | `track_session(app, platform, sürüm)` → `user_activity` |
+| 2 | O, P, K | Olaylar biriktirilir, toplu gönderilir (≤ 50/çağrı, kullanıcı başına ≤ 2000/gün). Ad biçimi `alan.eylem` (küçük harf, rakam, `_`, `.`). | `track_events(app, olaylar, platform, sürüm)` → `app_events` |
+| 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
+
+ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`.
+
+---
+
+> **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
+
+## P9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|
@@ -228,7 +261,7 @@ Teslim yolları:
 | 4 | [S] | 15 dakikada 10 hatalı denemeden sonra 15 dakika engel (429). | `code_attempts` |
 | 5 | [K] kayıt | ClinicApp kayıt ekranı ekip kodunu hesap açmadan önce `clinic_team_code_status(kod)` ile denetler (girişsiz çağrılır). | — |
 
-## 10. Ebeveyn ↔ çocuk mesajları (öneri, 21 Ekim 2026)
+## P10. Ebeveyn ↔ çocuk mesajları (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|
@@ -241,7 +274,7 @@ Teslim yolları:
 
 Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; kardeşler birbirinin sohbetini görmez; uzman mesajları göremez.
 
-## 11. Ödüller ve Güneş Taşı (öneri, 21 Ekim 2026)
+## P11. Ödüller ve Güneş Taşı (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|
@@ -252,7 +285,7 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 4 | [P] | Bir ya da birkaç çocuk seçip taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` (çocuk başına) |
 | 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
 
-## 12. Abonelik (öneri, 21 Ekim 2026)
+## P12. Abonelik (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|

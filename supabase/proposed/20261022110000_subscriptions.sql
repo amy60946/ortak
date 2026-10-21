@@ -1,5 +1,6 @@
 -- =====================================================================
--- Aile aboneliği: 7 günlük deneme + Aylık / Yıllık plan + ücretsiz plan sınırları (öneri, 21 Ekim 2026)
+-- Aile aboneliği: 7 günlük deneme + Aylık / Yıllık plan + ücretsiz plan sınırları (öneri, 22 Ekim 2026)
+-- Önkoşul: migrations/20261021200000_security_hardening.sql (family_premium kimlik kuralı korunur).
 --   Deneme: aileyi kuran ebeveyn e-postasını doğruladığı an başlar (auth.users.email_confirmed_at), 7 gün sürer.
 --           İkinci ebeveynin katılması denemeyi yeniden başlatmaz. Aynı e-postayla silip yeniden kayıt olan
 --           yeni deneme almaz (trial_history: e-postanın SHA-256 özeti; e-postanın kendisi saklanmaz).
@@ -11,7 +12,9 @@
 --           en çok 3 etkin görev, 1 çocuk; ödül, güneş taşı düşme, ebeveyn mesajı, zor an kaydı kapalı.
 --   Uygulama anahtarı: app_config 'billing'.enforce = false iken kimse kısıtlanmaz (ödeme altyapısı bağlanınca
 --           true yapılır; hatırlatıcı DURUM'da). Deneme yine sayılır ve uygulamada gösterilir.
---   Kural: klinik denemesi (trial) aileye premium vermez; yalnız ücretli klinik planı (güvenlik denetimi L3).
+--   Kural: klinik denemesi (trial) aileye premium vermez; yalnız etkin ve ücretli klinik (güvenlik denetimi L3:
+--   herkes uzman hesabı açıp deneme kliniğiyle aileye bedava premium alabiliyordu). ClinicApp üyeliğiyle uyumlu
+--   (clinic_active: small/business/custom ya da süresi dolmamış solo/clinic).
 -- Tekrar çalıştırılabilir.
 -- =====================================================================
 
@@ -145,7 +148,7 @@ begin
   premium := found and s.plan = 'premium' and s.status in ('active', 'grace', 'canceled')
              and (s.period_end is null or s.period_end > now());
   clinic := exists (select 1 from public.clinic_links l join public.clinics c on c.id = l.clinic_id
-                     where l.family_id = p_family and l.status = 'active' and c.plan in ('small', 'business', 'custom'));
+                     where l.family_id = p_family and l.status = 'active' and c.plan <> 'trial' and public.clinic_active(c.id));
   trial_end := f.trial_started_at + make_interval(days => (cfg ->> 'trial_days')::int);
   st := case when premium then 'premium' when clinic then 'clinic' when f.trial_started_at is null then 'pending'
              when trial_end > now() then 'trial' else 'expired' end;
@@ -188,20 +191,20 @@ begin
   end if;
 end $$;
 
--- family_premium (klinik ve eski çağrılar için): premium ya da ücretli klinik ya da deneme sürüyor
+-- family_premium (eski çağrılar, analytics): premium ya da ücretli klinik ya da deneme sürüyor.
+-- Kimlik kuralı 20261021200000_security_hardening.sql ile aynı: giriş yapmış kullanıcı yalnız kendi ailesini sorar;
+-- SQL Editor / service_role (auth.uid() boş) bütün aileleri sorabilir.
 create or replace function public.family_premium(p_family_id uuid default null)
-returns boolean language plpgsql stable security definer set search_path = '' as $$
-declare
-  fid uuid := coalesce(p_family_id, public.my_family_id());
-begin
-  if fid is null then return false; end if;
-  if fid is distinct from public.my_family_id() and not exists (
-    select 1 from public.clinic_links l
-     where l.family_id = fid and l.status = 'active' and l.clinic_id = public.my_clinic_id()) then
-    return false;
-  end if;
-  return coalesce(public.family_access_of(fid) ->> 'state', 'expired') in ('premium', 'clinic', 'trial');
-end $$;
+returns boolean language sql stable security definer set search_path = '' as $$
+  with f as (
+    select case
+      when p_family_id is null then public.my_family_id()
+      when auth.uid() is null or p_family_id = public.my_any_family_id() then p_family_id
+    end as id)
+  select f.id is not null
+     and coalesce(public.family_access_of(f.id) ->> 'state', 'expired') in ('premium', 'clinic', 'trial')
+  from f
+$$;
 
 -- ---------------------------------------------------------------------
 -- Ücretsiz plan sınırları (sunucuda; uygulama da önceden uyarır)

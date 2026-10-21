@@ -5,11 +5,11 @@ yalnız `gender` Türkçe). Yeni bir değer eklenecekse önce bu dosya ve SQL g�
 
 Kaynak:
 - `parent-app/supabase/migrations/20261013000000_init.sql`, `20261014000000_task_repeat_order.sql`
-- `pofi-adasi/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
-- `supabase/migrations/20261019000000_clinic.sql` (klinik; 19 Ekim 2026'da uygulandı), `src/lib/clinic.ts`
-- `pofi-adasi/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
+- `game-app/supabase/proposed/20261015000000_pofi_game.sql` (uygulandı)
+- `ortak/supabase/migrations/20261019000000_clinic.sql` (uygulandı); `parent-app`, `src/lib/clinic.ts`
+- `game-app/Assets/_Pofi/Scripts/Logic/Tasks/ChildTask.cs`, `Services/Supabase/SupabaseGameService.cs`, `Services/IGameServices.cs`, `Services/IAuthService.cs`, `Profile/AgeBand.cs`, `Auth/LoginThrottle.cs`, `Services/ServerConfig.cs`, `Data/Definitions.cs`
 - `parent-app/src/store.tsx`, `src/theme.ts`, `src/data/ageBands.ts`, `src/data/templates.ts`, `src/screens/TasksScreen.tsx`, `src/screens/ReviewScreen.tsx`
-- `pofi-adasi/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
+- `game-app/docs/PLAN.md`, `M4_SUNUCU_ONERISI.md`; `clinic-app/CLAUDE.md`
 
 Son güncelleme: 2026-10-19
 
@@ -65,20 +65,22 @@ Ek kurallar:
 
 | Tablo / alan | Değer | Anlamı | Geçerlilik | Kaynak |
 |---|---|---|---|---|
-| `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 15 dakika (öneri; önce 24 saat), tek kullanım | SQL (uygulandı) |
-| `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 15 dakika (öneri; önce 24 saat), tek kullanım; aynı çocuğa yeni kod eskisinin süresini bitirir | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 15 dakika (öneri; önce 7 gün), tek kullanım | uygulandı |
-| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 15 dakika (öneri; önce 7 gün), tek kullanım | uygulandı |
+| `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
+| `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
+| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | uygulandı |
+| `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
 - Sunucu üretimi (`random_code`): 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 **yok**). `invite_codes.code` kısıtı `^[A-Z0-9]{6}$`. `clinic_invites.code` için kısıt yok (öneri).
 - Oyun girişi (`ChildCode.Normalize`): küçük harf büyütülür, harf/rakam dışı karakterler atılır, uzunluk tam 6 olmalı. ParentApp: `trim().toUpperCase()`.
 - Oyunun deneme kodları `A1A1A1`, `B2B2B2`, `C3C3C3`: `ServerConfig.DemoCodes = true` iken `RoutedAuthService` bunları sahte arka uca yönlendirir (sunucuya gitmez). `A1A1A1` sunucu alfabesinde olmayan `1` içerdiği için gerçek bir kodla çakışamaz; `B2B2B2` ve `C3C3C3` ise sunucu alfabesine uyar, yani çok düşük olasılıkla gerçek bir kodla aynı olabilir ve o durumda oyun gerçek kodu sahte arka uca gönderir. Mağaza sürümünde `DemoCodes` kapatılmalı (doğrulanmalı).
-- Oyunda hatalı kod beklemesi (yalnız istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. Sunucu deneme sınırı: öneri `20261021130000_codes_15min.sql` (bölüm 11).
+- Oyunda hatalı kod beklemesi (istemci, `LoginThrottle`): 3 deneme serbest, sonra 15 sn'den başlayıp her hatada ikiye katlanır, en fazla 300 sn. **Sunucu** (`20261019020000_server_rules`, uygulandı 19 Ekim): oturum başına 15 dakikada 10 hatalı deneme → HTTP 429 `{"error":"too_many_attempts"}`; hatalı kod → HTTP 400 `{"error":"invalid_code"}` (artık hata fırlatılmaz ki deneme sayılabilsin). Oyun 429'u `Throttled` sayar.
 
 ---
 
 ## 4. Yaş bandı (`children.age_band`)
+
+> **Doğrulandı (21 Ekim 2026, kullanıcının SQL Editor sorgusu):** canlıda kısıt `age_band in ('A', 'B')` — **iki bant geçerli**. Üç bantlı `20261019010000_age_bands.sql` daha önce uygulanmış, ardından `20261019110000_age_bands.sql` iki banda indirmiştir (dosya sırası canlıyla aynı).
 
 **Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL `supabase/migrations/20261019110000_age_bands.sql` (19 Ekim 2026'da uygulandı).
 
@@ -92,7 +94,12 @@ Kod biçimi:
 - ParentApp yalnız A/B yazar ve (eski sürümden kalma) `C` gelirse `B` gösterir.
 - Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
-- Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`pofi-adasi/docs/PLAN.md` §9).
+- Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`game-app/docs/PLAN.md` §9).
+
+### 4.1 App Store / Google Play
+- Mağaza **Kids Category dışında**, yaş derecelendirmesi en düşük (4+); Kids kurallarına gönüllü uyulur: üçüncü taraf reklam/analitik yok, dış bağlantı ve satın alma ebeveyn kapısının (`ParentGate`) arkasında. Kaynak: `game-app/docs/PLAN.md` §9 (Seçenek A).
+- Apple Kids bantları (5 ve altı / 6–8 / 9–11) mağaza sınıflandırmasıdır; oyunun iç bantlarıyla aynı olmak zorunda değildir.
+- Yaş **çocuktan sorulmaz**: doğum gününü ebeveyn ParentApp'te girer (ebeveyn onayı orada). Oyun yalnız bandı alır.
 
 ---
 
@@ -105,9 +112,24 @@ Kod biçimi:
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
 
-`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`. Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
+`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
 
 ---
+
+## 5A. Güneş Taşı defteri nedeni (`sun_stone_ledger.reason`, `20261019030000_sun_stones` (uygulandı))
+
+| Değer | Anlam | Yazan | İşaret | `ref` biçimi |
+|---|---|---|---|---|
+| `task` | Ebeveyn onayı | Tetikleyici `completions_sun_stone` | + (1/2/3) | `<completion_id>:<epoch>` |
+| `task_undo` | Onay geri alındı | Tetikleyici | − (o tamamlamanın net taşı) | `<completion_id>:<epoch>` |
+| `adjust` | Elle düzeltme (yönetici) | SQL | ± | serbest |
+
+## 5B. Kalıcı adlar (karar: 19 Ekim 2026, kullanıcı)
+
+| Kavram | Ad | Not |
+|---|---|---|
+| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
+| Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
 
 ## 6. Diğer sabit değerler (uygulanmış)
 
@@ -123,12 +145,14 @@ Kod biçimi:
 
 ---
 
-## 7. ClinicApp (19 Ekim 2026'da uygulandı)
+## 7. Klinik (ClinicApp) — uygulandı
 
 | Alan | Değerler | Anlamı |
 |---|---|---|
 | `clinic_links.status` | `active` (varsayılan) / `revoked` | Rıza etkin / ebeveyn ya da uzman sonlandırdı. Bir klinik–çocuk çifti için en fazla bir `active`. |
-| `clinics.plan` | `trial` (varsayılan, 14 gün) / `small` / `business` / `custom` / `inactive` | Klinisyen başına abonelik. Etkin sayılanlar: `small`, `business`, `custom`, süresi dolmamış `trial`. |
+| `clinics.plan` | `trial` (varsayılan; öneriyle 7 gün, eskiden 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
+| `clinics.billing_source` | `app_store` / `iyzico` / `manual` / null | Ödeme kaynağı (öneri). |
+| `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
 | `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder ve klinik adını değiştirir. |
 | `clinic_task_suggestions.status` | `pending` (varsayılan) / `accepted` / `declined` | Ebeveyn kararı. `accepted` olunca görevi **ParentApp kendisi** oluşturur (sunucu otomatik görev açmaz). |
 | `clinic_task_suggestions.difficulty` | `easy` / `medium` / `hard` (varsayılan `easy`) | Görevdeki ile aynı. |
@@ -142,9 +166,9 @@ Kod biçimi:
 ### 7.1 Klinikle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
 |---|---|---|
-| K1 | `decline_reason` yazılamıyor | Oyunun `child_set_status(p_task_id, p_date, p_status)` imzasında neden parametresi yok; C# da göndermiyor. Sütun eklenirse ya RPC'ye `p_reason` eklenmeli ya da alan hep null kalır. |
-| K2 | `child_done_at` anlamı | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
-| K3 | Kabul edilen öneri ↔ görev bağı | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
+| K1 | ~~`decline_reason` yazılamıyor~~ **çözüldü** | Ayrı RPC `child_set_decline_reason(p_task_id, p_date, p_reason)`; `child_set_status` imzası değişmedi (eski oyun sürümü bozulmaz). Oyunun "Yapamam"dan sonra bunu çağırması gerekir; çağırmazsa neden null kalır. |
+| K2 | ~~`child_done_at` anlamı~~ **çözüldü**: tetikleyici artık yalnız çocuğun işaretinde doldurur | Tetikleyici, ebeveynin `review_completion` ile kayıt **yokken** `approved` yazmasında da (çocuk hiç "Yaptım" demeden) `child_done_at` doldurur. "Çocuğun yaptım dediği an" raporu bu durumda yanıltıcı olabilir. |
+| K3 | ~~Kabul edilen öneri ↔ görev bağı~~ **çözüldü**: `clinic_task_suggestions.task_id` | `accepted` öneri ile ParentApp'in oluşturduğu `tasks` satırı arasında sütun bağı yok (öneri kimliği görevde saklanmıyor). Uzman, önerisinin hangi göreve dönüştüğünü sunucudan izleyemez (doğrulanmalı). |
 
 ---
 
@@ -160,7 +184,7 @@ Kod biçimi:
 
 ---
 
-## 9. Kategori, gün bölümü, zor an (21 Ekim 2026'da uygulandı — `migrations/20261019140000_parent_features.sql`)
+## 9. Kategori, gün bölümü, zor an (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
@@ -180,29 +204,29 @@ Kod biçimi:
 |---|---|---|
 | `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
-| `profiles.invited_by` | davet kodunu üreten ebeveyn | `migrations/20261021000000_family_roles.sql` (uygulandı); uygulamada gösterilmez. |
+| `profiles.invited_by` | davet kodunu üreten ebeveyn | Öneri `20261021000000_family_roles.sql`; uygulamada gösterilmez. |
 
-## 11. Kod hataları (öneri, 21 Ekim 2026 — `proposed/20261021130000_codes_15min.sql`)
+---
 
-Bütün kodlar **15 dakika** geçerli. Kod kullanan RPC'ler (`join_family`, `redeem_child_code`, `clinic_invite_preview`,
-`redeem_clinic_invite`, `redeem_clinic_invite_children`, `clinic_team_code_status`) kod hatasında exception atmaz:
-denemeyi kaydeder, HTTP durumunu ayarlar ve PostgREST hata biçiminde döner (supabase-js bunu `error` olarak verir):
-`{"code":"P0001","message":"<metin>","details":null,"hint":"<neden>","error":"<neden>"}`.
+> **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
-| `hint` / `error` | HTTP | Metin (sunucu) | Uygulama ne yapar |
-|---|---|---|---|
-| `code_invalid` | 400 | Kod bulunamadı. Harfleri kontrol et ya da yeni kod iste. | Yeniden yazdırır |
-| `code_expired` | 400 | Kodun süresi doldu (kodlar 15 dakika geçerli). Yeni kod iste. | "Yeni kod iste" (ebeveyn/uzman yeni kod üretir) |
-| `code_used` | 400 | Bu kod daha önce kullanıldı. Yeni kod iste. | Aynı |
-| `too_many_attempts` | 429 | Çok fazla hatalı deneme yapıldı. 15 dakika sonra tekrar dene. | Giriş kutusunu 15 dk kilitler |
+## P11. Kod hataları (öneri, 22 Ekim 2026 — `proposed/20261022100000_codes_15min.sql`)
 
-- Deneme sınırı: oturum (`auth.uid()`) başına 15 dakikada 10, IP başına 30 hatalı deneme. Engel yanıtı sayılmaz.
-- Süresi dolan kod 1 gün tabloda kalır ("süresi doldu" diyebilmek için), sonra silinir.
-- `join_family` dönüşü `uuid` → `json {family_id}` oldu.
-- Oyun (`redeem_child_code`): başarı yanıtı aynı; hata yine HTTP 4xx, metin `message` alanında. Oyun `hint`'e göre ayrı metin gösterebilir.
-- Kod dışı hatalar (ör. "Zaten bu ailedesin", "Ebeveyn hesabıyla çocuk girişi yapılamaz") eskisi gibi exception.
+Deneme sınırı ve hata gövdesi canlıda (`migrations/20261021300000_security_pentest.sql`). Bu öneri: bütün kodlar **15 dakika**,
+nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
+`{"error":"invalid_code","reason":"expired|used|not_found","hint":"<reason>","message":"<metin>"}` + HTTP 400;
+çok deneme `{"error":"too_many_attempts","hint":"too_many_attempts","message":…}` + HTTP 429.
 
-## 12. Abonelik durumu (öneri, 21 Ekim 2026 — `proposed/20261021140000_subscriptions.sql`)
+| `reason` | Metin | Uygulama |
+|---|---|---|
+| `expired` | Kodun süresi doldu (kodlar 15 dakika geçerli). Yeni kod iste. | "Yeni kod iste" |
+| `used` | Bu kod daha önce kullanıldı. Yeni kod iste. | Aynı |
+| `not_found` | Kod bulunamadı. Harfleri kontrol et ya da yeni kod iste. | Yeniden yazdırır |
+
+- Sınır: oturum 15 dakikada 10, IP 30 hatalı deneme. Süresi dolan kod 1 gün tabloda kalır.
+- Kodlar: ikinci ebeveyn, çocuk girişi, uzman aile kodu (6 karakter), ekip kodu (8 karakter, `clinic_join_team`) hepsi 15 dakika.
+
+## P12. Abonelik durumu (öneri, 21 Ekim 2026 — `proposed/20261022110000_subscriptions.sql`)
 
 | `family_access().state` | Anlam | Erişim |
 |---|---|---|
@@ -218,7 +242,7 @@ denemeyi kaydeder, HTTP durumunu ayarlar ve PostgREST hata biçiminde döner (su
 - `family_subscriptions.status`: `active` / `grace` (ödeme sorunu, ek süre) / `canceled` (yenileme kapalı, dönem sonuna kadar premium) / `expired` / `refunded`. `billing`: `monthly` / `yearly`.
 - Mağaza ürün kimlikleri: `parentapp.premium.monthly`, `parentapp.premium.yearly`.
 
-## 13. Mesaj türleri (öneri, 21 Ekim 2026 — `proposed/20261021150000_messages.sql`)
+## P13. Mesaj türleri (öneri, 21 Ekim 2026 — `proposed/20261022120000_messages.sql`)
 
 | `messages.kind` | Kim gönderir | İçerik |
 |---|---|---|
@@ -231,7 +255,7 @@ denemeyi kaydeder, HTTP durumunu ayarlar ve PostgREST hata biçiminde döner (su
 `laugh` Kahkaha, `wow` Vay, `sad` Üzgün, `sleepy` Uykulu, `party` Kutlama, `thanks` Teşekkürler, `love_you` Seni seviyorum.
 Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf okudu.
 
-## 14. Güneş Taşı ve ödül (öneri, 21 Ekim 2026 — `proposed/20261021160000_sun_stones_rewards.sql`)
+## P14. Güneş Taşı ve ödül (öneri, 21 Ekim 2026 — `proposed/20261022130000_sun_stones_rewards.sql`)
 
 | Alan | Değerler |
 |---|---|
