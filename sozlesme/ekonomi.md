@@ -251,7 +251,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
-## P9. Güneş Taşı ile ödüller (öneri, 22 Ekim 2026 — `proposed/20261022130000_sun_stones_rewards.sql`)
+## P9. Güneş Taşı ile ödüller (uygulandı 22 Ekim 2026 — `migrations/20261022130000_sun_stones_rewards.sql`)
 
 Taş kazanma canlıda (GameApp, `migrations/20261019030000_sun_stones.sql`). İki sayı: **kazanılan** (`child_me.sun_stones`, adaya yerleştirme; ödül/ceza değiştirmez) ve **harcanabilir** (`sun_stones_spendable`, `child_me.sun_stones_spendable`; ödüller ve taş düşme bununla).
 

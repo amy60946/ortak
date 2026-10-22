@@ -210,7 +210,7 @@ Kod biçimi:
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
-## P11. Kod hataları (öneri, 22 Ekim 2026 — `proposed/20261022100000_codes_15min.sql`)
+## P11. Kod hataları (uygulandı 22 Ekim 2026 — `migrations/20261022100000_codes_15min.sql`)
 
 Deneme sınırı ve hata gövdesi canlıda (`migrations/20261021300000_security_pentest.sql`). Bu öneri: bütün kodlar **15 dakika**,
 nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
@@ -226,7 +226,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 - Sınır: oturum 15 dakikada 10, IP 30 hatalı deneme. Süresi dolan kod 1 gün tabloda kalır.
 - Kodlar: ikinci ebeveyn, çocuk girişi, uzman aile kodu (6 karakter), ekip kodu (8 karakter, `clinic_join_team`) hepsi 15 dakika.
 
-## P12. Abonelik durumu (öneri, 21 Ekim 2026 — `proposed/20261022110000_subscriptions.sql`)
+## P12. Abonelik durumu (uygulandı 22 Ekim 2026 — `migrations/20261022110000_subscriptions.sql`)
 
 | `family_access().state` | Anlam | Erişim |
 |---|---|---|
@@ -242,7 +242,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 - `family_subscriptions.status`: `active` / `grace` (ödeme sorunu, ek süre) / `canceled` (yenileme kapalı, dönem sonuna kadar premium) / `expired` / `refunded`. `billing`: `monthly` / `yearly`.
 - Mağaza ürün kimlikleri: `parentapp.premium.monthly`, `parentapp.premium.yearly`.
 
-## P13. Mesaj türleri (öneri, 21 Ekim 2026 — `proposed/20261022120000_messages.sql`)
+## P13. Mesaj türleri (uygulandı 22 Ekim 2026 — `migrations/20261022120000_messages.sql`)
 
 | `messages.kind` | Kim gönderir | İçerik |
 |---|---|---|
@@ -255,7 +255,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 `laugh` Kahkaha, `wow` Vay, `sad` Üzgün, `sleepy` Uykulu, `party` Kutlama, `thanks` Teşekkürler, `love_you` Seni seviyorum.
 Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf okudu.
 
-## P14. Güneş Taşı ve ödül (öneri, 21 Ekim 2026 — `proposed/20261022130000_sun_stones_rewards.sql`)
+## P14. Güneş Taşı ve ödül (uygulandı 22 Ekim 2026 — `migrations/20261022130000_sun_stones_rewards.sql`)
 
 | Alan | Değerler |
 |---|---|

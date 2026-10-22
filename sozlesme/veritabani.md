@@ -273,7 +273,7 @@ Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anaht
 
 ## P6. Kodlar, abonelik, mesajlar, Güneş Taşı, güvenlik (öneri, 21 Ekim 2026 — uygulanmadı)
 
-SQL: `supabase/proposed/20261022100000_codes_15min.sql`, `20261022110000_subscriptions.sql`, `20261022120000_messages.sql`,
+SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subscriptions.sql`, `20261022120000_messages.sql`,
 `20261022130000_sun_stones_rewards.sql`, `20261022140000_whitehat_fixes.sql`. Testler: `test_codes`, `test_subscriptions`,
 `test_messages`, `test_rewards`, `test_whitehat`. Akış: `akislar.md` 9–12. Değerler: `durumlar.md` 11–14, `ekonomi.md` 9.
 
