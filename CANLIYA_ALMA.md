@@ -101,7 +101,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 2.2 GameApp
 - [x] Kids Kategorisi: **hayır, normal oyun** (22 Ekim). Yine de Apple 5.1.4: üçüncü taraf analitik yok, dış bağlantılar ebeveyn kapısı arkasında; mağaza metninde "çocuklar için" yok
-- [ ] (Claude) **Kodsuz başlangıç** (WWDC 2014/602 + Apple 5.1.1(v)): önce pet + ada + ipuçları; "Ebeveynini bağla" sonra, ebeveyn kapısı arkasında; yerel ilerleme bağlanınca hesaba taşınır
+- [x] Kodsuz başlangıç: **hayır** (kullanıcı, 22 Ekim) — oyun bugünkü gibi kodla açılır; App Review için kalıcı deneme kodu (2.1)
 - [ ] (Claude) İlk dokunuşa kadar süre ölçümü (hedef iPhone 11'de < 10 sn); pet adı ekranı atlanabilir
 - [ ] (Claude) Çekirdek döngüler `docs/PLAN.md`'de iki cümle
 - [ ] (ortak) Aile aboneliği bitince çocuk cezalandırılmaz kuralı (oyun ve birikimler kalır)
