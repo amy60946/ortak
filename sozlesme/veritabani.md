@@ -229,7 +229,7 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
 
-## 8. ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+## 8. ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
 
 Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
 
@@ -316,3 +316,12 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - Klinik denemesi (trial) aileye premium vermez; yalnız ücretli klinik planı.
 - `clinic_goals.created_by`, `goal_ratings.rated_by` sunucu doldurur. Metin alanlarına uzunluk sınırı. Push anahtarı kullanıcı başına 5.
 - Edge Function `push-apns`: yalnız son 10 dakikada oluşmuş bildirim; yanıtta cihaz bilgisi yok (gizli başlık kuralı korunur).
+
+## 10. Klinik içi danışan ataması (öneri, `proposed/20261022100000_clinic_assignments.sql`)
+
+- **Görünürlük:** klinik sahibi kliniğin bütün paylaşımlarını görür. Ekip üyesi yalnız sorumlusu olduğu (`clinic_links.clinician_id`, ailenin kullandığı kodu üreten uzman) ve sahibin ona atadığı paylaşımları görür. Kural çocuk, görev, tamamlama, zor an + ses, not, hedef/puan, öneri ve danışan listesine (`clinic_clients`) sunucuda uygulanır (`clinic_link_visible`, `clinic_sees_child`, `clinic_link_mine`).
+- **`clinic_link_access`** (`link_id`, `clinician_id`, `clinic_id`, `granted_by`): sahibin atamaları. RLS: sahip kliniğin bütün satırlarını, üye yalnız kendi satırlarını okur; yazma yalnız RPC.
+- **RPC:** `clinic_assign(link_id, clinician_id, assigned bool)` (yalnız sahip; atanan üyeye `client_assigned` bildirimi), `clinic_set_responsible(link_id, clinician_id)` (yalnız sahip). Sorumlu uzmanı başka kimse değiştiremez (tetikleyici; kendi sorumluluğunu bırakma ve hesap silme hariç).
+- **`clinic_clients()`** dönüşüne `clinician_id`, `clinician_name`, `assigned uuid[]` eklendi.
+- **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
+- Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.

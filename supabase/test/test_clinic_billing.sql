@@ -1,4 +1,4 @@
--- ClinicApp üyeliği (proposed/20261022000000_clinic_billing.sql)
+-- ClinicApp üyeliği (proposed/20261022200000_clinic_billing.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -66,6 +66,9 @@ reset role;
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000d2', false,
    jsonb_build_object('account', 'clinician', 'name', 'Mert', 'team_code', (select v from tst.kv where k = 'team')));
+-- sahip Nazlı'yı Mert'e atar (20261022100000_clinic_assignments)
+insert into public.clinic_link_access (link_id, clinician_id, clinic_id)
+  select id, '00000000-0000-0000-0000-0000000000d2', clinic_id from public.clinic_links;
 set role authenticated;
 
 -- ---------------------------------------------------------------- istemci planı/süreyi yazamaz, kayıtları okuyamaz
