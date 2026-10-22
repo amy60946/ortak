@@ -6,7 +6,7 @@
 --   Ödeme: iPhone/iPad'de App Store aboneliği, web'de iyzico. İkisini de Edge Function `clinic-billing`
 --   doğrular ve yalnız service role ile `billing_apply` çağırır. İstemci plan/süre yazamaz.
 --   Eski planlar (small/business/custom) etkin sayılmaya devam eder (elle verilmiş).
--- Önkoşul: migrations/20261021300000_security_pentest.sql ve 20261022100000_clinic_assignments.sql. Tekrar çalıştırılabilir.
+-- Önkoşul: migrations/20261021300000_security_pentest.sql ve migrations/20261022100000_clinic_assignments.sql. Tekrar çalıştırılabilir.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -120,7 +120,7 @@ revoke execute on function public.clinician_access() from public, anon;
 grant execute on function public.clinician_access() to authenticated;
 
 -- Çocuk verisi, notlar, hedefler, öneriler ve danışan listesi clinician_access()'i zaten ister
--- (migrations/20261021300000_security_pentest.sql ve proposed/20261022100000_clinic_assignments.sql);
+-- (migrations/20261021300000_security_pentest.sql ve migrations/20261022100000_clinic_assignments.sql);
 -- yukarıdaki yeni tanımı kullanırlar.
 
 -- Davet ve ekibe katılma: 20261021300000_security_pentest.sql'deki clinic_create_invite / clinic_join_team zaten

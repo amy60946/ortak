@@ -317,7 +317,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - `clinic_goals.created_by`, `goal_ratings.rated_by` sunucu doldurur. Metin alanlarına uzunluk sınırı. Push anahtarı kullanıcı başına 5.
 - Edge Function `push-apns`: yalnız son 10 dakikada oluşmuş bildirim; yanıtta cihaz bilgisi yok (gizli başlık kuralı korunur).
 
-## 10. Klinik içi danışan ataması (öneri, `proposed/20261022100000_clinic_assignments.sql`)
+## 10. Klinik içi danışan ataması (22 Ekim 2026'da uygulandı, `migrations/20261022100000_clinic_assignments.sql`)
 
 - **Görünürlük:** klinik sahibi kliniğin bütün paylaşımlarını görür. Ekip üyesi yalnız sorumlusu olduğu (`clinic_links.clinician_id`, ailenin kullandığı kodu üreten uzman) ve sahibin ona atadığı paylaşımları görür. Kural çocuk, görev, tamamlama, zor an + ses, not, hedef/puan, öneri ve danışan listesine (`clinic_clients`) sunucuda uygulanır (`clinic_link_visible`, `clinic_sees_child`, `clinic_link_mine`).
 - **`clinic_link_access`** (`link_id`, `clinician_id`, `clinic_id`, `granted_by`): sahibin atamaları. RLS: sahip kliniğin bütün satırlarını, üye yalnız kendi satırlarını okur; yazma yalnız RPC.
