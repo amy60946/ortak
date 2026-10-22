@@ -1,4 +1,4 @@
--- Klinik içi danışan ataması (proposed/20261022100000_clinic_assignments.sql)
+-- Klinik içi danışan ataması (migrations/20261022100000_clinic_assignments.sql)
 \set ON_ERROR_STOP on
 
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$
