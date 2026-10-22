@@ -148,7 +148,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 | Dağ yürüyüşü | `min(40, 10 + round(25 × toplanan / en iyi))` | Evet |
 | Masa oyunları (`CardRewards.Xp`) | Kazanınca `round(20 + 20 × zorluk)`, kaybedince 8 | Evet |
 | Balık (`Fishing.Xp`) | `5 × nadirlik + (yeni tür ise 10)` (Runtime'da çağrısı bulunamadı — doğrulanmalı) | Evet (`Fishing`) |
-| Günlük oyun içi görevler (`daily_quests.json`, günde 3) | 10–20 (ör. `dq_feed_2` 15, `dq_wash_1` 10, `dq_coconut_10` 20, `dq_fish_2` 20) | Evet |
+| Günlük oyun içi görevler (`daily_quests.json`, günde 3; **22 Ekim 2026**, XP takibi S2) | Seviyeye oranlı (`DailyQuests.XpFor`): o seviyenin gereken XP'sinin %4'ü × görevin ağırlığı (veri XP'si / 15), verideki sayının (10–20) altına inmez. 3 görev ≈ seviyenin %12'si. Yeni görev `dq_harvest_2` (bahçeden 2 ürün, Sv bahçe). **Günlük sandık:** üç görev bitince bir kez açılır; coin **vermez** (ilke §1): yiyecek %60 (2 adet) · tohum %25 (2 adet) · sürpriz eşya %15 (sahip olunmayan, seviyesi açık aksesuar/süs; yoksa yiyecek). Oranlar sandıkta görünür. | **Hayır** (günde 3 ile kendiliğinden sınırlı; eskiden evet) |
 | Rozetler (`badges.json`) | 20–100 (ör. `badge_first_task` 20, `badge_task_10` 40, `badge_streak_7` 60, `badge_master` 100) | Hayır |
 | Adada parıltı keşfi (`MapScreen`) | yeni 10, tekrar 3 | Hayır |
 | Kulübe yapma (`Gathering.HutXp`) | 40 (tarif: 6 odun, 4 dal, 3 taş) | Hayır |
