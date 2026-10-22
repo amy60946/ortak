@@ -90,7 +90,7 @@ Notlar:
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
 | `task_family(uuid)`, `child_family(uuid)`, `task_assigned_to_me(uuid)` | `uuid` / `boolean` | iç | Politikalarda tablolar arası kontrol. |
-| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Eskiden çocuğun doğrudan `completions` yazımında izindi. **Öneri `20261022110000_security_game`:** çocuk doğrudan yazım politikaları kaldırılır, bu fonksiyon kimseye açık değildir; çocuk yalnız `child_set_status` ile yazar. |
+| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Eskiden çocuğun doğrudan `completions` yazımında izindi. **`20261022150000_security_game` (uygulandı 22 Ekim):** çocuk doğrudan yazım politikaları kaldırılır, bu fonksiyon kimseye açık değildir; çocuk yalnız `child_set_status` ile yazar. |
 | `random_code()` | `text` | iç | 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 yok). |
 | `handle_new_user()` (tetikleyici) | — | iç | Yeni **anonim olmayan** kullanıcıda aile + profil oluşturur. Anonim (çocuk) oturumlarda hiçbir şey yapmaz. |
 | `set_updated_at()` (tetikleyici) | — | iç | `profiles`, `tasks` için `updated_at`. |
@@ -124,7 +124,7 @@ Notlar:
 | Kim | Ne görür / ne yapar |
 |---|---|
 | **Ebeveyn** | Yalnız kendi ailesinin satırları (`family_id = my_family_id()`): çocuklar, görevler, atamalar, tamamlamalar, mesajlar, şablonlar, kodlar (yalnız okur), coin defteri (yalnız okur), oyun kayıtları (yalnız okur). Aynı ailedeki diğer ebeveyn profillerini görür. `families.name` ve kendi profilinin `nickname/name/avatar` alanlarını değiştirebilir. `children.user_id` sütununa doğrudan yazamaz. |
-| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (okur; yazım **yalnız `child_set_status` RPC'si** ile — dün/bugün/yarın, ebeveyn kararı değişmez; doğrudan insert/delete öneri `20261022110000_security_game` ile kapanır); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
+| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (okur; yazım **yalnız `child_set_status` RPC'si** ile — dün/bugün/yarın, ebeveyn kararı değişmez; doğrudan insert/delete `20261022150000_security_game` ile kapandı); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
 | **Herkes (oturum açmış)** | `game_items` (fiyat listesi) okunur. |
 | **İstemci hiçbir zaman** | `invite_codes`, `coin_ledger`, `game_items`, `game_saves`, `families`(ekleme/silme), `profiles`(ekleme/silme) tablolarına doğrudan yazamaz. Bunlar yalnız fonksiyon/tetikleyiciyle değişir. |
 
@@ -267,20 +267,3 @@ Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anaht
 - TRUNCATE `anon`/`authenticated`'dan alınır.
 - Test: `supabase/test/test_security_pentest.sql`.
 
----
-
-## 10. Gerçek ödül dükkânı (Ö7; öneri `proposed/20261022100000_reward_shop.sql`, test `test/test_reward_shop.sql`)
-
-| Tablo | Kim okur | Kim yazar |
-|---|---|---|
-| `rewards` (id, family_id, child_id?, title, icon, price 1–500, active, created_by, created_at, updated_at) | ebeveyn: kendi ailesi; çocuk: ailesinin etkin ve kendine açık ödülleri | ebeveyn doğrudan (insert/update: yalnız `title, icon, price, active, child_id`; delete). Aile başına ≤ 40 etkin (tetikleyici) |
-| `reward_requests` (id, family_id, child_id, reward_id, title, icon, price, status, tx, requested_at, decided_at, decided_by) | ebeveyn: kendi ailesi; çocuk: tabloyu okumaz (yalnız `child_request_reward`/`child_rewards`; `decided_by` gizli) | yalnız RPC (doğrudan yazma yetkisi yok). Realtime yayınında |
-
-| RPC | Kim | Ne yapar |
-|---|---|---|
-| `child_rewards()` | çocuk | bakiye, ayrılmış, kullanılabilir coin; ödüller; son 20 istek |
-| `child_request_reward(p_reward uuid, p_tx text)` | çocuk | istek açar (kullanılabilir coin ≥ fiyat, ≤ 3 bekleyen); aynı `tx` tekrarında aynı sonuç; ebeveynlere bildirim |
-| `child_cancel_reward_request(p_id uuid)` | çocuk | kendi bekleyen isteğini iptal eder |
-| `review_reward_request(p_id uuid, p_give boolean)` | ebeveyn | verir (coin düşer, `coin_ledger.reason='reward'`, ref = istek kimliği) ya da reddeder; çocuğa bildirim |
-
-Güvenlik: bütün fonksiyonlar `security definer`, `search_path=''`, anon'a kapalı; tablolar RLS'li, TRUNCATE kapalı. Test: yabancı aile/çocuk göremez ve yazamaz, çocuk kendi isteğini veremez, aynı istek iki kez düşülemez, bakiye eksiye inmez.

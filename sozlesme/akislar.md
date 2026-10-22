@@ -246,14 +246,3 @@ Teslim yolları:
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
 
 ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`.
-
----
-
-## 10. Gerçek ödül dükkânı (Ö7; öneri `proposed/20261022100000_reward_shop.sql`, 22 Ekim 2026)
-
-1. **ParentApp** (Ödüller sekmesi): ebeveyn `rewards` tablosuna doğrudan yazar (RLS: yalnız kendi ailesi). Alanlar: başlık, simge, fiyat, etkin mi, isteğe bağlı tek çocuk. Silmek yerine `active = false` önerilir (geçmiş istekler başlık/fiyat kopyasını tutar).
-2. **GameApp** (Dükkân → "Gerçek ödüller"): `child_rewards()` → `{balance, held, available, rewards[], requests[]}`. Çocuk "İsteğim" → `child_request_reward(reward_id, tx)` (tx: istemci işlem kimliği, tekrar gönderim güvenli). Bekleyen isteğinden `child_cancel_reward_request(id)` ile vazgeçebilir.
-3. Sunucu ebeveynlere `reward_request` bildirimi yazar (push açıksa gider).
-4. **ParentApp**: istek listesi (`reward_requests`, Realtime) → "Verdim" / "Şimdi değil" = `review_reward_request(id, true|false)`. Verilince coin düşer, çocuğa `reward_given` ("Ödülün hazır!"); reddedilince `reward_declined` ("Ödül şimdilik bekleyecek · coinlerin sende kaldı").
-5. Ret dili çocuğu suçlamaz; coin kaybı olmadığı vurgulanır (çocuk psikolojisi: biriktirme hedefi korunur).
-6. Uzmana (ClinicApp) ödül bilgisi gitmez.

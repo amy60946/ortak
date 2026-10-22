@@ -111,7 +111,6 @@ Kod biçimi:
 | `task_undo` | Onay geri alındı (durum değişti ya da kayıt silindi) | Tetikleyici | − | `<completion_id>:<epoch>` |
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
-| `reward` | Gerçek ödül verildi (Ö7, öneri `20261022100000_reward_shop`) | `review_reward_request(id, true)` | − | ödül isteği kimliği |
 
 `spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
 
@@ -178,7 +177,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, öneri Ö7: `reward_request` (ebeveyne), `reward_given`, `reward_declined` (çocuğa) (anlamları: `akislar.md` 7, 10) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined` (anlamları: `akislar.md` 7) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
@@ -206,16 +205,3 @@ Kod biçimi:
 | `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
 | `profiles.invited_by` | davet kodunu üreten ebeveyn | Öneri `20261021000000_family_roles.sql`; uygulamada gösterilmez. |
-
----
-
-## 11. Gerçek ödül dükkânı (Ö7; öneri `proposed/20261022100000_reward_shop.sql`, 22 Ekim 2026)
-
-| Alan | Değerler |
-|---|---|
-| `rewards.icon` | `gift`, `park`, `movie`, `game`, `treat`, `book`, `toy`, `trip`, `star` (oyun aynı adlı simgeyi gösterir) |
-| `rewards.price` | 1–500 coin |
-| `reward_requests.status` | `pending` (çocuk istedi) → `given` (ebeveyn verdi, coin düştü) · `declined` (ebeveyn reddetti, coin düşmedi) · `cancelled` (çocuk vazgeçti) |
-| `child_request_reward` hata kodları | `null` (başarılı), `unknown_reward` (yok/kapalı/başka çocuğa özel), `not_enough_coins` (kullanılabilir coin yetmez), `too_many_pending` (3 bekleyen), `already_requested` (aynı ödül zaten bekliyor), `too_many_today` (24 saatte 10 istek; iste-vazgeç döngüsü ebeveyne bildirim yağdırmasın) |
-| `review_reward_request` hata kodları | `null`, `not_enough_coins` (çocuk bu arada harcadı; istek bekler), `already_given` / `already_declined` / `already_cancelled` |
-| Sınırlar | çocuk başına en çok 3 bekleyen istek; aile başına en çok 40 etkin ödül; başlık 1–60 karakter |
