@@ -150,7 +150,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
 | 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
 
-Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
+Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'te 22 Ekim 2026'dan beri).
 
 ### 5.5 Gözlem notu (ABC kaydı; eski adı "Zor an")
 | # | Uygulama | Adım | Veritabanı |
@@ -244,6 +244,8 @@ Teslim yolları:
 | 1 | O, P, K | Açılışta ve öne gelişte oturum bildirilir (dakikada en çok bir oturum sayılır; gün değişince aktif gün +1). | `track_session(app, platform, sürüm)` → `user_activity` |
 | 2 | O, P, K | Olaylar biriktirilir, toplu gönderilir (≤ 50/çağrı, kullanıcı başına ≤ 2000/gün). Ad biçimi `alan.eylem` (küçük harf, rakam, `_`, `.`). | `track_events(app, olaylar, platform, sürüm)` → `app_events` |
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
+
+ParentApp olayları (22 Ekim 2026): `app.open`, `screen.<tasks|review|progress|family|create_task|task_details|chat|notifications|observation|rewards|paywall>`, `task.create` (`n`), `task.delete`, `task.review` (`approve`), `template.custom`, `child.add`, `invite.create` (`kind`), `family.join`, `message.send` (`kind`), `notification.open` (`kind`), `observation.create`, `reward.create`/`reward.update` (`kind`), `reward.delete`, `reward.give` (`n`), `reward.decide` (`approve`), `stones.deduct` (`n`, `reason`: doğru/yanlış; metin gönderilmez).
 
 ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`.
 
