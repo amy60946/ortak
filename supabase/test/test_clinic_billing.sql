@@ -172,6 +172,22 @@ select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(public.family_premium(), 'elle verilen pilot üyelik aileye premium verir');
 reset role;
 
+-- RevenueCat (bireysel App Store aboneliği; kullanıcı kararı 22 Ekim 2026): aynı billing_apply yolu
+set role service_role;
+select tst.check((public.billing_apply('revenuecat', '00000000-0000-0000-0000-0000000000d3:com.clinicapp.uzman.clinic.monthly',
+                  (select v::uuid from tst.kv where k = 'k3'), 'clinic_monthly', 'active', now() + interval '30 days', true,
+                  'PRODUCTION', '{"type":"INITIAL_PURCHASE"}') ->> 'active')::boolean, 'RevenueCat aboneliği kliniği açar');
+reset role;
+select tst.check((select plan = 'clinic' and billing_source = 'revenuecat' and billing_period = 'monthly'
+                    from public.clinics where id = (select v::uuid from tst.kv where k = 'k3')), 'RevenueCat: Klinik aylık yazıldı');
+set role service_role;
+select public.billing_apply('revenuecat', '00000000-0000-0000-0000-0000000000d3:com.clinicapp.uzman.clinic.monthly', null,
+                            'clinic_monthly', 'expired', now() - interval '1 day', false);
+reset role;
+select tst.check((select not public.clinic_active(id) from public.clinics where id = (select v::uuid from tst.kv where k = 'k3')),
+                 'RevenueCat aboneliği bitince klinik kapanır');
+select tst.fails($$select public.billing_apply('bilinmeyen', 'x', null, 'solo_monthly', 'active', now(), true)$$, 'bilinmeyen kaynak reddedilir');
+
 -- iş özeti istemciye kapalı
 set role authenticated;
 select tst.fails($$select * from analytics.clinic_billing$$, 'analytics.clinic_billing istemciye kapalı');

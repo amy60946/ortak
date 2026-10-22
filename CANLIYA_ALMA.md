@@ -40,7 +40,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] Açık Rıza Metni (çocuk verisi, uzman paylaşımı, yurt dışı aktarım, pazarlama ayrı)
 - [ ] Gizlilik Politikası (herkese açık URL)
 - [ ] Kullanım Koşulları / EULA (abonelik bağlantısı uygulamada + mağazada)
-- [ ] Mesafeli Satış Sözleşmesi + Ön Bilgilendirme Formu (web/iyzico satışları)
+- [ ] Mesafeli Satış Sözleşmesi + Ön Bilgilendirme Formu: web satışı olmadığı için şimdilik gerekmez (abonelik koşulları Kullanım Koşulları'nda)
 - [ ] Uzman Hizmet Sözleşmesi + Veri İşleme Eki
 - [ ] Çerez politikası + bant (ClinicApp web)
 - [ ] "Tanı değildir" uyarı metni
@@ -71,17 +71,18 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) `billing-webhook` dağıtımı (Verify JWT kapalı) + RevenueCat Webhook adresi ve Authorization başlığı
 - [ ] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets
 - [ ] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir
-- [ ] (Siz) iyzico üye işyeri
+- [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
-- [ ] (Claude) `proposed/20261022200000_clinic_billing.sql` uygulama; en son `billing.enforce = true`
+- [ ] (Claude) `proposed/20261022200000_clinic_billing.sql` (`revenuecat` kaynağı eklendi) uygulama; en son `billing.enforce = true`
+- [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
 - [ ] (Siz) Gerçek fiyatlar
 - [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
 
 ### 1.9 Fatura
 - [ ] (MM) App Store gelirinin faturalanması (Apple'a)
-- [ ] (Siz) e-Arşiv/e-Fatura özel entegratörü (API'li)
-- [ ] (Claude) Ödeme → fatura → PDF e-posta → `billing_events`; iadede iptal/iade faturası
-- [ ] (Claude) Bireysel / kurumsal fatura bilgisi alanları
+- [ ] (Siz) e-Arşiv/e-Fatura özel entegratörü: **şimdilik gerekmez** (tüm satış App Store'da, müşteriye faturayı Apple keser); web satışı başlarsa gerekir
+- [ ] (Claude) Ödeme → fatura → PDF e-posta: şimdilik gerekmez (yukarıdaki ile aynı koşul)
+- [ ] (Claude) Fatura bilgisi alanları: şimdilik gerekmez
 
 ### 1.10 Güvenlik ve işletme
 - [x] RLS + sızma testleri, anon kapalı, hız sınırları

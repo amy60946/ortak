@@ -2,6 +2,7 @@
 // Test: node --experimental-strip-types --test supabase/functions/billing-webhook/state.test.ts
 
 export const PRODUCT_PREFIX = 'parentapp.premium.';
+export const CLINIC_PREFIX = 'com.clinicapp.uzman.';
 
 export type Sub = {
   plan: 'premium' | 'free';
@@ -42,22 +43,9 @@ export function fromEvent(e: any): Sub | null {
   }
 }
 
-// RevenueCat REST v1 `GET /subscribers/{id}` yanıtından güncel durum (olay sırası ve TRANSFER sorununu çözer).
-// null = bu kullanıcının hiç ParentApp aboneliği yok.
-export function fromSubscriber(body: any, nowMs: number, allowSandbox: boolean): Sub | null {
-  const subs: Record<string, any> = body?.subscriber?.subscriptions ?? {};
-  let best: [string, any] | null = null;
-  for (const [product, s] of Object.entries(subs)) {
-    if (!product.startsWith(PRODUCT_PREFIX)) continue;
-    if (s?.is_sandbox && !allowSandbox) continue;
-    if (!best || (ms(s.expires_date) || 0) > (ms(best[1].expires_date) || 0)) best = [product, s];
-  }
-  if (!best) return null;
-  const [product, s] = best;
-  const base = {
-    billing: billingOf(product), productId: product,
-    transactionId: s.store_transaction_id ?? null,
-  };
+// RevenueCat REST v1 `GET /subscribers/{id}` yanıtındaki tek aboneliğin güncel durumu.
+function stateOf(product: string, s: any, nowMs: number): Sub {
+  const base = { billing: billingOf(product), productId: product, transactionId: s.store_transaction_id ?? null };
   if (s.refunded_at) {
     return { ...base, plan: 'free', status: 'refunded', periodEnd: s.expires_date ?? null, autoRenew: false };
   }
@@ -74,6 +62,31 @@ export function fromSubscriber(body: any, nowMs: number, allowSandbox: boolean):
     return { ...base, plan: 'premium', status: 'grace', periodEnd: s.grace_period_expires_date, autoRenew };
   }
   return { ...base, plan: 'free', status: 'expired', periodEnd: s.expires_date ?? null, autoRenew: false };
+}
+
+function subsWith(body: any, prefix: string, allowSandbox: boolean): [string, any][] {
+  const subs: Record<string, any> = body?.subscriber?.subscriptions ?? {};
+  return Object.entries(subs).filter(([p, s]) => p.startsWith(prefix) && (!s?.is_sandbox || allowSandbox));
+}
+
+// ParentApp: en geç biten aile aboneliği (olay sırası ve TRANSFER sorununu çözer). null = hiç abonelik yok.
+export function fromSubscriber(body: any, nowMs: number, allowSandbox: boolean): Sub | null {
+  let best: [string, any] | null = null;
+  for (const e of subsWith(body, PRODUCT_PREFIX, allowSandbox)) {
+    if (!best || (ms(e[1].expires_date) || 0) > (ms(best[1].expires_date) || 0)) best = e;
+  }
+  return best ? stateOf(best[0], best[1], nowMs) : null;
+}
+
+// ClinicApp (kullanıcı kararı 22 Ekim 2026: klinik sahibi birey olarak öder): uzmanın her klinik ürünü ayrı satır;
+// klinik planını sunucu en geniş etkin abonelikten seçer (billing_recompute). status billing_subscriptions değerleriyle.
+export type ClinicSub = { productId: string; status: 'active' | 'canceled' | 'expired' | 'refunded'; periodEnd: string | null; autoRenew: boolean };
+export function clinicSubs(body: any, nowMs: number, allowSandbox: boolean): ClinicSub[] {
+  return subsWith(body, CLINIC_PREFIX, allowSandbox).map(([product, s]) => {
+    const st = stateOf(product, s, nowMs);
+    // Ek süre (grace) klinikte etkin sayılır: erişim ek süre bitene dek açık kalır.
+    return { productId: product, status: st.status === 'grace' ? 'active' : st.status, periodEnd: st.periodEnd, autoRenew: st.autoRenew };
+  });
 }
 
 // Olayın etkilediği kullanıcılar: normalde app_user_id; TRANSFER'de (geri yükleme başka hesaba geçti) iki taraf.

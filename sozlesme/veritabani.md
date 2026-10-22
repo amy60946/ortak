@@ -250,7 +250,7 @@ Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en 
 | `billing_apply(source, external_id, clinic_id, plan_id, status, period_end, auto_renew, environment, payload)` | yalnız service role | Doğrulanmış ödemeyi yazar; aynı abonelik başka kliniğe bağlanamaz; kliniğin planını en geniş etkin abonelikten yeniden hesaplar (`billing_recompute`). Elle pilot üyelik: `select billing_apply('manual','pilot-1','<klinik>','clinic_yearly','active', now()+interval '90 days', false);` |
 | `clinic_create_invite` | K | Üyelik etkin olmalı; Bireysel pakette ekip daveti yok. |
 
-Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anahtarıyla ayrıca doğrulanır): `apple-verify` (App Store Server API'den işlemi okur; `appAccountToken` = klinik kimliği olmalı), `apple-notify` (App Store Server Notifications V2; içerik değil Apple'dan yeniden okunan durum yazılır), `iyzico-start` / `iyzico-callback` / `iyzico-webhook` / `iyzico-cancel`. Ödemeyi yalnız klinik sahibi alır/yönetir.
+Ödeme yolu (kullanıcı kararı 22 Ekim 2026): **RevenueCat**, klinik sahibi birey olarak öder. Edge Function `billing-webhook` (Verify JWT kapalı; `REVENUECAT_API_KEY` zorunlu) klinik ürünlerini `billing_apply('revenuecat', '<uzman kimliği>:<ürün>', klinik, paket, …)` ile yazar; paket `billing_plans.apple_product_id`'den bulunur. `clinic-billing` (Apple doğrudan + iyzico) ileride kendi sisteme geçiş için depoda durur, yayınlanmaz.
 
 ## 9. Sızma denemesi düzeltmeleri (öneri, `proposed/20261022010000_security_pentest.sql`)
 

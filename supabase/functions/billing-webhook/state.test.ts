@@ -1,7 +1,7 @@
 // node --experimental-strip-types --test supabase/functions/billing-webhook/state.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { affectedUsers, fromEvent, fromSubscriber } from './state.ts';
+import { affectedUsers, clinicSubs, fromEvent, fromSubscriber } from './state.ts';
 
 const NOW = Date.parse('2026-11-01T00:00:00Z');
 const one = (product: string, s: Record<string, unknown>) => ({ subscriber: { subscriptions: { [product]: s } } });
@@ -66,4 +66,20 @@ test('olay yolu (anahtarsız yedek)', () => {
 test('TRANSFER iki tarafı da etkiler', () => {
   assert.deepEqual(affectedUsers({ type: 'TRANSFER', transferred_from: ['a'], transferred_to: ['b', 'a'] }), ['a', 'b']);
   assert.deepEqual(affectedUsers({ type: 'RENEWAL', app_user_id: 'x' }), ['x']);
+});
+
+test('ClinicApp: her klinik ürünü ayrı; ek süre etkin sayılır; aile ürünü karışmaz', () => {
+  const body = { subscriber: { subscriptions: {
+    'com.clinicapp.uzman.solo.monthly': { expires_date: '2026-10-01T00:00:00Z' },
+    'com.clinicapp.uzman.clinic.monthly': { expires_date: '2026-10-30T00:00:00Z', billing_issues_detected_at: '2026-10-30T00:00:00Z',
+      grace_period_expires_date: '2026-11-10T00:00:00Z' },
+    'parentapp.premium.monthly': { expires_date: '2026-12-01T00:00:00Z' },
+  } } };
+  const r = clinicSubs(body, NOW, false);
+  assert.deepEqual(r.map((x) => [x.productId, x.status]), [
+    ['com.clinicapp.uzman.solo.monthly', 'expired'],
+    ['com.clinicapp.uzman.clinic.monthly', 'active'],
+  ]);
+  assert.equal(r[1].periodEnd, '2026-11-10T00:00:00Z');
+  assert.equal(fromSubscriber(body, NOW, false)?.productId, 'parentapp.premium.monthly');
 });
