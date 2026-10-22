@@ -90,7 +90,7 @@ Notlar:
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
 | `task_family(uuid)`, `child_family(uuid)`, `task_assigned_to_me(uuid)` | `uuid` / `boolean` | iç | Politikalarda tablolar arası kontrol. |
-| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Çocuğun doğrudan `completions` yazımında izin: görev ona atanmış **ve** durum `pending`/`declined` ya da (inceleme gerekmiyorsa) `approved`. (M4 ile `declined` eklendi.) |
+| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Eskiden çocuğun doğrudan `completions` yazımında izindi. **`20261022150000_security_game` (uygulandı 22 Ekim):** çocuk doğrudan yazım politikaları kaldırılır, bu fonksiyon kimseye açık değildir; çocuk yalnız `child_set_status` ile yazar. |
 | `random_code()` | `text` | iç | 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 yok). |
 | `handle_new_user()` (tetikleyici) | — | iç | Yeni **anonim olmayan** kullanıcıda aile + profil oluşturur. Anonim (çocuk) oturumlarda hiçbir şey yapmaz. |
 | `set_updated_at()` (tetikleyici) | — | iç | `profiles`, `tasks` için `updated_at`. |
@@ -124,7 +124,7 @@ Notlar:
 | Kim | Ne görür / ne yapar |
 |---|---|
 | **Ebeveyn** | Yalnız kendi ailesinin satırları (`family_id = my_family_id()`): çocuklar, görevler, atamalar, tamamlamalar, mesajlar, şablonlar, kodlar (yalnız okur), coin defteri (yalnız okur), oyun kayıtları (yalnız okur). Aynı ailedeki diğer ebeveyn profillerini görür. `families.name` ve kendi profilinin `nickname/name/avatar` alanlarını değiştirebilir. `children.user_id` sütununa doğrudan yazamaz. |
-| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (ekleyebilir — `child_may_complete` koşuluyla —, `pending`/`declined` iken silebilir); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
+| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (okur; yazım **yalnız `child_set_status` RPC'si** ile — dün/bugün/yarın, ebeveyn kararı değişmez; doğrudan insert/delete `20261022150000_security_game` ile kapandı); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
 | **Herkes (oturum açmış)** | `game_items` (fiyat listesi) okunur. |
 | **İstemci hiçbir zaman** | `invite_codes`, `coin_ledger`, `game_items`, `game_saves`, `families`(ekleme/silme), `profiles`(ekleme/silme) tablolarına doğrudan yazamaz. Bunlar yalnız fonksiyon/tetikleyiciyle değişir. |
 
