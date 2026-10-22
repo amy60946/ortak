@@ -1,4 +1,4 @@
--- Kişisel haftalık hedef (proposed/20261022230000_weekly_goal.sql).
+-- Kişisel haftalık hedef (migrations/20261022230000_weekly_goal.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

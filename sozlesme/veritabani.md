@@ -326,9 +326,9 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
 - Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
 
-## 11. XP takibi: hatırlatma, 2× XP teklifi, dört yaş grubu, haftalık hedef (ÖNERİ, 22 Ekim 2026 — uygulanmadı)
+## 11. XP takibi: hatırlatma, 2× XP teklifi, dört yaş grubu, haftalık hedef (22 Ekim 2026'da uygulandı)
 
-Dosyalar sırayla: `proposed/20261022210000_task_reminder_boost.sql`, `proposed/20261022220000_age_bands_four.sql`, `proposed/20261022230000_weekly_goal.sql` (testler `test_task_reminder_boost.sql`, `test_age_bands.sql`, `test_weekly_goal.sql`).
+Dosyalar sırayla: `migrations/20261022210000_task_reminder_boost.sql`, `migrations/20261022220000_age_bands_four.sql`, `migrations/20261022230000_weekly_goal.sql` (testler `test_task_reminder_boost.sql`, `test_age_bands.sql`, `test_weekly_goal.sql`).
 
 | Ad | Tür | Ne | Yazan | Okuyan |
 |---|---|---|---|---|

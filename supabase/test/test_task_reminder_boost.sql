@@ -1,4 +1,4 @@
--- Y5 child_tasks.reminder + Y2 task_boosts (proposed/20261022210000_task_reminder_boost.sql).
+-- Y5 child_tasks.reminder + Y2 task_boosts (migrations/20261022210000_task_reminder_boost.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

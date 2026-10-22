@@ -1,5 +1,5 @@
 -- =====================================================================
--- XP takibi Y5 + Y2 (22 Ekim 2026, kullanıcı onayı; ÖNERİ, henüz uygulanmadı)
+-- XP takibi Y5 + Y2 (22 Ekim 2026, kullanıcı onayı; UYGULANDI 22 Ekim 2026, kullanıcı SQL Editor)
 --   Y5 "Kendiliğinden yaptı": oyun, çocuğun "Yaptım"ı görevin hatırlatma saatinden önce bastığını bilmeli →
 --      child_tasks yanıtına `reminder` (HH:MM ya da null) eklenir. Bonus XP oyunda hesaplanır (sunucu XP tutmaz).
 --   Y2 "Zor görevde 2× XP": "Yapamam" sonrası oyun bazen 2× XP teklifi gösterir; teklif ve çocuğun seçimi kaydedilir

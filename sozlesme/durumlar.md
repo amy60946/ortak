@@ -80,7 +80,7 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-> **ÖNERİ (22 Ekim 2026, kullanıcı kararı — XP takibi S1; `proposed/20261022220000_age_bands_four.sql`, henüz uygulanmadı):** dört grup.
+> **UYGULANDI (22 Ekim 2026, kullanıcı kararı — XP takibi S1; `migrations/20261022220000_age_bands_four.sql`):** dört grup. Canlı kısıt `age_band in ('K', 'A', 'B', 'C')`.
 >
 > | Değer | Yaş | ParentApp etiketi | `suggest_age_band` | Oyun günlük XP sınırı |
 > |---|---|---|---|---|
@@ -89,7 +89,7 @@ Kod biçimi:
 > | `B` | 9–12 | "9–12 yaş" | 9 ≤ yaş < 13 | 300 |
 > | `C` | 13 ve üstü | "13 ve üstü" | yaş ≥ 13 | 350 |
 >
-> Seviye eşikleri gruba göre (`game_level_bands`, oyun `levels.json` `xpToNextByBand`); sunucunun harcama seviye kilidi (`child_level`) çocuğun grubunu kullanır. B tablosu bugünküyle aynı. Eski oyun sürümü `K`'yı A sayar. Uygulanınca aşağıdaki iki bantlı metin tarihe geçer.
+> Seviye eşikleri gruba göre (`game_level_bands`, oyun `levels.json` `xpToNextByBand`); sunucunun harcama seviye kilidi (`child_level`) çocuğun grubunu kullanır. B tablosu bugünküyle aynı. Eski oyun sürümü `K`'yı A sayar. Aşağıdaki iki bantlı metin (19–21 Ekim) tarihe geçti.
 > **ParentApp penceresi:** çocuk ekleme/düzenleme ekranında dört seçenek (`set_child_age_band` K/A/B/C).
 
 > **Doğrulandı (21 Ekim 2026, kullanıcının SQL Editor sorgusu):** canlıda kısıt `age_band in ('A', 'B')` — **iki bant geçerli**. Üç bantlı `20261019010000_age_bands.sql` daha önce uygulanmış, ardından `20261019110000_age_bands.sql` iki banda indirmiştir (dosya sırası canlıyla aynı).

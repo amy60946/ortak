@@ -27,7 +27,7 @@ insert into auth.users (id, is_anonymous, raw_user_meta_data) values
 grant usage on schema tst to authenticated;
 grant execute on all functions in schema tst to authenticated;
 
--- öneri kuralı (sınırlar) — dört grup (proposed/20261022220000_age_bands_four.sql)
+-- öneri kuralı (sınırlar) — dört grup (migrations/20261022220000_age_bands_four.sql)
 select tst.check(public.suggest_age_band(null) = 'A', 'doğum günü yok → A');
 select tst.check(public.suggest_age_band((current_date - interval '5 years')::date) = 'K', '5 yaş → K (5 ve altı)');
 select tst.check(public.suggest_age_band((current_date - interval '6 years')::date) = 'A', '6 yaş → A');

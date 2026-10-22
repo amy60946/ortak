@@ -1,5 +1,5 @@
 -- =====================================================================
--- Kişisel haftalık hedef (XP takibi Y6; kullanıcı onayı 22 Ekim 2026; ÖNERİ)
+-- Kişisel haftalık hedef (XP takibi Y6; kullanıcı onayı 22 Ekim 2026; UYGULANDI 22 Ekim 2026)
 --   Hedef = son 2 haftanın onaylı görev ortalaması × 1,2 (yukarı yuvarlanır), en az 3, en çok o haftaki görevlerin
 --   %90'ı (aşağı). Geçmişi olmayan çocukta (bu haftadan önce hiç kaydı yok) hedef yok, yalnız ölçüm. Bu hafta 3'ten az
 --   görev varsa hedef yok. Ebeveyn hedefi düşürebilir (üst sınır; null = otomatik). Ulaşamazsa ceza yok.

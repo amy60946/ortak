@@ -158,7 +158,7 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 
 ---
 
-## 5C. XP takibi ekleri (22 Ekim 2026; Y2/Y5/Y6 öneri SQL'i bekliyor)
+## 5C. XP takibi ekleri (22 Ekim 2026; Y2/Y5/Y6 sunucu tarafı uygulandı)
 
 | Kural | Değer | Nerede |
 |---|---|---|

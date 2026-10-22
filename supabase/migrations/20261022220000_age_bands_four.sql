@@ -1,5 +1,5 @@
 -- =====================================================================
--- Dört yaş grubu (XP takibi S1; kullanıcı kararı 22 Ekim 2026: "5 ve altı · 6–8 · 9–12 · 13 ve üstü"; ÖNERİ)
+-- Dört yaş grubu (XP takibi S1; kullanıcı kararı 22 Ekim 2026: "5 ve altı · 6–8 · 9–12 · 13 ve üstü"; UYGULANDI 22 Ekim 2026)
 --   K: 5 ve altı · A: 6–8 · B: 9–12 · C: 13 ve üstü (C 19 Ekim'de kaldırılmıştı, yeni anlamıyla geri gelir).
 --   - Kısıt ve set_child_age_band dört değeri kabul eder; doğum gününden öneri: <6 K, <9 A, <13 B, 13+ C.
 --     Var olan kayıtlara dokunulmaz (A/B aynı anlamda kalır). Doğum günü yoksa öneri yine A.
