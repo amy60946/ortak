@@ -1,4 +1,4 @@
-# Admin paneli ve KPI (öneri: `supabase/proposed/20261023000000_admin.sql`)
+# Admin paneli ve KPI (`supabase/migrations/20261023000000_admin.sql`, uygulandı 23 Ekim 2026)
 
 Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıcıları tek panelden yönetilir. Panel yalnız aşağıdaki `admin_*` fonksiyonlarını çağırır; tablolara doğrudan erişemez.
 

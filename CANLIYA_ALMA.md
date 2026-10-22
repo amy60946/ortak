@@ -73,7 +73,9 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir
 - [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
-- [ ] (Claude) `proposed/20261022200000_clinic_billing.sql` (`revenuecat` kaynağı eklendi) uygulama; en son `billing.enforce = true`
+- [x] `20261022200000_clinic_billing.sql` uygulandı (23 Ekim)
+- [ ] En son: `billing.enforce = true` (ParentApp ödemesi canlı olunca)
+- [ ] **Klinik denemeleri ~2 Kasım'da bitiyor:** ödeme canlı değilse panelden uzat
 - [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
 - [ ] (Siz) Gerçek fiyatlar
 - [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
@@ -142,7 +144,9 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ## 3. Admin paneli (Faz 1 canlıdan önce)
 - [x] (ortak) Sunucu tarafı yazıldı ve testli: `proposed/20261023000000_admin.sql`, `sozlesme/admin.md` (destek/KVKK talep tabloları Faz 2)
-- [ ] (Siz) Öneriyi Supabase'e uygulama (clinic_billing'den sonra) + ilk owner
+- [x] Supabase'e uygulandı (23 Ekim)
+- [ ] (Siz) İlk owner + iki adımlı doğrulama
+- [ ] (Siz + Claude) Panelin barındırılması
 - [x] (ortak) `admin_*` fonksiyonları (rol + iki adımlı doğrulama + gerekçe + denetim kaydı)
 - [ ] (Uygulamalar) `app_config` + kişiye istisna okuma (zorunlu güncelleme, bakım, bayraklar)
 - [x] Panel yeri: **ayrı depo `amy60946/admin-panel`** (kullanıcı, 22 Ekim)
