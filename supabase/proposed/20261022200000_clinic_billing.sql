@@ -6,7 +6,7 @@
 --   Ödeme: iPhone/iPad'de App Store aboneliği, web'de iyzico. İkisini de Edge Function `clinic-billing`
 --   doğrular ve yalnız service role ile `billing_apply` çağırır. İstemci plan/süre yazamaz.
 --   Eski planlar (small/business/custom) etkin sayılmaya devam eder (elle verilmiş).
--- Önkoşul: 20261021300000_security_pentest.sql. Tekrar çalıştırılabilir.
+-- Önkoşul: migrations/20261021300000_security_pentest.sql ve 20261022100000_clinic_assignments.sql. Tekrar çalıştırılabilir.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -119,36 +119,9 @@ $$;
 revoke execute on function public.clinician_access() from public, anon;
 grant execute on function public.clinician_access() to authenticated;
 
--- Çocuk verisi yalnız etkin üyelikle görünür
-create or replace function public.clinic_sees_child(p_child_id uuid)
-returns boolean language sql stable security definer set search_path = '' as $$
-  select public.clinician_access() and exists (
-    select 1 from public.clinic_links l
-    join public.clinicians m on m.clinic_id = l.clinic_id
-    where m.id = auth.uid() and l.child_id = p_child_id and l.status = 'active'
-  )
-$$;
-
-create or replace function public.clinic_link_mine(p_link_id uuid)
-returns boolean language sql stable security definer set search_path = '' as $$
-  select public.clinician_access() and exists (
-    select 1 from public.clinic_links l
-    where l.id = p_link_id and l.clinic_id = public.my_clinic_id() and l.status = 'active'
-  )
-$$;
-
-create or replace function public.clinic_clients()
-returns table (link_id uuid, clinic_id uuid, family_id uuid, child_id uuid, child_name text, avatar text,
-               birthday date, label text, consent_at timestamptz, parents text)
-language sql stable security definer set search_path = '' as $$
-  select l.id, l.clinic_id, l.family_id, l.child_id, c.name, c.avatar, c.birthday, l.label, l.consent_at,
-         coalesce((select string_agg(coalesce(nullif(trim(p.name), ''), p.nickname), ', ' order by p.created_at)
-                   from public.profiles p where p.family_id = l.family_id), '')
-  from public.clinic_links l
-  join public.children c on c.id = l.child_id
-  where l.clinic_id = public.my_clinic_id() and l.status = 'active' and public.clinician_access()
-  order by l.consent_at desc
-$$;
+-- Çocuk verisi, notlar, hedefler, öneriler ve danışan listesi clinician_access()'i zaten ister
+-- (migrations/20261021300000_security_pentest.sql ve proposed/20261022100000_clinic_assignments.sql);
+-- yukarıdaki yeni tanımı kullanırlar.
 
 -- Davet ve ekibe katılma: 20261021300000_security_pentest.sql'deki clinic_create_invite / clinic_join_team zaten
 -- clinician_access() (yukarıda yeniden tanımlandı) ve Bireysel paket koltuğunu (seat_limit = 1) denetler.

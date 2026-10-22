@@ -170,7 +170,7 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 | 1 | [S] (service role) | Mağaza/web ödemesi aile aboneliğini yazar. | `family_subscriptions` (`free`/`premium`) |
 | 2 | [S] | Aile, kendi aboneliği **ya da** etkin (deneme süresinde ya da ücretli) bir kliniğe bağlı çocuğu varsa premium sayılır. | `family_premium()`, `clinic_active()` |
 
-### 5.8 ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+### 5.8 ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [S] | Yeni klinik 7 gün ücretsiz dener (kart yok, 10 koltuk). | `clinics.plan='trial'`, `trial_ends_at` |

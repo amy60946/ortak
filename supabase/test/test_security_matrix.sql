@@ -173,8 +173,14 @@ select tst.check(tst.cnt('public.notifications') >= 2, 'uzman: kendi bildirimler
 
 -- ---------------------------------------------------------------- ekip üyesi (d2)
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
-select tst.check(tst.cnt('public.children') = 2, 'ekip üyesi: kliniğin danışanlarını görür');
-select tst.check(tst.cnt('public.clinic_notes') = 1, 'ekip üyesi: klinik notlarını görür (aynı klinik)');
+select tst.check(tst.cnt('public.children') + tst.cnt('public.clinic_notes') + tst.cnt('public.clinic_links') = 0, 'ekip üyesi: atanmadan sahibin danışanlarını görmez');
+reset role;
+insert into public.clinic_link_access (link_id, clinician_id, clinic_id)
+  select id, '00000000-0000-0000-0000-0000000000d2', clinic_id from public.clinic_links where clinic_id = (select v::uuid from tst.kv where k = 'k1');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d2');
+select tst.check(tst.cnt('public.children') = 2, 'ekip üyesi: atanınca danışanları görür');
+select tst.check(tst.cnt('public.clinic_notes') = 1, 'ekip üyesi: atandığı danışanın klinik notlarını görür');
 select tst.check(tst.cnt('public.notifications') = 0, 'ekip üyesi: sorumlu olmadığı danışanın bildirimi gelmez');
 select tst.no_effect($$update public.clinics set name = 'x'$$, 'ekip üyesi: klinik adını değiştiremez');
 select tst.fails($$select public.clinic_create_invite('clinician', '')$$, 'ekip üyesi: ekibe davet edemez');
