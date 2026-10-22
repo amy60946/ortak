@@ -141,10 +141,12 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) Web oturum zaman aşımı, çıktıda "tanı değildir"
 
 ## 3. Admin paneli (Faz 1 canlıdan önce)
-- [ ] (ortak) `admin_users`, `admin_audit`, `user_overrides`, `app_config` genişletme, `support_requests`, `privacy_requests` + RLS + test
-- [ ] (ortak) `admin_*` fonksiyonları (rol denetimi + denetim kaydı + gerekçe)
+- [x] (ortak) Sunucu tarafı yazıldı ve testli: `proposed/20261023000000_admin.sql`, `sozlesme/admin.md` (destek/KVKK talep tabloları Faz 2)
+- [ ] (Siz) Öneriyi Supabase'e uygulama (clinic_billing'den sonra) + ilk owner
+- [x] (ortak) `admin_*` fonksiyonları (rol + iki adımlı doğrulama + gerekçe + denetim kaydı)
 - [ ] (Uygulamalar) `app_config` + kişiye istisna okuma (zorunlu güncelleme, bakım, bayraklar)
-- [ ] (Karar) Panel teknolojisi (Expo web / ayrı site)
+- [x] Panel yeri: **ayrı depo `amy60946/admin-panel`** (kullanıcı, 22 Ekim)
+- [ ] (Karar) Panelin barındırılması (alan adı alınınca `admin.` alt alan adı)
 - [ ] Faz 1 modülleri: arama, kullanıcı kartı, hesap işlemleri, istisnalar, kişiye bildirim, KVKK talepleri, uygulama ayarları
 - [ ] (Siz) İlk süper admin + iki adımlı doğrulama
 
