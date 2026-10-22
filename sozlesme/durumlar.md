@@ -153,7 +153,7 @@ Kod biçimi:
 | `clinics.plan` | `trial` (varsayılan; öneriyle 7 gün, eskiden 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
 | `clinics.billing_source` | `app_store` / `iyzico` / `manual` / null | Ödeme kaynağı (öneri). |
 | `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
-| `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder ve klinik adını değiştirir. |
+| `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder, klinik adını değiştirir, bütün danışanları görür ve danışanları üyelere atar (`20261022100000`, uygulandı). Üye yalnız sorumlusu olduğu ve kendisine atanan danışanları görür. |
 | `clinic_task_suggestions.status` | `pending` (varsayılan) / `accepted` / `declined` | Ebeveyn kararı. `accepted` olunca görevi **ParentApp kendisi** oluşturur (sunucu otomatik görev açmaz). |
 | `clinic_task_suggestions.difficulty` | `easy` / `medium` / `hard` (varsayılan `easy`) | Görevdeki ile aynı. |
 | `family_subscriptions.plan` | `free` (varsayılan) / `premium` | Aile aboneliği. Etkin kliniğe bağlı çocuğu olan aile de premium sayılır (`family_premium`). |

@@ -116,6 +116,11 @@ select tst.check(public.family_premium(), 'ücretli kliniğe bağlı aile premiu
 select tst.rejects($$select public.redeem_clinic_invite((select v from tst.kv where k = 'fam'), '00000000-0000-0000-0000-00000000c0d2')$$, 'aile kodu bir kez kullanılır');
 
 -- ------------------------------------------------ rıza sonrası: uzman yalnız bağlı çocuğu okur
+-- (ekip üyesi danışanı sahip atayınca görür: 20261022100000_clinic_assignments)
+reset role;
+insert into public.clinic_link_access (link_id, clinician_id, clinic_id)
+  select id, '00000000-0000-0000-0000-0000000000d2', clinic_id from public.clinic_links;
+set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
 select tst.check((select count(*) from public.children) = 1, 'ekip üyesi bağlı çocuğu görür');
 select tst.check((select name from public.children) = 'Nazlı', 'yalnız rıza verilen çocuk görünür');

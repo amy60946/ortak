@@ -90,7 +90,7 @@ Notlar:
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
 | `task_family(uuid)`, `child_family(uuid)`, `task_assigned_to_me(uuid)` | `uuid` / `boolean` | iç | Politikalarda tablolar arası kontrol. |
-| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Çocuğun doğrudan `completions` yazımında izin: görev ona atanmış **ve** durum `pending`/`declined` ya da (inceleme gerekmiyorsa) `approved`. (M4 ile `declined` eklendi.) |
+| `child_may_complete(p_task_id, p_status)` | `boolean` | iç | Eskiden çocuğun doğrudan `completions` yazımında izindi. **`20261022150000_security_game` (uygulandı 22 Ekim):** çocuk doğrudan yazım politikaları kaldırılır, bu fonksiyon kimseye açık değildir; çocuk yalnız `child_set_status` ile yazar. |
 | `random_code()` | `text` | iç | 6 karakter, alfabe `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (I, L, O, 0, 1 yok). |
 | `handle_new_user()` (tetikleyici) | — | iç | Yeni **anonim olmayan** kullanıcıda aile + profil oluşturur. Anonim (çocuk) oturumlarda hiçbir şey yapmaz. |
 | `set_updated_at()` (tetikleyici) | — | iç | `profiles`, `tasks` için `updated_at`. |
@@ -124,7 +124,7 @@ Notlar:
 | Kim | Ne görür / ne yapar |
 |---|---|
 | **Ebeveyn** | Yalnız kendi ailesinin satırları (`family_id = my_family_id()`): çocuklar, görevler, atamalar, tamamlamalar, mesajlar, şablonlar, kodlar (yalnız okur), coin defteri (yalnız okur), oyun kayıtları (yalnız okur). Aynı ailedeki diğer ebeveyn profillerini görür. `families.name` ve kendi profilinin `nickname/name/avatar` alanlarını değiştirebilir. `children.user_id` sütununa doğrudan yazamaz. |
-| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (ekleyebilir — `child_may_complete` koşuluyla —, `pending`/`declined` iken silebilir); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
+| **Çocuk (oyun, anonim oturum)** | Yalnız kendi `children` satırı; kendisine atanmış görevler ve atamalar; kendi tamamlamaları (okur; yazım **yalnız `child_set_status` RPC'si** ile — dün/bugün/yarın, ebeveyn kararı değişmez; doğrudan insert/delete `20261022150000_security_game` ile kapandı); kendi mesajları (okur, `sender='child'` ile gönderir); kendi coin defteri ve oyun kaydı (yalnız okur). Coin ekleyemez, fiyat belirleyemez. |
 | **Herkes (oturum açmış)** | `game_items` (fiyat listesi) okunur. |
 | **İstemci hiçbir zaman** | `invite_codes`, `coin_ledger`, `game_items`, `game_saves`, `families`(ekleme/silme), `profiles`(ekleme/silme) tablolarına doğrudan yazamaz. Bunlar yalnız fonksiyon/tetikleyiciyle değişir. |
 
@@ -229,7 +229,7 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
 
-## 8. ClinicApp üyeliği (öneri, `proposed/20261022000000_clinic_billing.sql`)
+## 8. ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
 
 Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
 
@@ -316,3 +316,12 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - Klinik denemesi (trial) aileye premium vermez; yalnız ücretli klinik planı.
 - `clinic_goals.created_by`, `goal_ratings.rated_by` sunucu doldurur. Metin alanlarına uzunluk sınırı. Push anahtarı kullanıcı başına 5.
 - Edge Function `push-apns`: yalnız son 10 dakikada oluşmuş bildirim; yanıtta cihaz bilgisi yok (gizli başlık kuralı korunur).
+
+## 10. Klinik içi danışan ataması (22 Ekim 2026'da uygulandı, `migrations/20261022100000_clinic_assignments.sql`)
+
+- **Görünürlük:** klinik sahibi kliniğin bütün paylaşımlarını görür. Ekip üyesi yalnız sorumlusu olduğu (`clinic_links.clinician_id`, ailenin kullandığı kodu üreten uzman) ve sahibin ona atadığı paylaşımları görür. Kural çocuk, görev, tamamlama, zor an + ses, not, hedef/puan, öneri ve danışan listesine (`clinic_clients`) sunucuda uygulanır (`clinic_link_visible`, `clinic_sees_child`, `clinic_link_mine`).
+- **`clinic_link_access`** (`link_id`, `clinician_id`, `clinic_id`, `granted_by`): sahibin atamaları. RLS: sahip kliniğin bütün satırlarını, üye yalnız kendi satırlarını okur; yazma yalnız RPC.
+- **RPC:** `clinic_assign(link_id, clinician_id, assigned bool)` (yalnız sahip; atanan üyeye `client_assigned` bildirimi), `clinic_set_responsible(link_id, clinician_id)` (yalnız sahip). Sorumlu uzmanı başka kimse değiştiremez (tetikleyici; kendi sorumluluğunu bırakma ve hesap silme hariç).
+- **`clinic_clients()`** dönüşüne `clinician_id`, `clinician_name`, `assigned uuid[]` eklendi.
+- **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
+- Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
