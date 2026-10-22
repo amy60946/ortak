@@ -158,6 +158,14 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 
 ---
 
+## 5C. XP takibi ekleri (22 Ekim 2026; Y2/Y5/Y6 öneri SQL'i bekliyor)
+
+| Kural | Değer | Nerede |
+|---|---|---|
+| Hatırlatmadan önce "Yaptım" (Y5) | Görev onaylanınca görev XP'sinin yarısı kadar ek XP (kolay 3 / orta 5 / zor 7); hatırlatma saati olmayan görevde yok. Gerçek görev günlük payına sayılır. | Oyun (`child_tasks.reminder`) |
+| Zor görevde 2× XP (Y2) | "Yapamam" sonrası teklif: ilk "Yapamam"da bir kez, sonra yalnız zorlandığı görevlerde (son 4 haftada tamamlama oranı < %50), haftada en çok 1. "Deneyeceğim" + sonra onay → görev XP'si ×2 (payın içinde). Kayıt `task_boosts`. | Oyun + sunucu |
+| Haftalık hedef (Y6) | Hedef: son 2 hafta onaylı ortalaması × 1,2 (yukarı), en az 3, en çok o haftaki görevlerin %90'ı; ebeveyn düşürebilir. Ulaşınca +2 Güneş Taşı (`goal`) + oyunda XP (seviye ihtiyacının %10'u, en az 30) + ebeveyne kutlama. Ceza yok. | Sunucu (`claim_weekly_goal`) + oyun |
+
 ## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
 
 - **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.

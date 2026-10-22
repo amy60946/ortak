@@ -325,3 +325,22 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - **`clinic_clients()`** dönüşüne `clinician_id`, `clinician_name`, `assigned uuid[]` eklendi.
 - **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
 - Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
+
+## 11. XP takibi: hatırlatma, 2× XP teklifi, dört yaş grubu, haftalık hedef (ÖNERİ, 22 Ekim 2026 — uygulanmadı)
+
+Dosyalar sırayla: `proposed/20261022210000_task_reminder_boost.sql`, `proposed/20261022220000_age_bands_four.sql`, `proposed/20261022230000_weekly_goal.sql` (testler `test_task_reminder_boost.sql`, `test_age_bands.sql`, `test_weekly_goal.sql`).
+
+| Ad | Tür | Ne | Yazan | Okuyan |
+|---|---|---|---|---|
+| `child_tasks(p_from, p_to)` | RPC (değişti) | Yanıta `reminder` (`HH:MM`/null) eklendi (Y5: hatırlatmadan önce "Yaptım" bonusu oyunda hesaplanır) | — | O |
+| `task_boosts` | Tablo | 2× XP teklifi (Y2): `child_id`, `task_id`, `date`, `family_id`, `choice` (`accepted` "Deneyeceğim" / `skipped` "Şimdi değil"), `offered_at`; görev örneği başına tek kayıt | O (`child_record_boost`) | P (aile), O (kendi) — K rızayla sonra |
+| `child_record_boost(p_task_id, p_date, p_choice)` | RPC | Teklif cevabı; yalnız kendi atanmış görevi, bugün/dün; 7 günde en çok 3 farklı teklif | O | — |
+| `children.age_band` | Sütun (kısıt değişti) | `K`/`A`/`B`/`C` (`durumlar.md` §4) | P | O, P |
+| `game_level_bands` | Tablo | Gruba göre seviye eşikleri (`band`, `level`, `total_xp`); herkes okur, yazan yok | — | herkes (authenticated) |
+| `child_level(uuid)` | iç (değişti) | Çocuğun grubunun tablosu; yoksa `game_levels` | — | `spend_coins` |
+| `weekly_goal_claims` | Tablo | Haftalık hedef ödülü alındı (`child_id`, `week_start` pazartesi, `target`) | fonksiyon | P (aile), O (kendi) |
+| `child_goal_settings` | Tablo | Ebeveynin hedef üst sınırı `weekly_cap` (1–200, null = otomatik) | fonksiyon (`set_weekly_goal_cap`) | P (aile) |
+| `child_weekly_goal()` / `weekly_goal(p_child_id)` | RPC | `{week_start, target, auto, cap, done, assigned, claimed}`; hedef = son 2 hafta onaylı ortalaması × 1,2 (yukarı), en az 3, en çok bu haftaki görevlerin %90'ı; geçmişsiz çocukta ya da <3 görevde `target` null | — | O / P |
+| `set_weekly_goal_cap(p_child_id, p_cap)` | RPC | Ebeveyn hedefi düşürür (null = otomatik) | P | — |
+| `claim_weekly_goal()` | RPC | Hedefe ulaşan çocuk haftada bir kez: +2 Güneş Taşı (defter nedeni `goal`, ada ilerlemesine sayılır) + ebeveyne bildirim (`kind = 'weekly_goal'`). Hata: `no_goal`, `not_reached`, `already_claimed` | O | — |
+
