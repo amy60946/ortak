@@ -298,7 +298,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `join_family`, `redeem_child_code`, `clinic_invite_preview`, `redeem_clinic_invite(_children)`, `clinic_join_team` | P / O / K | Kod hatasında `reason` (expired/used/not_found) eklendi; durumlar P11 |
 | `family_access()` | P | `{state, full, enforced, trial_started_at, trial_ends_at, days_left, plan, period_end, auto_renew, subscription_status, limits}` |
 | `family_premium(p_family_id)` | P, K | premium / ücretli klinik / deneme sürüyor |
-| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`) |
+| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
 | `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |

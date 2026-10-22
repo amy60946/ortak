@@ -64,7 +64,13 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 1.8 Ödeme
 - [ ] (Siz) ASC ürünleri (ParentApp 2, ClinicApp 4) + TR fiyatları
 - [ ] (Siz) IAP .p8 anahtarı (Secrets) + App Store Server Notifications V2 adresi
-- [ ] (Karar) ParentApp ödeme yolu: öneri `clinic-billing` (kendi sistemimiz); kullanıcı onayı bekleniyor
+- [x] ParentApp ödeme yolu: **RevenueCat** (kullanıcı, 22 Ekim). Sunucu tarafı hazır: `supabase/functions/billing-webhook` (+ `state.test.ts`). ClinicApp kendi `clinic-billing` yolunda kalır.
+- [ ] (Siz) RevenueCat hesabı + proje; ParentApp'i App Store Connect'e bağlama (In-App Purchase anahtarı .p8 + App Store Connect API anahtarı — RevenueCat paneline, sohbete değil)
+- [ ] (Siz) RevenueCat: entitlement `premium`, offering `default` (`parentapp.premium.monthly`, `parentapp.premium.yearly`)
+- [ ] (Siz) Supabase Secrets: `BILLING_WEBHOOK_SECRET` (≥ 24 karakter), `REVENUECAT_API_KEY` (sk_…); denemede `BILLING_ALLOW_SANDBOX=1`
+- [ ] (Claude) `billing-webhook` dağıtımı (Verify JWT kapalı) + RevenueCat Webhook adresi ve Authorization başlığı
+- [ ] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets
+- [ ] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir
 - [ ] (Siz) iyzico üye işyeri
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
 - [ ] (Claude) `proposed/20261022200000_clinic_billing.sql` uygulama; en son `billing.enforce = true`
