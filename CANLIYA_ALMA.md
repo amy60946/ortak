@@ -8,9 +8,10 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 1.1 Şirket ve hesaplar
 - [ ] (Siz) Şirket/vergi kaydı, faturayı kesecek tüzel kişi
-- [ ] (Siz) Apple Developer hesabı türü (şirket → D-U-N-S)
+- [x] Apple Developer hesabı: **kişisel** (22 Ekim; ileride şirkete taşınabilir)
+- [ ] (Siz) Mali müşavir + şahıs şirketi (vergi kaydı, e-Arşiv fatura için şart)
 - [ ] (Siz) App Store Connect: Paid Apps sözleşmesi, banka, vergi
-- [ ] (Siz) Google Play olacak mı (kararı)
+- [x] Google Play: **iOS'tan sonra** ayrı aşama (22 Ekim)
 - [ ] (Siz) Supabase Pro plan (yedek, duraklatma yok)
 
 ### 1.2 Alan adı ve web
@@ -20,7 +21,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) Universal Links (`apple-app-site-association`)
 
 ### 1.3 E-posta
-- [ ] (Siz) Gönderim servisi hesabı (Resend / Postmark / SES)
+- [ ] (Siz) Gönderim servisi: **Resend ücretsiz** (karar 22 Ekim) — hesap açılacak, alan adı gerekli
 - [ ] (Siz + Claude) SPF, DKIM, DMARC
 - [ ] (Siz) Supabase SMTP + **Confirm email açık**
 - [ ] (Claude) Türkçe şablonlar: onay, şifre sıfırlama, e-posta değişikliği, sihirli bağlantı, davet
@@ -63,7 +64,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 1.8 Ödeme
 - [ ] (Siz) ASC ürünleri (ParentApp 2, ClinicApp 4) + TR fiyatları
 - [ ] (Siz) IAP .p8 anahtarı (Secrets) + App Store Server Notifications V2 adresi
-- [ ] (Karar) ParentApp ödeme yolu: `clinic-billing` mi RevenueCat mi
+- [ ] (Karar) ParentApp ödeme yolu: öneri `clinic-billing` (kendi sistemimiz); kullanıcı onayı bekleniyor
 - [ ] (Siz) iyzico üye işyeri
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
 - [ ] (Claude) `proposed/20261022200000_clinic_billing.sql` uygulama; en son `billing.enforce = true`
@@ -99,7 +100,14 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) TestFlight dış deneme (5–10 aile, en az 1 uzman)
 
 ### 2.2 GameApp
-- [ ] (Karar) Kids Kategorisi (S8)
+- [x] Kids Kategorisi: **hayır, normal oyun** (22 Ekim). Yine de Apple 5.1.4: üçüncü taraf analitik yok, dış bağlantılar ebeveyn kapısı arkasında; mağaza metninde "çocuklar için" yok
+- [ ] (Claude) **Kodsuz başlangıç** (WWDC 2014/602 + Apple 5.1.1(v)): önce pet + ada + ipuçları; "Ebeveynini bağla" sonra, ebeveyn kapısı arkasında; yerel ilerleme bağlanınca hesaba taşınır
+- [ ] (Claude) İlk dokunuşa kadar süre ölçümü (hedef iPhone 11'de < 10 sn); pet adı ekranı atlanabilir
+- [ ] (Claude) Çekirdek döngüler `docs/PLAN.md`'de iki cümle
+- [ ] (ortak) Aile aboneliği bitince çocuk cezalandırılmaz kuralı (oyun ve birikimler kalır)
+- [ ] (Claude) İlk 3 ay için 2–3 mevsimlik etkinlik planı (In-App Events)
+- [ ] (Claude) App Preview oynanış videosu (≤ 30 sn, iPhone + iPad)
+- [ ] (Karar) En düşük iOS 15.0 → 17 önerisi
 - [ ] (Claude) Ebeveyn kapısı: ayarlar, dış bağlantı, destek, yasal, bağlama
 - [ ] (Claude) Ödül dükkânı birleştirme, mesaj kutusu, bildirim + push anahtarı, yaş bandı C, avatar fotoğrafı
 - [ ] (Claude) `track_events('child')` (üçüncü taraf yok)
