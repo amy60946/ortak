@@ -160,7 +160,7 @@ Kod biçimi:
 | `family_subscriptions.source` | `store` (varsayılan) / `web` / `manual` | Ödeme kaynağı. |
 | `completions.decline_reason` | `hard` / `no_time` / `did_not_want` / `other` / null | "Yapamam" nedeni. |
 | `goal_ratings.rating` | −2, −1, 0, +1, +2 | GAS haftalık puanı. |
-| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Zor anın şiddeti. |
+| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Gözlem notundaki olayın şiddeti. |
 | Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title` | Uzman kaydı (aile oluşturulmaz). |
 
 ### 7.1 Klinikle ilgili tutarsızlıklar
@@ -184,7 +184,7 @@ Kod biçimi:
 
 ---
 
-## 9. Kategori, gün bölümü, zor an (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
+## 9. Kategori, gün bölümü, gözlem notu (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
