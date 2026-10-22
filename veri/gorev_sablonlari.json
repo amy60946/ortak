@@ -208,35 +208,6 @@
    "sort": 7
   },
   {
-   "key": "jt_treat_peers_respectfully_no_bossing_th",
-   "title": "Arkadaşlarına saygılı davran (patronluk taslamadan)",
-   "emoji": "🤝",
-   "category": "home",
-   "categories": [
-    "home"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Treat peers respectfully (no bossing them around)",
-   "joon_categories": [
-    "Ruh Sağlığı"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 8
-  },
-  {
    "key": "jt_put_shoes_away",
    "title": "Ayakkabılarını yerine koy",
    "emoji": "👟",
@@ -264,7 +235,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 9
+   "sort": 8
   },
   {
    "key": "jt_do_some_yard_work",
@@ -290,7 +261,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 10
+   "sort": 9
   },
   {
    "key": "jt_help_in_the_garden",
@@ -318,7 +289,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 11
+   "sort": 10
   },
   {
    "key": "jt_rake_the_leaves_in_the_yard",
@@ -346,7 +317,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 12
+   "sort": 11
   },
   {
    "key": "jt_empty_bathroom_trash_bin",
@@ -375,7 +346,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 13
+   "sort": 12
   },
   {
    "key": "jt_hang_up_towels_in_bathroom",
@@ -405,7 +376,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 14
+   "sort": 13
   },
   {
    "key": "jt_clean_bathroom",
@@ -434,7 +405,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 15
+   "sort": 14
   },
   {
    "key": "jt_help_prepare_a_simple_meal",
@@ -466,7 +437,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 16
+   "sort": 15
   },
   {
    "key": "jt_wait_until_others_are_done_talking_bef",
@@ -495,38 +466,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 17
-  },
-  {
-   "key": "jt_practice_greeting_someone_politely",
-   "title": "Birini kibarca selamlamayı çalış",
-   "emoji": "👋",
-   "category": "home",
-   "categories": [
-    "home",
-    "relation"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Practice greeting someone politely",
-   "joon_categories": [
-    "Ruh Sağlığı",
-    "İlişki Kurma"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 18
+   "sort": 16
   },
   {
    "key": "jt_empty_the_dishwasher",
@@ -555,7 +495,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 19
+   "sort": 17
   },
   {
    "key": "jt_load_the_dishwasher",
@@ -584,7 +524,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 20
+   "sort": 18
   },
   {
    "key": "jt_wash_dirty_dishes",
@@ -612,40 +552,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 21
-  },
-  {
-   "key": "jt_wait_quietly_while_parents_are_on_call",
-   "title": "Büyüklerin telefondayken sessizce bekle",
-   "emoji": "🤫",
-   "category": "home",
-   "categories": [
-    "home",
-    "focus",
-    "relation"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Wait quietly while parents are on calls",
-   "joon_categories": [
-    "Odak ve Öz Denetim",
-    "Ruh Sağlığı",
-    "İlişki Kurma"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 22
+   "sort": 19
   },
   {
    "key": "jt_follow_instructions_from_parents_witho",
@@ -671,7 +578,7 @@
    "joon_ages": [
     "13 ve üstü"
    ],
-   "sort": 23
+   "sort": 20
   },
   {
    "key": "jt_wash_windows",
@@ -698,7 +605,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 24
+   "sort": 21
   },
   {
    "key": "jt_help_vacuum",
@@ -727,7 +634,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 25
+   "sort": 22
   },
   {
    "key": "jt_offer_to_help_with_household_chores",
@@ -759,7 +666,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 26
+   "sort": 23
   },
   {
    "key": "jt_give_pet_food_and_water",
@@ -789,7 +696,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 27
+   "sort": 24
   },
   {
    "key": "jt_help_with_home_repairs",
@@ -818,7 +725,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 28
+   "sort": 25
   },
   {
    "key": "jt_unload_the_car_when_home",
@@ -847,7 +754,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 29
+   "sort": 26
   },
   {
    "key": "jt_help_with_general_tidiness_of_house",
@@ -877,7 +784,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 30
+   "sort": 27
   },
   {
    "key": "jt_help_clean_garage",
@@ -906,7 +813,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 31
+   "sort": 28
   },
   {
    "key": "jt_take_out_recycling",
@@ -935,7 +842,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 32
+   "sort": 29
   },
   {
    "key": "jt_sort_recycling_and_trash",
@@ -964,7 +871,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 33
+   "sort": 30
   },
   {
    "key": "jt_help_bring_in_light_groceries",
@@ -994,7 +901,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 34
+   "sort": 31
   },
   {
    "key": "jt_help_with_weekly_house_clean_up",
@@ -1024,7 +931,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 35
+   "sort": 32
   },
   {
    "key": "jt_put_your_plate_bowl_in_the_sink_after",
@@ -1054,7 +961,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 36
+   "sort": 33
   },
   {
    "key": "jt_prepare_the_coffee_maker",
@@ -1082,7 +989,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 37
+   "sort": 34
   },
   {
    "key": "jt_clean_up_from_breakfast",
@@ -1112,7 +1019,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 38
+   "sort": 35
   },
   {
    "key": "jt_help_your_sibling_with_homework",
@@ -1141,7 +1048,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 39
+   "sort": 36
   },
   {
    "key": "jt_take_a_silly_photo_of_yourself",
@@ -1169,7 +1076,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 40
+   "sort": 37
   },
   {
    "key": "jt_mind_own_business_i_e_no_tattling_with",
@@ -1195,7 +1102,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 41
+   "sort": 38
   },
   {
    "key": "jt_put_clothes_in_the_hamper",
@@ -1225,38 +1132,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 42
-  },
-  {
-   "key": "jt_make_eye_contact_in_a_conversation_wit",
-   "title": "Konuşurken söylenmeden göz teması kur",
-   "emoji": "👀",
-   "category": "home",
-   "categories": [
-    "home",
-    "relation"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Make eye contact in a conversation without being reminded",
-   "joon_categories": [
-    "Ruh Sağlığı",
-    "İlişki Kurma"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 43
+   "sort": 39
   },
   {
    "key": "jt_help_with_grocery_shopping",
@@ -1285,7 +1161,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 44
+   "sort": 40
   },
   {
    "key": "jt_help_put_groceries_away",
@@ -1315,7 +1191,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 45
+   "sort": 41
   },
   {
    "key": "jt_help_dust_the_furniture",
@@ -1344,7 +1220,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 46
+   "sort": 42
   },
   {
    "key": "jt_set_the_kitchen_table",
@@ -1374,7 +1250,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 47
+   "sort": 43
   },
   {
    "key": "jt_wipe_down_kitchen_table",
@@ -1404,7 +1280,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 48
+   "sort": 44
   },
   {
    "key": "jt_clean_up_bedroom_toys_clothes_bed",
@@ -1432,7 +1308,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 49
+   "sort": 45
   },
   {
    "key": "jt_organize_your_toys",
@@ -1461,7 +1337,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 50
+   "sort": 46
   },
   {
    "key": "jt_clean_up_after_playing",
@@ -1492,40 +1368,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 51
-  },
-  {
-   "key": "jt_wait_your_turn_in_games",
-   "title": "Oyunlarda sıranı bekle",
-   "emoji": "⏳",
-   "category": "home",
-   "categories": [
-    "home",
-    "focus",
-    "relation"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Wait your turn in games",
-   "joon_categories": [
-    "Odak ve Öz Denetim",
-    "Ruh Sağlığı",
-    "İlişki Kurma"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 52
+   "sort": 47
   },
   {
    "key": "jt_wash_plastic_dishes_with_supervision",
@@ -1553,7 +1396,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 53
+   "sort": 48
   },
   {
    "key": "jt_bring_the_mail_in_from_the_mailbox",
@@ -1581,7 +1424,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 54
+   "sort": 49
   },
   {
    "key": "jt_help_set_the_table",
@@ -1611,7 +1454,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 55
+   "sort": 50
   },
   {
    "key": "jt_help_clear_the_table",
@@ -1641,7 +1484,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 56
+   "sort": 51
   },
   {
    "key": "jt_help_mom_dad_when_asked_without_remind",
@@ -1669,7 +1512,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 57
+   "sort": 52
   },
   {
    "key": "jt_clean_up_toys_without_being_asked",
@@ -1700,7 +1543,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 58
+   "sort": 53
   },
   {
    "key": "jt_put_away_clean_dishes_no_sharp_objects",
@@ -1730,7 +1573,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 59
+   "sort": 54
   },
   {
    "key": "jt_put_away_clean_laundry",
@@ -1759,7 +1602,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 60
+   "sort": 55
   },
   {
    "key": "jt_replace_toilet_paper_in_bathroom",
@@ -1789,7 +1632,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 61
+   "sort": 56
   },
   {
    "key": "jt_change_bed_sheets",
@@ -1817,7 +1660,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 62
+   "sort": 57
   },
   {
    "key": "jt_pick_up_toys_before_bed",
@@ -1846,36 +1689,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 63
-  },
-  {
-   "key": "jt_play_with_a_new_friend",
-   "title": "Yeni bir arkadaşla oyna",
-   "emoji": "🧒",
-   "category": "home",
-   "categories": [
-    "home"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "teamwork",
-   "source_en": "Play with a new friend",
-   "joon_categories": [
-    "Ruh Sağlığı"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 64
+   "sort": 58
   },
   {
    "key": "jt_invent_a_new_handshake",
@@ -1904,7 +1718,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 65
+   "sort": 59
   },
   {
    "key": "jt_sweep_the_floors",
@@ -1932,7 +1746,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 66
+   "sort": 60
   },
   {
    "key": "jt_help_with_starting_laundry",
@@ -1961,7 +1775,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 67
+   "sort": 61
   },
   {
    "key": "jt_help_with_laundry_sort_clothing",
@@ -1991,7 +1805,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 68
+   "sort": 62
   },
   {
    "key": "jt_water_plants",
@@ -2021,7 +1835,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 69
+   "sort": 63
   },
   {
    "key": "jt_take_out_the_trash",
@@ -2049,7 +1863,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 70
+   "sort": 64
   },
   {
    "key": "jt_help_take_out_trash",
@@ -2077,7 +1891,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 71
+   "sort": 65
   },
   {
    "key": "jt_practice_deep_breathing_exercise_for_1",
@@ -2106,38 +1920,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 72
-  },
-  {
-   "key": "jt_run_on_the_spot_for_1_minute",
-   "title": "1 dakika yerinde koş",
-   "emoji": "🏃",
-   "category": "mind",
-   "categories": [
-    "mind",
-    "health"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "stamina",
-   "source_en": "Run on the spot for 1 minute",
-   "joon_categories": [
-    "Sağlık ve Spor",
-    "Ruh Sağlığı"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 73
+   "sort": 66
   },
   {
    "key": "jt_meditate_for_10_minutes",
@@ -2166,7 +1949,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 74
+   "sort": 67
   },
   {
    "key": "jt_meditate_for_15_minutes",
@@ -2192,7 +1975,7 @@
     "6 ve altı",
     "7–9"
    ],
-   "sort": 75
+   "sort": 68
   },
   {
    "key": "jt_dance_for_2_minutes",
@@ -2221,7 +2004,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 76
+   "sort": 69
   },
   {
    "key": "jt_take_5_deep_breaths",
@@ -2250,7 +2033,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 77
+   "sort": 70
   },
   {
    "key": "jt_write_a_note_to_your_parents",
@@ -2279,7 +2062,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 78
+   "sort": 71
   },
   {
    "key": "jt_write_a_note_to_your_parents_about_how",
@@ -2303,7 +2086,7 @@
    "joon_ages": [
     "13 ve üstü"
    ],
-   "sort": 79
+   "sort": 72
   },
   {
    "key": "jt_go_on_a_nature_walk_with_parent_and_co",
@@ -2330,7 +2113,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 80
+   "sort": 73
   },
   {
    "key": "jt_create_a_mood_tracker_and_fill_it_out",
@@ -2358,7 +2141,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 81
+   "sort": 74
   },
   {
    "key": "jt_draw_a_picture_and_show_it_to_mom_dad",
@@ -2386,7 +2169,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 82
+   "sort": 75
   },
   {
    "key": "jt_write_down_what_you_are_grateful_for_t",
@@ -2412,7 +2195,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 83
+   "sort": 76
   },
   {
    "key": "jt_have_a_positive_attitude_today",
@@ -2441,7 +2224,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 84
+   "sort": 77
   },
   {
    "key": "jt_list_three_good_things_today",
@@ -2472,7 +2255,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 85
+   "sort": 78
   },
   {
    "key": "jt_take_a_5_10_minute_break_to_calm_down",
@@ -2500,7 +2283,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 86
+   "sort": 79
   },
   {
    "key": "jt_talk_about_your_feelings_with_mom_dad",
@@ -2529,7 +2312,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 87
+   "sort": 80
   },
   {
    "key": "jt_write_down_what_you_are_most_scared_of",
@@ -2557,7 +2340,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 88
+   "sort": 81
   },
   {
    "key": "jt_draw_a_map_of_your_house_then_show_mom",
@@ -2582,7 +2365,7 @@
     "6 ve altı",
     "7–9"
    ],
-   "sort": 89
+   "sort": 82
   },
   {
    "key": "jt_start_a_diary",
@@ -2610,7 +2393,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 90
+   "sort": 83
   },
   {
    "key": "jt_journal_about_your_day",
@@ -2637,7 +2420,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 91
+   "sort": 84
   },
   {
    "key": "jt_paint_something_cool",
@@ -2665,7 +2448,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 92
+   "sort": 85
   },
   {
    "key": "jt_find_something_to_do_and_do_it",
@@ -2698,7 +2481,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 93
+   "sort": 86
   },
   {
    "key": "jt_start_a_gratitude_journal",
@@ -2726,7 +2509,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 94
+   "sort": 87
   },
   {
    "key": "jt_add_a_new_entry_to_your_gratitude_jour",
@@ -2754,7 +2537,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 95
+   "sort": 88
   },
   {
    "key": "jt_have_a_dance_party_in_your_room",
@@ -2782,7 +2565,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 96
+   "sort": 89
   },
   {
    "key": "jt_stretch_for_5_10_minutes_in_the_mornin",
@@ -2811,7 +2594,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 97
+   "sort": 90
   },
   {
    "key": "jt_write_down_what_makes_you_happy",
@@ -2839,7 +2622,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 98
+   "sort": 91
   },
   {
    "key": "jt_grab_some_chalk_and_decorate_the_sidew",
@@ -2866,7 +2649,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 99
+   "sort": 92
   },
   {
    "key": "jt_create_a_new_dance_move",
@@ -2895,7 +2678,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 100
+   "sort": 93
   },
   {
    "key": "jt_take_five_deep_breaths_when_upset",
@@ -2924,7 +2707,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 101
+   "sort": 94
   },
   {
    "key": "jt_find_5_things_starting_with_b",
@@ -2951,7 +2734,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 102
+   "sort": 95
   },
   {
    "key": "jt_read_a_book_for_10_minutes",
@@ -2981,7 +2764,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 103
+   "sort": 96
   },
   {
    "key": "jt_do_a_100_piece_puzzle",
@@ -3008,7 +2791,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 104
+   "sort": 97
   },
   {
    "key": "jt_practice_an_instrument_for_15_minutes",
@@ -3038,7 +2821,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 105
+   "sort": 98
   },
   {
    "key": "jt_read_on_your_own_for_15_minutes",
@@ -3067,7 +2850,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 106
+   "sort": 99
   },
   {
    "key": "jt_read_for_20_minutes",
@@ -3096,7 +2879,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 107
+   "sort": 100
   },
   {
    "key": "jt_tell_your_parent_a_story_about_today",
@@ -3125,7 +2908,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 108
+   "sort": 101
   },
   {
    "key": "jt_write_a_joke_for_dinner",
@@ -3153,7 +2936,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 109
+   "sort": 102
   },
   {
    "key": "jt_practice_saying_the_alphabet",
@@ -3181,7 +2964,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 110
+   "sort": 103
   },
   {
    "key": "jt_practice_writing_the_alphabet",
@@ -3208,7 +2991,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 111
+   "sort": 104
   },
   {
    "key": "jt_read_a_whole_book",
@@ -3237,7 +3020,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 112
+   "sort": 105
   },
   {
    "key": "jt_do_a_math_problem_set",
@@ -3266,7 +3049,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 113
+   "sort": 106
   },
   {
    "key": "jt_do_a_homework_assignment",
@@ -3295,7 +3078,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 114
+   "sort": 107
   },
   {
    "key": "jt_teach_someone_something_new",
@@ -3320,7 +3103,7 @@
    "joon_ages": [
     "13 ve üstü"
    ],
-   "sort": 115
+   "sort": 108
   },
   {
    "key": "jt_learn_how_to_ride_a_bicycle_with_helme",
@@ -3348,7 +3131,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 116
+   "sort": 109
   },
   {
    "key": "jt_learn_how_to_identify_plants",
@@ -3374,7 +3157,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 117
+   "sort": 110
   },
   {
    "key": "jt_complete_all_your_homework_assignments",
@@ -3403,7 +3186,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 118
+   "sort": 111
   },
   {
    "key": "jt_learn_how_to_use_a_digital_map_for_nav",
@@ -3428,7 +3211,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 119
+   "sort": 112
   },
   {
    "key": "jt_memorize_your_home_address",
@@ -3457,7 +3240,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 120
+   "sort": 113
   },
   {
    "key": "jt_learn_how_to_tie_different_knots",
@@ -3486,7 +3269,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 121
+   "sort": 114
   },
   {
    "key": "jt_start_next_week_s_homework",
@@ -3514,7 +3297,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 122
+   "sort": 115
   },
   {
    "key": "jt_draw_or_write_about_your_day",
@@ -3543,7 +3326,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 123
+   "sort": 116
   },
   {
    "key": "jt_learn_how_to_treat_a_cut_or_wound",
@@ -3572,7 +3355,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 124
+   "sort": 117
   },
   {
    "key": "jt_learn_how_to_tie_a_tie",
@@ -3600,7 +3383,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 125
+   "sort": 118
   },
   {
    "key": "jt_create_a_tiny_art_gallery",
@@ -3629,7 +3412,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 126
+   "sort": 119
   },
   {
    "key": "jt_go_to_school",
@@ -3659,7 +3442,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 127
+   "sort": 120
   },
   {
    "key": "jt_learn_to_play_chess",
@@ -3688,7 +3471,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 128
+   "sort": 121
   },
   {
    "key": "jt_practice_writing_down_numbers",
@@ -3714,7 +3497,7 @@
     "6 ve altı",
     "13 ve üstü"
    ],
-   "sort": 129
+   "sort": 122
   },
   {
    "key": "jt_learn_how_to_do_basic_first_aid",
@@ -3742,7 +3525,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 130
+   "sort": 123
   },
   {
    "key": "jt_prepare_for_an_upcoming_quiz_or_test",
@@ -3771,7 +3554,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 131
+   "sort": 124
   },
   {
    "key": "jt_write_down_what_schoolwork_you_need_to",
@@ -3800,7 +3583,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 132
+   "sort": 125
   },
   {
    "key": "jt_tell_mom_or_dad_3_interesting_facts_be",
@@ -3830,7 +3613,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 133
+   "sort": 126
   },
   {
    "key": "jt_read_before_bed",
@@ -3860,7 +3643,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 134
+   "sort": 127
   },
   {
    "key": "jt_help_measure_ingredients_for_cooking",
@@ -3888,7 +3671,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 135
+   "sort": 128
   },
   {
    "key": "jt_start_learning_a_new_language",
@@ -3914,7 +3697,7 @@
    "joon_ages": [
     "13 ve üstü"
    ],
-   "sort": 136
+   "sort": 129
   },
   {
    "key": "jt_start_learning_a_new_instrument",
@@ -3943,7 +3726,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 137
+   "sort": 130
   },
   {
    "key": "jt_learn_a_new_game",
@@ -3973,7 +3756,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 138
+   "sort": 131
   },
   {
    "key": "jt_design_a_new_sandwich",
@@ -4001,7 +3784,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 139
+   "sort": 132
   },
   {
    "key": "jt_learn_how_to_identify_poisonous_plants",
@@ -4030,7 +3813,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 140
+   "sort": 133
   },
   {
    "key": "jt_recite_multiplication_tables",
@@ -4057,7 +3840,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 141
+   "sort": 134
   },
   {
    "key": "jt_complete_your_homework_before_5_00pm",
@@ -4086,7 +3869,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 142
+   "sort": 135
   },
   {
    "key": "jt_share_something_you_learned",
@@ -4115,40 +3898,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 143
-  },
-  {
-   "key": "jt_accept_no_without_arguing",
-   "title": "'Hayır' cevabını tartışmadan kabul et",
-   "emoji": "🙂",
-   "category": "health",
-   "categories": [
-    "health",
-    "focus",
-    "relation"
-   ],
-   "ages": [
-    "K",
-    "A",
-    "B",
-    "C"
-   ],
-   "difficulty": "easy",
-   "coins": 5,
-   "skill": "strength",
-   "source_en": "Accept 'No' without arguing",
-   "joon_categories": [
-    "Odak ve Öz Denetim",
-    "Ruh Sağlığı",
-    "İlişki Kurma"
-   ],
-   "joon_ages": [
-    "6 ve altı",
-    "7–9",
-    "10–12",
-    "13 ve üstü"
-   ],
-   "sort": 144
+   "sort": 136
   },
   {
    "key": "jt_do_a_1_minute_stretch",
@@ -4175,7 +3925,37 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 145
+   "sort": 137
+  },
+  {
+   "key": "jt_run_on_the_spot_for_1_minute",
+   "title": "1 dakika yerinde koş",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "source_en": "Run on the spot for 1 minute",
+   "joon_categories": [
+    "Sağlık ve Spor",
+    "Ruh Sağlığı"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 138
   },
   {
    "key": "jt_do_10_burpees",
@@ -4203,7 +3983,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 146
+   "sort": 139
   },
   {
    "key": "jt_stretch_for_10_minutes",
@@ -4232,7 +4012,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 147
+   "sort": 140
   },
   {
    "key": "jt_do_10_jumping_jacks",
@@ -4262,7 +4042,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 148
+   "sort": 141
   },
   {
    "key": "jt_do_20_sit_ups",
@@ -4289,7 +4069,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 149
+   "sort": 142
   },
   {
    "key": "jt_do_20_push_ups",
@@ -4317,7 +4097,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 150
+   "sort": 143
   },
   {
    "key": "jt_run_2_miles_and_time_yourself",
@@ -4345,7 +4125,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 151
+   "sort": 144
   },
   {
    "key": "jt_do_3_push_ups",
@@ -4372,7 +4152,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 152
+   "sort": 145
   },
   {
    "key": "jt_exercise_for_30_minutes",
@@ -4399,7 +4179,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 153
+   "sort": 146
   },
   {
    "key": "jt_practice_a_sport_for_30_minutes",
@@ -4425,7 +4205,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 154
+   "sort": 147
   },
   {
    "key": "jt_eat_5_different_fruits_and_veggies",
@@ -4455,7 +4235,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 155
+   "sort": 148
   },
   {
    "key": "jt_do_5_sit_ups",
@@ -4485,7 +4265,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 156
+   "sort": 149
   },
   {
    "key": "jt_do_5_push_ups",
@@ -4514,7 +4294,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 157
+   "sort": 150
   },
   {
    "key": "jt_go_on_a_hike_with_mom_or_dad",
@@ -4543,7 +4323,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 158
+   "sort": 151
   },
   {
    "key": "jt_go_on_a_run_with_mom_dad",
@@ -4572,7 +4352,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 159
+   "sort": 152
   },
   {
    "key": "jt_take_dog_for_walk_with_mom_dad",
@@ -4598,7 +4378,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 160
+   "sort": 153
   },
   {
    "key": "jt_play_catch_with_mom_or_dad",
@@ -4627,7 +4407,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 161
+   "sort": 154
   },
   {
    "key": "jt_have_a_bath_with_help_from_mom_or_dad",
@@ -4655,7 +4435,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 162
+   "sort": 155
   },
   {
    "key": "jt_put_shoes_on",
@@ -4684,7 +4464,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 163
+   "sort": 156
   },
   {
    "key": "jt_eat_a_low_sugar_meal",
@@ -4714,7 +4494,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 164
+   "sort": 157
   },
   {
    "key": "jt_go_on_a_bike_ride",
@@ -4744,7 +4524,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 165
+   "sort": 158
   },
   {
    "key": "jt_drink_plenty_of_water",
@@ -4774,7 +4554,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 166
+   "sort": 159
   },
   {
    "key": "jt_put_on_deodorant",
@@ -4803,7 +4583,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 167
+   "sort": 160
   },
   {
    "key": "jt_floss_your_teeth",
@@ -4832,7 +4612,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 168
+   "sort": 161
   },
   {
    "key": "jt_play_outside",
@@ -4862,7 +4642,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 169
+   "sort": 162
   },
   {
    "key": "jt_be_brave_even_when_worried_about_what",
@@ -4891,7 +4671,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 170
+   "sort": 163
   },
   {
    "key": "jt_drink_8_cups_of_water_a_day",
@@ -4919,7 +4699,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 171
+   "sort": 164
   },
   {
    "key": "jt_eat_3_meals_a_day",
@@ -4949,7 +4729,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 172
+   "sort": 165
   },
   {
    "key": "jt_swim_1_lap",
@@ -4978,7 +4758,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 173
+   "sort": 166
   },
   {
    "key": "jt_eat_breakfast",
@@ -5008,7 +4788,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 174
+   "sort": 167
   },
   {
    "key": "jt_take_dog_for_walk",
@@ -5034,7 +4814,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 175
+   "sort": 168
   },
   {
    "key": "jt_brush_your_teeth_in_the_morning",
@@ -5066,7 +4846,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 176
+   "sort": 169
   },
   {
    "key": "jt_brush_teeth_in_the_morning_and_at_nigh",
@@ -5096,7 +4876,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 177
+   "sort": 170
   },
   {
    "key": "jt_brush_your_hair",
@@ -5127,7 +4907,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 178
+   "sort": 171
   },
   {
    "key": "jt_eat_a_healthy_dinner",
@@ -5157,7 +4937,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 179
+   "sort": 172
   },
   {
    "key": "jt_eat_a_healthy_lunch",
@@ -5187,7 +4967,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 180
+   "sort": 173
   },
   {
    "key": "jt_eat_your_vegetables",
@@ -5217,7 +4997,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 181
+   "sort": 174
   },
   {
    "key": "jt_take_vitamins_or_medicine",
@@ -5247,7 +5027,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 182
+   "sort": 175
   },
   {
    "key": "jt_brush_your_teeth_before_bed",
@@ -5279,7 +5059,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 183
+   "sort": 176
   },
   {
    "key": "jt_wash_hands_before_eating",
@@ -5309,7 +5089,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 184
+   "sort": 177
   },
   {
    "key": "jt_eat_meal_without_complaining",
@@ -5338,7 +5118,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 185
+   "sort": 178
   },
   {
    "key": "jt_learn_a_new_sport",
@@ -5367,7 +5147,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 186
+   "sort": 179
   },
   {
    "key": "jt_practice_swim_strokes",
@@ -5396,7 +5176,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 187
+   "sort": 180
   },
   {
    "key": "jt_learn_how_to_swim",
@@ -5426,7 +5206,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 188
+   "sort": 181
   },
   {
    "key": "jt_wash_your_face",
@@ -5457,7 +5237,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 189
+   "sort": 182
   },
   {
    "key": "jt_practice_jumping_rope_with_supervision",
@@ -5486,7 +5266,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 190
+   "sort": 183
   },
   {
    "key": "jt_try_a_fun_activity_that_you_don_t_want",
@@ -5515,16 +5295,16 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 191
+   "sort": 184
   },
   {
-   "key": "jt_use_indoor_voice_when_indoors",
-   "title": "İçeride alçak sesle konuş",
-   "emoji": "🔉",
-   "category": "health",
+   "key": "jt_accept_no_without_arguing",
+   "title": "'Hayır' cevabını tartışmadan kabul et",
+   "emoji": "🙂",
+   "category": "focus",
    "categories": [
-    "health",
-    "focus"
+    "focus",
+    "relation"
    ],
    "ages": [
     "K",
@@ -5534,11 +5314,12 @@
    ],
    "difficulty": "easy",
    "coins": 5,
-   "skill": "strength",
-   "source_en": "Use indoor voice when indoors",
+   "skill": "focus",
+   "source_en": "Accept 'No' without arguing",
    "joon_categories": [
     "Odak ve Öz Denetim",
-    "Ruh Sağlığı"
+    "Ruh Sağlığı",
+    "İlişki Kurma"
    ],
    "joon_ages": [
     "6 ve altı",
@@ -5546,7 +5327,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 192
+   "sort": 185
   },
   {
    "key": "jt_get_dressed_for_the_day_in_under_5_min",
@@ -5575,7 +5356,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 193
+   "sort": 186
   },
   {
    "key": "jt_write_a_story_using_6_words",
@@ -5601,7 +5382,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 194
+   "sort": 187
   },
   {
    "key": "jt_write_your_name_fancy",
@@ -5628,7 +5409,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 195
+   "sort": 188
   },
   {
    "key": "jt_prepare_a_meal_for_the_family",
@@ -5656,7 +5437,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 196
+   "sort": 189
   },
   {
    "key": "jt_do_your_bedtime_routine",
@@ -5686,7 +5467,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 197
+   "sort": 190
   },
   {
    "key": "jt_wake_up_with_alarm_clock",
@@ -5715,7 +5496,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 198
+   "sort": 191
   },
   {
    "key": "jt_practice_tying_your_shoes",
@@ -5743,7 +5524,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 199
+   "sort": 192
   },
   {
    "key": "jt_draw_a_family_member_and_give_it_to_th",
@@ -5771,7 +5552,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 200
+   "sort": 193
   },
   {
    "key": "jt_write_out_a_business_plan_for_an_idea",
@@ -5798,7 +5579,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 201
+   "sort": 194
   },
   {
    "key": "jt_complete_a_task_without_needing_parent",
@@ -5826,7 +5607,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 202
+   "sort": 195
   },
   {
    "key": "jt_complete_a_puzzle_without_giving_up",
@@ -5858,7 +5639,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 203
+   "sort": 196
   },
   {
    "key": "jt_pick_an_item_you_want_to_start_saving",
@@ -5887,7 +5668,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 204
+   "sort": 197
   },
   {
    "key": "jt_write_out_5_goals_for_the_month_and_sh",
@@ -5916,7 +5697,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 205
+   "sort": 198
   },
   {
    "key": "jt_tell_mom_dad_what_you_want_to_do_today",
@@ -5946,7 +5727,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 206
+   "sort": 199
   },
   {
    "key": "jt_stay_in_bed_all_night",
@@ -5974,7 +5755,39 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 207
+   "sort": 200
+  },
+  {
+   "key": "jt_wait_quietly_while_parents_are_on_call",
+   "title": "Büyüklerin telefondayken sessizce bekle",
+   "emoji": "🤫",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "source_en": "Wait quietly while parents are on calls",
+   "joon_categories": [
+    "Odak ve Öz Denetim",
+    "Ruh Sağlığı",
+    "İlişki Kurma"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 201
   },
   {
    "key": "jt_write_about_what_you_want_to_be_when_y",
@@ -6003,7 +5816,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 208
+   "sort": 202
   },
   {
    "key": "jt_draw_what_you_want_to_be_when_you_grow",
@@ -6030,7 +5843,7 @@
     "7–9",
     "10–12"
    ],
-   "sort": 209
+   "sort": 203
   },
   {
    "key": "jt_fix_something_broken_around_the_house",
@@ -6057,7 +5870,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 210
+   "sort": 204
   },
   {
    "key": "jt_pick_up_your_belongings",
@@ -6087,7 +5900,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 211
+   "sort": 205
   },
   {
    "key": "jt_finish_all_quests_for_the_day",
@@ -6117,7 +5930,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 212
+   "sort": 206
   },
   {
    "key": "jt_plan_out_your_day",
@@ -6146,7 +5959,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 213
+   "sort": 207
   },
   {
    "key": "jt_list_3_weekend_wishes",
@@ -6175,7 +5988,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 214
+   "sort": 208
   },
   {
    "key": "jt_create_a_weekly_study_schedule",
@@ -6202,7 +6015,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 215
+   "sort": 209
   },
   {
    "key": "jt_set_your_goals_for_the_week",
@@ -6230,7 +6043,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 216
+   "sort": 210
   },
   {
    "key": "jt_make_a_plan_for_your_week",
@@ -6259,7 +6072,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 217
+   "sort": 211
   },
   {
    "key": "jt_create_a_little_spending_budget_for_al",
@@ -6287,7 +6100,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 218
+   "sort": 212
   },
   {
    "key": "jt_tidy_your_room_when_you_wake_up",
@@ -6317,7 +6130,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 219
+   "sort": 213
   },
   {
    "key": "jt_try_to_dress_yourself",
@@ -6345,7 +6158,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 220
+   "sort": 214
   },
   {
    "key": "jt_do_your_own_laundry",
@@ -6373,7 +6186,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 221
+   "sort": 215
   },
   {
    "key": "jt_prepare_a_snack",
@@ -6402,7 +6215,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 222
+   "sort": 216
   },
   {
    "key": "jt_start_a_piggy_bank",
@@ -6430,7 +6243,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 223
+   "sort": 217
   },
   {
    "key": "jt_add_a_little_bit_of_money_to_your_pigg",
@@ -6457,7 +6270,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 224
+   "sort": 218
   },
   {
    "key": "jt_create_a_paper_airplane",
@@ -6486,7 +6299,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 225
+   "sort": 219
   },
   {
    "key": "jt_make_a_grocery_list",
@@ -6515,7 +6328,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 226
+   "sort": 220
   },
   {
    "key": "jt_go_to_sleep_without_a_fuss",
@@ -6543,7 +6356,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 227
+   "sort": 221
   },
   {
    "key": "jt_clean_your_room_extra_well",
@@ -6571,7 +6384,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 228
+   "sort": 222
   },
   {
    "key": "jt_open_your_bedroom_blinds",
@@ -6601,7 +6414,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 229
+   "sort": 223
   },
   {
    "key": "jt_help_prepare_school_lunch",
@@ -6630,7 +6443,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 230
+   "sort": 224
   },
   {
    "key": "jt_make_your_own_school_lunch",
@@ -6658,7 +6471,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 231
+   "sort": 225
   },
   {
    "key": "jt_organize_your_backpack",
@@ -6685,7 +6498,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 232
+   "sort": 226
   },
   {
    "key": "jt_pack_your_school_bag",
@@ -6717,7 +6530,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 233
+   "sort": 227
   },
   {
    "key": "jt_get_dressed_for_school",
@@ -6747,7 +6560,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 234
+   "sort": 228
   },
   {
    "key": "jt_complete_all_your_quests_first_before",
@@ -6779,7 +6592,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 235
+   "sort": 229
   },
   {
    "key": "jt_put_pajamas_on_for_bed_by_yourself",
@@ -6806,7 +6619,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 236
+   "sort": 230
   },
   {
    "key": "jt_go_to_bed_before_9pm",
@@ -6835,7 +6648,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 237
+   "sort": 231
   },
   {
    "key": "jt_ready_out_of_the_house_by_8am",
@@ -6864,7 +6677,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 238
+   "sort": 232
   },
   {
    "key": "jt_get_out_of_bed_at_6_45am_by_yourself",
@@ -6893,7 +6706,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 239
+   "sort": 233
   },
   {
    "key": "jt_do_your_morning_routine",
@@ -6923,7 +6736,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 240
+   "sort": 234
   },
   {
    "key": "jt_morning_routine_checklist",
@@ -6952,7 +6765,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 241
+   "sort": 235
   },
   {
    "key": "jt_start_homework_without_being_reminded",
@@ -6980,7 +6793,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 242
+   "sort": 236
   },
   {
    "key": "jt_turn_off_video_game_console_when_time",
@@ -7011,7 +6824,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 243
+   "sort": 237
   },
   {
    "key": "jt_set_alarm_for_tomorrow_morning",
@@ -7040,7 +6853,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 244
+   "sort": 238
   },
   {
    "key": "jt_plan_out_tomorrow",
@@ -7069,7 +6882,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 245
+   "sort": 239
   },
   {
    "key": "jt_pick_out_tomorrow_s_clothes",
@@ -7099,7 +6912,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 246
+   "sort": 240
   },
   {
    "key": "jt_make_your_bed",
@@ -7129,7 +6942,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 247
+   "sort": 241
   },
   {
    "key": "jt_put_away_electronic_devices_20_minutes",
@@ -7159,7 +6972,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 248
+   "sort": 242
   },
   {
    "key": "jt_get_ready_for_bed",
@@ -7189,7 +7002,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 249
+   "sort": 243
   },
   {
    "key": "jt_organize_your_workspace",
@@ -7216,7 +7029,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 250
+   "sort": 244
   },
   {
    "key": "jt_prepare_all_homework_supplies_before_s",
@@ -7244,7 +7057,37 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 251
+   "sort": 245
+  },
+  {
+   "key": "jt_use_indoor_voice_when_indoors",
+   "title": "İçeride alçak sesle konuş",
+   "emoji": "🔉",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "source_en": "Use indoor voice when indoors",
+   "joon_categories": [
+    "Odak ve Öz Denetim",
+    "Ruh Sağlığı"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 246
   },
   {
    "key": "jt_give_3_compliments",
@@ -7272,7 +7115,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 252
+   "sort": 247
   },
   {
    "key": "jt_have_a_family_movie_night",
@@ -7301,7 +7144,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 253
+   "sort": 248
   },
   {
    "key": "jt_plan_a_fun_weekend_activity_for_your_f",
@@ -7330,7 +7173,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 254
+   "sort": 249
   },
   {
    "key": "jt_write_3_things_you_love_about_your_fam",
@@ -7358,7 +7201,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 255
+   "sort": 250
   },
   {
    "key": "jt_schedule_a_hangout_with_a_friend_that",
@@ -7384,7 +7227,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 256
+   "sort": 251
   },
   {
    "key": "jt_watch_a_movie_with_family",
@@ -7414,7 +7257,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 257
+   "sort": 252
   },
   {
    "key": "jt_go_on_a_day_trip_with_your_family",
@@ -7442,7 +7285,7 @@
     "6 ve altı",
     "13 ve üstü"
    ],
-   "sort": 258
+   "sort": 253
   },
   {
    "key": "jt_play_a_card_game_with_your_family",
@@ -7472,7 +7315,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 259
+   "sort": 254
   },
   {
    "key": "jt_play_a_board_game_with_family",
@@ -7502,7 +7345,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 260
+   "sort": 255
   },
   {
    "key": "jt_go_on_a_walk_with_family",
@@ -7532,7 +7375,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 261
+   "sort": 256
   },
   {
    "key": "jt_read_a_short_book_with_mom_or_dad",
@@ -7560,7 +7403,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 262
+   "sort": 257
   },
   {
    "key": "jt_practice_good_manners_with_mom_or_dad",
@@ -7589,7 +7432,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 263
+   "sort": 258
   },
   {
    "key": "jt_go_to_the_park_with_mom_or_dad",
@@ -7617,7 +7460,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 264
+   "sort": 259
   },
   {
    "key": "jt_snuggle_with_mom_or_dad",
@@ -7646,7 +7489,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 265
+   "sort": 260
   },
   {
    "key": "jt_ask_about_parent_s_day",
@@ -7675,7 +7518,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 266
+   "sort": 261
   },
   {
    "key": "jt_give_mom_or_dad_a_hug",
@@ -7705,7 +7548,36 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 267
+   "sort": 262
+  },
+  {
+   "key": "jt_treat_peers_respectfully_no_bossing_th",
+   "title": "Arkadaşlarına saygılı davran (patronluk taslamadan)",
+   "emoji": "🤝",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "source_en": "Treat peers respectfully (no bossing them around)",
+   "joon_categories": [
+    "Ruh Sağlığı"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 263
   },
   {
    "key": "jt_daily_check_in_with_parent_s_about_fri",
@@ -7735,7 +7607,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 268
+   "sort": 264
   },
   {
    "key": "jt_tell_others_how_you_re_feeling_without",
@@ -7761,7 +7633,7 @@
     "6 ve altı",
     "7–9"
    ],
-   "sort": 269
+   "sort": 265
   },
   {
    "key": "jt_call_facetime_a_family_member_to_check",
@@ -7791,7 +7663,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 270
+   "sort": 266
   },
   {
    "key": "jt_play_a_game_of_chess_with_family_membe",
@@ -7820,7 +7692,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 271
+   "sort": 267
   },
   {
    "key": "jt_write_a_letter_to_a_friend",
@@ -7849,7 +7721,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 272
+   "sort": 268
   },
   {
    "key": "jt_hang_out_with_a_friend",
@@ -7879,7 +7751,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 273
+   "sort": 269
   },
   {
    "key": "jt_write_a_thank_you_note",
@@ -7909,7 +7781,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 274
+   "sort": 270
   },
   {
    "key": "jt_do_something_kind_for_someone",
@@ -7939,7 +7811,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 275
+   "sort": 271
   },
   {
    "key": "jt_tell_someone_good_morning",
@@ -7969,7 +7841,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 276
+   "sort": 272
   },
   {
    "key": "jt_give_a_compliment_to_someone",
@@ -7998,7 +7870,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 277
+   "sort": 273
   },
   {
    "key": "jt_make_a_card_for_someone_telling_them_w",
@@ -8028,7 +7900,37 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 278
+   "sort": 274
+  },
+  {
+   "key": "jt_practice_greeting_someone_politely",
+   "title": "Birini kibarca selamlamayı çalış",
+   "emoji": "👋",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "source_en": "Practice greeting someone politely",
+   "joon_categories": [
+    "Ruh Sağlığı",
+    "İlişki Kurma"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 275
   },
   {
    "key": "jt_leave_a_happy_surprise_note_for_someon",
@@ -8057,7 +7959,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 279
+   "sort": 276
   },
   {
    "key": "jt_make_someone_smile_today",
@@ -8086,7 +7988,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 280
+   "sort": 277
   },
   {
    "key": "jt_absolutely_no_physical_violence_to_sib",
@@ -8115,7 +8017,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 281
+   "sort": 278
   },
   {
    "key": "jt_share_your_favorite_book",
@@ -8144,7 +8046,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 282
+   "sort": 279
   },
   {
    "key": "jt_share_a_fun_memory",
@@ -8173,7 +8075,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 283
+   "sort": 280
   },
   {
    "key": "jt_find_3_things_you_re_proud_of",
@@ -8198,7 +8100,7 @@
    "joon_ages": [
     "13 ve üstü"
    ],
-   "sort": 284
+   "sort": 281
   },
   {
    "key": "jt_share_with_siblings_or_friends",
@@ -8227,7 +8129,7 @@
     "7–9",
     "13 ve üstü"
    ],
-   "sort": 285
+   "sort": 282
   },
   {
    "key": "jt_be_nice_to_your_sibling",
@@ -8257,7 +8159,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 286
+   "sort": 283
   },
   {
    "key": "jt_have_a_outdoor_picnic_with_your_siblin",
@@ -8287,7 +8189,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 287
+   "sort": 284
   },
   {
    "key": "jt_do_a_fun_activity_with_your_sibling",
@@ -8317,7 +8219,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 288
+   "sort": 285
   },
   {
    "key": "jt_dont_fight_with_your_sibling",
@@ -8347,7 +8249,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 289
+   "sort": 286
   },
   {
    "key": "jt_play_a_game_with_your_sibling",
@@ -8377,7 +8279,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 290
+   "sort": 287
   },
   {
    "key": "jt_make_a_silly_monster_face",
@@ -8405,7 +8307,37 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 291
+   "sort": 288
+  },
+  {
+   "key": "jt_make_eye_contact_in_a_conversation_wit",
+   "title": "Konuşurken söylenmeden göz teması kur",
+   "emoji": "👀",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "source_en": "Make eye contact in a conversation without being reminded",
+   "joon_categories": [
+    "Ruh Sağlığı",
+    "İlişki Kurma"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 289
   },
   {
    "key": "jt_babysit_younger_sibling",
@@ -8433,7 +8365,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 292
+   "sort": 290
   },
   {
    "key": "jt_say_please_and_thank_you",
@@ -8463,7 +8395,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 293
+   "sort": 291
   },
   {
    "key": "jt_behave_at_school_all_day",
@@ -8493,7 +8425,39 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 294
+   "sort": 292
+  },
+  {
+   "key": "jt_wait_your_turn_in_games",
+   "title": "Oyunlarda sıranı bekle",
+   "emoji": "⏳",
+   "category": "relation",
+   "categories": [
+    "relation",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "source_en": "Wait your turn in games",
+   "joon_categories": [
+    "Odak ve Öz Denetim",
+    "Ruh Sağlığı",
+    "İlişki Kurma"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 293
   },
   {
    "key": "jt_do_a_random_act_of_kindness",
@@ -8523,7 +8487,7 @@
     "10–12",
     "13 ve üstü"
    ],
-   "sort": 295
+   "sort": 294
   },
   {
    "key": "jt_draw_something_you_re_thankful_for",
@@ -8546,6 +8510,35 @@
     "Ruh Sağlığı"
    ],
    "joon_ages": [
+    "10–12",
+    "13 ve üstü"
+   ],
+   "sort": 295
+  },
+  {
+   "key": "jt_play_with_a_new_friend",
+   "title": "Yeni bir arkadaşla oyna",
+   "emoji": "🧒",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "source_en": "Play with a new friend",
+   "joon_categories": [
+    "Ruh Sağlığı"
+   ],
+   "joon_ages": [
+    "6 ve altı",
+    "7–9",
     "10–12",
     "13 ve üstü"
    ],

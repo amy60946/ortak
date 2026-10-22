@@ -15,12 +15,12 @@
 
 | Kategori (beceri) | Şablon |
 |---|---|
-| Ev İşleri (Takım Çalışması) | 71 |
-| Ruh Sağlığı (Dayanıklılık) | 30 |
+| Ev İşleri (Takım Çalışması) | 65 |
+| Ruh Sağlığı (Dayanıklılık) | 29 |
 | Öğrenme ve Eğitim (Bilgi) | 42 |
-| Sağlık ve Spor (Güç) | 49 |
-| Odak ve Öz Denetim (Odak) | 59 |
-| İlişki Kurma (Nezaket) | 47 |
+| Sağlık ve Spor (Güç) | 48 |
+| Odak ve Öz Denetim (Odak) | 62 |
+| İlişki Kurma (Nezaket) | 52 |
 
 | Yaş grubu | Şablon |
 |---|---|
@@ -40,7 +40,6 @@
 | 🍁 Annen ya da babanla bahçedeki yaprakları topla | KA | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help mom or dad rake the leaves in the yard |
 | 🚗 Araba yıkamaya yardım et | KAB | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help wash car |
 | 🚗 Arabayı yıka | BC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wash car |
-| 🤝 Arkadaşlarına saygılı davran (patronluk taslamadan) | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Treat peers respectfully (no bossing them around) |
 | 👟 Ayakkabılarını yerine koy | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Put shoes away |
 | 🌳 Bahçe işlerine yardım et | BC | Kolay | — | 10–12, 13 ve üstü | Do some yard work |
 | 🌱 Bahçede yardım et | KAB | Orta | — | 6 ve altı, 7–9, 10–12 | Help in the garden |
@@ -50,11 +49,9 @@
 | 🛁 Banyoyu temizle | ABC | Zor | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Clean bathroom |
 | 🥘 Basit bir yemeği hazırlamaya yardım et | KABC | Kolay | İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help prepare a simple meal |
 | ✋ Başkası konuşurken sözünü kesmeden bekle | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wait until others are done talking before talking |
-| 👋 Birini kibarca selamlamayı çalış | KABC | Kolay | İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Practice greeting someone politely |
 | 🍽️ Bulaşık makinesini boşalt | ABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Empty the dishwasher |
 | 🍽️ Bulaşık makinesini doldur | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Load the dishwasher |
 | 🧽 Bulaşıkları yıka | BC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wash dirty dishes |
-| 🤫 Büyüklerin telefondayken sessizce bekle | KABC | Kolay | Odak ve Öz Denetim, İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wait quietly while parents are on calls |
 | 👂 Büyüklerinin söylediğini tartışmadan yap | KABC | Kolay | — | 13 ve üstü | Follow instructions from parents without arguing |
 | 🪟 Camları sil | ABC | Kolay | — | 7–9, 13 ve üstü | Wash windows |
 | 🧹 Elektrik süpürgesi çekmeye yardım et | ABC | Zor | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help vacuum |
@@ -75,7 +72,6 @@
 | 🤳 Kendinin komik bir fotoğrafını çek | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Take a silly photo of yourself |
 | 🤫 Kimseyi şikâyet etmeden kendi işine odaklan | ABC | Kolay | — | 7–9, 13 ve üstü | Mind own business (i.e., no tattling) without being reminded |
 | 🧺 Kirli kıyafetlerini sepete at | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Put clothes in the hamper |
-| 👀 Konuşurken söylenmeden göz teması kur | KABC | Kolay | İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Make eye contact in a conversation without being reminded |
 | 🛒 Market alışverişine yardım et | KABC | Kolay | — | 6 ve altı, 7–9, 13 ve üstü | Help with grocery shopping |
 | 🧃 Market alışverişini yerleştirmeye yardım et | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help put groceries away |
 | 🪶 Mobilyaların tozunu almaya yardım et | KABC | Kolay | — | 6 ve altı, 7–9, 13 ve üstü | Help dust the furniture |
@@ -84,7 +80,6 @@
 | 🧹 Odanı topla (oyuncak, kıyafet, yatak) | ABC | Zor | — | 7–9, 10–12, 13 ve üstü | Clean up bedroom (toys, clothes, bed) |
 | 🧸 Oyuncaklarını düzenle | KAB | Zor | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Organize your toys |
 | 🧸 Oyundan sonra ortalığı topla | KAB | Kolay | Odak ve Öz Denetim | 6 ve altı, 7–9, 10–12, 13 ve üstü | Clean up after playing |
-| ⏳ Oyunlarda sıranı bekle | KABC | Kolay | Odak ve Öz Denetim, İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wait your turn in games |
 | 🧽 Plastik bulaşıkları yıka (bir büyüğünle) | KA | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wash plastic dishes (with supervision) |
 | 📬 Posta kutusundaki mektupları getir | ABC | Kolay | — | 7–9, 10–12, 13 ve üstü | Bring the mail in from the mailbox |
 | 🍴 Sofrayı kurmaya yardım et | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help set the table |
@@ -96,7 +91,6 @@
 | 🧻 Tuvalet kâğıdını değiştir | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Replace toilet paper in bathroom |
 | 🛏️ Yatak çarşafını değiştir | BC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Change bed sheets |
 | 🧸 Yatmadan önce oyuncaklarını topla | KAB | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Pick up toys before bed |
-| 🧒 Yeni bir arkadaşla oyna | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Play with a new friend |
 | ✋ Yeni bir selamlaşma uydur | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Invent a new handshake |
 | 🧹 Yerleri süpür | ABC | Orta | — | 6 ve altı, 7–9, 10–12 | Sweep the floors |
 | 🧺 Çamaşır makinesini çalıştırmaya yardım et | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Help with starting laundry |
@@ -110,7 +104,6 @@
 | Görev | Yaş | Zorluk | Diğer süzgeçler | Joon'da (yaş) | Kaynak (İng.) |
 |---|---|---|---|---|---|
 | 🌬️ 1 dakika derin nefes egzersizi yap | KABC | Zor | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Practice deep breathing exercise for 1 minute |
-| 🏃 1 dakika yerinde koş | KABC | Kolay | Sağlık ve Spor | 6 ve altı, 7–9, 10–12, 13 ve üstü | Run on the spot for 1 minute |
 | 🧘 10 dakika meditasyon yap | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Meditate for 10 minutes |
 | 🧘 15 dakika meditasyon yap | ABC | Kolay | — | 6 ve altı, 7–9 | Meditate for 15 minutes |
 | 🕺 2 dakika dans et | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Dance for 2 minutes |
@@ -191,8 +184,8 @@
 
 | Görev | Yaş | Zorluk | Diğer süzgeçler | Joon'da (yaş) | Kaynak (İng.) |
 |---|---|---|---|---|---|
-| 🙂 'Hayır' cevabını tartışmadan kabul et | KABC | Kolay | Odak ve Öz Denetim, İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Accept 'No' without arguing |
 | 🙆 1 dakika esneme yap | KA | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Do a 1-minute stretch |
+| 🏃 1 dakika yerinde koş | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Run on the spot for 1 minute |
 | 🏋️ 10 burpee yap | BC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Do 10 burpees |
 | 🧘 10 dakika esneme yap | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Stretch for 10 minutes |
 | 🤸 10 zıplama hareketi (jumping jack) yap | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Do 10 jumping jacks |
@@ -239,12 +232,12 @@
 | 🫧 Yüzünü yıka | KABC | Kolay | Odak ve Öz Denetim | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wash your face |
 | 🪢 İp atlamayı çalış (bir büyüğünle) | KAB | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Practice jumping rope (with supervision) |
 | 🎢 İstemediğin eğlenceli bir etkinliği dene | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Try a fun activity that you don't want to do |
-| 🔉 İçeride alçak sesle konuş | KABC | Kolay | Odak ve Öz Denetim | 6 ve altı, 7–9, 10–12, 13 ve üstü | Use indoor voice when indoors |
 
 ## Odak ve Öz Denetim → Odak
 
 | Görev | Yaş | Zorluk | Diğer süzgeçler | Joon'da (yaş) | Kaynak (İng.) |
 |---|---|---|---|---|---|
+| 🙂 'Hayır' cevabını tartışmadan kabul et | KABC | Kolay | İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Accept 'No' without arguing |
 | ⏱️ 5 dakikadan kısa sürede giyin | ABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Get dressed for the day in under 5 minutes |
 | 📜 6 kelimelik bir hikâye yaz | ABC | Kolay | — | 7–9, 13 ve üstü | Write a story using 6 words |
 | ✒️ Adını süslü harflerle yaz | KA | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Write your name fancy |
@@ -260,6 +253,7 @@
 | 🎯 Bu ay için 5 hedef yaz ve ailene göster | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Write out 5 goals for the month and show mom or dad |
 | 🗣️ Bugün ne yapmak istediğini ailene anlat | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Tell mom / dad what you want to do today |
 | 🛏️ Bütün gece kendi yatağında uyu | KA | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Stay in bed all night |
+| 🤫 Büyüklerin telefondayken sessizce bekle | KABC | Kolay | İlişki Kurma | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wait quietly while parents are on calls |
 | 🌟 Büyüyünce ne olmak istediğini yaz | ABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Write about what you want to be when you grow up |
 | 🌟 Büyüyünce ne olmak istediğini çiz | KA | Kolay | — | 6 ve altı, 7–9, 10–12 | Draw what you want to be when you grow up |
 | 🔧 Evde bozuk bir şeyi onar (bir büyüğünle) | BC | Orta | — | 7–9, 10–12, 13 ve üstü | Fix something broken around the house |
@@ -304,6 +298,7 @@
 | 🛌 Yatmaya hazırlan | KABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Get ready for bed |
 | 🗂️ Çalışma masanı düzenle | ABC | Orta | — | 7–9, 10–12, 13 ve üstü | Organize your workspace |
 | ✏️ Ödeve başlamadan bütün malzemeni hazırla | ABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Prepare all homework supplies before starting |
+| 🔉 İçeride alçak sesle konuş | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Use indoor voice when indoors |
 
 ## İlişki Kurma → Nezaket
 
@@ -325,6 +320,7 @@
 | 🧸 Annen ya da babanla sarılarak dinlen | KAB | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Snuggle with mom or dad |
 | 💬 Annene ya da babana gününün nasıl geçtiğini sor | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Ask about parent's day |
 | 🤗 Annene ya da babana sarıl | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Give mom or dad a hug |
+| 🤝 Arkadaşlarına saygılı davran (patronluk taslamadan) | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Treat peers respectfully (no bossing them around) |
 | 👫 Arkadaşlarını annen ya da babanla konuş | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Daily check-in with parent(s) about friends |
 | 💬 Bağırmadan nasıl hissettiğini anlat | KAB | Kolay | — | 6 ve altı, 7–9 | Tell others how you're feeling without yelling |
 | 📞 Bir aile büyüğünü arayıp hâlini sor | KABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Call / FaceTime a family member to check in on them |
@@ -336,6 +332,7 @@
 | 🌞 Birine günaydın de! | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Tell someone good morning! |
 | 🌸 Birine iltifat et | KABC | Kolay | — | 6 ve altı, 7–9, 13 ve üstü | Give a compliment to someone |
 | 💌 Birine neden onu sevdiğini anlatan bir kart yap | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Make a card for someone telling them why you appreciate them |
+| 👋 Birini kibarca selamlamayı çalış | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Practice greeting someone politely |
 | 💌 Birini mutlu edecek bir sürpriz not bırak | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Leave a happy surprise note for someone |
 | 😄 Bugün birini gülümset | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Make someone smile today |
 | 🤝 Bugün kardeşine hiç vurma, itme | KAB | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Absolutely no physical violence to sibling today |
@@ -349,10 +346,13 @@
 | 🕊️ Kardeşinle kavga etme | KABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Dont fight with your sibling |
 | 🎮 Kardeşinle oyun oyna | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Play a game with your sibling |
 | 👾 Komik bir canavar yüzü yap | KAB | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Make a silly monster face |
+| 👀 Konuşurken söylenmeden göz teması kur | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Make eye contact in a conversation without being reminded |
 | 👶 Küçük kardeşine göz kulak ol (bir büyüğün yanındayken) | BC | Zor | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Babysit younger sibling |
 | 🙏 Lütfen ve teşekkür ederim de | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Say please and thank you |
 | 🏫 Okulda bütün gün güzel davran | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Behave at school all day |
+| ⏳ Oyunlarda sıranı bekle | KABC | Kolay | Odak ve Öz Denetim | 6 ve altı, 7–9, 10–12, 13 ve üstü | Wait your turn in games |
 | 🎁 Rastgele bir iyilik yap | KABC | Orta | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Do a random act of kindness |
 | 🙏 Teşekkür ettiğin bir şeyi çiz | KAB | Kolay | — | 10–12, 13 ve üstü | Draw something you're thankful for |
+| 🧒 Yeni bir arkadaşla oyna | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Play with a new friend |
 | 😊 İki farklı kişiye güzel bir söz söyleyip onları gülümset | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Say something nice to 2 different people to make them smile |
 | 🤗 İyi arkadaş nasıl olur, ailenle konuş | KABC | Kolay | — | 6 ve altı, 7–9, 10–12, 13 ve üstü | Discuss what makes a good friend with parent(s) |
