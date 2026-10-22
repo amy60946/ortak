@@ -201,6 +201,8 @@ Kod biçimi:
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
 | `saved_templates.category` (ve şablon kategorisi) | `home` / `mind` / `learn` / `health` / `focus` / `relation` (`self` → `health` taşındı) | Ev İşleri / Ruh Sağlığı / Öğrenme ve Eğitim / Sağlık ve Spor / Odak ve Öz Denetim / İlişki Kurma |
+| Kategori → beceri (`tasks.skill`, 23 Ekim 2026) | `home`→`teamwork`, `mind`→`stamina`, `learn`→`knowledge`, `health`→`strength`, `focus`→`focus`, `relation`→`kindness` | Takım Çalışması / Dayanıklılık / Bilgi / Güç / Odak / Nezaket (`ekonomi.md` 5B) |
+| Şablon yaş grubu | `K` (5 ve altı) / `A` (6–8) / `B` (9–12) / `C` (13 ve üstü) — oyunun yaş grubuyla aynı (§4) | ParentApp süzgeci; bir şablon birden çok grupta olabilir (`gorev_sablonlari.md`) |
 | `tasks.day_part` | `morning` / `noon` / `evening` / `null` | Sabah / Öğlen / Akşam / Herhangi (Anytime) |
 | `abc_events.day_part` | `morning` / `noon` / `evening` / `night` | Sabah / Öğlen / Akşam / Gece |
 | `abc_events.occurred_at` | seçilen gün + gün bölümünün temsil saati: 08:00 / 13:00 / 19:00 / 22:00 (yerel) | — |

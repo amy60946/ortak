@@ -173,21 +173,32 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
 
-## 5B. Beceriler (Ö2; karar 19 Ekim 2026)
+## 5B. Beceriler (Ö2; karar 19 Ekim 2026; **güncellendi 23 Ekim 2026: kategori = beceri**)
 
-Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun ve raporlar aşağıdaki **tek sözlüğe** eşler (`SkillCatalog`); eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+Her görev kategorisi oyundaki **tek bir beceriye** bağlıdır (kullanıcı kararı, 23 Ekim 2026). Görev oluşturulurken
+`tasks.skill` alanına **beceri anahtarı** yazılır ve anahtar görevin kategorisinden gelir. ParentApp görev ekranında ayrı
+beceri seçimi yoktur: kategori seçilince beceri yazılır ("Bu görev Okti'nin Takım Çalışması becerisini geliştirir").
+ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sablonlari.md`.
 
-| Anahtar | Ad (Türkçe) | Eşlenen etiketler (bugünkü ParentApp şablonları dahil) |
-|---|---|---|
-| `focus` | Odak | Odak, Odaklanma |
-| `kindness` | Nezaket | Nezaket, Empati, Minnettarlık |
-| `responsibility` | Sorumluluk | Sorumluluk, Takım Çalışması |
-| `independence` | Bağımsızlık | Bağımsızlık |
-| `calm` | Sakinlik | Sakinlik, Sakinleşme |
-| `self_care` | Öz Bakım | Öz Bakım |
+| Kategori (`category`) | Kategori adı | Beceri anahtarı (`tasks.skill`) | Beceri adı (oyun) | Simge rengi |
+|---|---|---|---|---|
+| `home` | Ev İşleri | `teamwork` | Takım Çalışması | turuncu |
+| `mind` | Ruh Sağlığı | `stamina` | Dayanıklılık | camgöbeği |
+| `learn` | Öğrenme ve Eğitim | `knowledge` | Bilgi | mavi |
+| `health` | Sağlık ve Spor | `strength` | Güç | yeşil |
+| `focus` | Odak ve Öz Denetim | `focus` | Odak | pembe |
+| `relation` | İlişki Kurma | `kindness` | Nezaket | sarı |
 
+- Bir şablon birden çok kategoride listelenebilir (süzgeç etiketi); becerisi şablonun **ana kategorisinden** gelir.
+- **Eski kayıtlar ve serbest etiketler** okuyan uygulamada eşlenir (oyun: `SkillCatalog`):
+  Sorumluluk, Takım Çalışması, Bağımsızlık → `teamwork`; Sakinlik, Sakinleşme, Duygu Farkındalığı → `stamina`;
+  Okuma, Dil, Temel Beceriler, Bilgi → `knowledge`; Öz Bakım, Hareket, Sağlıklı Alışkanlık, Güç → `strength`;
+  Odak, Odaklanma, Öz Denetim, Sabır, Planlama → `focus`; Nezaket, Empati, Minnettarlık, Paylaşma, İletişim, Arkadaşlık → `kindness`.
+  Kategori anahtarının kendisi (`home` …) ve İngilizce adlar (Teamwork, Stamina, Knowledge, Strength, Focus, Kindness) da kabul edilir.
+  Eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+- Oyun kaydındaki eski yıldız anahtarları yeniye taşınır: `responsibility`, `independence` → `teamwork`; `calm` → `stamina`; `self_care` → `strength`.
 - Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
-- Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
+- Raporlar (ParentApp, ClinicApp) beceri dağılımını bu altı anahtarla gösterir; hiçbiri tanı ya da puan değildir.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
