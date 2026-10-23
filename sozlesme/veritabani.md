@@ -234,6 +234,12 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
 
+## 7.1 Tek seferlik veri işleri (öneri, `proposed/20261023050000_age_band_reset_auto.sql`)
+
+| Tablo | Ne | Kim okur/yazar |
+|---|---|---|
+| `one_time_jobs` | `key` (birincil), `done_at`. Tek seferlik veri işinin yapıldığı işareti (ör. `age_band_reset_auto_20261023`: eski yaş grupları Otomatik'e). | Hiçbir uygulama (RLS açık, politika yok; `public`, `anon`, `authenticated` yetkisiz). Yalnız SQL Editor. |
+
 ## 8. ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
 
 Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.

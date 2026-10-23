@@ -97,6 +97,7 @@ Kod biçimi:
 - `children.age_band` **yalnız ebeveynin bilerek seçtiği** gruptur; `null` = **otomatik** (doğum gününden, çocuk büyüdükçe kendiliğinden değişir). ParentApp çocuk eklerken grup yazmaz; düzenleme ekranında "Otomatik (doğum gününden)" + K/A/B/C seçenekleri vardır.
 - Etkin grup her yerde `child_age_band(child) = coalesce(age_band, age_band(birthday))`: `redeem_child_code`, `child_me` ve seviye kilidi (`child_level`) aynı değeri verir. **Oyun grubu her eşitlemede `child_me`'den okur** (girişte dondurmaz).
 - Seviye düşmez: grup büyüyünce aynı XP daha küçük seviyeye denk gelebilir; oyun ulaşılan en yüksek seviyeyi kaydında tutar (`Xp.BestLevel`), sunucu `child_level` bunu korur (aynı XP ile K tablosunun verebileceğinden yüksek olamaz).
+- **Eski kayıtlar Otomatik'e** (kullanıcı kararı, 23 Ekim 2026; öneri `20261023050000_age_band_reset_auto.sql`): daha önce elle ya da eski ParentApp'in kendiliğinden yazdığı gruplar bir kez silinir (`null`); iş `one_time_jobs`'a işaretlenir, yeniden çalıştırılınca sonradan bilerek seçilen grup korunur.
 - **Raporlar ve ayrıntılı analizler** kaydedilmiş gruba bakmaz (değişebilir, geçmişi yok): olay günündeki gerçek yaşı `age_years(doğum_günü, olay_günü)` ile hesaplar; grup gerekirse `age_band(doğum_günü, olay_günü)`.
 - Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`).
 - Tarih: doğum günü takvim günüdür (saat dilimi yok); uygulamalar `YYYY-MM-DD`'yi yerel gün olarak okur, UTC'ye çevirmez.

@@ -101,4 +101,18 @@ select tst.check(public.suggest_age_band('2020-01-01') in ('K', 'A'), 'öneri d�
 update public.children set age_band = 'K' where id = '00000000-0000-0000-0000-00000000c0de';
 select tst.check((select age_band from public.children where id = '00000000-0000-0000-0000-00000000c0de') = 'K', 'kısıt dört grubu kabul etmeye devam eder');
 
+-- tek seferlik "Otomatik"e çevirme (20261023050000): elle kayıtlı grup silinir; dosya yeniden çalışırsa yeni seçim korunur
+delete from public.one_time_jobs where key = 'age_band_reset_auto_20261023';
+update public.children set age_band = 'C' where id = '00000000-0000-0000-0000-00000000c0de';
+\ir ../proposed/20261023050000_age_band_reset_auto.sql
+select tst.check((select age_band from public.children where id = '00000000-0000-0000-0000-00000000c0de') is null, 'elle kayıtlı grup Otomatik''e döndü');
+select tst.check(public.child_age_band('00000000-0000-0000-0000-00000000c0de') = public.age_band((select birthday from public.children where id = '00000000-0000-0000-0000-00000000c0de')), 'grup doğum gününden');
+update public.children set age_band = 'B' where id = '00000000-0000-0000-0000-00000000c0de';
+\ir ../proposed/20261023050000_age_band_reset_auto.sql
+select tst.check((select age_band from public.children where id = '00000000-0000-0000-0000-00000000c0de') = 'B', 'yeniden çalışınca ebeveynin yeni seçimi korunur');
+select tst.check((select relrowsecurity from pg_class where oid = 'public.one_time_jobs'::regclass), 'one_time_jobs RLS açık');
+set role authenticated;
+select tst.fails($$select * from public.one_time_jobs$$, 'uygulama tek seferlik işler tablosunu okuyamaz');
+reset role;
+
 select 'TÜM YAŞ BANDI TESTLERİ GEÇTİ' as sonuc;
