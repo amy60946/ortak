@@ -196,7 +196,7 @@ ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sab
   Odak, Odaklanma, Öz Denetim, Sabır, Planlama → `focus`; Nezaket, Empati, Minnettarlık, Paylaşma, İletişim, Arkadaşlık → `kindness`.
   Kategori anahtarının kendisi (`home` …) ve İngilizce adlar (Teamwork, Stamina, Knowledge, Strength, Focus, Kindness) da kabul edilir.
   Eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
-- **Sunucu tek biçim (öneri `proposed/20261023020000_skill_keys.sql`):** `tasks.skill` ve `clinic_task_suggestions.skill` yazılırken
+- **Sunucu tek biçim (uygulandı 23 Ekim 2026, `migrations/20261023020000_skill_keys.sql`):** `tasks.skill` ve `clinic_task_suggestions.skill` yazılırken
   yukarıdaki eski etiketler `public.skill_key()` ile anahtara çevrilir; uzman önerisinde eski `self` kategorisi `health` olur ve
   öneri kategorisi altı kategoriye açılır. Uygulanmadan önce ParentApp ve ClinicApp anahtarı Türkçe adla göstermelidir.
 - Oyun kaydındaki eski yıldız anahtarları yeniye taşınır: `responsibility`, `independence` → `teamwork`; `calm` → `stamina`; `self_care` → `strength`.

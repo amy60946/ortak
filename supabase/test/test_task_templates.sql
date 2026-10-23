@@ -1,4 +1,4 @@
--- Ev Görevleri şablon kataloğu (migrations/20261023010000_task_templates.sql + proposed/20261023030000_task_templates_clean.sql):
+-- Ev Görevleri şablon kataloğu (migrations/20261023010000_task_templates.sql + migrations/20261023030000_task_templates_clean.sql):
 -- herkes okur, kimse yazamaz; kategori = beceri; sürüm 2 anahtarları, eski anahtarlı kayıtlar yeni anahtara geçer.
 \set ON_ERROR_STOP on
 
@@ -43,7 +43,7 @@ insert into public.task_templates (key, title, emoji, category, categories, age_
 insert into public.saved_templates (family_id, template_key) values
   ('00000000-0000-0000-0000-0000000000f1', 'jt_eski_bir'),
   ('00000000-0000-0000-0000-0000000000f2', 'jt_eski_bir'), ('00000000-0000-0000-0000-0000000000f2', 'gs_home_001');
-\ir ../proposed/20261023030000_task_templates_clean.sql
+\ir ../migrations/20261023030000_task_templates_clean.sql
 select tst.check((select template_key from public.saved_templates where family_id = '00000000-0000-0000-0000-0000000000f1') = 'gs_home_001', 'kayıtlı şablon yeni anahtara geçti');
 select tst.check((select count(*) from public.saved_templates where family_id = '00000000-0000-0000-0000-0000000000f2') = 1, 'iki kopya teke indi');
 select tst.check(not exists (select 1 from public.task_templates where key like 'jt\_%'), 'eski anahtarlı şablon kalmadı');

@@ -1,4 +1,4 @@
--- Beceri anahtarı ve altı kategori (proposed/20261023020000_skill_keys.sql)
+-- Beceri anahtarı ve altı kategori (migrations/20261023020000_skill_keys.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

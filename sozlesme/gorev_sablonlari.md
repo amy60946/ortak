@@ -1,6 +1,6 @@
 # Ev Görevleri şablon kataloğu (23 Ekim 2026)
 
-**298 şablon**, 6 kategori × 4 yaş grubu. Kullanıcının referans kayıtlarından derlendi: görev adları Türkçe yazıldı, kopyalar birleştirildi, Türkiye'ye uyarlandı. Veri: [`veri/gorev_sablonlari.json`](../veri/gorev_sablonlari.json) (sürüm 2); sunucu tablosu: `supabase/migrations/20261023010000_task_templates.sql` (uygulandı 23 Ekim 2026). Sürüm 2 temizliği (anahtarlar `gs_<kategori>_<sıra>`, başka uygulamanın adları ve alanları yok): `supabase/proposed/20261023030000_task_templates_clean.sql`.
+**298 şablon**, 6 kategori × 4 yaş grubu. Kullanıcının referans kayıtlarından derlendi: görev adları Türkçe yazıldı, kopyalar birleştirildi, Türkiye'ye uyarlandı. Veri: [`veri/gorev_sablonlari.json`](../veri/gorev_sablonlari.json) (sürüm 2); sunucu tablosu: `supabase/migrations/20261023010000_task_templates.sql` (uygulandı 23 Ekim 2026). Sürüm 2 temizliği (anahtarlar `gs_<kategori>_<sıra>`, başka uygulamanın adları ve alanları yok): `supabase/migrations/20261023030000_task_templates_clean.sql` (uygulandı 23 Ekim 2026).
 
 ## Kurallar
 
