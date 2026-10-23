@@ -92,19 +92,15 @@ Kod biçimi:
 > Seviye eşikleri gruba göre (`game_level_bands`, oyun `levels.json` `xpToNextByBand`); sunucunun harcama seviye kilidi (`child_level`) çocuğun grubunu kullanır. B tablosu bugünküyle aynı. Eski oyun sürümü `K`'yı A sayar. Aşağıdaki iki bantlı metin (19–21 Ekim) tarihe geçti.
 > **ParentApp penceresi:** çocuk ekleme/düzenleme ekranında dört seçenek (`set_child_age_band` K/A/B/C).
 
-> **Doğrulandı (21 Ekim 2026, kullanıcının SQL Editor sorgusu):** canlıda kısıt `age_band in ('A', 'B')` — **iki bant geçerli**. Üç bantlı `20261019010000_age_bands.sql` daha önce uygulanmış, ardından `20261019110000_age_bands.sql` iki banda indirmiştir (dosya sırası canlıyla aynı).
+**Tek kaynak (23 Ekim 2026; `20261023040000_age_band_single_source.sql`):**
+- Sınırlar yalnız sunucudaki `public.age_band(doğum_günü, gün)` işlevinde: yaş < 6 → `K`, < 9 → `A`, < 13 → `B`, aksi `C`; doğum günü yoksa `A`. Gün verilmezse **Türkiye'nin bugünü** (`Europe/Istanbul`). Uygulamalar bu sınırları kendileri hesaplarsa yalnız gösterim içindir ve aynı kuralı kullanır.
+- `children.age_band` **yalnız ebeveynin bilerek seçtiği** gruptur; `null` = **otomatik** (doğum gününden, çocuk büyüdükçe kendiliğinden değişir). ParentApp çocuk eklerken grup yazmaz; düzenleme ekranında "Otomatik (doğum gününden)" + K/A/B/C seçenekleri vardır.
+- Etkin grup her yerde `child_age_band(child) = coalesce(age_band, age_band(birthday))`: `redeem_child_code`, `child_me` ve seviye kilidi (`child_level`) aynı değeri verir. **Oyun grubu her eşitlemede `child_me`'den okur** (girişte dondurmaz).
+- Seviye düşmez: grup büyüyünce aynı XP daha küçük seviyeye denk gelebilir; oyun ulaşılan en yüksek seviyeyi kaydında tutar (`Xp.BestLevel`), sunucu `child_level` bunu korur (aynı XP ile K tablosunun verebileceğinden yüksek olamaz).
+- **Raporlar ve ayrıntılı analizler** kaydedilmiş gruba bakmaz (değişebilir, geçmişi yok): olay günündeki gerçek yaşı `age_years(doğum_günü, olay_günü)` ile hesaplar; grup gerekirse `age_band(doğum_günü, olay_günü)`.
+- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`).
+- Tarih: doğum günü takvim günüdür (saat dilimi yok); uygulamalar `YYYY-MM-DD`'yi yerel gün olarak okur, UTC'ye çevirmez.
 
-**Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL `supabase/migrations/20261019110000_age_bands.sql` (19 Ekim 2026'da uygulandı).
-
-| Değer | Yaş | ParentApp etiketi (`ageBands.ts`) | SQL `suggest_age_band` |
-|---|---|---|---|
-| `A` | 6–8 | "6–8 yaş" | doğum günü yok **ya da** yaş < 9 |
-| `B` | 9–12 | "9–12 yaş" | yaş ≥ 9 (13+ da B) |
-| `null` | — | — | sunucu yanıtlarında `coalesce(age_band, suggest_age_band(birthday))` ile dolu gelir |
-
-- `C` (eski 13–15) **kaldırıldı**: kısıt `age_band in ('A', 'B')`; var olan `C` kayıtları göçle `B` yapılır; `set_child_age_band` `C`'yi reddeder.
-- ParentApp yalnız A/B yazar ve (eski sürümden kalma) `C` gelirse `B` gösterir.
-- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
 - Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`game-app/docs/PLAN.md` §9).
 

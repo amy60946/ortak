@@ -74,7 +74,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + çocuğun grubunun `game_level_bands` tablosu; ulaşılan en yüksek seviye `Xp.BestLevel` korunur). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -127,13 +127,14 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 
 ### 5.1 Yaş bandına göre ayarlar (`AgeBandProfile.For`)
 
-> 19 Ekim kararı: bantlar A 6–8 / B 9–12; C kaldırıldı (`durumlar.md` 4). A/B ayarlarının yeni yaş aralıklarına göre yeniden ayarlanması oyun penceresinin işidir; değerler değişirse önce burası güncellenir.
+> Dört grup (22 Ekim 2026; `durumlar.md` §4): K ≤5 · A 6–8 · B 9–12 · C 13+. Oyundaki değerler (`AgeBandProfile.For`); değişirse önce burası güncellenir.
 
-| Bant | Günlük XP sınırı | Tema | Ses hep açık | Ses varsayılan | Altyazı varsayılan | Mini oyun zorluğu | Düğme ölçeği |
+| Grup | Günlük XP sınırı | Tema | Ses hep açık | Ses varsayılan | Altyazı varsayılan | Mini oyun zorluğu | Düğme ölçeği |
 |---|---|---|---|---|---|---|---|
+| K | **200** | `rounded_icons` | evet | açık | açık | 0.2 | 1.3 |
 | A | **250** | `rounded_icons` | evet | açık | açık | 0.3 | 1.25 |
 | B | **300** | `balanced` | hayır | açık | açık | 0.6 | 1.0 |
-| ~~C~~ | ~~350~~ | ~~`compact`~~ | | | | ~~0.85~~ | ~~0.9~~ |
+| C | **350** | `compact` | hayır | kapalı | açık | 0.85 | 0.9 |
 
 - Gün, cihazın **yerel** tarihine göre döner.
 - Sınıra **sayılan** kaynaklar: `MiniGame`, `CardGame`, `Fishing`, `Garden`, `DailyQuest`. **Sayılmayan**: `TaskStreak` (gerçek görev serisi), `Achievement` (rozet, keşif, etkinlik, kulübe vb.).

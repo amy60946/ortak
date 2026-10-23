@@ -64,7 +64,7 @@ Notlar:
 
 | Tablo / sütun | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
-| `children.age_band` | Yaş bandı | `'A'` (6–8) / `'B'` (9–12) / null (null ise doğum gününden önerilir). `'C'` 19 Ekim 2026'da kaldırıldı | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
+| `children.age_band` | Ebeveynin seçtiği yaş grubu (isteğe bağlı) | `'K'` (≤5) / `'A'` (6–8) / `'B'` (9–12) / `'C'` (13+) / null = otomatik (doğum gününden, `durumlar.md` §4) | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
 | `completions.parent_note` | Ebeveynin ret/onay notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
 | `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
 | `sun_stone_ledger` | Güneş Taşı defteri (`20261019030000_sun_stones`, uygulandı 19 Ekim). Toplam = `sum(amount)` (en az 0) | `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`adjust`), `ref`; unique (`child_id`, `reason`, `ref`) | yalnız tetikleyici `completions_sun_stone` | P (aile), O (kendi) |
@@ -108,11 +108,13 @@ Notlar:
 | `spend_coins(p_tx text, p_item_id text, p_quantity integer)` | `json {ok, error, balance}` | O | Harcama. Fiyat `game_items`'tan; `p_tx` 8–64 karakter, aynı `p_tx` ikinci kez düşmez (idempotent); `p_quantity` 1–20; bakiye eksiye düşmez. `error` ∈ `null`/`unknown_item`/`not_enough_coins`. Öneri `20261019020000_server_rules`: `min_level > child_level` → `level_locked`. |
 | `game_save_get()` | `jsonb` (yoksa null) | O | Oyun kaydı yedeğini okur. |
 | `game_save_put(p_data jsonb)` | `void` | O | Yedeği yazar (en fazla 262 144 bayt). |
-| `set_child_age_band(p_child_id uuid, p_band text)` | `void` | P | Bandı yazar (`A`/`B`/`C` ya da null). |
+| `set_child_age_band(p_child_id uuid, p_band text)` | `void` | P | Grubu yazar (`K`/`A`/`B`/`C`; null = otomatik). |
 | `review_completion(p_task_id, p_child_id, p_date, p_status, p_note default null)` | `void` | P | Ebeveyn kararı: `approved`/`rejected`/`pending`. Kayıt yoksa oluşturur; `parent_note`, `reviewed_at`, `reviewed_by` yazar. ParentApp onay ve ret için bunu çağırır (19 Ekim kararı). |
 | `unlink_child_device(p_child_id uuid)` | `void` | P | `children.user_id = null`. Oyun bir sonraki kontrolde "bağlantın kapatıldı" der. |
 | `child_balance(p_child_id uuid)` | `integer` | P | Aynı ailedeki çocuğun coin bakiyesi. |
-| `suggest_age_band(p_birthday date)` | `text` | iç (istemciye açık ama kullanılmıyor) | Doğum günü yok → `A`; yaş < 9 → `A`; aksi `B` (C yok; `20261019110000_age_bands.sql`, canlıda doğrulandı 21 Ekim 2026). |
+| `suggest_age_band(p_birthday date)` | `text` | P, iç | `age_band(p_birthday)` ile aynı (eski ad, korunur). |
+| `age_band(p_birthday date, p_on date default null)` | `text` | P, iç | Yaş grubunun tek kaynağı: < 6 `K`, < 9 `A`, < 13 `B`, aksi `C`; doğum günü yok `A`; gün yoksa Türkiye'nin bugünü (`20261023040000`). |
+| `age_years(p_birthday date, p_on date default null)` | `integer` | P, iç | Verilen gündeki gerçek yaş (analiz ve raporlar bunu kullanır). |
 | `child_age_band(uuid)`, `coin_balance(uuid)` | `text` / `integer` | iç | İstemciye kapalı. |
 | `task_occurs_on(t tasks, d date)` | `boolean` | iç | Görev o gün var mı (tek seferlik: başlangıç günü; tekrarlı: günlük / haftanın / ayın günleri; ayda olmayan gün → ayın son günü). |
 | `completions_coin_trigger()` (tetikleyici `completions_coin`) | — | iç | `approved`'a geçişte `+coins` (`reason='task'`), `approved`'dan çıkışta ya da silinişte `-coins` (`reason='task_undo'`). Onayda tutar o andaki `task_assignments.coins`; geri almada o tamamlama için verilmiş net tutar, görev/atama silinmişse geri alma yok (`20261019100000_task_rewards.sql`, uygulandı). Ayrıntı: `ekonomi.md`. |
