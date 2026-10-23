@@ -9,6 +9,8 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
 | Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | bu pencere (ortak) |
 
+Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`. İlk iş: bu dosya + `DURUM.md`.
+
 ## İçerik
 
 | Yol | Ne |
