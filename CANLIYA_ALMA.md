@@ -4,6 +4,8 @@ Ayrıntılı plan, gerekçeler ve öneriler: **Canlıya Alma Planı** belgesi ht
 Bu dosya pencerelerin ortak takip listesidir; bir madde bitince `[x]` yapılır ve `DURUM.md`'ye satır yazılır.
 Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/metin · **Hukuk/MM** = avukat / mali müşavir.
 
+
+> **Durum (23 Ekim 2026): BEKLEMEDE.** Kullanıcı "devam edelim" deyince **1.2 Alan adı** maddesinden sürer (ayrıntı `DURUM.md` → Açık işler → BEKLEMEDE).
 ## 1. Ortak altyapı (bitmeden hiçbir uygulama mağazaya çıkmaz)
 
 ### 1.1 Şirket ve hesaplar
