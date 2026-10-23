@@ -190,10 +190,20 @@ select tst.check((select count from public.admin_kpi_funnel('child', current_dat
 select tst.fails($$select * from public.admin_kpi_funnel('baska', current_date, current_date)$$, 'bilinmeyen huni');
 select tst.fails($$select * from public.admin_kpi_daily(current_date - 400, current_date)$$, 'en çok 1 yıl');
 select tst.fails($$select public.admin_set_kpi_config('{"parent_monthly_try": 99}', 'fiyat')$$, 'izleyici fiyat değiştiremez');
+
+-- uygulama bazında göstergeler (proposed/20261024000000_admin_fixes.sql)
+select tst.check((public.admin_kpi_apps(30) -> 'parent' ->> 'subscribers_monthly')::int = 1, 'ParentApp: aylık abone');
+select tst.check((public.admin_kpi_apps(30) -> 'child' ->> 'linked')::int = 1, 'GameApp: bağlı çocuk');
+select tst.check((public.admin_kpi_apps(30) -> 'child' ->> 'active')::int = 1, 'GameApp: aktif çocuk');
+select tst.check((public.admin_kpi_apps(30) -> 'clinic' ->> 'clinics')::int = 0, 'ClinicApp: klinik sayısı (silindi)');
+select tst.check((public.admin_kpi_apps(30) -> 'total' ->> 'mrr_gross_try')::numeric = 0, 'fiyat yokken toplam gelir 0');
+select tst.check((select count(*) from public.admin_search('example.com')) >= 3, 'e-postayla arama (varchar e-posta)');
+select tst.check((select email from public.admin_search('owner@') limit 1) = 'owner@example.com', 'arama e-postayı döner');
 select tst.as_mfa('00000000-0000-0000-0000-0000000000f1');
 select public.admin_set_kpi_config('{"parent_monthly_try": 100}', 'ParentApp aylık fiyatı');
 select tst.check((public.admin_kpi_summary(30) -> 'revenue' ->> 'mrr_gross_try')::numeric = 100, 'brüt aylık gelir');
 select tst.check((public.admin_kpi_summary(30) -> 'revenue' ->> 'mrr_net_try')::numeric = 84.15, 'net: Apple %15 ve RevenueCat %1 sonrası');
+select tst.check((public.admin_kpi_apps(30) -> 'parent' ->> 'mrr_net_try')::numeric = 84.15, 'ParentApp net gelir');
 reset role;
 
 select 'TÜM ADMİN TESTLERİ GEÇTİ' as sonuc;
