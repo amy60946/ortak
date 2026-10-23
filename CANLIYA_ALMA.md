@@ -145,8 +145,8 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ## 3. Admin paneli (Faz 1 canlıdan önce)
 - [x] (ortak) Sunucu tarafı yazıldı ve testli: `proposed/20261023000000_admin.sql`, `sozlesme/admin.md` (destek/KVKK talep tabloları Faz 2)
 - [x] Supabase'e uygulandı (23 Ekim)
-- [ ] (Siz) İlk owner + iki adımlı doğrulama
-- [ ] (Siz + Claude) Panelin barındırılması
+- [x] İlk owner + iki adımlı doğrulama (23 Ekim)
+- [x] Panel yayında: Cloudflare Workers (alan adı alınınca `admin.` alt alan adı bağlanır)
 - [x] (ortak) `admin_*` fonksiyonları (rol + iki adımlı doğrulama + gerekçe + denetim kaydı)
 - [ ] (Uygulamalar) `app_config` + kişiye istisna okuma (zorunlu güncelleme, bakım, bayraklar)
 - [x] Panel yeri: **ayrı depo `amy60946/admin-panel`** (kullanıcı, 22 Ekim)
