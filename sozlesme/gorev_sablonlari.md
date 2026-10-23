@@ -1,6 +1,6 @@
 # Ev Görevleri şablon kataloğu (23 Ekim 2026)
 
-**298 şablon**, 6 kategori × 4 yaş grubu. Kaynak: kullanıcının paylaştığı Joon "Start with a template" kayıtları (10 video, 19 Ekim 2026); görev adları videolardan okunup Türkçeleştirildi, kopyalar birleştirildi, Türkiye'ye uyarlandı (mil → km, "Joon görevleri" → Ev Görevleri, çay vb.). Veri: [`veri/gorev_sablonlari.json`](../veri/gorev_sablonlari.json); sunucu tablosu önerisi: `supabase/proposed/20261023010000_task_templates.sql`.
+**298 şablon**, 6 kategori × 4 yaş grubu. Kaynak: kullanıcının paylaştığı Joon "Start with a template" kayıtları (10 video, 19 Ekim 2026); görev adları videolardan okunup Türkçeleştirildi, kopyalar birleştirildi, Türkiye'ye uyarlandı (mil → km, "Joon görevleri" → Ev Görevleri, çay vb.). Veri: [`veri/gorev_sablonlari.json`](../veri/gorev_sablonlari.json); sunucu tablosu: `supabase/migrations/20261023010000_task_templates.sql` (uygulandı 23 Ekim 2026, 298 satır).
 
 ## Kurallar
 
