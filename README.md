@@ -12,4 +12,6 @@
 | `clinic-app` | ClinicApp — uzman paneli (web + iPad) | Expo |
 | `admin-panel` | Yönetim paneli (ekip için) | React web |
 
+Takip panosu: GitHub Projects → **Island Game** (beş depo bağlı; `ortak`'ta açılan iş kayıtları panoya kendiliğinden düşer).
+
 Nereden başlanır: [`CLAUDE.md`](CLAUDE.md) (kurallar), [`DURUM.md`](DURUM.md) (son kararlar ve açık işler), [`CANLIYA_ALMA.md`](CANLIYA_ALMA.md) (canlıya alma listesi), [`sozlesme/`](sozlesme/).
