@@ -19,6 +19,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | `sozlesme/durumlar.md` | Durum adları ve sabit değerler (tam yazımlarıyla). |
 | `sozlesme/ekonomi.md` | Coin, XP, seviye, gösterge düşüşü ve fiyatlar. |
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
+| `sozlesme/admin.md` | Admin paneli (roller, işlemler, güvenlik) ve KPI tanımları. |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
 > Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.

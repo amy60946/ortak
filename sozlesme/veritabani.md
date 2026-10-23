@@ -229,7 +229,7 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
 
-## 8. ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
+## 8. ClinicApp üyeliği (`migrations/20261022200000_clinic_billing.sql`, uygulandı 23 Ekim)
 
 Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
 
@@ -250,7 +250,7 @@ Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en 
 | `billing_apply(source, external_id, clinic_id, plan_id, status, period_end, auto_renew, environment, payload)` | yalnız service role | Doğrulanmış ödemeyi yazar; aynı abonelik başka kliniğe bağlanamaz; kliniğin planını en geniş etkin abonelikten yeniden hesaplar (`billing_recompute`). Elle pilot üyelik: `select billing_apply('manual','pilot-1','<klinik>','clinic_yearly','active', now()+interval '90 days', false);` |
 | `clinic_create_invite` | K | Üyelik etkin olmalı; Bireysel pakette ekip daveti yok. |
 
-Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anahtarıyla ayrıca doğrulanır): `apple-verify` (App Store Server API'den işlemi okur; `appAccountToken` = klinik kimliği olmalı), `apple-notify` (App Store Server Notifications V2; içerik değil Apple'dan yeniden okunan durum yazılır), `iyzico-start` / `iyzico-callback` / `iyzico-webhook` / `iyzico-cancel`. Ödemeyi yalnız klinik sahibi alır/yönetir.
+Ödeme yolu (kullanıcı kararı 22 Ekim 2026): **RevenueCat**, klinik sahibi birey olarak öder. Edge Function `billing-webhook` (Verify JWT kapalı; `REVENUECAT_API_KEY` zorunlu) klinik ürünlerini `billing_apply('revenuecat', '<uzman kimliği>:<ürün>', klinik, paket, …)` ile yazar; paket `billing_plans.apple_product_id`'den bulunur. `clinic-billing` (Apple doğrudan + iyzico) ileride kendi sisteme geçiş için depoda durur, yayınlanmaz.
 
 ## 9. Sızma denemesi düzeltmeleri (öneri, `proposed/20261022010000_security_pentest.sql`)
 
@@ -298,7 +298,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `join_family`, `redeem_child_code`, `clinic_invite_preview`, `redeem_clinic_invite(_children)`, `clinic_join_team` | P / O / K | Kod hatasında `reason` (expired/used/not_found) eklendi; durumlar P11 |
 | `family_access()` | P | `{state, full, enforced, trial_started_at, trial_ends_at, days_left, plan, period_end, auto_renew, subscription_status, limits}` |
 | `family_premium(p_family_id)` | P, K | premium / ücretli klinik / deneme sürüyor |
-| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`) |
+| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
 | `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
