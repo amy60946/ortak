@@ -1,4 +1,4 @@
--- İlk ödül talebi bilgisi (proposed/20261024100000_welcome_coins_first_reward.sql).
+-- İlk ödül talebi bilgisi (migrations/20261024100000_welcome_coins_first_reward.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

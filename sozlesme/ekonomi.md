@@ -21,7 +21,7 @@ Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sun
 | İlke | Nerede uygulanıyor |
 |---|---|
 | Coin **yalnızca gerçek görevden**, **yalnızca ebeveyn onayıyla** gelir. Oyun içi etkinlik coin vermez. **Tek istisna:** hoş geldin coini (aşağıda). | Tetikleyici `completions_coin` (SQL); `Wallet` istemcide coin ekleyemez; `StarterKit` coin vermez; bahçe hasadı yiyecek verir, coin değil. |
-| **İstisna — hoş geldin coini** (kullanıcı kararı, 24 Ekim 2026: "ilk aksesuarını alabileceği bir coin … dükkânı kullanma alışkanlığı"): çocuk başına **bir kez** **20 coin**, defter nedeni `welcome`. Oyun **ilk beslemede** ister; ikinci istek yazılmaz. Başka hiçbir oyun içi eylem coin vermez. | `claim_welcome_coins()` (SQL, öneri `proposed/20261024100000_welcome_coins_first_reward.sql`); ayrıntı §2.4. |
+| **İstisna — hoş geldin coini** (kullanıcı kararı, 24 Ekim 2026: "ilk aksesuarını alabileceği bir coin … dükkânı kullanma alışkanlığı"): çocuk başına **bir kez** **20 coin**, defter nedeni `welcome`. Oyun **ilk beslemede** ister; ikinci istek yazılmaz. Başka hiçbir oyun içi eylem coin vermez. | `claim_welcome_coins()` (SQL, öneri `migrations/20261024100000_welcome_coins_first_reward.sql`); ayrıntı §2.4. |
 | Bakiye her zaman **sunucunun** bakiyesidir; çakışmada sunucu kazanır. | `Wallet.ServerCoins`, `ApplyServerSnapshot`; `child_me().balance`. |
 | Fiyatı **sunucu** belirler; istemcideki fiyat yalnız gösterim içindir. | `spend_coins` fiyatı `game_items`'tan okur; `ShopRules` yorumu. |
 | XP yalnız oyun içi etkinliklerden gelir; **coin ile alınamaz**. XP ve seviye yalnız oyunda (cihaz + `game_saves` yedeği) tutulur; sunucuda XP sütunu yoktur. | `XpSystem`, `LevelTable`. |
@@ -62,7 +62,7 @@ Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sun
 - Oyun senkronunda (`SyncCoordinator`): görevler çekilir → `child_me().balance` alınır → `Wallet.ApplyServerSnapshot` artışı "kazanılan coin" olarak kutlar.
 - Senkron sırası: (1) bekleyen görev niyetleri → (2) bekleyen harcamalar → (3) görevler (dün … +7 gün) → (4) bakiye → (5) kayıt yedeği.
 
-### 2.4 Hoş geldin coini (tek istisna; öneri `20261024100000_welcome_coins_first_reward`, uygulanmadı)
+### 2.4 Hoş geldin coini (tek istisna; göç `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026)
 
 | Kural | Değer |
 |---|---|
@@ -96,7 +96,7 @@ Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sun
 ## 4. Dükkân fiyatları (`game_items` = `items.json`)
 
 48 eşya; sunucu (`game_items`) ve oyun verisi (`items.json`) 2026-10-19'da karşılaştırıldı: **fiyat ve seviye birebir aynı**.
-Oyuna 23 Ekim 2026'da 19 komik eşya eklendi (`fancy: true`); sunucuya ekleyen öneri `proposed/20261024110000_fancy_items_catalog.sql` (**uygulanmadı**, E9). Öneri uygulanınca katalog **67 eşya**.
+Oyuna 23 Ekim 2026'da 19 komik eşya eklendi (`fancy: true`); sunucuya ekleyen öneri `migrations/20261024110000_fancy_items_catalog.sql` (**uygulandı 24 Ekim 2026**, E9). Öneri uygulanınca katalog **67 eşya**.
 Etkiler (gösterge artışı) yalnız oyun verisindedir.
 Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyundakiyle aynı fiyat ve seviyede olduğunu, sunucuda oyunda olmayan eşya kalmadığını denetler (oyun deposu yandayken: `../game-app`, ya da `GAME_ITEMS_JSON`); yeni eşya önce burada ve `game_items` önerisinde, sonra oyunda.
 
@@ -129,7 +129,7 @@ Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyun
 | Ev eşyası (etki: ev göstergesi, ilk yerleştirmede bir kez) | `home_bed` 60 (4) ev +25 · `home_rug` 40 (4) ev +15 · `home_lamp` 45 (4) ev +15 · `home_bookshelf` 80 (6) ev +20 · `home_aquarium` 100 (8) ev +30, mutluluk +5 |
 | Süs | `decor_umbrella` 35 (3), `decor_sandcastle` 25 (2), `decor_palm` 50 (5), `decor_lanterns` 70 (12) |
 | Özel setler | `set_captain` 180 (9), `set_captain_hat` 70 (9), `set_star_cape` 150 (14) |
-| Komik eşyalar (F1–F17, `fancy`; öneri `20261024110000_fancy_items_catalog`, uygulanmadı) | Baş: `hat_bucket` 25 (1), `hat_propeller` 30 (2), `hat_watermelon` 30 (2), `hat_cake` 35 (3), `hat_banana` 35 (3), `hat_crown_tilt` 45 (5), `hat_fishbowl` 60 (6), `hat_shark` 70 (7) · Göz: `glasses_heart` 25 (2), `glasses_nose` 30 (3), `glasses_snorkel` 40 (4), `mask_hero` 30 (4) · El (çift): `socks_arm` 25 (2), `pompom` 30 (3) · Gövde: `float_flamingo` 50 (4), `outfit_hula` 45 (5), `outfit_burger` 80 (8), `outfit_chicken` 80 (8) · Sırt: `backpack_rocket` 70 (6) |
+| Komik eşyalar (F1–F17, `fancy`; göç `20261024110000_fancy_items_catalog`, uygulandı 24 Ekim 2026) | Baş: `hat_bucket` 25 (1), `hat_propeller` 30 (2), `hat_watermelon` 30 (2), `hat_cake` 35 (3), `hat_banana` 35 (3), `hat_crown_tilt` 45 (5), `hat_fishbowl` 60 (6), `hat_shark` 70 (7) · Göz: `glasses_heart` 25 (2), `glasses_nose` 30 (3), `glasses_snorkel` 40 (4), `mask_hero` 30 (4) · El (çift): `socks_arm` 25 (2), `pompom` 30 (3) · Gövde: `float_flamingo` 50 (4), `outfit_hula` 45 (5), `outfit_burger` 80 (8), `outfit_chicken` 80 (8) · Sırt: `backpack_rocket` 70 (6) |
 
 ### 4.3 Coin dışı başlangıç / test
 | Ne | Değer | Not |
@@ -286,7 +286,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |
-| E9 | ~~Komik eşyalar sunucuda yok~~ (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya `game_items`'ta yoktu: gerçek sunucuda `spend_coins` bunlar için `unknown_item` dönüyordu. **Çözüm (öneri, 24 Ekim 2026; uygulanmadı):** `proposed/20261024110000_fancy_items_catalog.sql` 19 eşyayı `items.json`'daki fiyat ve seviyeyle ekler (liste §4.2; fiyat oyundaki gibi, yeni karar yok). Testler `test_fancy_items.sql` (19 eşya + satın alma, seviye kilidi, fiyat sunucuda) ve `test_items_catalog.sql` (bekçi: sunucu kataloğu = `items.json`). Uygulanana kadar gerçek sunucuda bu eşyalar alınamaz. |
+| E9 | ~~Komik eşyalar sunucuda yok~~ (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya `game_items`'ta yoktu: gerçek sunucuda `spend_coins` bunlar için `unknown_item` dönüyordu. **Çözüm (öneri, 24 Ekim 2026; uygulandı 24 Ekim 2026):** `migrations/20261024110000_fancy_items_catalog.sql` 19 eşyayı `items.json`'daki fiyat ve seviyeyle ekler (liste §4.2; fiyat oyundaki gibi, yeni karar yok). Testler `test_fancy_items.sql` (19 eşya + satın alma, seviye kilidi, fiyat sunucuda) ve `test_items_catalog.sql` (bekçi: sunucu kataloğu = `items.json`). Uygulanana kadar gerçek sunucuda bu eşyalar alınamaz. |
 
 ---
 
@@ -305,7 +305,7 @@ Taş kazanma canlıda (GameApp, `migrations/20261019030000_sun_stones.sql`). İk
 | Ödül fiyatı | Eşya/etkinlik: 1–500 taş. Değiş tokuş (uygulamalarda görünen ad; kodda `exchange`): "N taş = M dakika ekran süresi" ya da "N taş = M TL harçlık", 1–20 kez alınır. Ebeveyn belirler; aile başına en çok 100 ödül |
 | Harcama | Ödül verilince/onaylanınca; bakiye eksiye düşmez (çocuk satırı kilitlenerek denetlenir) |
 | Ceza (taş düşme) | Ebeveyn 1–100 taş, isteğe bağlı neden (≤ 200); bakiyeden fazla düşülemez; çocuğa bildirim gider |
-| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer. Oyunda istek özelliği birkaç seviye sonra açılır (seviye oyun verisinde; sunucu seviye denetlemez). Çocuğun **ilk** isteği ebeveynlere bir kez "İlk ödül talebi" olarak bildirilir (`data.first = true`; öneri `20261024100000`, `akislar.md` P11) |
+| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer. Oyunda istek özelliği birkaç seviye sonra açılır (seviye oyun verisinde; sunucu seviye denetlemez). Çocuğun **ilk** isteği ebeveynlere bir kez "İlk ödül talebi" olarak bildirilir (`data.first = true`; göç `20261024100000`, `akislar.md` P11) |
 | Başlangıç | 0. Uygulanmadan önce onaylanmış görevler taş vermez (geriye dönük yok) |
 
 Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki ilerlemeyi geri almaz.

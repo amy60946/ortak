@@ -120,7 +120,7 @@ Kod biçimi:
 | `task_undo` | Onay geri alındı (durum değişti ya da kayıt silindi) | Tetikleyici | − | `<completion_id>:<epoch>` |
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
-| `welcome` | Hoş geldin coini (coin kuralının tek istisnası; `ekonomi.md` §2.4). Öneri `20261024100000_welcome_coins_first_reward`, uygulanmadı. | `claim_welcome_coins()` (oyun, ilk beslemede) | + (20) | `welcome` (çocuk başına tek satır) |
+| `welcome` | Hoş geldin coini (coin kuralının tek istisnası; `ekonomi.md` §2.4). Öneri `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026. | `claim_welcome_coins()` (oyun, ilk beslemede) | + (20) | `welcome` (çocuk başına tek satır) |
 
 `spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim).
 `claim_welcome_coins` hata kodları (`error`): `null` (başarılı, 20 coin yazıldı), `already_claimed` (daha önce alındı, yazılmadı). Ekranda gösterim: ParentApp coin geçmişi gösterirse `welcome` = "Hoş geldin hediyesi". Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
@@ -277,4 +277,4 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `reward_requests.status` | `pending` (bekliyor) / `approved` (verildi, taş düştü) / `rejected` (olmadı) / `canceled` (çocuk vazgeçti) |
 | Hata `hint` | `not_enough_stones`, `too_many_requests` (5 bekleyen istek), `premium_required` |
 | Bildirim `kind` | `reward_request` (ebeveynlere), `reward_given`, `reward_decided`, `stones_deducted` (çocuğa; diğer ebeveyne bilgi) |
-| `reward_request` bildiriminin `data` alanı | `{request_id, child_id}`; çocuğun **ilk** isteğinde (oyundan gelen hiçbir önceki isteği yokken; durum fark etmez) ayrıca `"first": true` ve başlık `İlk ödül talebi: <ad> bir ödül istiyor`. Sonraki isteklerde `first` yok. Yeni `kind` yok. Öneri `20261024100000_welcome_coins_first_reward`, uygulanmadı. |
+| `reward_request` bildiriminin `data` alanı | `{request_id, child_id}`; çocuğun **ilk** isteğinde (oyundan gelen hiçbir önceki isteği yokken; durum fark etmez) ayrıca `"first": true` ve başlık `İlk ödül talebi: <ad> bir ödül istiyor`. Sonraki isteklerde `first` yok. Yeni `kind` yok. Öneri `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026. |

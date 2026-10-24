@@ -74,7 +74,7 @@ Notlar:
 | `game_saves` | Oyun kaydı yedeği | `child_id` (PK), `family_id`, `data` (jsonb, en fazla 262 144 bayt), `updated_at` | O (`game_save_put`) | O (`game_save_get`), P (aile; ParentApp bugün okumuyor) |
 
 `game_items` içeriği oyunun `Resources/Data/items.json` dosyasıyla birebir aynıdır (48 eşya; fiyat ve seviye 2026-10-19'da karşılaştırıldı, fark yok). Liste: `ekonomi.md`.
-Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `proposed/20261024110000_fancy_items_catalog.sql` (uygulanmadı; §13). Bekçi testi `test_items_catalog.sql` sunucu kataloğunu `items.json` ile karşılaştırır.
+Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261024110000_fancy_items_catalog.sql` (uygulandı 24 Ekim 2026; §13). Bekçi testi `test_items_catalog.sql` sunucu kataloğunu `items.json` ile karşılaştırır.
 
 ---
 
@@ -356,7 +356,7 @@ Dosyalar sırayla: `migrations/20261022210000_task_reminder_boost.sql`, `migrati
 | `set_weekly_goal_cap(p_child_id, p_cap)` | RPC | Ebeveyn hedefi düşürür (null = otomatik) | P | — |
 | `claim_weekly_goal()` | RPC | Hedefe ulaşan çocuk haftada bir kez: +2 Güneş Taşı (defter nedeni `goal`, ada ilerlemesine sayılır) + ebeveyne bildirim (`kind = 'weekly_goal'`). Hata: `no_goal`, `not_reached`, `already_claimed` | O | — |
 
-## 12. Hoş geldin coini ve ilk ödül talebi (öneri, `proposed/20261024100000_welcome_coins_first_reward.sql`, uygulanmadı)
+## 12. Hoş geldin coini ve ilk ödül talebi (`migrations/20261024100000_welcome_coins_first_reward.sql`, uygulandı 24 Ekim 2026)
 
 Kullanıcı kararı (24 Ekim 2026). Testler `test_welcome_coins.sql`, `test_reward_first.sql`. Kurallar `ekonomi.md` §1, §2.4; akış `akislar.md` 3.1a, P11 3c; değerler `durumlar.md` §5, P14.
 
@@ -369,7 +369,7 @@ Kullanıcı kararı (24 Ekim 2026). Testler `test_welcome_coins.sql`, `test_rewa
 
 Bakiye hesapları değişmedi: `coin_balance` bütün satırları toplar (`welcome` dahil); onay geri alma (`completions_coin_trigger`) yalnız `task`/`task_undo` satırlarına bakar.
 
-## 13. Komik eşyalar kataloğu (öneri, `proposed/20261024110000_fancy_items_catalog.sql`, uygulanmadı)
+## 13. Komik eşyalar kataloğu (`migrations/20261024110000_fancy_items_catalog.sql`, uygulandı 24 Ekim 2026)
 
 `ekonomi.md` E9 (24 Ekim 2026). Yeni tablo, sütun ya da fonksiyon yok; yalnız `game_items` satırları (`insert … on conflict (item_id) do update`, tekrar çalıştırılabilir).
 

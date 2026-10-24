@@ -1,4 +1,4 @@
--- Komik eşyalar sunucu kataloğunda (proposed/20261024110000_fancy_items_catalog.sql; ekonomi.md E9).
+-- Komik eşyalar sunucu kataloğunda (migrations/20261024110000_fancy_items_catalog.sql; ekonomi.md E9).
 -- Beklenen değerler oyunun Resources/Data/items.json dosyasındaki "fancy": true eşyalardır (24 Ekim 2026).
 -- Oyun verisiyle canlı karşılaştırma ayrıca test_items_catalog.sql'de.
 \set ON_ERROR_STOP on
