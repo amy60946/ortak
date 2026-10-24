@@ -12,7 +12,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
 - `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4)
 
 ---
 
@@ -20,7 +20,8 @@ Son güncelleme: 2026-10-19
 
 | İlke | Nerede uygulanıyor |
 |---|---|
-| Coin **yalnızca gerçek görevden**, **yalnızca ebeveyn onayıyla** gelir. Oyun içi etkinlik coin vermez. | Tetikleyici `completions_coin` (SQL); `Wallet` istemcide coin ekleyemez; `StarterKit` coin vermez; bahçe hasadı yiyecek verir, coin değil. |
+| Coin **yalnızca gerçek görevden**, **yalnızca ebeveyn onayıyla** gelir. Oyun içi etkinlik coin vermez. **Tek istisna:** hoş geldin coini (aşağıda). | Tetikleyici `completions_coin` (SQL); `Wallet` istemcide coin ekleyemez; `StarterKit` coin vermez; bahçe hasadı yiyecek verir, coin değil. |
+| **İstisna — hoş geldin coini** (kullanıcı kararı, 24 Ekim 2026: "ilk aksesuarını alabileceği bir coin … dükkânı kullanma alışkanlığı"): çocuk başına **bir kez** **20 coin**, defter nedeni `welcome`. Oyun **ilk beslemede** ister; ikinci istek yazılmaz. Başka hiçbir oyun içi eylem coin vermez. | `claim_welcome_coins()` (SQL, öneri `proposed/20261024100000_welcome_coins_first_reward.sql`); ayrıntı §2.4. |
 | Bakiye her zaman **sunucunun** bakiyesidir; çakışmada sunucu kazanır. | `Wallet.ServerCoins`, `ApplyServerSnapshot`; `child_me().balance`. |
 | Fiyatı **sunucu** belirler; istemcideki fiyat yalnız gösterim içindir. | `spend_coins` fiyatı `game_items`'tan okur; `ShopRules` yorumu. |
 | XP yalnız oyun içi etkinliklerden gelir; **coin ile alınamaz**. XP ve seviye yalnız oyunda (cihaz + `game_saves` yedeği) tutulur; sunucuda XP sütunu yoktur. | `XpSystem`, `LevelTable`. |
@@ -28,7 +29,7 @@ Son güncelleme: 2026-10-19
 
 ---
 
-## 2. Coin kazanma (gerçek görev)
+## 2. Coin kazanma (gerçek görev; tek istisna §2.4)
 
 ### 2.1 Görev ödülü (`task_assignments.coins`)
 | Zorluk | ParentApp varsayılanı | Değiştirilebilir mi? |
@@ -60,6 +61,18 @@ Son güncelleme: 2026-10-19
 ### 2.3 Oyunda kazancın görünmesi
 - Oyun senkronunda (`SyncCoordinator`): görevler çekilir → `child_me().balance` alınır → `Wallet.ApplyServerSnapshot` artışı "kazanılan coin" olarak kutlar.
 - Senkron sırası: (1) bekleyen görev niyetleri → (2) bekleyen harcamalar → (3) görevler (dün … +7 gün) → (4) bakiye → (5) kayıt yedeği.
+
+### 2.4 Hoş geldin coini (tek istisna; öneri `20261024100000_welcome_coins_first_reward`, uygulanmadı)
+
+| Kural | Değer |
+|---|---|
+| Tutar | **20 coin** (fonksiyondaki tek sabit `welcome_coins`). Neden: en ucuz Sv1 giyilebilir eşya `glasses_round` 15 coin; 20 ile ilk aksesuar alınır, 5 coin kalır. Fiyatlar değişirse test (`test_welcome_coins.sql`) uyarır. |
+| Kaç kez | Çocuk (`children.id`) başına **bir kez**: defterde `reason='welcome'`, `ref='welcome'`; çocuk başına tek satır (benzersiz dizin `coin_ledger_welcome_once`). Cihaz değişse, bağlantı yeniden kurulsa da ikinci kez verilmez. |
+| Kim ister | Oyun (çocuk oturumu), **ilk beslemede** `claim_welcome_coins()`. Ebeveyn ya da bağlı çocuğu olmayan oturum: hata `42501`. |
+| Yanıt | `jsonb {ok, coins, balance, error}`: ilk çağrı `{true, 20, yeni bakiye, null}`; sonrakiler `{false, 0, bakiye, 'already_claimed'}`. `balance` = `child_me().balance` ile aynı hesap. |
+| Bakiye | Bakiye bütün defter satırlarının toplamıdır (`coin_balance`); `welcome` dahil. ParentApp `child_balance` ile görür. |
+| Geri alma | Görev onayı geri alınınca yalnız o görevin coini düşer (`task`/`task_undo`); hoş geldin coini düşmez. |
+| Eski oyuncular | Sunucu "ilk oyun" ayrımı yapmaz: henüz almamış her çocuk bir kez alabilir. Kimin ne zaman isteyeceğine oyun karar verir (ilk besleme). |
 
 ---
 
@@ -119,6 +132,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 | Ne | Değer | Not |
 |---|---|---|
 | Hoş geldin hediyesi (`start.json`) | `food_apple` ×3, `clean_soap` ×2 | Pet ilk adlandırılınca bir kez; **coin yok**; yalnız oyun envanterine (sunucuya yazılmaz). |
+| Hoş geldin coini (sunucu) | 20 coin, bir kez | `start.json`'dan ayrı; sunucu yazar (`claim_welcome_coins`, §2.4). Oyun ilk beslemede ister. |
 | Test erişimi (`TestAccess`) | 5000 coin, tüketilenlerden 20'şer, en üst seviye | **Yalnız sahte arka uç** (önizleme). Gerçek hesapta yok. |
 
 ---
@@ -269,6 +283,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |
+| E9 | Komik eşyalar sunucuda yok (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya (ör. `hat_bucket` 25 Sv1, `glasses_heart`, `socks_arm`, `hat_shark`, `outfit_burger` …) `game_items`'ta yok: gerçek sunucuda `spend_coins` bunlar için `unknown_item` döner. Karar bekliyor: fiyat/seviyeleri `game_items`'a ekleyen ayrı öneri (GameApp penceresi fiyatları verir). |
 
 ---
 
@@ -287,7 +302,7 @@ Taş kazanma canlıda (GameApp, `migrations/20261019030000_sun_stones.sql`). İk
 | Ödül fiyatı | Eşya/etkinlik: 1–500 taş. Değiş tokuş (uygulamalarda görünen ad; kodda `exchange`): "N taş = M dakika ekran süresi" ya da "N taş = M TL harçlık", 1–20 kez alınır. Ebeveyn belirler; aile başına en çok 100 ödül |
 | Harcama | Ödül verilince/onaylanınca; bakiye eksiye düşmez (çocuk satırı kilitlenerek denetlenir) |
 | Ceza (taş düşme) | Ebeveyn 1–100 taş, isteğe bağlı neden (≤ 200); bakiyeden fazla düşülemez; çocuğa bildirim gider |
-| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer |
+| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer. Oyunda istek özelliği birkaç seviye sonra açılır (seviye oyun verisinde; sunucu seviye denetlemez). Çocuğun **ilk** isteği ebeveynlere bir kez "İlk ödül talebi" olarak bildirilir (`data.first = true`; öneri `20261024100000`, `akislar.md` P11) |
 | Başlangıç | 0. Uygulanmadan önce onaylanmış görevler taş vermez (geriye dönük yok) |
 
 Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki ilerlemeyi geri almaz.

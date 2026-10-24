@@ -13,7 +13,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
 - `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-24 (3.1a hoş geldin coini, P11 ilk ödül talebi)
 
 ---
 
@@ -88,6 +88,14 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 3 | [S] | Fiyat `game_items`'tan; aynı işlem iki kez düşülmez; bakiye yetmezse reddedilir. | `coin_ledger` (`spend`) |
 | 4 | [O] | Kabul → kesinleşir. Ret (`not_enough_coins` / `unknown_item`) → eşya envanterden geri alınır, bakiye sunucudakine eşitlenir. | `Wallet.Acknowledge/Reject` |
 | 5 | [P] | Ebeveynin gördüğü bakiye düşer (bir sonraki `child_balance` çağrısında). | |
+
+### 3.1a Hoş geldin coini (coin kuralının tek istisnası; öneri `proposed/20261024100000_welcome_coins_first_reward.sql`, uygulanmadı)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [O] | Çocuk Okti'yi **ilk kez beslediğinde** oyun hoş geldin coinini ister (çevrimdışıysa kuyrukta bekler; tekrar göndermek zararsızdır). | `claim_welcome_coins()` |
+| 2 | [S] | Bu çocuğa daha önce verilmediyse deftere **+20** (`reason='welcome'`) yazar → `{ok:true, coins:20, balance, error:null}`. Verildiyse yazmaz → `{ok:false, coins:0, balance, error:'already_claimed'}`. Ebeveyn hesabı ya da bağlı olmayan oturum: `42501`. | `coin_ledger` (`welcome`) |
+| 3 | [O] | `balance`'ı sunucu bakiyesi olarak alır (`Wallet.ApplyServerSnapshot`); `ok:true` ise kutlar ve çocuğu dükkâna (ilk aksesuar, ör. `glasses_round` 15) yönlendirebilir. `already_claimed` sessizce geçilir. | — |
+| 4 | [P] | Ebeveyn bakiyede 20 coini görür (bildirim yok). Coin geçmişi gösterilirse satır adı "Hoş geldin hediyesi". | `child_balance(child_id)`, `coin_ledger` |
 
 ### 3.2 Oyun kaydı yedeği
 | # | Uygulama | Adım | Veritabanı |
@@ -216,6 +224,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 | Ebeveyn öneriye karar verdi | ParentApp → öneriyi yapan uzman | `suggestion_decided` | clinic |
 | Zor an kaydı | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
 | Ekibe yeni uzman katıldı | ClinicApp → klinik sahipleri | `team_joined` | clinic |
+| Çocuk ödül istedi (ilkinde `data.first = true`, başlık "İlk ödül talebi: …"; P11 3c) | Oyun → ebeveynler | `reward_request` | parent |
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
@@ -281,7 +290,8 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 1 | [P] | Görevler › + › **Ödül**: önerilen ödüllerden seçer ya da kendi ödülünü oluşturur (tür: eşya/etkinlik ya da değiş tokuş; taş fiyatı; hangi çocuklar; simge; ad). | `rewards` |
 | 2 | [S] | Onaylanan görev taş verir (1/2/3). | tetikleyici `completions_stone` |
 | 3a | [P] | Ödülü doğrudan verir (değiş tokuşta kaç kez) → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül, adet)` |
-| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `decide_reward_request(istek, onay, not)` |
+| 3b | [O] | Çocuk oyunda ister (özellik oyunda birkaç seviye sonra açılır; seviye GameApp verisinde, sunucu seviye denetlemez) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `{request_id, status, first}` → `decide_reward_request(istek, onay, not)` |
+| 3c | [S → P] | **İlk talep bilgisi** (kullanıcı kararı, 24 Ekim 2026; öneri `20261024100000_welcome_coins_first_reward`, uygulanmadı): çocuğun oyundan gelen **ilk** isteğinde (önceki hiçbir `source='child'` isteği yokken; durum fark etmez; ebeveynin doğrudan verdiği ödül sayılmaz) bildirim yine `kind='reward_request'`, ama `data.first = true` ve başlık "İlk ödül talebi: <ad> bir ödül istiyor". Yalnız bir kez; sonraki isteklerde `first` yok. ParentApp bildirimde ve istek kartında **"İlk ödül talebi"** etiketini gösterir (ör. "Nazlı ilk kez ödül istedi"). Oyun yanıttaki `first` ile çocuğa "ilk isteğin gönderildi" diyebilir. | `notifications.data.first`; `request_reward` yanıtı `first` |
 | 4 | [P] | Bir ya da birkaç çocuk seçip taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` (çocuk başına) |
 | 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
 

@@ -66,7 +66,7 @@ Notlar:
 |---|---|---|---|---|
 | `children.age_band` | Ebeveynin seçtiği yaş grubu (isteğe bağlı) | `'K'` (≤5) / `'A'` (6–8) / `'B'` (9–12) / `'C'` (13+) / null = otomatik (doğum gününden, `durumlar.md` §4) | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
 | `completions.parent_note` | Ebeveynin ret/onay notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
-| `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
+| `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`; öneri §12: + `welcome`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`; öneri §12: `claim_welcome_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
 | `sun_stone_ledger` | Güneş Taşı defteri (`20261019030000_sun_stones`, uygulandı 19 Ekim). Toplam = `sum(amount)` (en az 0) | `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`adjust`), `ref`; unique (`child_id`, `reason`, `ref`) | yalnız tetikleyici `completions_sun_stone` | P (aile), O (kendi) |
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
 | `game_levels` | Seviye eşikleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `level` (PK), `total_xp` | Sunucu (SQL ile tohumlanır; `levels.json` ile aynı) | Herkes (oturum açmış) |
@@ -316,7 +316,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `sun_stones_spendable(p_child_id)` | P (aile), O (yalnız kendisi) | Harcanabilir bakiye (`child_me.sun_stones_spendable` da). `child_me.sun_stones` = kazanılan (ada), değişmedi |
 | `give_reward(p_child_id, p_reward_id, p_quantity default 1)` | P | `{request_id, balance}` |
 | `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
-| `request_reward(p_reward_id, p_quantity default 1)` | O | `{request_id, status}` |
+| `request_reward(p_reward_id, p_quantity default 1)` | O | `{request_id, status}` (öneri §12: + `first`; ilk talepte ebeveyn bildirimi `data.first = true`) |
 | `cancel_reward_request(p_request_id)` | O | Bekleyen isteği geri çeker |
 | `decide_reward_request(p_request_id, p_approve, p_note)` | P | `{status, balance}` |
 | `register_push_token` (değişti) | O, P, K | Kullanıcı başına en yeni 5 anahtar |
@@ -355,3 +355,15 @@ Dosyalar sırayla: `migrations/20261022210000_task_reminder_boost.sql`, `migrati
 | `set_weekly_goal_cap(p_child_id, p_cap)` | RPC | Ebeveyn hedefi düşürür (null = otomatik) | P | — |
 | `claim_weekly_goal()` | RPC | Hedefe ulaşan çocuk haftada bir kez: +2 Güneş Taşı (defter nedeni `goal`, ada ilerlemesine sayılır) + ebeveyne bildirim (`kind = 'weekly_goal'`). Hata: `no_goal`, `not_reached`, `already_claimed` | O | — |
 
+## 12. Hoş geldin coini ve ilk ödül talebi (öneri, `proposed/20261024100000_welcome_coins_first_reward.sql`, uygulanmadı)
+
+Kullanıcı kararı (24 Ekim 2026). Testler `test_welcome_coins.sql`, `test_reward_first.sql`. Kurallar `ekonomi.md` §1, §2.4; akış `akislar.md` 3.1a, P11 3c; değerler `durumlar.md` §5, P14.
+
+| Ad | Tür | Ne | Yazan | Okuyan |
+|---|---|---|---|---|
+| `coin_ledger.reason` | Kısıt (değişti) | + `welcome` (hoş geldin coini) | — | — |
+| `coin_ledger_welcome_once` | Benzersiz dizin | `(child_id) where reason = 'welcome'`: çocuk başına en çok bir hoş geldin satırı | — | — |
+| `claim_welcome_coins()` | RPC (yeni) | `jsonb {ok, coins, balance, error}`. Oturumdaki çocuğa bir kez **+20 coin** (`reason='welcome'`, `ref='welcome'`); sonraki çağrılar yazmaz (`ok=false`, `coins=0`, `error='already_claimed'`). `balance` = `coin_balance` (= `child_me().balance`). Çocuk yoksa `42501` "Bağlantı yok". `anon` çağıramaz; `authenticated` çağırır. | O (ilk beslemede) | — |
+| `request_reward(p_reward_id, p_quantity default 1)` | RPC (değişti) | Gövde aynı; yanıta `first` (boolean) eklendi. Çocuğun ilk isteğinde (önceki `source='child'` satırı yokken, durum fark etmez) ebeveyn bildirimi `kind='reward_request'`, `data = {request_id, child_id, first: true}`, başlık "İlk ödül talebi: <ad> bir ödül istiyor". Sonrakilerde `data = {request_id, child_id}`, başlık "<ad> bir ödül istiyor". | O | P (bildirim) |
+
+Bakiye hesapları değişmedi: `coin_balance` bütün satırları toplar (`welcome` dahil); onay geri alma (`completions_coin_trigger`) yalnız `task`/`task_undo` satırlarına bakar.
