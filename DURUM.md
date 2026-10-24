@@ -57,6 +57,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 - [x] ClinicApp teknolojisi: **Expo (React Native + web)**, ParentApp ile aynı (kullanıcı onayı, 19 Ekim 2026).
 
 ## Günlük
+- 2026-10-24 · ortak + admin-panel · **Uygulandı** (kullanıcı, SQL Editor): `20261024000000_admin_fixes.sql` → `migrations/` (arama düzeltildi, `admin_kpi_apps`). Panel güncellemesi yayına alındı (uygulama bazında göstergeler, Türkçe olay adları, yazdıkça arama). · Diğer ürünleri etkilemez.
 - 2026-10-24 · ortak + admin-panel · **Admin düzeltmeleri (öneri)** `proposed/20261024000000_admin_fixes.sql`: canlıda arama hiç çalışmıyordu (`auth.users.email` varchar, fonksiyon text bekliyordu → tür hatası); düzeltildi. Yeni `admin_kpi_apps(gün)`: göstergeler uygulama bazında. Test ortamı e-postayı artık Supabase gibi varchar tutar (hata testte görünür). Tüm testler geçti. · **Kullanıcı:** SQL Editor'de uygula; sonra panel güncellemesi yayına alınır.
 - 2026-10-23 · ortak (tümü) · **Claude projesi "Island Game"** (kullanıcı): yeni pencereler bu projenin içinden açılır; pencere başına depolar `CLAUDE.md`'de. Eski pencereler yerinde kaldı (taşınmadı). · Yeni pencere: önce `CLAUDE.md` + `DURUM.md`.
 - 2026-10-23 · ortak (tümü) · **Takip panosu açıldı** (kullanıcı): GitHub Projects "Island Game", beş depo bağlı (ortak, game-app, parent-app, clinic-app, admin-panel); `ortak` iş kayıtları kendiliğinden eklenir. Depolar taşınmadı, hiçbir ayar değişmedi. · Tek doğruluk kaynağı yine `DURUM.md`.
