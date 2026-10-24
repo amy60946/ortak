@@ -71,7 +71,7 @@ Kaynak: `activity_days` (her gün `track_session` bir satır yazar; geçmiş ser
 | Kayıp (churn) | Son N günde süresi biten/iade edilen aile abonelikleri; üyeliği biten klinikler | `churn` |
 | Etkileşim | Oluşturulan görev, tamamlanan, onaylanan, onay oranı, onay süresi ortancası (dk), aktif çocuk, bildirim okunma oranı, bildirim açık kullanıcı | `engagement` |
 | Klinik | Etkin paylaşım, danışanı olan klinik, öneri, not, rızası geri alınan | `clinic` |
-| Uygulama bazında | ParentApp (aile, abone, deneme, gelir, görev/onay, ödül, bildirim), GameApp (çocuk, bağlı cihaz, aktif çocuk, "Yaptım", ödül isteği, bildirim), ClinicApp (klinik, uzman, ücretli/deneme/elle, gelir, paylaşım, öneri, not, bildirim) + toplam gelir | `admin_kpi_apps(gün)` (öneri `proposed/20261024000000_admin_fixes.sql`) |
+| Uygulama bazında | ParentApp (aile, abone, deneme, gelir, görev/onay, ödül, bildirim), GameApp (çocuk, bağlı cihaz, aktif çocuk, "Yaptım", ödül isteği, bildirim), ClinicApp (klinik, uzman, ücretli/deneme/elle, gelir, paylaşım, öneri, not, bildirim) + toplam gelir | `admin_kpi_apps(gün)` (`migrations/20261024000000_admin_fixes.sql`, uygulandı 24 Ekim) |
 | Günlük seri | Gün × uygulama: aktif ve yeni kullanıcı (en çok 1 yıl) | `admin_kpi_daily(from, to)` |
 | Elde tutma | İlk görülme haftası kohortu; G1/G7/G30 = ilk günden 1/7/30 gün sonra yeniden aktif olanların oranı (henüz dolmamışsa boş) | `admin_kpi_retention(hafta)` |
 | Huniler | **parent:** kayıt → e-posta onayı → çocuk eklendi → cihaz bağlandı → ilk görev → ilk onay → ücretli. **child:** eklendi → bağlandı → oyunu açtı → ilk "Yaptım" → ilk onay → 7. gün aktif. **clinic:** açıldı → ilk aile → ilk öneri → ilk not → ücretli | `admin_kpi_funnel(app, from, to)` |
