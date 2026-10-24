@@ -170,6 +170,8 @@ Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyun
 | Rozetler (`badges.json`) | 20–100 (ör. `badge_first_task` 20, `badge_task_10` 40, `badge_streak_7` 60, `badge_master` 100) | Hayır |
 | Adada parıltı keşfi (`MapScreen`) | yeni 10, tekrar 3 | Hayır |
 | Kulübe yapma (`Gathering.HutXp`) | 40 (tarif: 6 odun, 4 dal, 3 taş) | Hayır |
+| Kamp ateşini harla (`CampfireRules`; **24 Ekim 2026**, GB18) | Harlama başına **8** (2 odun yakılır), günde en çok **3** harlama (günde ≤ 24 XP). Odun adadaki kütüklerden (küçük kütük 3 vuruş → 2 odun, büyük kütük 6 vuruş → 5 odun). Coin vermez. | Hayır (günde 3 ile sınırlı) |
+| İlk oyun rehberi (`Guide.Steps`, GB17) | Adım başına 10–30 (16 adım, her biri bir kez; yalnız canlı yapılan adım ödüllenir) | Hayır |
 | Festival / final etkinliği (`Events`) | 25 / 100 | Hayır |
 
 Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (`tasks_approved` sayacı) bağlıdır; yani ParentApp onayı oyunda XP'yi de dolaylı etkiler.
