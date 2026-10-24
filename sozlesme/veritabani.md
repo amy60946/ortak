@@ -378,3 +378,13 @@ Bakiye hesapları değişmedi: `coin_balance` bütün satırları toplar (`welco
 | `game_items` | Veri (19 satır eklenir) | Oyunun 19 komik eşyası (`items.json` `fancy: true`), fiyat ve seviye `items.json`'daki gibi; liste `ekonomi.md` §4.2. Uygulanınca katalog 67 eşya; `spend_coins` bunlar için artık `unknown_item` değil, fiyatı ve seviye kilidini (`level_locked`) sunucudan uygular. | Sunucu (SQL) | Herkes (oturum açmış), `spend_coins` |
 
 Testler: `test_fancy_items.sql` (19 eşyanın fiyat/seviyesi, bağlı çocuğun `hat_bucket` alması, seviye kilidi, fiyatın sunucudan düşülmesi, istemcinin katalogu değiştirememesi), `test_items_catalog.sql` (bekçi: oyun deposu yandayken — `../game-app` ya da `GAME_ITEMS_JSON` — `items.json`'daki her eşya sunucuda aynı fiyat ve seviyede, sunucuda oyunda olmayan eşya yok; dosya yoksa uyarıyla atlanır).
+
+## 14. Beyaz şapka taraması 2 (öneri, `proposed/20261025000000_whitehat2.sql`, uygulanmadı)
+
+24 Ekim 2026 güvenlik turu (kullanıcı: "kodda ve oyunda güvenlik açıklarını kontrol et, beyaz şapka olarak bir kez daha geç"). Test `test_whitehat2.sql` (bulgu + engellenen ~40 saldırı gerileme testi olarak).
+
+| Ad | Tür | Ne |
+|---|---|---|
+| W2-1 · `redeem_child_code`, `join_family`, `redeem_clinic_invite_children`, `clinic_join_team` | RPC (değişti) | Başarılı kod kullanımı artık `code_attempts` satırlarını **silmez**. Önce siliyordu; satırlar IP damgasını da taşıdığı için oturum (10), IP (30) ve genel (200) sınırlar birlikte sıfırlanıyordu: kendi ailesine sınırsız kod üretebilen biri her 9 hatalı denemeden sonra kendi koduyla girip sayacı temizleyerek başka ailelerin kodlarını sınırsız deneyebiliyordu. Gövdelerin geri kalanı aynı; eski denemeler `code_throttled` içindeki 1 günlük temizlikle gider, 15 dakikalık pencere kendiliğinden kayar. Gerçek kullanıcı etkilenmez (yalnız hatalı denemeler sayılır). |
+
+Canlıda girişsiz denemeler (24 Ekim 2026, yalnız okuma): 49 tablonun hiçbirinden satır okunamadı, 143 fonksiyonun hepsi `42501` ile reddetti, `mail`/`abc` kovaları listelenemedi. Ayar notu: e-posta doğrulaması kapalı (`mailer_autoconfirm`), anonim giriş açık (çocuk cihazı için gerekli) — doğrulama SMTP ile birlikte açılmalı (`CANLIYA_ALMA.md`).
