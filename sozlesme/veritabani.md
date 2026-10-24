@@ -74,6 +74,7 @@ Notlar:
 | `game_saves` | Oyun kaydı yedeği | `child_id` (PK), `family_id`, `data` (jsonb, en fazla 262 144 bayt), `updated_at` | O (`game_save_put`) | O (`game_save_get`), P (aile; ParentApp bugün okumuyor) |
 
 `game_items` içeriği oyunun `Resources/Data/items.json` dosyasıyla birebir aynıdır (48 eşya; fiyat ve seviye 2026-10-19'da karşılaştırıldı, fark yok). Liste: `ekonomi.md`.
+Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `proposed/20261024110000_fancy_items_catalog.sql` (uygulanmadı; §13). Bekçi testi `test_items_catalog.sql` sunucu kataloğunu `items.json` ile karşılaştırır.
 
 ---
 
@@ -367,3 +368,13 @@ Kullanıcı kararı (24 Ekim 2026). Testler `test_welcome_coins.sql`, `test_rewa
 | `request_reward(p_reward_id, p_quantity default 1)` | RPC (değişti) | Gövde aynı; yanıta `first` (boolean) eklendi. Çocuğun ilk isteğinde (önceki `source='child'` satırı yokken, durum fark etmez) ebeveyn bildirimi `kind='reward_request'`, `data = {request_id, child_id, first: true}`, başlık "İlk ödül talebi: <ad> bir ödül istiyor". Sonrakilerde `data = {request_id, child_id}`, başlık "<ad> bir ödül istiyor". | O | P (bildirim) |
 
 Bakiye hesapları değişmedi: `coin_balance` bütün satırları toplar (`welcome` dahil); onay geri alma (`completions_coin_trigger`) yalnız `task`/`task_undo` satırlarına bakar.
+
+## 13. Komik eşyalar kataloğu (öneri, `proposed/20261024110000_fancy_items_catalog.sql`, uygulanmadı)
+
+`ekonomi.md` E9 (24 Ekim 2026). Yeni tablo, sütun ya da fonksiyon yok; yalnız `game_items` satırları (`insert … on conflict (item_id) do update`, tekrar çalıştırılabilir).
+
+| Ad | Tür | Ne | Yazan | Okuyan |
+|---|---|---|---|---|
+| `game_items` | Veri (19 satır eklenir) | Oyunun 19 komik eşyası (`items.json` `fancy: true`), fiyat ve seviye `items.json`'daki gibi; liste `ekonomi.md` §4.2. Uygulanınca katalog 67 eşya; `spend_coins` bunlar için artık `unknown_item` değil, fiyatı ve seviye kilidini (`level_locked`) sunucudan uygular. | Sunucu (SQL) | Herkes (oturum açmış), `spend_coins` |
+
+Testler: `test_fancy_items.sql` (19 eşyanın fiyat/seviyesi, bağlı çocuğun `hat_bucket` alması, seviye kilidi, fiyatın sunucudan düşülmesi, istemcinin katalogu değiştirememesi), `test_items_catalog.sql` (bekçi: oyun deposu yandayken — `../game-app` ya da `GAME_ITEMS_JSON` — `items.json`'daki her eşya sunucuda aynı fiyat ve seviyede, sunucuda oyunda olmayan eşya yok; dosya yoksa uyarıyla atlanır).

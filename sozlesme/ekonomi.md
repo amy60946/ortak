@@ -12,7 +12,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
 - `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
-Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4)
+Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
 
 ---
 
@@ -96,7 +96,9 @@ Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4)
 ## 4. Dükkân fiyatları (`game_items` = `items.json`)
 
 48 eşya; sunucu (`game_items`) ve oyun verisi (`items.json`) 2026-10-19'da karşılaştırıldı: **fiyat ve seviye birebir aynı**.
+Oyuna 23 Ekim 2026'da 19 komik eşya eklendi (`fancy: true`); sunucuya ekleyen öneri `proposed/20261024110000_fancy_items_catalog.sql` (**uygulanmadı**, E9). Öneri uygulanınca katalog **67 eşya**.
 Etkiler (gösterge artışı) yalnız oyun verisindedir.
+Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyundakiyle aynı fiyat ve seviyede olduğunu, sunucuda oyunda olmayan eşya kalmadığını denetler (oyun deposu yandayken: `../game-app`, ya da `GAME_ITEMS_JSON`); yeni eşya önce burada ve `game_items` önerisinde, sonra oyunda.
 
 ### 4.1 Tüketilenler (yiyecek, temizlik, tohum)
 | item_id | Ad (oyun) | Fiyat | Seviye | Etki |
@@ -127,6 +129,7 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 | Ev eşyası (etki: ev göstergesi, ilk yerleştirmede bir kez) | `home_bed` 60 (4) ev +25 · `home_rug` 40 (4) ev +15 · `home_lamp` 45 (4) ev +15 · `home_bookshelf` 80 (6) ev +20 · `home_aquarium` 100 (8) ev +30, mutluluk +5 |
 | Süs | `decor_umbrella` 35 (3), `decor_sandcastle` 25 (2), `decor_palm` 50 (5), `decor_lanterns` 70 (12) |
 | Özel setler | `set_captain` 180 (9), `set_captain_hat` 70 (9), `set_star_cape` 150 (14) |
+| Komik eşyalar (F1–F17, `fancy`; öneri `20261024110000_fancy_items_catalog`, uygulanmadı) | Baş: `hat_bucket` 25 (1), `hat_propeller` 30 (2), `hat_watermelon` 30 (2), `hat_cake` 35 (3), `hat_banana` 35 (3), `hat_crown_tilt` 45 (5), `hat_fishbowl` 60 (6), `hat_shark` 70 (7) · Göz: `glasses_heart` 25 (2), `glasses_nose` 30 (3), `glasses_snorkel` 40 (4), `mask_hero` 30 (4) · El (çift): `socks_arm` 25 (2), `pompom` 30 (3) · Gövde: `float_flamingo` 50 (4), `outfit_hula` 45 (5), `outfit_burger` 80 (8), `outfit_chicken` 80 (8) · Sırt: `backpack_rocket` 70 (6) |
 
 ### 4.3 Coin dışı başlangıç / test
 | Ne | Değer | Not |
@@ -283,7 +286,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |
-| E9 | Komik eşyalar sunucuda yok (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya (ör. `hat_bucket` 25 Sv1, `glasses_heart`, `socks_arm`, `hat_shark`, `outfit_burger` …) `game_items`'ta yok: gerçek sunucuda `spend_coins` bunlar için `unknown_item` döner. Karar bekliyor: fiyat/seviyeleri `game_items`'a ekleyen ayrı öneri (GameApp penceresi fiyatları verir). |
+| E9 | ~~Komik eşyalar sunucuda yok~~ (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya `game_items`'ta yoktu: gerçek sunucuda `spend_coins` bunlar için `unknown_item` dönüyordu. **Çözüm (öneri, 24 Ekim 2026; uygulanmadı):** `proposed/20261024110000_fancy_items_catalog.sql` 19 eşyayı `items.json`'daki fiyat ve seviyeyle ekler (liste §4.2; fiyat oyundaki gibi, yeni karar yok). Testler `test_fancy_items.sql` (19 eşya + satın alma, seviye kilidi, fiyat sunucuda) ve `test_items_catalog.sql` (bekçi: sunucu kataloğu = `items.json`). Uygulanana kadar gerçek sunucuda bu eşyalar alınamaz. |
 
 ---
 
