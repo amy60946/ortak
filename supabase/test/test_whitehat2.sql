@@ -1,4 +1,4 @@
--- Beyaz şapka taraması 2 (proposed/20261025000000_whitehat2.sql) + doğru engellenen saldırılar (gerileme testleri).
+-- Beyaz şapka taraması 2 (migrations/20261025000000_whitehat2.sql, uygulandı 25 Ekim 2026) + doğru engellenen saldırılar (gerileme testleri).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

@@ -379,7 +379,7 @@ Bakiye hesapları değişmedi: `coin_balance` bütün satırları toplar (`welco
 
 Testler: `test_fancy_items.sql` (19 eşyanın fiyat/seviyesi, bağlı çocuğun `hat_bucket` alması, seviye kilidi, fiyatın sunucudan düşülmesi, istemcinin katalogu değiştirememesi), `test_items_catalog.sql` (bekçi: oyun deposu yandayken — `../game-app` ya da `GAME_ITEMS_JSON` — `items.json`'daki her eşya sunucuda aynı fiyat ve seviyede, sunucuda oyunda olmayan eşya yok; dosya yoksa uyarıyla atlanır).
 
-## 14. Beyaz şapka taraması 2 (öneri, `proposed/20261025000000_whitehat2.sql`, uygulanmadı)
+## 14. Beyaz şapka taraması 2 (`migrations/20261025000000_whitehat2.sql`, uygulandı 25 Ekim 2026)
 
 24 Ekim 2026 güvenlik turu (kullanıcı: "kodda ve oyunda güvenlik açıklarını kontrol et, beyaz şapka olarak bir kez daha geç"). Test `test_whitehat2.sql` (bulgu + engellenen ~40 saldırı gerileme testi olarak).
 
