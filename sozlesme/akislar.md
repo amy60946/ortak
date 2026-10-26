@@ -245,7 +245,7 @@ Teslim yolları:
 | 2 | O, P, K | Olaylar biriktirilir, toplu gönderilir (≤ 50/çağrı, kullanıcı başına ≤ 2000/gün). Ad biçimi `alan.eylem` (küçük harf, rakam, `_`, `.`). | `track_events(app, olaylar, platform, sürüm)` → `app_events` |
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
 
-ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`.
+ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026).
 
 ---
 
