@@ -1,4 +1,4 @@
--- Aile davet bağlantısı, geçmiş aktarımı, takip planı (proposed/20261026100000_family_invite_links.sql)
+-- Aile davet bağlantısı, geçmiş aktarımı, takip planı (migrations/20261026100000_family_invite_links.sql)
 \set ON_ERROR_STOP on
 
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$
@@ -258,6 +258,58 @@ insert into tst.kv select 'c6', public.clinic_create_invite('family', '') ->> 'c
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
 select public.redeem_clinic_invite_children(tst.v('c6'), array['00000000-0000-0000-0000-00000000c009'::uuid], true, 'uzman-gecis-v1');
 select tst.check((select count(*) from public.family_clinic_links() where history_shared) = 1, 'paylaşırken geçmiş birlikte açılır');
+
+-- ---------------------------------------------------------------- 6. ebeveyn uzmanın önerdiği çocuğu kontrol eder, düzeltir, onaylar
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+insert into tst.kv select 'i8', public.clinic_create_invite('family', '', 'Zeynep', null, 'Ela', 'B')::text;
+insert into tst.kv values ('t8', (tst.v('i8')::json) ->> 'token'), ('c8', (tst.v('i8')::json) ->> 'code');
+insert into tst.kv select 'c9', public.clinic_create_invite('family', 'Yanlış aile', '', null, 'Mert', 'A') ->> 'code';
+insert into tst.kv select 'c10', public.clinic_create_invite('family', '', '', null, 'Can', 'A') ->> 'code';
+reset role;
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000b4', false, jsonb_build_object('nickname', 'Zeynep', 'clinic_invite', tst.v('t8')));
+insert into public.children (id, family_id, name, avatar)
+  values ('00000000-0000-0000-0000-00000000c041', (select family_id from public.profiles where id = '00000000-0000-0000-0000-0000000000b4'), 'ela ', 'kedi');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000b4');
+select public.claim_clinic_invite(tst.v('c9'));
+select public.claim_clinic_invite(tst.v('c10'));
+select tst.check((select count(*) from public.family_pending_invites()) = 3, 'üç bekleyen davet');
+select tst.check(public.family_accept_invite(tst.v('t8'), '{"name":"Ela","age_group":"B"}') ->> 'error' = 'duplicate_child', 'aynı adda çocuk varsa önce sorulur');
+select tst.check((public.family_accept_invite(tst.v('t8'), '{"name":"Ela","age_group":"B"}') ->> 'child_id')::uuid = '00000000-0000-0000-0000-00000000c041', 'var olan çocuk gösterilir');
+select tst.fails($$select public.family_accept_invite(tst.v('t8'), '{"name":"Ela","age_group":"X"}')$$, 'geçersiz yaş grubu');
+select tst.fails($$select public.family_accept_invite(tst.v('t8'), null, array['00000000-0000-0000-0000-00000000c001'::uuid])$$, 'başka ailenin çocuğu seçilemez');
+insert into tst.kv select 'A8', public.family_accept_invite(tst.v('t8'), '{"name":"Elanur","age_group":"C","birthday":"2014-05-01","gender":"kız"}',
+                                                          null, false, 'uzman-paylasim-v1')::text;
+select tst.check(json_array_length(tst.v('A8')::json -> 'link_ids') = 1, 'düzeltilen çocuk oluşur ve paylaşılır');
+select tst.check((select name = 'Elanur' and age_band = 'B' and birthday = '2014-05-01' from public.children
+                   where id = ((tst.v('A8')::json -> 'child_ids') ->> 0)::uuid), 'ebeveynin düzelttiği bilgi kaydedilir (C → B bandı)');
+select tst.check((select consent_version from public.clinic_links where id = ((tst.v('A8')::json -> 'link_ids') ->> 0)::uuid) = 'uzman-paylasim-v1',
+                 'paylaşım onayı metin sürümü kaydedilir');
+select tst.check(public.family_accept_invite(tst.v('c10'), '{"name":"Can","age_group":"A"}') -> 'link_ids' is not null, 'öneri aynen onaylanır');
+select tst.check(public.family_accept_invite(tst.v('c10'), '{"name":"Can 2"}') ->> 'reason' = 'used'
+                 and not exists (select 1 from public.children where name = 'Can 2'), 'kullanılan davet yeniden onaylanamaz, çocuk oluşmaz');
+-- yanlış aile reddeder
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.fails($$select public.family_decline_invite(tst.v('c9'))$$, 'başka aile reddedemez');
+select tst.as_user('00000000-0000-0000-0000-0000000000b4');
+select public.family_decline_invite(tst.v('c9'));
+select tst.check(public.claim_clinic_invite(tst.v('c9')) ->> 'reason' = 'expired', 'reddedilen davet kapanır');
+select tst.check((select count(*) from public.family_pending_invites()) = 0, 'bekleyen davet kalmaz');
+-- uzman tarafı
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check((select count(*) from public.notifications where kind = 'invite_child_updated' and user_id = auth.uid()) = 1
+                 and (select body from public.notifications where kind = 'invite_child_updated' and user_id = auth.uid()) = 'Ela (B) → Elanur (C)',
+                 'ebeveyn düzeltince uzmana bildirim (aynen onayda yok)');
+select tst.check((select child_id is not null from public.notifications where kind = 'invite_child_updated' and user_id = auth.uid()), 'bildirim çocuğa gider');
+select tst.check(exists (select 1 from public.notifications where kind = 'invite_declined' and user_id = auth.uid()), 'reddedince uzmana bildirim');
+select tst.check((select status from public.clinic_invites_list(30) where code = tst.v('c9')) = 'declined', 'durum: aile reddetti');
+select tst.check((select child_name from public.clinic_clients() where child_id = ((tst.v('A8')::json -> 'child_ids') ->> 0)::uuid) = 'Elanur',
+                 'onaylanan ad uzmanın danışan listesinde');
+reset role;
+select tst.check((select count(*) from public.clinic_invites where code in (tst.v('c8'), tst.v('c9'), tst.v('c10')) and child_name is not null) = 0,
+                 'davet bitince öneri silinir');
+set role authenticated;
 
 -- anon
 reset role;

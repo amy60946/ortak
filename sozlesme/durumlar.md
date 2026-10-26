@@ -67,7 +67,7 @@ Ek kurallar:
 |---|---|---|---|---|
 | `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
 | `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aile daveti: 6 karakter kod + 32 karakter bağlantı anahtarı (`token`, `https://<alan adı>/d/<token>`) | 15 dk (uygulandı) → **48 saat**; aileye bağlanınca 30 gün (öneri `20261026100000`) | uygulandı / öneri |
+| `clinic_invites.kind` | `family` | Uzmanın aile daveti: 6 karakter kod + 32 karakter bağlantı anahtarı (`token`, `https://<alan adı>/d/<token>`) | 15 dk (uygulandı) → **48 saat**; aileye bağlanınca 30 gün (`20261026100000`) | uygulandı |
 | `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
@@ -188,7 +188,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; öneri `20261026100000`: `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi) (anlamları: `akislar.md` 7, 10, 12) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
@@ -279,11 +279,15 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | Bildirim `kind` | `reward_request` (ebeveynlere), `reward_given`, `reward_decided`, `stones_deducted` (çocuğa; diğer ebeveyne bilgi) |
 | `reward_request` bildiriminin `data` alanı | `{request_id, child_id}`; çocuğun **ilk** isteğinde (oyundan gelen hiçbir önceki isteği yokken; durum fark etmez) ayrıca `"first": true` ve başlık `İlk ödül talebi: <ad> bir ödül istiyor`. Sonraki isteklerde `first` yok. Yeni `kind` yok. Öneri `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026. |
 
-## P15. Aile daveti, geçmiş aktarımı, takip planı (öneri `proposed/20261026100000_family_invite_links.sql`, 26 Ekim 2026)
+## P15. Aile daveti, geçmiş aktarımı, takip planı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 
 | Alan | Değerler | Anlam |
 |---|---|---|
-| davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti |
+| davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti · aile reddetti |
+| bayrak `clinician_verification` | `false` (ilk sürüm) / `true` | belge incelemesi görünür mü (ClinicApp satırı + sayfası, ParentApp rozeti/etiketi, sunucu başvurusu ve `verified_as`) |
+| `clinician_verifications.status` | `pending`, `auto_rejected`, `approved`, `rejected`, `withdrawn`, `suspended` | incelemede · ön kontrol geri çevirdi · belgesi incelendi · reddedildi · yerine yenisi geldi · askıya alındı |
+| `clinician_verifications.profession` / `clinicians.verified_profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `diger` | Türkçe ad `clinician_profession_label()`; eşleme `veri/uzman_meslekleri.json` |
+| onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |
 | `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik) |
 | `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). ParentApp `age_band`'e çevirirken K, A → `A`; B, C → `B` (§4) |
 | `invite-info` durumu | `open`, `used`, `expired`, `revoked`, `not_found` | açılış sayfası |
