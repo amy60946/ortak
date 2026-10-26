@@ -185,31 +185,55 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d3');
 select tst.check(tst.cnt('public.clinic_notes') = 0 and tst.cnt('public.clinic_goals') = 0, 'rıza yokken yeni uzman eski kayıtları görmez');
 select tst.check(tst.cnt('public.children') = 1, 'çocuğun görev/kayıt verisini zaten görür');
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
-select tst.check(public.clinic_link_history_set(tst.v('L2')::uuid, true) = 1, 'aile önceki kayıtları açar');
+select tst.check(public.clinic_link_history_set(tst.v('L2')::uuid, true, 'uzman-gecis-v1') = 1, 'aile önceki kayıtları açar');
 select tst.as_user('00000000-0000-0000-0000-0000000000d3');
-select tst.check(tst.cnt('public.clinic_notes') = 1 and tst.cnt('public.clinic_task_suggestions') = 1, 'yeni uzman eski not ve öneriyi okur');
-select tst.check(tst.cnt('public.clinic_goals') = 2 and tst.cnt('public.goal_ratings') = 1 and tst.cnt('public.care_modules') = 1
-                 and tst.cnt('public.care_module_logs') = 2, 'hedefler, puanlar, aile programı ve uygulama kaydı aktarılır');
-select tst.check((select clinician from public.clinic_link_history_of(tst.v('L2')::uuid)) = 'Dr. Ece', 'kimden geldiği görünür');
+select tst.check(tst.cnt('public.clinic_notes') = 0 and tst.cnt('public.clinic_task_suggestions') = 0 and tst.cnt('public.clinic_goals') = 0
+                 and tst.cnt('public.care_modules') = 0 and tst.cnt('public.clinic_link_history') = 0,
+                 'yeni uzman tablolara doğrudan erişmez (kimlik sütunları görünmez)');
+insert into tst.kv select 'R', public.clinic_inherited_records(tst.v('L2')::uuid)::text;
+select tst.check(jsonb_array_length(tst.v('R')::jsonb) = 1 and tst.v('R')::jsonb -> 0 ->> 'label' = 'Önceki uzman 1', 'önceki uzman adsız: "Önceki uzman 1"');
+select tst.check(tst.v('R')::jsonb -> 0 -> 'notes' -> 0 ->> 'body' = 'Eski uzmanın notu'
+                 and tst.v('R')::jsonb -> 0 -> 'suggestions' -> 0 ->> 'title' = 'Eski öneri', 'yeni uzman eski not ve öneriyi okur');
+select tst.check(jsonb_array_length(tst.v('R')::jsonb -> 0 -> 'goals') = 2
+                 and (select sum(jsonb_array_length(g -> 'ratings')) from jsonb_array_elements(tst.v('R')::jsonb -> 0 -> 'goals') g) = 1
+                 and jsonb_array_length(tst.v('R')::jsonb -> 0 -> 'modules') = 1
+                 and jsonb_array_length(tst.v('R')::jsonb -> 0 -> 'modules' -> 0 -> 'logs') = 2,
+                 'hedefler, puanlar, aile programı ve uygulama kaydı aktarılır');
+select tst.check(position('Dr. Ece' in tst.v('R')) = 0 and position('Mavi' in tst.v('R')) = 0
+                 and tst.v('R') !~ '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-',
+                 'önceki uzmanın adı, kliniği ve kimlikleri dönmez');
+-- metinde geçen ad gizlenir; başka kelimelere dokunulmaz
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+reset role;
+insert into public.clinic_notes (link_id, clinic_id, author_id, body)
+  select tst.v('L1')::uuid, clinic_id, id, 'Ece Hanım görüştü (Mavi Klinik değil, Mavi). Becerisi arttı; ece' from public.clinicians where id = '00000000-0000-0000-0000-0000000000d1';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d3');
+select tst.check(public.clinic_inherited_records(tst.v('L2')::uuid) -> 0 -> 'notes' -> 0 ->> 'body'
+                 = '[önceki uzman] Hanım görüştü ([önceki uzman] Klinik değil, [önceki uzman]). Becerisi arttı; [önceki uzman]',
+                 'metindeki uzman ve klinik adı gizlenir, "Becerisi" bozulmaz');
+select tst.fails($$select public.clinic_redact('x', array['x'])$$, 'gizleme işlevi istemciye kapalı');
 update public.clinic_notes set body = 'değişti';
 delete from public.clinic_notes;
 reset role;
-select tst.check((select body from public.clinic_notes) = 'Eski uzmanın notu', 'devralınan kayıt salt okunur');
+select tst.check((select count(*) from public.clinic_notes where body = 'Eski uzmanın notu') = 1, 'devralınan kayıt salt okunur');
+select tst.check((select consent_version from public.clinic_link_history where link_id = tst.v('L2')::uuid) = 'uzman-gecis-v1', 'onaylanan metin sürümü kaydedilir');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
 select tst.check(tst.cnt('public.clinic_notes') = 0, 'eski kliniğin başka üyesi görmez (paylaşım bitti, atanmamış)');
+select tst.check(jsonb_array_length(public.clinic_inherited_records(tst.v('L2')::uuid)) = 0, 'başka klinik devralınan kayıtları okuyamaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.fails($$select public.clinic_link_history_set(tst.v('L2')::uuid, true)$$, 'başka aile aktarımı açamaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
 select public.clinic_link_history_set(tst.v('L2')::uuid, false);
 select tst.as_user('00000000-0000-0000-0000-0000000000d3');
-select tst.check(tst.cnt('public.clinic_notes') = 0, 'aile geri alınca erişim biter');
+select tst.check(jsonb_array_length(public.clinic_inherited_records(tst.v('L2')::uuid)) = 0, 'aile geri alınca erişim biter');
 
 -- paylaşırken birlikte açma
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'c6', public.clinic_create_invite('family', '') ->> 'code';
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
-select public.redeem_clinic_invite_children(tst.v('c6'), array['00000000-0000-0000-0000-00000000c009'::uuid], true);
+select public.redeem_clinic_invite_children(tst.v('c6'), array['00000000-0000-0000-0000-00000000c009'::uuid], true, 'uzman-gecis-v1');
 select tst.check((select count(*) from public.family_clinic_links() where history_shared) = 1, 'paylaşırken geçmiş birlikte açılır');
 
 -- anon
