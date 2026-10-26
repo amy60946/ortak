@@ -5,6 +5,9 @@
 -- 3) Yönetim panelinde (support/owner, iki adımlı doğrulama) kişi barkodu turkiye.gov.tr/belge-dogrulama'da, BCBA'yı BACB
 --    sicilinde sorgular ve onaylar ya da nedenle reddeder. Karar sonrası belge dosyası silinir; yalnız özet kalır.
 -- 4) Onaylanan uzmanda rozet "Belgesi incelendi: <meslek>" (doğrulandı değil). Ad değişince rozet düşer.
+-- 5) Görünürlük bayrağı `clinician_verification` (kullanıcı kararı 26 Ekim 2026): ilk sürümde KAPALI. Kapalıyken uzman başvuramaz,
+--    ailelere rozet dönmez; ClinicApp ve ParentApp `client_config` bayrağına göre ekranı gizler. Yönetim panelinden açılır
+--    (`admin_set_flag`; önce kişiye istisna `admin_set_user_flag` ile denenebilir). Karar hatırlatması DURUM.md.
 -- Bu dosya 20261026100000_family_invite_links.sql'den ÖNCE çalışır (o dosyadaki aile yanıtları rozeti okur). Tekrar çalıştırılabilir.
 
 -- ---------------------------------------------------------------------
@@ -32,11 +35,17 @@ $$;
 revoke execute on function public.clinician_profession_label(text) from public, anon;
 grant execute on function public.clinician_profession_label(text) to authenticated;
 
--- Aile yanıtlarındaki rozet metni: "Klinik psikolog" ya da null
+-- Görünürlük bayrağı: ilk sürümde kapalı (var olan değer korunur)
+insert into public.feature_flags (key, enabled, rollout_pct, description)
+values ('clinician_verification', false, 100, 'Uzman belge incelemesi: ClinicApp "Belgeni yükle" + ailelere "Belgesi incelendi" rozeti')
+on conflict (key) do nothing;
+
+-- Aile yanıtlarındaki rozet metni: "Klinik psikolog" ya da null (bayrak kapalıysa null; açılış sayfasında oturum yok → genel bayrak)
 create or replace function public.clinician_badge(p_clinician uuid)
 returns text language sql stable security definer set search_path = '' as $$
   select public.clinician_profession_label(m.verified_profession)
-    from public.clinicians m where m.id = p_clinician and m.verified_at is not null
+    from public.clinicians m
+   where m.id = p_clinician and m.verified_at is not null and public.flag_on(auth.uid(), 'clinician_verification')
 $$;
 revoke execute on function public.clinician_badge(uuid) from public, anon, authenticated;
 
@@ -108,6 +117,7 @@ declare
 begin
   select * into me from public.clinicians where id = auth.uid();
   if not found then raise exception 'Yalnızca uzman hesabı'; end if;
+  if not public.flag_on(me.id, 'clinician_verification') then raise exception 'Belge incelemesi henüz açık değil'; end if;
   if public.clinician_profession_label(p_profession) is null then raise exception 'Meslek seç'; end if;
   if p_profession = 'bcba' and b is null then raise exception 'BACB sicil numarasını yaz'; end if;
   if b is not null and b !~ '^[0-9A-Z-]{4,20}$' then raise exception 'BACB sicil numarası geçersiz'; end if;
@@ -148,6 +158,7 @@ grant execute on function public.clinician_verification_submit(uuid) to authenti
 create or replace function public.clinician_verification_me()
 returns json language sql stable security definer set search_path = '' as $$
   select json_build_object(
+    'enabled', public.flag_on(m.id, 'clinician_verification'),
     'verified_profession', m.verified_profession,
     'verified_label', public.clinician_profession_label(m.verified_profession),
     'verified_at', m.verified_at,

@@ -270,6 +270,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | Alan | Değerler | Anlam |
 |---|---|---|
 | davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti · aile reddetti |
+| bayrak `clinician_verification` | `false` (ilk sürüm) / `true` | belge incelemesi görünür mü (ClinicApp satırı + sayfası, ParentApp rozeti/etiketi, sunucu başvurusu ve `verified_as`) |
 | `clinician_verifications.status` | `pending`, `auto_rejected`, `approved`, `rejected`, `withdrawn`, `suspended` | incelemede · ön kontrol geri çevirdi · belgesi incelendi · reddedildi · yerine yenisi geldi · askıya alındı |
 | `clinician_verifications.profession` / `clinicians.verified_profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `diger` | Türkçe ad `clinician_profession_label()`; eşleme `veri/uzman_meslekleri.json` |
 | onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |

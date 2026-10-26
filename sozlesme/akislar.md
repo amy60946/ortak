@@ -323,6 +323,8 @@ Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şi
 | 6 | Üçüncü taraf kimlik doğrulama (KYC) | Kimlik + canlı fotoğraf hizmeti | Kimliği güçlü, mesleği değil | Kişi başı ücret, yeni veri işleyen |
 | 7 | e-Devlet ile giriş / resmî kayıt sorgusu | Kurumsal entegrasyon | En güçlü | Yüksek (başvuru, sözleşme) |
 
+**Görünürlük (kullanıcı, 26 Ekim 2026):** özellik bayrağa bağlı: `clinician_verification`, **ilk sürümde KAPALI**. Kapalıyken ClinicApp'te "Belgeni yükle" satırı ve sayfası görünmez, sunucu başvuru almaz; ParentApp'te rozet de "Belgesi incelenmedi" etiketi de gösterilmez (yalnız uyarı + veli beyanı); aile yanıtlarında `verified_as` null döner. Açmak: yönetim paneli → Bayraklar → `clinician_verification` (önce kişiye istisnayla denenebilir). Karar hatırlatması `DURUM.md` Açık işler.
+
 **Karar (kullanıcı, 26 Ekim 2026): seçenek 2, yarı otomatik** — öneri `proposed/20261026050000_clinician_verification.sql`, Edge Function `clinician-verify`, meslek eşlemesi `veri/uzman_meslekleri.json`. Uyarı + veli beyanı (1) rozet olsa da kalır.
 
 ### 14.1 Akış
