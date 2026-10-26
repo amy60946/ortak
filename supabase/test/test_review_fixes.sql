@@ -1,4 +1,4 @@
--- 26 Ekim 2026 denetimi düzeltmeleri (proposed/20261026300000_review_fixes.sql)
+-- 26 Ekim 2026 denetimi düzeltmeleri (migrations/20261026300000_review_fixes.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

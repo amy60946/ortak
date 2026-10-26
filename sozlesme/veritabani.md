@@ -403,8 +403,8 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `clinicians` (genişledi) | Rozet | `verified_profession`, `verified_at` (uzman yazamaz; ad değişince düşer) | değişmedi | yönetici kararı |
 | `clinic_links` (genişledi) | Paylaşım | `consent_version` (ebeveynin onayladığı paylaşım metni, ör. `uzman-paylasim-v1`), `plan_published_at`; `label` sütunu artık hep boş (not `clinic_link_labels`'ta) | değişmedi | `family_accept_invite` yazar |
 | `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
-| `clinic_link_labels` (`20261026300000`, öneri) | Uzmanın paylaşım notu (etiket) | `link_id`, `clinic_id`, `label` (≤ 60) | K (görünür paylaşım); **aile okumaz** | `clinic_links.label` yazımı tetikleyiciyle buraya taşınır |
-| `storage_trash` (`20261026300000`, öneri) | Silinecek kova dosyaları | `bucket`, `path` | yalnız service_role (`storage_trash_take/done`) | tetikleyici (`clinician_verifications`) |
+| `clinic_link_labels` (`20261026300000`, uygulandı 26 Ekim 2026) | Uzmanın paylaşım notu (etiket) | `link_id`, `clinic_id`, `label` (≤ 60) | K (görünür paylaşım); **aile okumaz** | `clinic_links.label` yazımı tetikleyiciyle buraya taşınır |
+| `storage_trash` (`20261026300000`, uygulandı 26 Ekim 2026) | Silinecek kova dosyaları | `bucket`, `path` | yalnız service_role (`storage_trash_take/done`) | tetikleyici (`clinician_verifications`) |
 
 `goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman yalnız `clinic_inherited_records` ile okur (önceki uzman adsız).
 
