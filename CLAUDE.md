@@ -7,7 +7,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | GameApp | Çocuk | `amy60946/game-app` (Unity, C#) | "Oyun" |
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
 | ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
-| Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | bu pencere (ortak) |
+| Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | "GameApp2" (ortak + admin-panel; yönetim paneli işlerinin hepsi bu pencerede, kullanıcı kararı 26 Ekim 2026) |
 
 Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`. İlk iş: bu dosya + `DURUM.md`.
 
