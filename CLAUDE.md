@@ -7,6 +7,9 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | GameApp | Çocuk | `amy60946/game-app` (Unity, C#) | "Oyun" |
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
 | ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
+| Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | bu pencere (ortak) |
+
+Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`. İlk iş: bu dosya + `DURUM.md`.
 
 ## İçerik
 
@@ -19,6 +22,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | `sozlesme/durumlar.md` | Durum adları ve sabit değerler (tam yazımlarıyla). |
 | `sozlesme/ekonomi.md` | Coin, XP, seviye, gösterge düşüşü ve fiyatlar. |
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
+| `sozlesme/admin.md` | Admin paneli (roller, işlemler, güvenlik) ve KPI tanımları. |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
 > Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.

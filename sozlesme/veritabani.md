@@ -229,7 +229,7 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 - `family_premium(p_family_id)`: giriş yapmış kullanıcı yalnız kendi ailesini sorar; başka aile kimliği `false` döner. Oturumsuz (SQL Editor/service_role) bütün aileler.
 - Güvenlik matrisi testi: `supabase/test/test_security_matrix.sql` (girişsiz, ebeveyn, başka aile, çocuk cihazı, klinik sahibi, ekip üyesi, başka klinik; rıza geri alınması).
 
-## 8. ClinicApp üyeliği (öneri, `proposed/20261022200000_clinic_billing.sql`)
+## 8. ClinicApp üyeliği (`migrations/20261022200000_clinic_billing.sql`, uygulandı 23 Ekim)
 
 Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
 
@@ -250,7 +250,7 @@ Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en 
 | `billing_apply(source, external_id, clinic_id, plan_id, status, period_end, auto_renew, environment, payload)` | yalnız service role | Doğrulanmış ödemeyi yazar; aynı abonelik başka kliniğe bağlanamaz; kliniğin planını en geniş etkin abonelikten yeniden hesaplar (`billing_recompute`). Elle pilot üyelik: `select billing_apply('manual','pilot-1','<klinik>','clinic_yearly','active', now()+interval '90 days', false);` |
 | `clinic_create_invite` | K | Üyelik etkin olmalı; Bireysel pakette ekip daveti yok. |
 
-Edge Function `clinic-billing` (Verify JWT kapalı; uzman istekleri oturum anahtarıyla ayrıca doğrulanır): `apple-verify` (App Store Server API'den işlemi okur; `appAccountToken` = klinik kimliği olmalı), `apple-notify` (App Store Server Notifications V2; içerik değil Apple'dan yeniden okunan durum yazılır), `iyzico-start` / `iyzico-callback` / `iyzico-webhook` / `iyzico-cancel`. Ödemeyi yalnız klinik sahibi alır/yönetir.
+Ödeme yolu (kullanıcı kararı 22 Ekim 2026): **RevenueCat**, klinik sahibi birey olarak öder. Edge Function `billing-webhook` (Verify JWT kapalı; `REVENUECAT_API_KEY` zorunlu) klinik ürünlerini `billing_apply('revenuecat', '<uzman kimliği>:<ürün>', klinik, paket, …)` ile yazar; paket `billing_plans.apple_product_id`'den bulunur. `clinic-billing` (Apple doğrudan + iyzico) ileride kendi sisteme geçiş için depoda durur, yayınlanmaz.
 
 ## 9. Sızma denemesi düzeltmeleri (öneri, `proposed/20261022010000_security_pentest.sql`)
 
@@ -298,7 +298,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `join_family`, `redeem_child_code`, `clinic_invite_preview`, `redeem_clinic_invite(_children)`, `clinic_join_team` | P / O / K | Kod hatasında `reason` (expired/used/not_found) eklendi; durumlar P11 |
 | `family_access()` | P | `{state, full, enforced, trial_started_at, trial_ends_at, days_left, plan, period_end, auto_renew, subscription_status, limits}` |
 | `family_premium(p_family_id)` | P, K | premium / ücretli klinik / deneme sürüyor |
-| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`) |
+| `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
 | `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
@@ -325,3 +325,43 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - **`clinic_clients()`** dönüşüne `clinician_id`, `clinician_name`, `assigned uuid[]` eklendi.
 - **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
 - Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
+
+## 11. Aile davet bağlantısı, geçmiş aktarımı, takip planı (öneri, `proposed/20261026100000_family_invite_links.sql`)
+
+Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
+
+### 11.1 Tablolar
+| Tablo | Ne | Alanlar | Okur | Yazar |
+|---|---|---|---|---|
+| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at`, `child_name` (≤ 40, uzmanın önerisi), `child_age_group` (`K`/`A`/`B`/`C`; davet bitince ikisi de silinir), `declined_at` | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
+| `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
+| `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
+| `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
+| `clinic_links` (genişledi) | Paylaşım | `consent_version` (ebeveynin onayladığı paylaşım metni, ör. `uzman-paylasim-v1`) | değişmedi | `family_accept_invite` yazar |
+| `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
+
+`goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman yalnız `clinic_inherited_records` ile okur (önceki uzman adsız).
+
+### 11.2 Fonksiyonlar
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: 48 saat, `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
+| `clinic_invite_mark(code, channel, revoke)` | K (davet sahibi / klinik sahibi) | Kanal kaydı ya da iptal (iptal taslak planı siler) |
+| `clinic_invites_list(gün)` / `clinic_invite_stats(gün)` | K | Davet listesi + durum / uzman başına gönderilen, açılan, bağlanan, paylaşılan, süresi dolan |
+| `clinic_invites_sweep()` | K | Kendi kliniğinin süresi dolan davetleri için `invite_expired` (zamanlayıcı yoksa) |
+| `clinic_invites_expire(clinic?)` | yalnız sunucu (pg_cron) | Aynısı, bütün klinikler |
+| `clinic_invite_open(token)` | yalnız service_role (Edge Function `invite-info`) | Açılış sayfası bilgisi + `opened_at` |
+| `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{code, clinic_id, clinic, clinician, title, child_name, child_age_group, has_plan}` (uzmanın notu `label` dönmez) |
+| `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün): `code, clinic, clinician, title, child_name, child_age_group, claimed_at, has_plan` |
+| `clinic_invite_preview(token|kod)` | P | Kod ya da anahtar; bağlanmış davet 30 gün |
+| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false, rıza_sürümü=null)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı); davet akışında `family_accept_invite` tercih edilir |
+| `family_accept_invite(token|kod, çocuk jsonb?, çocuklar uuid[]?, paylaş_geçmiş, onay_sürümü, geçmiş_sürümü)` | P | Uzmanın önerdiği çocuğu ebeveynin düzelttiği haliyle oluşturur (`{name, age_group, birthday?, gender?, avatar?, allow_duplicate?}`; yaş grubu → `age_band` K/A→A, B/C→B) ve/veya var olan çocukları ekler, paylaşır; `clinic_links.consent_version`. Aynı ad: `{"error":"duplicate_child", child_id, name, message}` (HTTP 200). Düzeltildiyse uzmana `invite_child_updated`. `{link_ids, child_ids, clinic_id}` |
+| `family_decline_invite(token|kod)` | P | "Bu davet bana ait değil": davet `declined`, öneri + taslak plan silinir, uzmana `invite_declined` |
+| `clinic_link_history_set(link, açık, rıza_sürümü=null)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat; onaylanan metin sürümü kaydedilir |
+| `clinic_inherited_records(link)` | K | Devralınan kayıtlar, önceki paylaşım başına: `{n, label: "Önceki uzman n", from, to (ay), notes, suggestions, goals (+ratings), modules (+logs)}`; ad, unvan, klinik ve kimlik yok; metinlerde adlar "[önceki uzman]" |
+| `family_clinic_links()` | P | + `history_shared`, `history_available` |
+| `care_plan_publish(link)` | K | Ebeveynlere tek `care_plan_shared` bildirimi |
+| `family_care_plan(link)` | P | Paylaşılan hedefler + etkin/tamamlanan modüller + bu hafta uygulanan gün sayısı |
+| `handle_new_user` | tetikleyici | Ebeveyn kaydında meta `clinic_invite` (anahtar/kod) ya da e-posta eşleşmesiyle daveti bağlar; hata kaydı engellemez |
+
+Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).

@@ -67,7 +67,7 @@ Ek kurallar:
 |---|---|---|---|---|
 | `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
 | `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aileye verdiği paylaşım kodu (ebeveyn ParentApp'te girer) | 7 gün, tek kullanım | uygulandı |
+| `clinic_invites.kind` | `family` | Uzmanın aile daveti: 6 karakter kod + 32 karakter bağlantı anahtarı (`token`, `https://<alan adı>/d/<token>`) | 15 dk (uygulandı) → **48 saat**; aileye bağlanınca 30 gün (öneri `20261026100000`) | uygulandı / öneri |
 | `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
@@ -151,7 +151,7 @@ Kod biçimi:
 |---|---|---|
 | `clinic_links.status` | `active` (varsayılan) / `revoked` | Rıza etkin / ebeveyn ya da uzman sonlandırdı. Bir klinik–çocuk çifti için en fazla bir `active`. |
 | `clinics.plan` | `trial` (varsayılan; öneriyle 7 gün, eskiden 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
-| `clinics.billing_source` | `app_store` / `iyzico` / `manual` / null | Ödeme kaynağı (öneri). |
+| `clinics.billing_source` | `revenuecat` (bugünkü yol) / `app_store` / `iyzico` (ileride kendi sistem) / `manual` / null | Ödeme kaynağı (öneri). |
 | `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
 | `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder, klinik adını değiştirir, bütün danışanları görür ve danışanları üyelere atar (`20261022100000`, uygulandı). Üye yalnız sorumlusu olduğu ve kendisine atanan danışanları görür. |
 | `clinic_task_suggestions.status` | `pending` (varsayılan) / `accepted` / `declined` | Ebeveyn kararı. `accepted` olunca görevi **ParentApp kendisi** oluşturur (sunucu otomatik görev açmaz). |
@@ -177,7 +177,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined` (anlamları: `akislar.md` 7) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; öneri `20261026100000`: `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi) (anlamları: `akislar.md` 7, 10, 12) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
@@ -264,3 +264,20 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `reward_requests.status` | `pending` (bekliyor) / `approved` (verildi, taş düştü) / `rejected` (olmadı) / `canceled` (çocuk vazgeçti) |
 | Hata `hint` | `not_enough_stones`, `too_many_requests` (5 bekleyen istek), `premium_required` |
 | Bildirim `kind` | `reward_request` (ebeveynlere), `reward_given`, `reward_decided`, `stones_deducted` (çocuğa; diğer ebeveyne bilgi) |
+
+## P15. Aile daveti, geçmiş aktarımı, takip planı (öneri `proposed/20261026100000_family_invite_links.sql`, 26 Ekim 2026)
+
+| Alan | Değerler | Anlam |
+|---|---|---|
+| davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti · aile reddetti |
+| onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |
+| `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik) |
+| `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). ParentApp `age_band`'e çevirirken K, A → `A`; B, C → `B` (§4) |
+| `invite-info` durumu | `open`, `used`, `expired`, `revoked`, `not_found` | açılış sayfası |
+| `clinic_goals.measure` | `yesno`, `percent`, `frequency`, `duration`, `level` | evet-hayır (gün) · yüzde · sıklık · süre (dk) · düzey (yalnız GAS) |
+| `clinic_goals.status` | `active`, `achieved`, `paused` | sürüyor · ulaşıldı · ara verildi |
+| `clinic_goals.shared` | `true` / `false` | aile görür / yalnız klinik (eski hedefler `false`) |
+| `care_modules.status` | `planned`, `active`, `done` | planlandı (aile görmez) · etkin · tamamlandı |
+| `care_module_logs.barrier` | `no_time`, `forgot`, `child_resisted`, `unsure` | vakit yoktu · unuttum · çocuk direndi · nasıl yapacağımı bilemedim |
+| `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
+| hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |

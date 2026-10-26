@@ -3,8 +3,12 @@
 --   Paketler: "Bireysel" (solo, 1 uzman) ve "Klinik" (clinic, ekip dahil en çok 10 uzman); aylık ya da yıllık.
 --   Yeni klinik 7 gün ücretsiz dener (kart istenmez; denemede ekip de denenebilir, 10 koltuk).
 --   Deneme ya da üyelik bitince uzman çocuk verisine erişemez (sunucu kuralı); uygulama üyelik ekranını gösterir.
---   Ödeme: iPhone/iPad'de App Store aboneliği, web'de iyzico. İkisini de Edge Function `clinic-billing`
---   doğrular ve yalnız service role ile `billing_apply` çağırır. İstemci plan/süre yazamaz.
+--   Ödeme (kullanıcı kararı 22 Ekim 2026): klinik sahibi BİREY olarak öder (şirket hesabı/fatura yok) →
+--   iPhone/iPad'de App Store aboneliği, RevenueCat üzerinden (ParentApp ile aynı yol). Edge Function
+--   `billing-webhook` RevenueCat'ten durumu okur ve yalnız service role ile `billing_apply('revenuecat', …)` çağırır.
+--   Web panelinde satın alma yok; üyelik uzman hesabına bağlı olduğu için web'de de açılır.
+--   `app_store` / `iyzico` kaynakları ve `clinic-billing` ileride kendi Apple sistemine geçiş için duruyor (DURUM hatırlatması).
+--   İstemci plan/süre yazamaz.
 --   Eski planlar (small/business/custom) etkin sayılmaya devam eder (elle verilmiş).
 -- Önkoşul: migrations/20261021300000_security_pentest.sql ve migrations/20261022100000_clinic_assignments.sql. Tekrar çalıştırılabilir.
 -- =====================================================================
@@ -17,7 +21,7 @@ alter table public.clinics add constraint clinics_plan_check
   check (plan in ('trial', 'solo', 'clinic', 'small', 'business', 'custom', 'inactive'));
 alter table public.clinics add column if not exists billing_period text check (billing_period in ('monthly', 'yearly'));
 alter table public.clinics add column if not exists period_end timestamptz;
-alter table public.clinics add column if not exists billing_source text check (billing_source in ('app_store', 'iyzico', 'manual'));
+alter table public.clinics add column if not exists billing_source text check (billing_source in ('revenuecat', 'app_store', 'iyzico', 'manual'));
 alter table public.clinics add column if not exists auto_renew boolean not null default false;
 alter table public.clinics alter column trial_ends_at set default now() + interval '7 days';
 alter table public.clinics alter column seat_limit set default 10;
@@ -57,8 +61,8 @@ grant select on public.billing_plans to authenticated;
 create table if not exists public.billing_subscriptions (
   id            uuid primary key default gen_random_uuid(),
   clinic_id     uuid not null references public.clinics (id) on delete cascade,
-  source        text not null check (source in ('app_store', 'iyzico', 'manual')),
-  external_id   text not null check (char_length(external_id) between 1 and 200),  -- App Store originalTransactionId / iyzico abonelik referansı
+  source        text not null check (source in ('revenuecat', 'app_store', 'iyzico', 'manual')),
+  external_id   text not null check (char_length(external_id) between 1 and 200),  -- RevenueCat: '<uzman kimliği>:<ürün>' / App Store originalTransactionId / iyzico abonelik referansı
   plan_id       text not null references public.billing_plans (id),
   status        text not null check (status in ('active', 'canceled', 'expired', 'refunded', 'pending')),
   period_end    timestamptz,
@@ -190,7 +194,7 @@ declare
   cur public.billing_subscriptions%rowtype;
   cid uuid;
 begin
-  if p_source not in ('app_store', 'iyzico', 'manual') then raise exception 'Geçersiz kaynak'; end if;
+  if p_source not in ('revenuecat', 'app_store', 'iyzico', 'manual') then raise exception 'Geçersiz kaynak'; end if;
   if not exists (select 1 from public.billing_plans where id = p_plan_id) then raise exception 'Geçersiz paket'; end if;
   select * into cur from public.billing_subscriptions where source = p_source and external_id = p_external_id for update;
   if found and p_clinic_id is not null and cur.clinic_id <> p_clinic_id then
