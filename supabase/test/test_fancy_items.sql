@@ -58,7 +58,7 @@ select tst.check(not exists (select 1 from tst.fancy f left join public.game_ite
 select tst.check(not exists (select 1 from tst.fancy f join public.game_items g using (item_id)
                              where g.price <> f.price or g.min_level <> f.min_level),
                  'her komik eşyanın fiyatı ve seviyesi items.json ile aynı');
-select tst.check((select count(*) from public.game_items) = 67, 'katalog 48 + 19 = 67 eşya (katalog büyürse bu sayı ve ekonomi.md §4 güncellenir)');
+select tst.check((select count(*) from public.game_items) = 76, 'katalog 48 + 19 komik + 9 uzay = 76 eşya (katalog büyürse bu sayı ve ekonomi.md §4 güncellenir)');
 select tst.check((select count(*) from public.game_items where price <= 0) = 0, 'sıfır ya da eksi fiyat yok');
 -- var olan 48 eşyaya dokunulmadı (örnekler)
 select tst.check((select price from public.game_items where item_id = 'glasses_round') = 15
