@@ -12,6 +12,9 @@
 --    Uzman isterse çocuğun adını (ya da takma adını) ve yaş grubunu yazar (kullanıcı kararı 26 Ekim 2026): yalnız daveti
 --    kendi ailesine bağlamış ebeveyn görür ("Efe'yi ekle ve paylaş"), açılış sayfasında görünmez; davet bitince silinir.
 --    Oyun giriş kodu davete konmaz (çocuk hesabını ebeveyn açar ve bağlar).
+--    Ebeveyn öneriyi kontrol eder, gerekirse düzeltir ve tek adımda onaylar: çocuk sunucuda oluşur ve paylaşılır
+--    (family_accept_invite); düzelttiyse uzmana bildirim gider. Davet kendisine ait değilse reddeder (family_decline_invite).
+--    Paylaşım onayının metin sürümü clinic_links.consent_version'a yazılır (uzman doğrulanmaz uyarısı + veli beyanı).
 -- 3) Takip planı: çocuk hedefleri (clinic_goals genişler; "aileyle paylaşılan" hedefleri aile görür, haftalık puanlar yine yalnız klinikte)
 --    + aile programı modülleri (care_modules) + ebeveynin uygulama kaydı (care_module_logs). Plan davet sırasında taslak olarak kurulabilir;
 --    aile çocuğunu paylaşınca o çocuğa taşınır.
@@ -31,6 +34,11 @@ alter table public.clinic_invites add column if not exists expired_notified_at t
 alter table public.clinic_invites add column if not exists revoked_at timestamptz;
 alter table public.clinic_invites add column if not exists child_name text;        -- uzmanın önerisi; ebeveyn düzenler
 alter table public.clinic_invites add column if not exists child_age_group text;   -- K ≤5 · A 6–8 · B 9–12 · C 13+ (şablon yaş grupları)
+alter table public.clinic_invites add column if not exists declined_at timestamptz; -- aile "bu davet bana ait değil / paylaşmak istemiyorum"
+alter table public.clinic_links add column if not exists consent_version text;      -- ebeveynin onayladığı paylaşım metni sürümü
+do $$ begin
+  alter table public.clinic_links add constraint clinic_links_consent_version_len check (consent_version is null or char_length(consent_version) <= 40);
+exception when duplicate_object then null; end $$;
 do $$ begin
   alter table public.clinic_invites add constraint clinic_invites_parent_name_len check (char_length(parent_name) <= 60);
 exception when duplicate_object then null; end $$;
@@ -164,6 +172,7 @@ revoke execute on function public.clinic_invite_rejected(text) from public, anon
 create or replace function public.clinic_invite_status(i public.clinic_invites)
 returns text language sql stable set search_path = '' as $$
   select case
+    when i.declined_at is not null then 'declined'
     when i.revoked_at is not null then 'revoked'
     when i.used_at is not null then 'shared'
     when i.claimed_at is not null then 'claimed'
@@ -449,6 +458,108 @@ begin
   if r ->> 'error' is not null then return r; end if;
   return json_build_object('link_id', (r -> 'link_ids') ->> 0);
 end $$;
+
+-- Ebeveyn davet akışını tek çağrıyla bitirir: uzmanın önerdiği çocuğu kontrol eder, gerekirse düzeltir (p_child) ve/veya
+-- ailede var olan çocukları seçer (p_child_ids); çocuk oluşturulur ve paylaşılır. Aynı adda çocuk varsa önce sorulur
+-- ({"error":"duplicate_child"}; ebeveyn "yine de ekle" derse p_child.allow_duplicate = true). Ebeveyn öneriyi değiştirdiyse
+-- uzmana bildirim (invite_child_updated). p_consent_version: paylaşım onayı metni (uzman doğrulanmaz uyarısı + veli beyanı),
+-- p_history_version: önceki uzman kayıtlarının aktarımı (bölüm 2).
+-- p_child: {name, age_group (K/A/B/C), birthday?, gender? ('kız'/'erkek'), avatar?, allow_duplicate?}
+create or replace function public.family_accept_invite(p_key text, p_child jsonb default null, p_child_ids uuid[] default null,
+                                                      p_share_history boolean default false, p_consent_version text default null,
+                                                      p_history_version text default null)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  inv public.clinic_invites%rowtype;
+  ids uuid[] := coalesce(p_child_ids, '{}');
+  nm text;
+  grp text;
+  dup record;
+  cid uuid;
+  r json;
+  t json;
+begin
+  if fid is null then raise exception 'Önce ebeveyn olarak giriş yapmalısın'; end if;
+  t := public.code_throttled();
+  if t is not null then return t; end if;
+  inv := public.clinic_family_invite_find(p_key);
+  if inv.code is null then return public.clinic_invite_rejected('not_found'); end if;
+  if inv.revoked_at is not null then return public.clinic_invite_rejected('expired'); end if;
+  if inv.used_at is not null then return public.clinic_invite_rejected('used'); end if;
+  if inv.claimed_at is not null then
+    if inv.claimed_family is distinct from fid then return public.clinic_invite_rejected('used'); end if;
+    if inv.claimed_at <= now() - interval '30 days' then return public.clinic_invite_rejected('expired'); end if;
+  elsif inv.expires_at <= now() then
+    return public.clinic_invite_rejected('expired');
+  end if;
+  if exists (select 1 from unnest(ids) x where not exists (select 1 from public.children c where c.id = x and c.family_id = fid)) then
+    raise exception 'Çocuk bulunamadı';
+  end if;
+  if p_child is not null then
+    nm := btrim(coalesce(p_child ->> 'name', ''));
+    if nm = '' or char_length(nm) > 40 then raise exception 'Çocuğun adını yaz (en çok 40 harf)'; end if;
+    grp := nullif(upper(btrim(coalesce(p_child ->> 'age_group', ''))), '');
+    if grp is not null and grp not in ('K', 'A', 'B', 'C') then raise exception 'Geçersiz yaş grubu'; end if;
+    if not coalesce((p_child ->> 'allow_duplicate')::boolean, false) then
+      select c.id, c.name into dup from public.children c
+       where c.family_id = fid and lower(btrim(c.name)) = lower(nm) and not (c.id = any(ids)) limit 1;
+      if found then
+        return json_build_object('error', 'duplicate_child', 'child_id', dup.id, 'name', dup.name,
+          'message', 'Kayıtlarında bu isimde bir çocuk var. Aynı çocuksa onu seç; değilse yine de ekleyebilirsin.');
+      end if;
+    end if;
+    insert into public.children (family_id, name, avatar, gender, birthday, age_band)
+    values (fid, nm, left(coalesce(nullif(p_child ->> 'avatar', ''), 'kedi'), 200), nullif(p_child ->> 'gender', ''),
+            nullif(p_child ->> 'birthday', '')::date,
+            case when grp in ('K', 'A') then 'A' when grp in ('B', 'C') then 'B' end)
+    returning id into cid;
+    ids := ids || cid;
+  end if;
+  if coalesce(array_length(ids, 1), 0) = 0 then raise exception 'En az bir çocuk seç'; end if;
+  r := public.redeem_clinic_invite_children(inv.code, ids, p_share_history, p_history_version);
+  if r ->> 'error' is not null then raise exception '%', coalesce(r ->> 'message', 'Davet kullanılamadı'); end if;
+  update public.clinic_links set consent_version = left(nullif(btrim(p_consent_version), ''), 40)
+   where id in (select (jsonb_array_elements_text((r -> 'link_ids')::jsonb))::uuid);
+  -- uzmanın önerisi düzeltildiyse uzmana bildir (onaylanan bilgi danışan listesinde zaten görünür)
+  if cid is not null and (inv.child_name is not null or inv.child_age_group is not null)
+     and (nm is distinct from inv.child_name or grp is distinct from inv.child_age_group) then
+    perform public.notify(inv.clinician_id, 'clinic', 'invite_child_updated', 'Ebeveyn çocuk bilgisini düzeltti',
+      left(coalesce(inv.child_name, '—') || coalesce(' (' || inv.child_age_group || ')', '') || ' → ' || nm || coalesce(' (' || grp || ')', ''), 300),
+      jsonb_build_object('code', inv.code), fid, cid);
+  end if;
+  return json_build_object('link_ids', r -> 'link_ids', 'child_ids', to_json(ids), 'clinic_id', inv.clinic_id);
+end $$;
+revoke execute on function public.family_accept_invite(text, jsonb, uuid[], boolean, text, text) from public, anon;
+grant execute on function public.family_accept_invite(text, jsonb, uuid[], boolean, text, text) to authenticated;
+
+-- Ebeveyn: "Bu davet bana ait değil / paylaşmak istemiyorum". Davet kapanır, çocuk önerisi ve taslak plan silinir, uzmana bildirim.
+create or replace function public.family_decline_invite(p_key text)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  inv public.clinic_invites%rowtype;
+begin
+  if fid is null then raise exception 'Önce ebeveyn olarak giriş yapmalısın'; end if;
+  inv := public.clinic_family_invite_find(p_key);
+  if inv.code is null or inv.used_at is not null or inv.revoked_at is not null
+     or (inv.claimed_at is not null and inv.claimed_family is distinct from fid)
+     or (inv.claimed_at is null and inv.expires_at <= now()) then
+    raise exception 'Davet bulunamadı';
+  end if;
+  update public.clinic_invites
+     set declined_at = now(), revoked_at = now(), claimed_at = coalesce(claimed_at, now()), claimed_family = coalesce(claimed_family, fid),
+         child_name = null, child_age_group = null
+   where code = inv.code;
+  delete from public.clinic_goals where invite_code = inv.code;
+  delete from public.care_modules where invite_code = inv.code;
+  perform public.notify(inv.clinician_id, 'clinic', 'invite_declined', 'Aile davetini kabul etmedi',
+    left(case when inv.label <> '' then inv.label || ' · ' when inv.parent_name <> '' then inv.parent_name || ' · ' else '' end
+         || 'Bilgileri kontrol edip gerekirse yeni davet gönder.', 300),
+    jsonb_build_object('code', inv.code));
+end $$;
+revoke execute on function public.family_decline_invite(text) from public, anon;
+grant execute on function public.family_decline_invite(text) to authenticated;
 
 -- Kayıt: ebeveyn hesabı açılınca bağlantıdaki davet (meta `clinic_invite`) ya da e-postası eşleşen açık davet aileye bağlanır
 create or replace function public.handle_new_user()
