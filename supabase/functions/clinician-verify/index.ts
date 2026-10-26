@@ -1,4 +1,4 @@
-// clinician-verify: uzman doğrulama ön kontrolü (sozlesme/akislar.md 14, proposed/20261026050000_clinician_verification.sql).
+// clinician-verify: uzman doğrulama ön kontrolü (sozlesme/akislar.md 14, migrations/20261026050000_clinician_verification.sql).
 // ClinicApp belgeyi `verify` kovasına yükleyip `clinician_verification_submit` dedikten sonra uzman oturumuyla çağırır:
 //   POST { id }  →  { status: 'pending' | 'unreadable' | 'student_doc' | 'duplicate' | 'skipped', checks }
 // "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi; yeni anahtar düzeninde ağ geçidi oturum anahtarını reddedebiliyor):

@@ -1,4 +1,4 @@
--- Aile davet bağlantısı, geçmiş aktarımı, takip planı (proposed/20261026100000_family_invite_links.sql)
+-- Aile davet bağlantısı, geçmiş aktarımı, takip planı (migrations/20261026100000_family_invite_links.sql)
 \set ON_ERROR_STOP on
 
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$
