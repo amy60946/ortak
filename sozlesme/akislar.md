@@ -13,7 +13,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
 - `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-24 (3.1a hoş geldin coini, P11 ilk ödül talebi)
 
 ---
 
@@ -39,8 +39,8 @@ Son güncelleme: 2026-10-19
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **24 saat**, tek kullanım |
-| 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). | — |
-| 3 | [O] | Çocuk kodu yazar. Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
+| 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). ParentApp kodu yazıyla **ve QR olarak** gösterir (§2.0). | — |
+| 3 | [O] | Çocuk kodu yazar ya da QR okutur (§2.0). Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
 | 4 | [O] | Oturum yoksa **anonim oturum** açar. | `POST /auth/v1/signup` (anonim). Supabase'de "Anonymous Sign-Ins" açık olmalı. |
 | 5 | [O → S] | Kodu kullanır. | `redeem_child_code(code)` → `{child_id, family_id, name, avatar, age_band}` |
 | 6 | [S] | `children.user_id = auth.uid()` yapılır, kod tüketilir. Ebeveyn hesabıyla çağrılırsa reddedilir. | `children`, `invite_codes` |
@@ -49,6 +49,24 @@ Son güncelleme: 2026-10-19
 | 9 | [P] | Realtime ile çocuğun "bağlı" olduğu görünür (`linked` = `user_id` dolu). | `children` (Realtime) |
 
 Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider; bu akışı kullanmaz.
+
+### 2.0 QR ile bağlama (karar 26 Ekim 2026, kullanıcı: "QR ile ilerleriz; kodla da giriş yapılabildiği için PC'de o kullanılır")
+
+Yeni sunucu işi yok: QR yalnız 1. adımdaki **aynı** kodu taşır (aynı süre, tek kullanım, aynı `redeem_child_code`).
+
+| Konu | Kural |
+|---|---|
+| QR içeriği | `pofiadasi://baglan?kod=<KOD>` (KOD = 6 harf/rakam, büyük harf). Başka alan, çocuk adı ya da kimlik **konmaz**. |
+| ParentApp [P] | "Giriş kodu üret" ekranında kodun yanında QR (orta düzey hata düzeltme, en az 220 pt, beyaz kenar payı). Kod yazıyla da görünür kalır (bilgisayar/tarayıcıda oyun kodla açılır). Süre dolunca QR de söner. |
+| Oyun [O] — uygulama içi | Giriş ekranında "QR okut" (yalnız iOS uygulamasında; tarayıcı/bilgisayar sürümünde düğme yok, kod yazılır). Kamera yalnız bu ekranda, yalnız okumak için açılır; görüntü kaydedilmez, gönderilmez; üçüncü taraf kütüphane yok (iOS'un kendi okuyucusu). Kamera bu cihazda **ilk kez** istenmeden önce oyunun ebeveyn kapısı sorusu çıkar (geçilince bir daha sorulmaz). Okunan kod kutuya yazılır ve giriş başlar. |
+| Oyun [O] — telefonun kamerası | Oyun `pofiadasi://` şemasını tanır: sistem kamerasıyla okutulunca oyun açılır, kod kutuya **yazılır ama giriş kendiliğinden başlamaz** — çocuk "Başla"ya basar (başka bir sitenin bağlantısı cihazı habersizce başka hesaba bağlayamasın). Oturum açıksa bağlantı yok sayılır. |
+| Geçersiz QR | Şema/biçim tutmazsa "Bu QR Pofi Adası'nın değil" uyarısı; kod denemesi sayılmaz (`LoginThrottle` yalnız sunucuya giden denemede artar). |
+
+**İlk görev önerisi (karar 26 Ekim 2026, kullanıcı; ParentApp'te yapılacak):** ebeveyn "Giriş kodu üret"e bastığında çocuğun hiç
+görevi yoksa kod üretilmeden önce **yumuşak** bir adım çıkar: "Çocuğunuz adada ilk olarak panoya bakacak. Şimdi ilk görevi
+ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, tek dokunuşla ekle) + "Sonra ekleyeceğim" (kod yine
+üretilir). Kesin engel konmaz (kayıtta vazgeçmeyi önlemek için). Oyunda pano hiçbir zaman boş başlamaz: rehberin hoş geldin görevi
+(`ekonomi.md` §5A) ilk ziyarette panonun en üstündedir. Sunucu değişikliği yok (`create_invite_code` aynı).
 
 ### 2.1 Bağlantıyı kaldırma
 | # | Uygulama | Adım | Veritabanı |
@@ -77,7 +95,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 10a | [S] | Aynı geçişte **Güneş Taşı** yazılır: kolay 1 / orta 2 / zor 3 (`20261019030000_sun_stones`, uygulandı 19 Ekim). Geri almada o tamamlamanın taşı düşer. | tetikleyici `completions_sun_stone` → `sun_stone_ledger` |
 | 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
 | 12 | [O] | Bakiye sunucudan alınır, artış "kazanılan coin" olarak kutlanır. Aynı gün ilk onayda görev serisi bonusu XP'si verilir (coin değil). | `child_me().balance`; `TaskStreak` |
-| 12a | [O] | Onaylı her görev örneği için bir kez: zorluğa göre XP (20/35/50, sınıra sayılmaz) ve becerisine 1 yıldız (`ekonomi.md` 5B). Taş toplamı `child_me().sun_stones`'tan alınır; çocuk taşları adadaki onarım noktalarına yerleştirir. | `child_tasks` (`skill`, `difficulty`); `child_me().sun_stones` |
+| 12a | [O] | Onaylı her görev örneği için bir kez: zorluğa göre XP (6/10/14, günlük sınıra sayılmaz; görünmez günlük payı var — `ekonomi.md` 5.2) ve becerisine 1 yıldız (`ekonomi.md` 5B). Taş toplamı `child_me().sun_stones`'tan alınır; çocuk taşları adadaki onarım noktalarına yerleştirir. | `child_tasks` (`skill`, `difficulty`); `child_me().sun_stones` |
 | 13 | [P] | Ebeveyn çocuğun bakiyesini görür. | `child_balance(child_id)` |
 
 ### 3.1 Coin harcama (oyun içi, ebeveyn adımı yok)
@@ -88,6 +106,14 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 3 | [S] | Fiyat `game_items`'tan; aynı işlem iki kez düşülmez; bakiye yetmezse reddedilir. | `coin_ledger` (`spend`) |
 | 4 | [O] | Kabul → kesinleşir. Ret (`not_enough_coins` / `unknown_item`) → eşya envanterden geri alınır, bakiye sunucudakine eşitlenir. | `Wallet.Acknowledge/Reject` |
 | 5 | [P] | Ebeveynin gördüğü bakiye düşer (bir sonraki `child_balance` çağrısında). | |
+
+### 3.1a Hoş geldin coini (coin kuralının tek istisnası; öneri `migrations/20261024100000_welcome_coins_first_reward.sql`, uygulandı 24 Ekim 2026)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [O] | Çocuk Okti'yi **ilk kez beslediğinde** oyun hoş geldin coinini ister (çevrimdışıysa kuyrukta bekler; tekrar göndermek zararsızdır). | `claim_welcome_coins()` |
+| 2 | [S] | Bu çocuğa daha önce verilmediyse deftere **+20** (`reason='welcome'`) yazar → `{ok:true, coins:20, balance, error:null}`. Verildiyse yazmaz → `{ok:false, coins:0, balance, error:'already_claimed'}`. Ebeveyn hesabı ya da bağlı olmayan oturum: `42501`. | `coin_ledger` (`welcome`) |
+| 3 | [O] | `balance`'ı sunucu bakiyesi olarak alır (`Wallet.ApplyServerSnapshot`); `ok:true` ise kutlar ve çocuğu dükkâna (ilk aksesuar, ör. `glasses_round` 15) yönlendirebilir. `already_claimed` sessizce geçilir. | — |
+| 4 | [P] | Ebeveyn bakiyede 20 coini görür (bildirim yok). Coin geçmişi gösterilirse satır adı "Hoş geldin hediyesi". | `child_balance(child_id)`, `coin_ledger` |
 
 ### 3.2 Oyun kaydı yedeği
 | # | Uygulama | Adım | Veritabanı |
@@ -216,6 +242,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 | Ebeveyn öneriye karar verdi | ParentApp → öneriyi yapan uzman | `suggestion_decided` | clinic |
 | Zor an kaydı | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
 | Ekibe yeni uzman katıldı | ClinicApp → klinik sahipleri | `team_joined` | clinic |
+| Çocuk ödül istedi (ilkinde `data.first = true`, başlık "İlk ödül talebi: …"; P11 3c) | Oyun → ebeveynler | `reward_request` | parent |
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
@@ -402,7 +429,8 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 1 | [P] | Görevler › + › **Ödül**: önerilen ödüllerden seçer ya da kendi ödülünü oluşturur (tür: eşya/etkinlik ya da değiş tokuş; taş fiyatı; hangi çocuklar; simge; ad). | `rewards` |
 | 2 | [S] | Onaylanan görev taş verir (1/2/3). | tetikleyici `completions_stone` |
 | 3a | [P] | Ödülü doğrudan verir (değiş tokuşta kaç kez) → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül, adet)` |
-| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `decide_reward_request(istek, onay, not)` |
+| 3b | [O] | Çocuk oyunda ister (özellik oyunda birkaç seviye sonra açılır; seviye GameApp verisinde, sunucu seviye denetlemez) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `{request_id, status, first}` → `decide_reward_request(istek, onay, not)` |
+| 3c | [S → P] | **İlk talep bilgisi** (kullanıcı kararı, 24 Ekim 2026; göç `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026): çocuğun oyundan gelen **ilk** isteğinde (önceki hiçbir `source='child'` isteği yokken; durum fark etmez; ebeveynin doğrudan verdiği ödül sayılmaz) bildirim yine `kind='reward_request'`, ama `data.first = true` ve başlık "İlk ödül talebi: <ad> bir ödül istiyor". Yalnız bir kez; sonraki isteklerde `first` yok. ParentApp bildirimde ve istek kartında **"İlk ödül talebi"** etiketini gösterir (ör. "Nazlı ilk kez ödül istedi"). Oyun yanıttaki `first` ile çocuğa "ilk isteğin gönderildi" diyebilir. | `notifications.data.first`; `request_reward` yanıtı `first` |
 | 4 | [P] | Bir ya da birkaç çocuk seçip taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` (çocuk başına) |
 | 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
 

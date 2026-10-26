@@ -12,7 +12,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
 - `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
 
 ---
 
@@ -20,7 +20,8 @@ Son güncelleme: 2026-10-19
 
 | İlke | Nerede uygulanıyor |
 |---|---|
-| Coin **yalnızca gerçek görevden**, **yalnızca ebeveyn onayıyla** gelir. Oyun içi etkinlik coin vermez. | Tetikleyici `completions_coin` (SQL); `Wallet` istemcide coin ekleyemez; `StarterKit` coin vermez; bahçe hasadı yiyecek verir, coin değil. |
+| Coin **yalnızca gerçek görevden**, **yalnızca ebeveyn onayıyla** gelir. Oyun içi etkinlik coin vermez. **Tek istisna:** hoş geldin coini (aşağıda). | Tetikleyici `completions_coin` (SQL); `Wallet` istemcide coin ekleyemez; `StarterKit` coin vermez; bahçe hasadı yiyecek verir, coin değil. |
+| **İstisna — hoş geldin coini** (kullanıcı kararı, 24 Ekim 2026: "ilk aksesuarını alabileceği bir coin … dükkânı kullanma alışkanlığı"): çocuk başına **bir kez** **20 coin**, defter nedeni `welcome`. Oyun **ilk beslemede** ister; ikinci istek yazılmaz. Başka hiçbir oyun içi eylem coin vermez. | `claim_welcome_coins()` (SQL, öneri `migrations/20261024100000_welcome_coins_first_reward.sql`); ayrıntı §2.4. |
 | Bakiye her zaman **sunucunun** bakiyesidir; çakışmada sunucu kazanır. | `Wallet.ServerCoins`, `ApplyServerSnapshot`; `child_me().balance`. |
 | Fiyatı **sunucu** belirler; istemcideki fiyat yalnız gösterim içindir. | `spend_coins` fiyatı `game_items`'tan okur; `ShopRules` yorumu. |
 | XP yalnız oyun içi etkinliklerden gelir; **coin ile alınamaz**. XP ve seviye yalnız oyunda (cihaz + `game_saves` yedeği) tutulur; sunucuda XP sütunu yoktur. | `XpSystem`, `LevelTable`. |
@@ -28,7 +29,7 @@ Son güncelleme: 2026-10-19
 
 ---
 
-## 2. Coin kazanma (gerçek görev)
+## 2. Coin kazanma (gerçek görev; tek istisna §2.4)
 
 ### 2.1 Görev ödülü (`task_assignments.coins`)
 | Zorluk | ParentApp varsayılanı | Değiştirilebilir mi? |
@@ -61,6 +62,18 @@ Son güncelleme: 2026-10-19
 - Oyun senkronunda (`SyncCoordinator`): görevler çekilir → `child_me().balance` alınır → `Wallet.ApplyServerSnapshot` artışı "kazanılan coin" olarak kutlar.
 - Senkron sırası: (1) bekleyen görev niyetleri → (2) bekleyen harcamalar → (3) görevler (dün … +7 gün) → (4) bakiye → (5) kayıt yedeği.
 
+### 2.4 Hoş geldin coini (tek istisna; göç `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026)
+
+| Kural | Değer |
+|---|---|
+| Tutar | **20 coin** (fonksiyondaki tek sabit `welcome_coins`). Neden: en ucuz Sv1 giyilebilir eşya `glasses_round` 15 coin; 20 ile ilk aksesuar alınır, 5 coin kalır. Fiyatlar değişirse test (`test_welcome_coins.sql`) uyarır. |
+| Kaç kez | Çocuk (`children.id`) başına **bir kez**: defterde `reason='welcome'`, `ref='welcome'`; çocuk başına tek satır (benzersiz dizin `coin_ledger_welcome_once`). Cihaz değişse, bağlantı yeniden kurulsa da ikinci kez verilmez. |
+| Kim ister | Oyun (çocuk oturumu), **ilk beslemede** `claim_welcome_coins()`. Ebeveyn ya da bağlı çocuğu olmayan oturum: hata `42501`. |
+| Yanıt | `jsonb {ok, coins, balance, error}`: ilk çağrı `{true, 20, yeni bakiye, null}`; sonrakiler `{false, 0, bakiye, 'already_claimed'}`. `balance` = `child_me().balance` ile aynı hesap. |
+| Bakiye | Bakiye bütün defter satırlarının toplamıdır (`coin_balance`); `welcome` dahil. ParentApp `child_balance` ile görür. |
+| Geri alma | Görev onayı geri alınınca yalnız o görevin coini düşer (`task`/`task_undo`); hoş geldin coini düşmez. |
+| Eski oyuncular | Sunucu "ilk oyun" ayrımı yapmaz: henüz almamış her çocuk bir kez alabilir. Kimin ne zaman isteyeceğine oyun karar verir (ilk besleme). |
+
 ---
 
 ## 3. Coin harcama (`spend_coins`)
@@ -74,7 +87,7 @@ Son güncelleme: 2026-10-19
 | Bakiye yetmezse | `ok=false`, `error='not_enough_coins'`, düşülmez |
 | Bilinmeyen eşya / geçersiz adet | `ok=false`, `error='unknown_item'` |
 | Eksi bakiye | Olamaz (aynı çocuğun harcamaları `for update` ile sıraya girer) |
-| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + `game_levels`). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
+| Seviye kilidi (`min_level`) | Oyunda `ShopRules`; sunucuda `spend_coins` → `level_locked` (`20261019020000_server_rules` (uygulandı); seviye = `child_level`: kayıttaki `Xp.TotalXp` + çocuğun grubunun `game_level_bands` tablosu; ulaşılan en yüksek seviye `Xp.BestLevel` korunur). `game_levels` eşikleri `levels.json` ile aynı tutulur. |
 
 İstemci akışı (`Wallet`): harcama önce yerelde "bekleyen" olarak düşülür (`Available = ServerCoins − bekleyenler`), sunucu kabul edince kesinleşir; reddederse eşya envanterden geri alınır. Ağ hatası (HTTP 0 / 5xx) → kuyrukta kalır, tekrar denenir.
 
@@ -83,7 +96,10 @@ Son güncelleme: 2026-10-19
 ## 4. Dükkân fiyatları (`game_items` = `items.json`)
 
 48 eşya; sunucu (`game_items`) ve oyun verisi (`items.json`) 2026-10-19'da karşılaştırıldı: **fiyat ve seviye birebir aynı**.
+Oyuna 23 Ekim 2026'da 19 komik eşya eklendi (`fancy: true`); sunucuya ekleyen öneri `migrations/20261024110000_fancy_items_catalog.sql` (**uygulandı 24 Ekim 2026**, E9). Öneri uygulanınca katalog **67 eşya**.
+Uzay kıyafetleri (26 Ekim 2026, kullanıcı onayı; Gezegen Koşusu): 3 takım + 3 kask/başlık + 3 sırt parçası (`space: true`, Sv 3; takım 80, kask 40, sırt 45 coin) — `migrations/20261026100000_space_items_catalog.sql` (**uygulandı 26 Ekim 2026**). Katalog **76 eşya**. Koşu başında çocuğun ücretsiz seçtiği takım yalnız o koşuda giyilir (oyun içi; satın alma ya da envanter değil).
 Etkiler (gösterge artışı) yalnız oyun verisindedir.
+Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyundakiyle aynı fiyat ve seviyede olduğunu, sunucuda oyunda olmayan eşya kalmadığını denetler (oyun deposu yandayken: `../game-app`, ya da `GAME_ITEMS_JSON`); yeni eşya önce burada ve `game_items` önerisinde, sonra oyunda.
 
 ### 4.1 Tüketilenler (yiyecek, temizlik, tohum)
 | item_id | Ad (oyun) | Fiyat | Seviye | Etki |
@@ -114,11 +130,13 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 | Ev eşyası (etki: ev göstergesi, ilk yerleştirmede bir kez) | `home_bed` 60 (4) ev +25 · `home_rug` 40 (4) ev +15 · `home_lamp` 45 (4) ev +15 · `home_bookshelf` 80 (6) ev +20 · `home_aquarium` 100 (8) ev +30, mutluluk +5 |
 | Süs | `decor_umbrella` 35 (3), `decor_sandcastle` 25 (2), `decor_palm` 50 (5), `decor_lanterns` 70 (12) |
 | Özel setler | `set_captain` 180 (9), `set_captain_hat` 70 (9), `set_star_cape` 150 (14) |
+| Komik eşyalar (F1–F17, `fancy`; göç `20261024110000_fancy_items_catalog`, uygulandı 24 Ekim 2026) | Baş: `hat_bucket` 25 (1), `hat_propeller` 30 (2), `hat_watermelon` 30 (2), `hat_cake` 35 (3), `hat_banana` 35 (3), `hat_crown_tilt` 45 (5), `hat_fishbowl` 60 (6), `hat_shark` 70 (7) · Göz: `glasses_heart` 25 (2), `glasses_nose` 30 (3), `glasses_snorkel` 40 (4), `mask_hero` 30 (4) · El (çift): `socks_arm` 25 (2), `pompom` 30 (3) · Gövde: `float_flamingo` 50 (4), `outfit_hula` 45 (5), `outfit_burger` 80 (8), `outfit_chicken` 80 (8) · Sırt: `backpack_rocket` 70 (6) |
 
 ### 4.3 Coin dışı başlangıç / test
 | Ne | Değer | Not |
 |---|---|---|
 | Hoş geldin hediyesi (`start.json`) | `food_apple` ×3, `clean_soap` ×2 | Pet ilk adlandırılınca bir kez; **coin yok**; yalnız oyun envanterine (sunucuya yazılmaz). |
+| Hoş geldin coini (sunucu) | 20 coin, bir kez | `start.json`'dan ayrı; sunucu yazar (`claim_welcome_coins`, §2.4). Oyun ilk beslemede ister. |
 | Test erişimi (`TestAccess`) | 5000 coin, tüketilenlerden 20'şer, en üst seviye | **Yalnız sahte arka uç** (önizleme). Gerçek hesapta yok. |
 
 ---
@@ -127,13 +145,14 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 
 ### 5.1 Yaş bandına göre ayarlar (`AgeBandProfile.For`)
 
-> 19 Ekim kararı: bantlar A 6–8 / B 9–12; C kaldırıldı (`durumlar.md` 4). A/B ayarlarının yeni yaş aralıklarına göre yeniden ayarlanması oyun penceresinin işidir; değerler değişirse önce burası güncellenir.
+> Dört grup (22 Ekim 2026; `durumlar.md` §4): K ≤5 · A 6–8 · B 9–12 · C 13+. Oyundaki değerler (`AgeBandProfile.For`); değişirse önce burası güncellenir.
 
-| Bant | Günlük XP sınırı | Tema | Ses hep açık | Ses varsayılan | Altyazı varsayılan | Mini oyun zorluğu | Düğme ölçeği |
+| Grup | Günlük XP sınırı | Tema | Ses hep açık | Ses varsayılan | Altyazı varsayılan | Mini oyun zorluğu | Düğme ölçeği |
 |---|---|---|---|---|---|---|---|
+| K | **200** | `rounded_icons` | evet | açık | açık | 0.2 | 1.3 |
 | A | **250** | `rounded_icons` | evet | açık | açık | 0.3 | 1.25 |
 | B | **300** | `balanced` | hayır | açık | açık | 0.6 | 1.0 |
-| ~~C~~ | ~~350~~ | ~~`compact`~~ | | | | ~~0.85~~ | ~~0.9~~ |
+| C | **350** | `compact` | hayır | kapalı | açık | 0.85 | 0.9 |
 
 - Gün, cihazın **yerel** tarihine göre döner.
 - Sınıra **sayılan** kaynaklar: `MiniGame`, `CardGame`, `Fishing`, `Garden`, `DailyQuest`. **Sayılmayan**: `TaskStreak` (gerçek görev serisi), `Achievement` (rozet, keşif, etkinlik, kulübe vb.).
@@ -141,22 +160,33 @@ Etkiler (gösterge artışı) yalnız oyun verisindedir.
 ### 5.2 XP kaynakları (koddaki sayılar)
 | Kaynak | XP | Sınıra sayılır mı |
 |---|---|---|
-| **Gerçek görev onayı** (Ö2, `RealTaskRewards.Xp`; karar 19 Ekim) | Zorluğa göre (`task_assignments.difficulty`): kolay **20**, orta **35**, zor **50**. Her onaylı görev örneği bir kez. | Hayır |
+| **Gerçek görev onayı** (Ö2, `RealTaskRewards.Xp`; **karar 22 Ekim 2026**, XP takibi M7) | Zorluğa göre (`task_assignments.difficulty`): kolay **6**, orta **10**, zor **14** ("cüzî" XP; asıl ödül coin + Güneş Taşı + beceri yıldızı). Her onaylı görev örneği bir kez. **Görünmez günlük pay** (`XpSystem.AddRealTask`): bir günde gerçek görevden gelen XP, o günkü oyun içi XP'yi geçmez (en az 20). Pay dolunca çocuğa sınır değil sıcak bir "bugünkü yıldız hedefine ulaştın" haberi gösterilir; coin, taş ve yıldız tam gelir. (Eski: 20/35/50.) | Hayır (kendi payı var) |
 | Gerçek görev serisi (`TaskStreak.Bonus`): art arda günlerde en az bir **onaylı** görev | 1. gün 10, her gün +5, 7. günden sonra **40**'ta sabit (10, 15, 20, 25, 30, 35, 40). Aynı gün ikinci onay bonus vermez; seri kırılırsa 1'den başlar, ceza yok. | Hayır |
 | Mini oyun (`MiniGameXp.For`) | `min(40, 5 + skor × puanBaşı)`; hindistan cevizi puanBaşı 1, mağara 2 | Evet |
+| **Gezegen Koşusu** (Oyun Kulübesi, **25 Ekim 2026**; `game-app` `Logic/Runner`, `RunnerRun.Result`; tema sonradan değişebilir: Mısır, Dinozor) | Mini oyun kuralı `min(40, 5 + x)`, ağırlık bitirmede: x = toplanan kristal ÷ 5 (aşağı yuvarlanır) + kapıya ulaşınca 15 + gezegen kartı bulunca 5 (bitiren 25–40, bitirmeyen çoğunlukla 5–15). Ekrandaki puan ayrı: kristal + 25 + 10. **Coin vermez.** Koşu sonsuz değil: her parkurun varış kapısı var (yaş grubuna göre ~55–75 sn). Günlük oyun içi görev `dq_runner_1` ("kapıya ulaş", veri ağırlığı 20). Kart oyunları beklemede; Oyun Kulübesi koşuyu açar (Sv3). | Evet |
 | "Pet'e yardım" mini oyunu | `max(10, 25 − 2 × deneme)` | Evet |
 | Dağ yürüyüşü | `min(40, 10 + round(25 × toplanan / en iyi))` | Evet |
 | Masa oyunları (`CardRewards.Xp`) | Kazanınca `round(20 + 20 × zorluk)`, kaybedince 8 | Evet |
 | Balık (`Fishing.Xp`) | `5 × nadirlik + (yeni tür ise 10)` (Runtime'da çağrısı bulunamadı — doğrulanmalı) | Evet (`Fishing`) |
-| Günlük oyun içi görevler (`daily_quests.json`, günde 3) | 10–20 (ör. `dq_feed_2` 15, `dq_wash_1` 10, `dq_coconut_10` 20, `dq_fish_2` 20) | Evet |
+| Günlük oyun içi görevler (`daily_quests.json`, günde 3; **22 Ekim 2026**, XP takibi S2) | Seviyeye oranlı (`DailyQuests.XpFor`): o seviyenin gereken XP'sinin %4'ü × görevin ağırlığı (veri XP'si / 15), verideki sayının (10–20) altına inmez. 3 görev ≈ seviyenin %12'si. Yeni görev `dq_harvest_2` (bahçeden 2 ürün, Sv bahçe). **Günlük sandık:** üç görev bitince bir kez açılır; coin **vermez** (ilke §1): yiyecek %60 (2 adet) · tohum %25 (2 adet) · sürpriz eşya %15 (sahip olunmayan, seviyesi açık aksesuar/süs; yoksa yiyecek). Oranlar sandıkta görünür. | **Hayır** (günde 3 ile kendiliğinden sınırlı; eskiden evet) |
 | Rozetler (`badges.json`) | 20–100 (ör. `badge_first_task` 20, `badge_task_10` 40, `badge_streak_7` 60, `badge_master` 100) | Hayır |
 | Adada parıltı keşfi (`MapScreen`) | yeni 10, tekrar 3 | Hayır |
 | Kulübe yapma (`Gathering.HutXp`) | 40 (tarif: 6 odun, 4 dal, 3 taş) | Hayır |
+| Kamp ateşini harla (`CampfireRules`; **24 Ekim 2026**, GB18) | Harlama başına **8** (2 odun yakılır), günde en çok **3** harlama (günde ≤ 24 XP). Odun adadaki kütüklerden (küçük kütük 3 vuruş → 2 odun, büyük kütük 6 vuruş → 5 odun). Coin vermez. | Hayır (günde 3 ile sınırlı) |
+| İlk oyun rehberi (`Guide.Steps`, GB17) | Adım başına 10–30 (16 adım, her biri bir kez; yalnız canlı yapılan adım ödüllenir) | Hayır |
 | Festival / final etkinliği (`Events`) | 25 / 100 | Hayır |
 
 Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (`tasks_approved` sayacı) bağlıdır; yani ParentApp onayı oyunda XP'yi de dolaylı etkiler.
 
 ---
+
+## 5C. XP takibi ekleri (22 Ekim 2026; Y2/Y5/Y6 sunucu tarafı uygulandı)
+
+| Kural | Değer | Nerede |
+|---|---|---|
+| Hatırlatmadan önce "Yaptım" (Y5) | Görev onaylanınca görev XP'sinin yarısı kadar ek XP (kolay 3 / orta 5 / zor 7); hatırlatma saati olmayan görevde yok. Gerçek görev günlük payına sayılır. | Oyun (`child_tasks.reminder`) |
+| Zor görevde 2× XP (Y2) | "Yapamam" sonrası teklif: ilk "Yapamam"da bir kez, sonra yalnız zorlandığı görevlerde (son 4 haftada tamamlama oranı < %50), haftada en çok 1. "Deneyeceğim" + sonra onay → görev XP'si ×2 (payın içinde). Kayıt `task_boosts`. | Oyun + sunucu |
+| Haftalık hedef (Y6) | Hedef: son 2 hafta onaylı ortalaması × 1,2 (yukarı), en az 3, en çok o haftaki görevlerin %90'ı; ebeveyn düşürebilir. Ulaşınca +2 Güneş Taşı (`goal`) + oyunda XP (seviye ihtiyacının %10'u, en az 30) + ebeveyne kutlama. Ceza yok. | Sunucu (`claim_weekly_goal`) + oyun |
 
 ## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
 
@@ -164,22 +194,47 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
+- **Hediye taş (tek istisna, yalnız ada; karar 24 Ekim 2026, GameApp GB19; kaynağı 26 Ekim 2026'da değişti):** ilk oyunda çocuk
+  **1 Güneş Taşı**'nı panodaki **hoş geldin görevi**yle kazanır (kullanıcı, 26 Ekim 2026: "taşın nereden, nasıl kazanıldığı
+  örnekle aktarılsın"). Mavi "panoya sana bir hoş geldin görevi bıraktım" der; Ev Görevleri'nin en üstünde Mavi mühürlü kart
+  ("Pofi Adası'na hoş geldin: oynamaya başla!", ödül 1 taş) → "Yaptım" → taş kazanma gösterisi + bilgi kartı ("hoş geldin
+  görevini yaptın · taşı kulübe yerine götür, sis dağılsın · yeni taşları evdeki gerçek görevleri yapınca kazanırsın"). Bu kart
+  **yalnız oyunda** çizilir (sunucuda görev satırı yok, ParentApp'te görünmez, ebeveyn onayı beklenmez); bir kez.
+  Taş **yalnız oyun kaydında** tutulur (`SunStoneState.Gift`); **sunucuya yazılmaz**, `child_me().sun_stones`'a ve harcanabilir
+  bakiyeye girmez, **gerçek ödüle harcanamaz**. Yalnız ilk onarım noktası olan **kulübe yerindeki sisi** (`spot_hut_fog`) açar;
+  "yerleştirilebilir" = kazanılan + hediye − yerleştirilen. Kulübesini yapmış/başka sisi açmış eski oyuncuda hediye taş kulübe
+  yerine kendiliğinden konur (sis hiç görünmez). Sunucu değişikliği yok; ParentApp/ClinicApp etkilenmez (ebeveyn ekranındaki
+  taş sayısı hediyeyi göstermez; oyundaki sayı hediye konana kadar 1 fazla görünebilir).
 
-## 5B. Beceriler (Ö2; karar 19 Ekim 2026)
+## 5B. Beceriler (Ö2; karar 19 Ekim 2026; **güncellendi 23 Ekim 2026: kategori = beceri**)
 
-Görev becerisi `tasks.skill` serbest metindir (ParentApp şablon etiketi). Oyun ve raporlar aşağıdaki **tek sözlüğe** eşler (`SkillCatalog`); eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+Her görev kategorisi oyundaki **tek bir beceriye** bağlıdır (kullanıcı kararı, 23 Ekim 2026). Görev oluşturulurken
+`tasks.skill` alanına **beceri anahtarı** yazılır ve anahtar görevin kategorisinden gelir. ParentApp görev ekranında ayrı
+beceri seçimi yoktur: kategori seçilince beceri yazılır ("Bu görev Okti'nin Takım Çalışması becerisini geliştirir").
+ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sablonlari.md`.
 
-| Anahtar | Ad (Türkçe) | Eşlenen etiketler (bugünkü ParentApp şablonları dahil) |
-|---|---|---|
-| `focus` | Odak | Odak, Odaklanma |
-| `kindness` | Nezaket | Nezaket, Empati, Minnettarlık |
-| `responsibility` | Sorumluluk | Sorumluluk, Takım Çalışması |
-| `independence` | Bağımsızlık | Bağımsızlık |
-| `calm` | Sakinlik | Sakinlik, Sakinleşme |
-| `self_care` | Öz Bakım | Öz Bakım |
+| Kategori (`category`) | Kategori adı | Beceri anahtarı (`tasks.skill`) | Beceri adı (oyun) | Simge rengi |
+|---|---|---|---|---|
+| `home` | Ev İşleri | `teamwork` | Takım Çalışması | turuncu |
+| `mind` | Ruh Sağlığı | `stamina` | Dayanıklılık | camgöbeği |
+| `learn` | Öğrenme ve Eğitim | `knowledge` | Bilgi | mavi |
+| `health` | Sağlık ve Spor | `strength` | Güç | yeşil |
+| `focus` | Odak ve Öz Denetim | `focus` | Odak | pembe |
+| `relation` | İlişki Kurma | `kindness` | Nezaket | sarı |
 
+- Bir şablon birden çok kategoride listelenebilir (süzgeç etiketi); becerisi şablonun **ana kategorisinden** gelir.
+- **Eski kayıtlar ve serbest etiketler** okuyan uygulamada eşlenir (oyun: `SkillCatalog`):
+  Sorumluluk, Takım Çalışması, Bağımsızlık → `teamwork`; Sakinlik, Sakinleşme, Duygu Farkındalığı → `stamina`;
+  Okuma, Dil, Temel Beceriler, Bilgi → `knowledge`; Öz Bakım, Hareket, Sağlıklı Alışkanlık, Güç → `strength`;
+  Odak, Odaklanma, Öz Denetim, Sabır, Planlama → `focus`; Nezaket, Empati, Minnettarlık, Paylaşma, İletişim, Arkadaşlık → `kindness`.
+  Kategori anahtarının kendisi (`home` …) ve İngilizce adlar (Teamwork, Stamina, Knowledge, Strength, Focus, Kindness) da kabul edilir.
+  Eşleşmeyen (`Özel`, boş) beceri yıldızı vermez, yalnız XP/taş verir.
+- **Sunucu tek biçim (uygulandı 23 Ekim 2026, `migrations/20261023020000_skill_keys.sql`):** `tasks.skill` ve `clinic_task_suggestions.skill` yazılırken
+  yukarıdaki eski etiketler `public.skill_key()` ile anahtara çevrilir; uzman önerisinde eski `self` kategorisi `health` olur ve
+  öneri kategorisi altı kategoriye açılır. Uygulanmadan önce ParentApp ve ClinicApp anahtarı Türkçe adla göstermelidir.
+- Oyun kaydındaki eski yıldız anahtarları yeniye taşınır: `responsibility`, `independence` → `teamwork`; `calm` → `stamina`; `self_care` → `strength`.
 - Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
-- Öneri (ParentApp penceresi): şablon etiketlerini zamanla bu altı ada çekmek; eşleme tablosu o zamana kadar geriye uyum sağlar.
+- Raporlar (ParentApp, ClinicApp) beceri dağılımını bu altı anahtarla gösterir; hiçbiri tanı ya da puan değildir.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
@@ -246,6 +301,7 @@ Not: `PLAN.md` gösterge düşüşünde sunucu saatinin referans alınacağını
 | E6 | ~~Onay sonrası ödül değişimi~~ | **Karar (19 Ekim):** geri alma verilen kadar düşer; görev/atama silinince coin kalır (bkz. 2.2). Uygulandı. |
 | E7 | Bakiye ParentApp'te | ParentApp bakiyeyi `child_balance` ile okur; defter satırlarını (geçmiş) bugün göstermiyor (doğrulanmalı). |
 | E8 | Klinik paylaşımı | Coin defteri uzmanla **paylaşılmaz** (klinik göçü, uygulandı). |
+| E9 | ~~Komik eşyalar sunucuda yok~~ (24 Ekim 2026'da görüldü) | Oyunun `items.json`'ındaki 19 `fancy` eşya `game_items`'ta yoktu: gerçek sunucuda `spend_coins` bunlar için `unknown_item` dönüyordu. **Çözüm (öneri, 24 Ekim 2026; uygulandı 24 Ekim 2026):** `migrations/20261024110000_fancy_items_catalog.sql` 19 eşyayı `items.json`'daki fiyat ve seviyeyle ekler (liste §4.2; fiyat oyundaki gibi, yeni karar yok). Testler `test_fancy_items.sql` (19 eşya + satın alma, seviye kilidi, fiyat sunucuda) ve `test_items_catalog.sql` (bekçi: sunucu kataloğu = `items.json`). Uygulanana kadar gerçek sunucuda bu eşyalar alınamaz. |
 
 ---
 
@@ -264,7 +320,7 @@ Taş kazanma canlıda (GameApp, `migrations/20261019030000_sun_stones.sql`). İk
 | Ödül fiyatı | Eşya/etkinlik: 1–500 taş. Değiş tokuş (uygulamalarda görünen ad; kodda `exchange`): "N taş = M dakika ekran süresi" ya da "N taş = M TL harçlık", 1–20 kez alınır. Ebeveyn belirler; aile başına en çok 100 ödül |
 | Harcama | Ödül verilince/onaylanınca; bakiye eksiye düşmez (çocuk satırı kilitlenerek denetlenir) |
 | Ceza (taş düşme) | Ebeveyn 1–100 taş, isteğe bağlı neden (≤ 200); bakiyeden fazla düşülemez; çocuğa bildirim gider |
-| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer |
+| Çocuk isteği | Bakiye yetmeli; en çok 5 bekleyen istek; aynı ödüle tek bekleyen istek; taş onayda düşer. Oyunda istek özelliği birkaç seviye sonra açılır (seviye oyun verisinde; sunucu seviye denetlemez). Çocuğun **ilk** isteği ebeveynlere bir kez "İlk ödül talebi" olarak bildirilir (`data.first = true`; göç `20261024100000`, `akislar.md` P11) |
 | Başlangıç | 0. Uygulanmadan önce onaylanmış görevler taş vermez (geriye dönük yok) |
 
 Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki ilerlemeyi geri almaz.
