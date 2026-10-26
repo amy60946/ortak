@@ -2,7 +2,7 @@
 // Örnek metinler e-Devlet "Yükseköğretim Mezun Belgesi" düzenine benzetilmiştir; gerçek kişi verisi değildir.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { analyze, findBarcode, highestDegree, norm } from './index.ts';
+import { analyze, findBarcode, highestDegree, isPdf, norm } from './index.ts';
 
 const doc = (program: string, level: string, extra = '') => `T.C. YÜKSEKÖĞRETİM KURULU BAŞKANLIĞI
 YÜKSEKÖĞRETİM MEZUN BELGESİ
@@ -18,8 +18,8 @@ test('psikolog lisans: hepsi tamam', () => {
   assert.equal(a.hard, null);
   assert.equal(a.barcode, 'YOK-1A2B-3C4D-5E6F');
   assert.deepEqual([a.checks.name, a.checks.program, a.checks.degree, a.checks.edevlet, a.checks.graduate], ['ok', 'ok', 'ok', 'ok', 'ok']);
-  assert.equal(a.extracted.university, 'ÖRNEK ÜNİVERSİTESİ');
   assert.equal(a.extracted.graduation_year, '2019');
+  assert.equal((a.extracted as Record<string, unknown>).university, undefined);   // satırda kişi adı olabilir: alınmaz
 });
 
 test('klinik psikolog: yalnız lisans yetmez, yüksek lisans gerekir', () => {
@@ -58,4 +58,36 @@ test('BCBA ve elle incelenen meslekler ön kontrolde bölüm aramaz', () => {
 test('barkod etiketsiz de bulunur', () => {
   assert.equal(findBarcode('... YÖK-ab12-CD34-ef56-7890 ...'), 'YÖK-AB12-CD34-EF56-7890');
   assert.equal(findBarcode('barkod yok'), null);
+});
+
+test('düz sözcük ya da ad barkod sayılmaz (herkese aynı "barkod" → yanlış çakışma olmasın)', () => {
+  assert.equal(findBarcode('BARKOD NUMARASI İLE sorgulayabilirsiniz'), null);
+  assert.equal(findBarcode('barkod numarasi ile'), null);
+  assert.equal(findBarcode('Barkod: Doğrulama sayfasında'), null);
+  assert.equal(findBarcode('BARKOD :\nMEHMETALİ YILMAZ'), null);
+  assert.equal(findBarcode('Barkod No: YOK-1A2B-3C4D-5E6F'), 'YOK-1A2B-3C4D-5E6F');
+});
+
+test('uzun boşluklu metinde barkod araması hızlı', () => {
+  const t0 = Date.now();
+  findBarcode('barkod' + ' '.repeat(20000) + 'x');
+  assert.ok(Date.now() - t0 < 200);
+});
+
+test('elle incelenen meslek ve BCBA kendiliğinden reddedilmez', () => {
+  assert.equal(analyze('   ', 'Ayşe', 'hekim').hard, null);
+  assert.equal(analyze('   ', 'Ayşe', 'bcba').hard, null);
+  assert.equal(analyze('T.C. ÖĞRENCİ BELGESİ Tıp fakültesi 5. sınıf öğrencisidir. Ayşe Nur Yılmaz uzun bir metin burada', 'Ayşe', 'diger').hard, null);
+});
+
+test('bölüm sözcük sınırıyla: "psikoloji" "psikolojik danışmanlık" içinde eşleşmez', () => {
+  assert.equal(analyze(doc('PSİKOLOJİK DANIŞMANLIK VE REHBERLİK', 'Lisans'), 'Ayşe Nur Yılmaz', 'psikolog').checks.program, 'fail');
+  assert.equal(analyze(doc('PSİKOLOJİK DANIŞMANLIK VE REHBERLİK', 'Lisans'), 'Ayşe Nur Yılmaz', 'pdr').checks.program, 'ok');
+});
+
+test('PDF imzası ilk 1024 bayt içinde aranır', () => {
+  const enc = new TextEncoder();
+  assert.ok(isPdf(enc.encode('%PDF-1.7 ...')));
+  assert.ok(isPdf(enc.encode('\n\n  %PDF-1.4')));
+  assert.ok(!isPdf(enc.encode('<html>not a pdf</html>')));
 });
