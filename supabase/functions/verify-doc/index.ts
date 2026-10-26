@@ -1,4 +1,4 @@
-// verify-doc: yönetim panelinin uzman belgesine tek kapısı (sozlesme/admin.md, proposed/20261026400000_verify_doc_server.sql).
+// verify-doc: yönetim panelinin uzman belgesine tek kapısı (sozlesme/admin.md, migrations/20261026400000_verify_doc_server.sql).
 // Kova `verify` yöneticiye doğrudan açık değil; belgeyi yalnız bu işlev, denetim kaydı yazdıktan sonra kısa süreli bağlantıyla verir.
 //   POST { action: 'open', id }  →  { url }        admin_verification_open (support/owner + iki adımlı, denetim kaydı) → 2 dk imzalı bağlantı
 //   POST { action: 'purge' }     →  { removed }    karar verilmiş / geri çekilmiş başvuruların dosyalarını siler (storage_trash)
