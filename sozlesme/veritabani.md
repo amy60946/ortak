@@ -326,7 +326,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
 - Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
 
-## 11. Aile davet bağlantısı, geçmiş aktarımı, takip planı (öneri, `proposed/20261026100000_family_invite_links.sql`)
+## 11. Aile davet bağlantısı, geçmiş aktarımı, takip planı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 
 Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 
@@ -337,7 +337,7 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
 | `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
 | `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
-| `clinician_verifications` (öneri `20261026050000`) | Uzman belge başvurusu | `clinician_id`, `profession`, `bacb_number`, `file_path` (karar sonrası null), `status`, `auto` (ön kontrol), `barcode`, `reason`, `note`, `summary` (onayda özet; ad/kimlik yok), `submitted_at`, `decided_at/by`, `recheck_at` | yok (yalnız RPC) | `clinician_verification_*`, `admin_verification*` |
+| `clinician_verifications` (`20261026050000`, uygulandı) | Uzman belge başvurusu | `clinician_id`, `profession`, `bacb_number`, `file_path` (karar sonrası null), `status`, `auto` (ön kontrol), `barcode`, `reason`, `note`, `summary` (onayda özet; ad/kimlik yok), `submitted_at`, `decided_at/by`, `recheck_at` | yok (yalnız RPC) | `clinician_verification_*`, `admin_verification*` |
 | `clinicians` (genişledi) | Rozet | `verified_profession`, `verified_at` (uzman yazamaz; ad değişince düşer) | değişmedi | yönetici kararı |
 | `clinic_links` (genişledi) | Paylaşım | `consent_version` (ebeveynin onayladığı paylaşım metni, ör. `uzman-paylasim-v1`) | değişmedi | `family_accept_invite` yazar |
 | `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
