@@ -1,4 +1,4 @@
--- Uzman doğrulama (proposed/20261026050000_clinician_verification.sql) + aile yanıtlarındaki rozet (20261026100000)
+-- Uzman doğrulama (migrations/20261026050000_clinician_verification.sql) + aile yanıtlarındaki rozet (20261026100000)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

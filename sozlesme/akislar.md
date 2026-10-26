@@ -126,7 +126,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 ### 5.2 Aile paylaşımı (ebeveynin açık rızası)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter; **48 saat + bağlantı (öneri, bölüm 10)** |
+| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter; **48 saat + bağlantı (bölüm 10)** |
 | 2 | [K → ebeveyn] | Kodu aileye verir (uygulama dışı). | — |
 | 3 | [P] | Ebeveyn Uzmanım › kodu yazar; **rıza vermeden önce** klinik adı, uzman adı ve unvanını görür. | `clinic_invite_preview(code)` |
 | 4 | [P] | Paylaşılacak çocuğu seçer, "Onaylıyorum, paylaş". | `redeem_clinic_invite(code, child_id)` |
@@ -249,7 +249,7 @@ ParentApp olayları (22 Ekim 2026): `app.open`, `screen.<tasks|review|progress|f
 
 ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026).
 
-## 10. Uzman başlatır: aile davet bağlantısı (öneri, `proposed/20261026100000_family_invite_links.sql`, 26 Ekim 2026)
+## 10. Uzman başlatır: aile davet bağlantısı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 
 Karar (kullanıcı isteği 26 Ekim): akışı uzman başlatır. Uzman isterse önce takip planını (hedefler + aile programı) kurar, sonra aileye **bağlantı** gönderir (WhatsApp / e-posta / SMS / kopyala). Aile bağlantıdan ParentApp'i yükler, kayıt olur; uzman kendiliğinden tanımlıdır. Çocuk verisi yine **ebeveynin çocuk seçip onay vermesiyle** paylaşılır (rıza kuralı değişmedi).
 
@@ -282,7 +282,7 @@ Kurallar: Bağlanmış davet 30 gün içinde çocuk paylaşımına kullanılabil
 
 Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, maliyet, izin/KVKK yükü. App Store'dan yükleme sonrası davet; (a) "Daveti uygulamada aç" dokunuşu, (b) e-posta eşleşmesi, (c) kod ile taşınır.
 
-## 11. Uzman değişimi ve geçmiş aktarımı (öneri, aynı dosya)
+## 11. Uzman değişimi ve geçmiş aktarımı (aynı dosya, uygulandı)
 
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
@@ -293,7 +293,7 @@ Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, ma
 
 Not: Önceki uzmanın notları onun mesleki kaydıdır; aktarım yalnız ebeveyn rızasıyla, okuma olarak ve önceki uzmanın kimliği gizlenerek yapılır. Dayanak: uzman sözleşmesindeki aktarım maddesi + ebeveynin açık rızası (taslak maddeler `sozlesme/hukuk_notlari.md`). Canlıda açılmadan önce hukuk onayı gerekir.
 
-## 12. Takip planı: hedefler ve aile programı (öneri, aynı dosya)
+## 12. Takip planı: hedefler ve aile programı (aynı dosya, uygulandı)
 
 Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon (iskelet) sunuyoruz. Şablon kataloğu: `veri/takip_sablonlari.json` (7 alan, 27 hedef, 13 modül — 12 + "Gözlem ve zor an kaydı" girişi, 8 paket; kaynaklarıyla).
 
@@ -327,14 +327,14 @@ Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şi
 
 **Görünürlük (kullanıcı, 26 Ekim 2026):** özellik bayrağa bağlı: `clinician_verification`, **ilk sürümde KAPALI**. Kapalıyken ClinicApp'te "Belgeni yükle" satırı ve sayfası görünmez, sunucu başvuru almaz; ParentApp'te rozet de "Belgesi incelenmedi" etiketi de gösterilmez (yalnız uyarı + veli beyanı); aile yanıtlarında `verified_as` null döner. Açmak: yönetim paneli → Bayraklar → `clinician_verification` (önce kişiye istisnayla denenebilir). Karar hatırlatması `DURUM.md` Açık işler.
 
-**Karar (kullanıcı, 26 Ekim 2026): seçenek 2, yarı otomatik** — öneri `proposed/20261026050000_clinician_verification.sql`, Edge Function `clinician-verify`, meslek eşlemesi `veri/uzman_meslekleri.json`. Uyarı + veli beyanı (1) rozet olsa da kalır.
+**Karar (kullanıcı, 26 Ekim 2026): seçenek 2, yarı otomatik** — `migrations/20261026050000_clinician_verification.sql` (uygulandı 26 Ekim 2026), Edge Function `clinician-verify`, meslek eşlemesi `veri/uzman_meslekleri.json`. Uyarı + veli beyanı (1) rozet olsa da kalır.
 
 ### 14.1 Akış
 
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [K] | "Hesabını doğrula": meslek seç (BCBA ise BACB sicil no), e-Devlet'ten indirdiği **Yükseköğretim Mezun Belgesi** PDF'ini yükle (fotoğraf/tarama yok; BCBA'da belge isteğe bağlı). | `clinician_verification_start(meslek, bacb)` → `{id, upload_path}`; Storage `verify/<uzman>/<id>.pdf`; `clinician_verification_submit(id)` |
-| 2 | [S] | Ön kontrol (birkaç saniye, kendi sunucumuzda, PDF metin katmanı): belge okunuyor mu, e-Devlet izi, mezuniyet, barkod, **ad** (hesap adı belgede mi), **bölüm** (meslek ↔ bölüm), **derece** (klinik psikolog: yüksek lisans/doktora; ön lisans lisans yerine geçmez). Yalnız kesin durumlar kendiliğinden ret: okunamayan belge, öğrenci belgesi, başka hesabın barkodu. Kişinin adı ve kimlik numarası saklanmaz. | Edge Function `clinician-verify` → `clinician_verification_autocheck` |
+| 2 | [S] | Ön kontrol (birkaç saniye, kendi sunucumuzda, PDF metin katmanı): belge okunuyor mu, e-Devlet izi, mezuniyet, barkod, **ad** (hesap adı belgede mi), **bölüm** (meslek ↔ bölüm), **derece** (klinik psikolog: yüksek lisans/doktora; ön lisans lisans yerine geçmez). Yalnız kesin durumlar kendiliğinden ret: okunamayan belge, öğrenci belgesi, başka hesabın barkodu. Kişinin adı ve kimlik numarası saklanmaz. | Edge Function `clinician-verify` (Verify JWT kapalı; oturumu kendisi doğrular) → `clinician_verification_autocheck` |
 | 3 | Yönetici (support/owner, iki adımlı) | Panelde ön kontrol özeti + belge. Barkodu **turkiye.gov.tr/belge-dogrulama**'da sorgular, açılan asıl belgeyi yüklenenle karşılaştırır; BCBA'da **BACB sicili** (ad + sertifika no, durum etkin, disiplin kaydı). Şüphede kısa telefon. Onay ya da nedenli ret. Belge görüntüleme ve karar denetim kaydına yazılır. | `admin_verifications`, `admin_verification_open`, `admin_verification_decide`, `admin_verification_suspend` |
 | 4 | [S] | Onayda belge dosyası silinir (panel kovadan siler), yalnız özet kalır (üniversite, bölüm, derece, mezuniyet yılı). Uzmana `verification_approved` / `verification_rejected` (neden + açıklama) / `verification_suspended`. | `clinician_verifications.summary`, `clinicians.verified_profession`, `verified_at` |
 | 5 | [P] | Davet ekranı, açılış sayfası ve Uzmanım'da **"Belgesi incelendi: Klinik psikolog"** rozeti; rozet yoksa "Belgesi incelenmedi" etiketi. Uyarı ve veli beyanı her durumda kalır. | `verified_as`: `clinic_invite_open`, `claim_clinic_invite`, `clinic_invite_preview`, `family_pending_invites`, `family_clinic_links` |
@@ -361,14 +361,14 @@ Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o
 |---|---|---|---|---|
 | Ebeveyn | İkinci ebeveyn | ParentApp Aile › + › Ebeveyn › davet kodu; diğeri Aile › Hesap › "Aileye katıl" | 6 karakter, 15 dk | uygulandı |
 | Ebeveyn | Çocuğun cihazı | Aile › çocuk › "Giriş kodu üret"; GameApp'te yazılır | çocuk başına, 15 dk, tek kullanım | uygulandı |
-| Uzman | Aile | ClinicApp "Aileyi davet et" → bağlantı (WhatsApp/e-posta/SMS/kopyala) + kod; isteğe bağlı taslak takip planı | **48 saat** (bağlanınca 30 gün içinde çocuk paylaşımı) | öneri (bölüm 10) |
-| Ebeveyn | Uzman → çocuk | Kayıtta bağlantı/e-posta ile ya da sonradan kod/bağlantıyla uzman tanımlanır; uzmanın önerdiği çocuğu kontrol edip düzeltir, uyarıyı okuyup "Onayla ve paylaş" (çocuk o an oluşur); istemezse reddeder | — | öneri (bölüm 10) |
+| Uzman | Aile | ClinicApp "Aileyi davet et" → bağlantı (WhatsApp/e-posta/SMS/kopyala) + kod; isteğe bağlı taslak takip planı | **48 saat** (bağlanınca 30 gün içinde çocuk paylaşımı) | uygulandı (bölüm 10) |
+| Ebeveyn | Uzman → çocuk | Kayıtta bağlantı/e-posta ile ya da sonradan kod/bağlantıyla uzman tanımlanır; uzmanın önerdiği çocuğu kontrol edip düzeltir, uyarıyı okuyup "Onayla ve paylaş" (çocuk o an oluşur); istemezse reddeder | — | uygulandı (bölüm 10) |
 | Ebeveyn | Aynı uzmana başka çocuk | Uzmanım'da "Ekle" (kodsuz) | — | uygulandı |
-| Ebeveyn | Yeni uzmana geçmiş | Paylaşırken ya da sonradan "Önceki uzmanın kayıtlarını paylaş" | geri alınabilir | öneri (bölüm 11) |
+| Ebeveyn | Yeni uzmana geçmiş | Paylaşırken ya da sonradan "Önceki uzmanın kayıtlarını paylaş" | geri alınabilir | uygulandı (bölüm 11) |
 | Ebeveyn / uzman | Paylaşımı durdurma | "Paylaşımı durdur" | hemen | uygulandı |
 | Klinik sahibi | Ekibe uzman | "Ekibe uzman davet et"; yeni uzman kayıtta "Kodum var" ya da Ekip bölümünden | 8 karakter, 15 dk; koltuk sınırı; Bireysel pakette yok | uygulandı |
 | Klinik sahibi | Ekip üyesine danışan | Danışan › "Ekip erişimi" (aç/kapat, sorumlu yap) | — | uygulandı |
-| Ekip üyesi | Aile | Kendi davet bağlantısı; davet ettiği aileyi sahip de görür | 48 saat | öneri (bölüm 10) |
+| Ekip üyesi | Aile | Kendi davet bağlantısı; davet ettiği aileyi sahip de görür | 48 saat | uygulandı (bölüm 10) |
 
 ---
 

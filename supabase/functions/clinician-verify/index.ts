@@ -1,7 +1,8 @@
-// clinician-verify: uzman doğrulama ön kontrolü (sozlesme/akislar.md 14, proposed/20261026050000_clinician_verification.sql).
+// clinician-verify: uzman doğrulama ön kontrolü (sozlesme/akislar.md 14, migrations/20261026050000_clinician_verification.sql).
 // ClinicApp belgeyi `verify` kovasına yükleyip `clinician_verification_submit` dedikten sonra uzman oturumuyla çağırır:
 //   POST { id }  →  { status: 'pending' | 'unreadable' | 'student_doc' | 'duplicate' | 'skipped', checks }
-// "Verify JWT" AÇIK yayınlanır. Belge kendi sunucumuzda okunur (PDF metin katmanı); dışarıya veri gitmez, yapay zekâ yok.
+// "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi; yeni anahtar düzeninde ağ geçidi oturum anahtarını reddedebiliyor):
+// oturum işlevin içinde doğrulanır (auth.getUser), yalnız başvurunun sahibi kendi belgesini kontrol ettirebilir. Belge kendi sunucumuzda okunur (PDF metin katmanı); dışarıya veri gitmez, yapay zekâ yok.
 // Kişinin adı ve kimlik numarası kaydedilmez; yalnız eşleşme sonucu ve özet (üniversite, bölüm, derece, mezuniyet yılı).
 // Kesin olmayan hiçbir sonuç ret sayılmaz: karar yönetim panelinde bir kişinindir. Meslek tablosu veri/uzman_meslekleri.json ile aynı
 // (Supabase panelinden tek dosya yapıştırılabilsin diye burada da tutulur). Saf işlevlerin testi: analyze.test.ts.

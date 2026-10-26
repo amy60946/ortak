@@ -88,7 +88,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
   > ☐ Bu uzmanı tanıyorum ve çocuğun velisiyim (yasal temsilcisiyim). — kutu işaretlenmeden "Onayla ve paylaş" açılmaz. Altta: "Bu davet bana ait değil".
 - **ParentApp › onay ekranı:** B'deki metin + düğme.
 
-## 4. Sistemdeki karşılığı (öneri `proposed/20261026100000_family_invite_links.sql`)
+## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
 |---|---|
@@ -100,7 +100,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 | Paylaşım onayı, sürümlü (uyarı + veli beyanı) | `family_accept_invite(…, p_consent_version)` → `clinic_links.consent_version` (`consent_by`, `consent_at` zaten var) |
 | Aile onayından önce çocuk bilgisi | `clinic_invites.child_name/child_age_group`; yalnız daveti bağlamış aileye görünür; onay, ret, iptal ya da süre dolunca silinir |
 | Ebeveyn düzeltir, uzmana yansır | `family_accept_invite` düzeltilmiş bilgiyle çocuğu oluşturur, uzmana `invite_child_updated`; sonraki düzeltmeler `clinic_clients()` ile |
-| Uzman belge incelemesi | `proposed/20261026050000_clinician_verification.sql`: belge yalnız yöneticiye açık kovada, görüntüleme denetim kaydında, karar sonrası dosya silinir, özette ad/kimlik yok; rozet `verified_as` |
+| Uzman belge incelemesi | `migrations/20261026050000_clinician_verification.sql`: belge yalnız yöneticiye açık kovada, görüntüleme denetim kaydında, karar sonrası dosya silinir, özette ad/kimlik yok; rozet `verified_as` |
 | Yanlış aileye giden davet | `family_decline_invite` → davet kapanır, öneri silinir, uzmana `invite_declined` |
 | Test | `test/test_family_invite_links.sql` 5. ve 6. bölüm |
 
