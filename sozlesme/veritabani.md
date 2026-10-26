@@ -411,12 +411,12 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 ### 15.2 Fonksiyonlar
 | Fonksiyon | Kim | Ne |
 |---|---|---|
-| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: **3 gün** (72 saat, `20261027000000` öneri; önce 48 saat), `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
+| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: **3 gün** (72 saat, `20261027000000`, uygulandı 26 Ekim 2026; önce 48 saat), `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
 | `clinic_invite_mark(code, channel, revoke)` | K (davet sahibi / klinik sahibi) | Kanal kaydı ya da iptal (iptal taslak planı siler) |
 | `clinic_invites_list(gün)` / `clinic_invite_stats(gün)` | K | Davet listesi + durum / uzman başına gönderilen, açılan, bağlanan, paylaşılan, süresi dolan |
 | `clinic_invites_sweep()` | K | Kendi kliniğinin süresi dolan davetleri için `invite_expired` (zamanlayıcı yoksa) |
 | `clinic_invites_expire(clinic?)` | yalnız sunucu (pg_cron) | Aynısı, bütün klinikler |
-| `clinic_invite_email_take(code, uzman)` / `clinic_invite_email_done(code, ok)` | yalnız service_role (Edge Function `invite-email`) | Sistem e-postası (`20261027000000`, öneri): hak al (davet açık, e-postası var, üyelik etkin; davet başına 3, 60 sn'de bir, uzman başına günde 30 davet) → `{code, token, expires_at, to, clinician, title, clinic}` (çocuk önerisi ve not yok) ya da `{error}`; sonuç `sent`/`failed` (gönderilemeyen sayılmaz). `clinic_invites` + `email_count`, `email_sent_at`, `email_status`; `clinic_invites_list` bu üçünü de döndürür |
+| `clinic_invite_email_take(code, uzman)` / `clinic_invite_email_done(code, ok)` | yalnız service_role (Edge Function `invite-email`) | Sistem e-postası (`20261027000000`, uygulandı 26 Ekim 2026): hak al (davet açık, e-postası var, üyelik etkin; davet başına 3, 60 sn'de bir, uzman başına günde 30 davet) → `{code, token, expires_at, to, clinician, title, clinic}` (çocuk önerisi ve not yok) ya da `{error}`; sonuç `sent`/`failed` (gönderilemeyen sayılmaz). `clinic_invites` + `email_count`, `email_sent_at`, `email_status`; `clinic_invites_list` bu üçünü de döndürür |
 | `clinic_invite_open(token)` | yalnız service_role (Edge Function `invite-info`) | Açılış sayfası bilgisi + `opened_at` |
 | `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{code, clinic_id, clinic, clinician, title, child_name, child_age_group, has_plan}` (uzmanın notu `label` dönmez) |
 | `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün): `code, clinic, clinician, title, child_name, child_age_group, claimed_at, has_plan` |

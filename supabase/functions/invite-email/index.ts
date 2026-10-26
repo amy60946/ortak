@@ -1,4 +1,4 @@
-// invite-email: aile davetini sistem uzman adına e-postayla gönderir (sozlesme/akislar.md 10, proposed/20261027000000_invite_email.sql).
+// invite-email: aile davetini sistem uzman adına e-postayla gönderir (sozlesme/akislar.md 10, migrations/20261027000000_invite_email.sql).
 // ClinicApp daveti oluşturduktan sonra uzman oturumuyla çağırır:
 //   POST { code }  →  { sent: true } | { sent: false, reason }
 //   reason: not_configured (e-posta ayarı yok) · not_found · no_email · closed · expired · no_access · limit_invite · too_soon
