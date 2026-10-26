@@ -172,7 +172,7 @@ Kod biçimi:
 | `completions.decline_reason` | `hard` / `no_time` / `did_not_want` / `other` / null | "Yapamam" nedeni. |
 | `goal_ratings.rating` | −2, −1, 0, +1, +2 | GAS haftalık puanı. |
 | `abc_events.intensity` | 1 … 5 (varsayılan 3) | Zor anın şiddeti. |
-| Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title` | Uzman kaydı (aile oluşturulmaz). |
+| Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title`, `practice` (`solo` / `clinic`) | Uzman kaydı (aile oluşturulmaz). `practice` sunucuda kullanılmaz (ikisi de klinik açar); ClinicApp bireyselde ekip bölümünü gizler. |
 
 ### 7.1 Klinikle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
