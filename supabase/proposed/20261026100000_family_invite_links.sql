@@ -18,7 +18,7 @@
 -- 3) Takip planı: çocuk hedefleri (clinic_goals genişler; "aileyle paylaşılan" hedefleri aile görür, haftalık puanlar yine yalnız klinikte)
 --    + aile programı modülleri (care_modules) + ebeveynin uygulama kaydı (care_module_logs). Plan davet sırasında taslak olarak kurulabilir;
 --    aile çocuğunu paylaşınca o çocuğa taşınır.
--- Tekrar çalıştırılabilir.
+-- Uzman rozeti (verified_as) için önce 20261026050000_clinician_verification.sql çalışmalı. Tekrar çalıştırılabilir.
 
 -- =====================================================================
 -- 1. Aile davet bağlantısı
@@ -275,7 +275,8 @@ begin
     'status', case when r.revoked_at is not null then 'revoked'
                    when r.used_at is not null or r.claimed_at is not null then 'used'
                    when r.expires_at <= now() then 'expired' else 'open' end,
-    'clinic', r.clinic, 'clinician', r.clinician, 'title', r.title, 'code', r.code, 'expires_at', r.expires_at);
+    'clinic', r.clinic, 'clinician', r.clinician, 'title', r.title, 'code', r.code, 'expires_at', r.expires_at,
+    'verified_as', public.clinician_badge(r.clinician_id));
 end $$;
 revoke execute on function public.clinic_invite_open(text) from public, anon, authenticated;
 grant execute on function public.clinic_invite_open(text) to service_role;
@@ -327,6 +328,7 @@ begin
   delete from public.code_attempts where user_id = auth.uid();
   -- `label` uzmanın kendi notudur, aileye dönmez; çocuk önerisi yalnız daveti bu aileye bağlanmışsa
   return (select json_build_object('code', inv.code, 'clinic_id', inv.clinic_id, 'clinic', c.name, 'clinician', m.name, 'title', m.title,
+                                   'verified_as', public.clinician_badge(m.id),
                                    'child_name', inv.child_name, 'child_age_group', inv.child_age_group,
                                    'has_plan', exists (select 1 from public.clinic_goals where invite_code = inv.code)
                                             or exists (select 1 from public.care_modules where invite_code = inv.code))
@@ -338,11 +340,13 @@ grant execute on function public.claim_clinic_invite(text) to authenticated;
 -- Ebeveynin bağlı ama henüz çocuk paylaşılmamış davetleri (ParentApp "Uzmanın seni bekliyor" kartı)
 drop function if exists public.family_pending_invites();
 create function public.family_pending_invites()
-returns table (code text, clinic text, clinician text, title text, child_name text, child_age_group text, claimed_at timestamptz, has_plan boolean)
+returns table (code text, clinic text, clinician text, title text, child_name text, child_age_group text, claimed_at timestamptz, has_plan boolean,
+               verified_as text)
 language sql stable security definer set search_path = '' as $$
   select i.code, c.name, m.name, m.title, i.child_name, i.child_age_group, i.claimed_at,
          exists (select 1 from public.clinic_goals g where g.invite_code = i.code)
-         or exists (select 1 from public.care_modules x where x.invite_code = i.code)
+         or exists (select 1 from public.care_modules x where x.invite_code = i.code),
+         public.clinician_badge(m.id)
     from public.clinic_invites i
     join public.clinics c on c.id = i.clinic_id
     join public.clinicians m on m.id = i.clinician_id
@@ -374,6 +378,7 @@ begin
     return public.clinic_invite_rejected(public.code_problem(inv.used_at, inv.expires_at));
   end if;
   return (select json_build_object('clinic', c.name, 'clinician', m.name, 'title', m.title, 'expires_at', inv.expires_at, 'code', inv.code,
+                                   'verified_as', public.clinician_badge(m.id),
                                    'child_name', case when inv.claimed_family = fid then inv.child_name end,
                                    'child_age_group', case when inv.claimed_family = fid then inv.child_age_group end,
                                    'has_plan', exists (select 1 from public.clinic_goals where invite_code = inv.code)
@@ -849,11 +854,12 @@ grant execute on function public.clinic_inherited_records(uuid) to authenticated
 drop function if exists public.family_clinic_links();
 create function public.family_clinic_links()
 returns table (link_id uuid, clinic_id uuid, child_id uuid, clinic text, clinician text, title text, consent_at timestamptz,
-               history_shared boolean, history_available boolean)
+               history_shared boolean, history_available boolean, verified_as text)
 language sql stable security definer set search_path = '' as $$
   select l.id, l.clinic_id, l.child_id, c.name, coalesce(m.name, ''), coalesce(m.title, ''), l.consent_at,
          exists (select 1 from public.clinic_link_history h where h.link_id = l.id),
-         exists (select 1 from public.clinic_links o where o.child_id = l.child_id and o.clinic_id <> l.clinic_id and o.consent_at <= l.consent_at)
+         exists (select 1 from public.clinic_links o where o.child_id = l.child_id and o.clinic_id <> l.clinic_id and o.consent_at <= l.consent_at),
+         public.clinician_badge(m.id)
   from public.clinic_links l
   join public.clinics c on c.id = l.clinic_id
   left join public.clinicians m on m.id = l.clinician_id

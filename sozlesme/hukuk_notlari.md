@@ -39,7 +39,8 @@ Amaçlar: (1) ebeveyn çocuğunun takibini başka bir uzmana taşıdığında ö
 8. **Saklama.** Paylaşım bittikten sonra kayıtların saklama süresi ve imhası Veri İşleme Eki'nde yazılır.
 9. **Davette çocuk bilgisi (aile onayından önce).** Uzman, aileyi davet ederken çocuğun yalnız adını ya da takma adını ve yaş grubunu girebilir; doğum tarihi, tanı, sağlık bilgisi, fotoğraf girmez. Uzman, bu bilgiyi girmeden önce ebeveynle görüştüğünü ve daveti onun bilgisiyle gönderdiğini beyan eder. Platform bu bilgiyi uzman adına ve yalnız daveti iletmek ve ebeveynin onayına sunmak amacıyla tutar; ebeveyn onaylayana kadar başka hiçbir amaçla işlemez. Ebeveyn onaylamaz, reddeder ya da davet süresi dolarsa bilgi silinir (bağlanmamış davette 48 saat, bağlanmış ama onaylanmamışta en geç 30 gün). Bilginin yanlış ya da hukuka aykırı girilmesinden uzman sorumludur.
 10. **Uzmanın beyan ve taahhütleri.** Uzman; kimliğinin, mesleki unvanının ve yetkisinin doğru olduğunu, mesleğini mevzuata uygun icra ettiğini, yalnız tanıdığı ve hizmet verdiği ailelere davet gönderdiğini, davet bağlantısını yalnız ilgili ebeveyne ilettiğini beyan eder. Gerçeğe aykırı beyan ya da kötüye kullanım hâlinde hesap derhal kapatılabilir, ilgili kayıtlar yetkili mercilerle paylaşılabilir ve uzman doğan zararı tazmin eder.
-11. **Doğrulama.** Platform, aksi açıkça belirtilmedikçe uzmanın kimliğini ve mesleki belgelerini doğrulamaz; ileride belge incelemesi yapılırsa "Doğrulanmış uzman" ifadesi yalnız incelenen belgeyi kapsar.
+11. **Belge incelemesi.** Platform uzmanın kimliğini ve meslek icra yetkisini doğrulamaz. Uzman isterse mezuniyet belgesini (e-Devlet barkodlu) ya da BACB sicil numarasını yükler; platform belgenin e-Devlet'te ya da BACB sicilinde kayıtlı olduğunu ve belgedeki ad, bölüm ve derecenin beyanla uyduğunu inceler. Sonuç ailelere yalnız **"Belgesi incelendi: <meslek>"** olarak gösterilir; bu ifade kimlik doğrulaması, yetki onayı ya da hizmet kalitesi taahhüdü değildir. Gerçeğe aykırı belge ya da beyan madde 10'a tabidir; platform rozeti her an askıya alabilir.
+12. **Belgenin işlenmesi.** Uzman, yüklediği belgenin yalnız bu inceleme için işlenmesini kabul eder: belge kendi sunucumuzda okunur (yapay zekâ ya da dış hizmet kullanılmaz), yalnız yetkili ekip üyesi görür ve her görüntüleme kayda geçer, karar verilince dosya silinir; yalnız özet (üniversite, bölüm, derece, mezuniyet yılı) ve karar kaydı saklanır. Kimlik numarası saklanmaz.
 
 ### B. Ebeveyn açık rıza metni (ParentApp onay ekranı) — sürüm `uzman-gecis-v1`
 
@@ -53,6 +54,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 
 - **Ebeveyn aydınlatması:** amaç (takibin sürekliliği), alıcı (ebeveynin seçtiği yeni uzman), aktarılan kayıt türleri (1. bölüm), yöntem (yalnız okuma, uygulama içinden), saklama, geri alma ve başvuru yolu (`kvkk@`).
 - **Uzman aydınlatması:** uzmanın kişisel verisi (adı, unvanı, kliniği) aktarıma konu edilmez; girdiği kayıtlar ebeveyn izniyle adsız olarak sonraki uzmana açılabilir.
+- **Uzman aydınlatması (belge incelemesi):** amaç (ailelere "Belgesi incelendi" bilgisini göstermek), işlenen veri (mezuniyet belgesi: ad, kimlik numarası, okul, bölüm, derece, tarih; BACB sicil no), saklama (dosya karar sonrası silinir, özet ve karar kaydı hesap süresince), erişim (yalnız yetkili ekip, iki adımlı giriş, kayıtlı), haklar ve başvuru (`kvkk@`).
 
 ### D. Kullanım koşulları
 
@@ -98,6 +100,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 | Paylaşım onayı, sürümlü (uyarı + veli beyanı) | `family_accept_invite(…, p_consent_version)` → `clinic_links.consent_version` (`consent_by`, `consent_at` zaten var) |
 | Aile onayından önce çocuk bilgisi | `clinic_invites.child_name/child_age_group`; yalnız daveti bağlamış aileye görünür; onay, ret, iptal ya da süre dolunca silinir |
 | Ebeveyn düzeltir, uzmana yansır | `family_accept_invite` düzeltilmiş bilgiyle çocuğu oluşturur, uzmana `invite_child_updated`; sonraki düzeltmeler `clinic_clients()` ile |
+| Uzman belge incelemesi | `proposed/20261026050000_clinician_verification.sql`: belge yalnız yöneticiye açık kovada, görüntüleme denetim kaydında, karar sonrası dosya silinir, özette ad/kimlik yok; rozet `verified_as` |
 | Yanlış aileye giden davet | `family_decline_invite` → davet kapanır, öneri silinir, uzmana `invite_declined` |
 | Test | `test/test_family_invite_links.sql` 5. ve 6. bölüm |
 
@@ -111,4 +114,5 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 6. Çocuğun belli bir yaştan sonra (ör. 15+) kendi görüşünün alınması gerekir mi?
 7. Uzmanın davette çocuk adını aile onayından önce girmesi için uzman sözleşmesindeki beyan (A9) yeterli dayanak mı, yoksa aydınlatma ilk mesajda mı yapılmalı?
 8. "Uzmanı tanıyorum ve veliyim" onay kutusu ile sorumluluk maddeleri (3F) tüketici mevzuatı açısından ne ölçüde geçerli; sorumluluk sınırı (3G) nasıl yazılmalı?
-9. Uzman doğrulaması yapılmadan çalışmak için ek bir yükümlülük var mı (ör. sağlık meslek mensuplarını listeleyen platformlar, uzaktan sağlık hizmetleri mevzuatı kapsamına girip girmediği)? Doğrulama seçenekleri `akislar.md` 14.
+9. Belge incelemesi sonrası gösterilen "Belgesi incelendi" ifadesi ve inceleme kapsamı (A11) yeterince açık mı; inceleme hatasında sorumluluk nasıl sınırlanır?
+10. Uzman doğrulaması yapılmadan çalışmak için ek bir yükümlülük var mı (ör. sağlık meslek mensuplarını listeleyen platformlar, uzaktan sağlık hizmetleri mevzuatı kapsamına girip girmediği)? Doğrulama seçenekleri `akislar.md` 14.
