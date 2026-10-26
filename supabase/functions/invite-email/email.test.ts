@@ -30,7 +30,7 @@ test('bireysel uzman: klinik adı = uzmanın adı ise tekrar edilmez', () => {
 test('alan adı yokken bağlantı yok, kod adımları var; varken bağlantı', () => {
   const a = buildInviteEmail(inv, env);
   assert.ok(!a.html.includes('Daveti aç') && !a.text.includes('https://'));
-  assert.ok(a.text.includes('"Davet kodum var"'));
+  assert.ok(a.text.includes('"Kodun var mı?"') && a.text.includes('Aile › Hesap › Kod gir'));
   const b = buildInviteEmail(inv, { ...env, baseUrl: 'https://ornek.com/d', storeUrl: 'https://apps.apple.com/x', privacyUrl: 'https://ornek.com/kvkk' });
   assert.ok(b.text.includes(`https://ornek.com/d/${'f'.repeat(32)}`));
   assert.ok(b.html.includes('Daveti aç') && b.html.includes('https://ornek.com/kvkk'));
