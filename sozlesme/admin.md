@@ -46,7 +46,7 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_set_app_config(app, min_version, maintenance, banner, gerekçe)` / `admin_app_config()` | owner / okur | `app_config` anahtarı `app.parent` / `app.child` / `app.clinic` |
 | `admin_set_kpi_config(jsonb, gerekçe)` | owner, finance | `app_config.kpi`: `parent_monthly_try`, `parent_yearly_try`, `store_fee_pct` (15), `revenuecat_pct` (1) |
 | `admin_list_admins()` / `admin_set_admin(email, rol|null, gerekçe)` | owner | Admin yönetimi |
-| `admin_verifications(durum='pending', limit)` | okur | Uzman belge başvuruları (`20261026050000`, uygulandı): uzman, e-posta, klinik, meslek, BACB no, ön kontrol (`auto`), barkod, dosya var mı, önceki ret sayısı; bekleyenler en eskiden |
+| `admin_verifications(durum='pending', limit)` | support | Uzman belge başvuruları (`20261026050000`, uygulandı): uzman, e-posta, klinik, meslek, BACB no, ön kontrol (`auto`), barkod, dosya var mı, önceki ret sayısı; bekleyenler en eskiden (barkod, BACB no ve e-posta içerdiği için yalnız support/owner, 26 Ekim denetimi) |
 | `admin_verification_open(id)` | support | Belge yolunu döner ve görüntülemeyi denetim kaydına yazar; panel `verify` kovasından imzalı bağlantı ister (kova yalnız support/owner + iki adımlı okur) |
 | `admin_verification_decide(id, onay, ret_nedeni, açıklama, barkod, özet, gerekçe)` | support | Onay → rozet (`clinicians.verified_profession/verified_at`) + bildirim; ret → neden kodu + uzmana açıklama. Özet yalnız `{university, program, degree, graduation_year}`. Dönen belge yolunu panel kovadan **siler** |
 | `admin_verification_suspend(uzman, açıklama, gerekçe)` | support | Rozeti askıya alır (şikâyet, BCBA süresi) |
