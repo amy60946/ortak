@@ -1,4 +1,4 @@
--- Aile daveti e-postayla, 3 gün (proposed/20261027000000_invite_email.sql)
+-- Aile daveti e-postayla, 3 gün (migrations/20261027000000_invite_email.sql)
 \set ON_ERROR_STOP on
 
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$

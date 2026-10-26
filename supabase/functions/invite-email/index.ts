@@ -1,4 +1,4 @@
-// invite-email: aile davetini sistem uzman adına e-postayla gönderir (sozlesme/akislar.md 10, proposed/20261027000000_invite_email.sql).
+// invite-email: aile davetini sistem uzman adına e-postayla gönderir (sozlesme/akislar.md 10, migrations/20261027000000_invite_email.sql).
 // ClinicApp daveti oluşturduktan sonra uzman oturumuyla çağırır:
 //   POST { code }  →  { sent: true } | { sent: false, reason }
 //   reason: not_configured (e-posta ayarı yok) · not_found · no_email · closed · expired · no_access · limit_invite · too_soon
@@ -40,8 +40,8 @@ export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
     `${who}${from} sizi ${brand} uygulamasına ${m.code} koduyla davet ediyor.`,
     '',
     link ? `Daveti açın: ${link}` : `1) ${brand} uygulamasını yükleyin${e.storeUrl ? `: ${e.storeUrl}` : ' (App Store)'}.`,
-    link ? `Uygulama kod sorarsa: ${m.code}` : `2) Kayıt olurken "Davet kodum var" bağlantısına dokunup bu kodu yazın: ${m.code}`,
-    `Hesabınız varsa: Aile › Hesap › Uzmanım bölümüne kodu yazın.`,
+    link ? `Uygulama kod sorarsa: ${m.code}` : `2) Kayıt olun; açılan "Kodun var mı?" ekranına bu kodu yazın: ${m.code}`,
+    `Hesabınız varsa: Aile › Hesap › Kod gir bölümüne kodu yazın.`,
     '',
     `Davet ${until} tarihine kadar geçerli.`,
     'Hangi çocuğunuzu paylaşacağınıza siz karar verirsiniz; paylaşımı istediğiniz an durdurabilirsiniz.',
@@ -76,8 +76,8 @@ export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
   </td></tr></table>
   <table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 8px">
     ${link ? step(1, `Aşağıdaki düğmeyle daveti açın.`) : step(1, `App Store'dan ${esc(brand)} uygulamasını yükleyin.`)}
-    ${step(2, `Kayıt olurken <strong>“Davet kodum var”</strong> bağlantısına dokunup kodu yazın.`)}
-    ${step(3, `Hesabınız varsa: <strong>Aile › Hesap › Uzmanım</strong> bölümüne kodu yazın.`)}
+    ${step(2, `Kayıt olun; açılan <strong>“Kodun var mı?”</strong> ekranına kodu yazın.`)}
+    ${step(3, `Hesabınız varsa: <strong>Aile › Hesap › Kod gir</strong> bölümüne kodu yazın.`)}
   </table>
   ${link || e.storeUrl ? `<p style="margin:18px 0 6px">${link ? btn(link, 'Daveti aç', true) : btn(e.storeUrl, `${brand} uygulamasını yükle`, true)}</p>` : ''}
   <p style="margin:22px 0 0;font-size:14px;line-height:21px;color:#5B6275">Hangi çocuğunuzu paylaşacağınıza siz karar verirsiniz; paylaşımı istediğiniz an durdurabilirsiniz.</p>
