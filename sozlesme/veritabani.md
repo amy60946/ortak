@@ -333,10 +333,11 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 ### 11.1 Tablolar
 | Tablo | Ne | Alanlar | Okur | Yazar |
 |---|---|---|---|---|
-| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at`, `child_name` (≤ 40, uzmanın önerisi), `child_age_group` (`K`/`A`/`B`/`C`; davet bitince ikisi de silinir) | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
+| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at`, `child_name` (≤ 40, uzmanın önerisi), `child_age_group` (`K`/`A`/`B`/`C`; davet bitince ikisi de silinir), `declined_at` | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
 | `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
 | `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
 | `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
+| `clinic_links` (genişledi) | Paylaşım | `consent_version` (ebeveynin onayladığı paylaşım metni, ör. `uzman-paylasim-v1`) | değişmedi | `family_accept_invite` yazar |
 | `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
 
 `goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman yalnız `clinic_inherited_records` ile okur (önceki uzman adsız).
@@ -353,7 +354,9 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{code, clinic_id, clinic, clinician, title, child_name, child_age_group, has_plan}` (uzmanın notu `label` dönmez) |
 | `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün): `code, clinic, clinician, title, child_name, child_age_group, claimed_at, has_plan` |
 | `clinic_invite_preview(token|kod)` | P | Kod ya da anahtar; bağlanmış davet 30 gün |
-| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false, rıza_sürümü=null)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı) |
+| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false, rıza_sürümü=null)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı); davet akışında `family_accept_invite` tercih edilir |
+| `family_accept_invite(token|kod, çocuk jsonb?, çocuklar uuid[]?, paylaş_geçmiş, onay_sürümü, geçmiş_sürümü)` | P | Uzmanın önerdiği çocuğu ebeveynin düzelttiği haliyle oluşturur (`{name, age_group, birthday?, gender?, avatar?, allow_duplicate?}`; yaş grubu → `age_band` K/A→A, B/C→B) ve/veya var olan çocukları ekler, paylaşır; `clinic_links.consent_version`. Aynı ad: `{"error":"duplicate_child", child_id, name, message}` (HTTP 200). Düzeltildiyse uzmana `invite_child_updated`. `{link_ids, child_ids, clinic_id}` |
+| `family_decline_invite(token|kod)` | P | "Bu davet bana ait değil": davet `declined`, öneri + taslak plan silinir, uzmana `invite_declined` |
 | `clinic_link_history_set(link, açık, rıza_sürümü=null)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat; onaylanan metin sürümü kaydedilir |
 | `clinic_inherited_records(link)` | K | Devralınan kayıtlar, önceki paylaşım başına: `{n, label: "Önceki uzman n", from, to (ay), notes, suggestions, goals (+ratings), modules (+logs)}`; ad, unvan, klinik ve kimlik yok; metinlerde adlar "[önceki uzman]" |
 | `family_clinic_links()` | P | + `history_shared`, `history_available` |
