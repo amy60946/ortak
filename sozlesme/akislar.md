@@ -58,7 +58,7 @@ Yeni sunucu işi yok: QR yalnız 1. adımdaki **aynı** kodu taşır (aynı sür
 |---|---|
 | QR içeriği | `pofiadasi://baglan?kod=<KOD>` (KOD = 6 harf/rakam, büyük harf). Başka alan, çocuk adı ya da kimlik **konmaz**. |
 | ParentApp [P] | "Giriş kodu üret" ekranında kodun yanında QR (orta düzey hata düzeltme, en az 220 pt, beyaz kenar payı). Kod yazıyla da görünür kalır (bilgisayar/tarayıcıda oyun kodla açılır). Süre dolunca QR de söner. |
-| Oyun [O] — uygulama içi | Giriş ekranında "QR okut" (yalnız iOS uygulamasında; tarayıcı/bilgisayar sürümünde düğme yok, kod yazılır). Kamera yalnız bu ekranda, yalnız okumak için açılır; görüntü kaydedilmez, gönderilmez. Okunan kod kutuya yazılır ve giriş başlar. |
+| Oyun [O] — uygulama içi | Giriş ekranında "QR okut" (yalnız iOS uygulamasında; tarayıcı/bilgisayar sürümünde düğme yok, kod yazılır). Kamera yalnız bu ekranda, yalnız okumak için açılır; görüntü kaydedilmez, gönderilmez; üçüncü taraf kütüphane yok (iOS'un kendi okuyucusu). Kamera bu cihazda **ilk kez** istenmeden önce oyunun ebeveyn kapısı sorusu çıkar (geçilince bir daha sorulmaz). Okunan kod kutuya yazılır ve giriş başlar. |
 | Oyun [O] — telefonun kamerası | Oyun `pofiadasi://` şemasını tanır: sistem kamerasıyla okutulunca oyun açılır, kod kutuya **yazılır ama giriş kendiliğinden başlamaz** — çocuk "Başla"ya basar (başka bir sitenin bağlantısı cihazı habersizce başka hesaba bağlayamasın). Oturum açıksa bağlantı yok sayılır. |
 | Geçersiz QR | Şema/biçim tutmazsa "Bu QR Pofi Adası'nın değil" uyarısı; kod denemesi sayılmaz (`LoginThrottle` yalnız sunucuya giden denemede artar). |
 
