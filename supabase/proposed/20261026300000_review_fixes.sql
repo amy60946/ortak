@@ -15,6 +15,7 @@
 --   A7. Davetle oluşan çocuğun yaş grubu: doğum günü verildiyse otomatik (null), yoksa önerilen grup (K/A/B/C; eskiden K→A, C→B).
 --   A8. Taslak plan yalnız önerilen çocuğa taşınır (ebeveyn kardeşleri de seçerse planı kopyalanmaz); öneri yoksa seçilenlerin hepsine.
 --   A9. Bağlanıp 30 günde çocuk paylaşılmayan davet listede "Süresi doldu"; reddedilen davet istatistikte "kayıt" sayılmaz.
+--   A10. Aynı uzmana başka çocuk eklerken (clinic_share_child) onay metni sürümü de kaydedilir.
 -- B. Uzmanın özel notu (etiket) aileye açıktı: clinic_links.label'ı aile tablodan okuyabiliyordu. Not artık yalnız kliniğin
 --    okuyabildiği clinic_link_labels tablosunda; uygulamalar eskisi gibi clinic_links.label yazar, sunucu taşır.
 -- C. Takip planı
@@ -469,6 +470,34 @@ begin
 end $$;
 revoke execute on function public.clinic_invites_expire(uuid) from public, anon, authenticated;
 grant execute on function public.clinic_invites_expire(uuid) to service_role;
+
+-- Aynı uzmana başka çocuk ekleme (Uzmanım › Ekle): paylaşım onayı metni sürümü de kaydedilir (ParentApp gönderir;
+-- eski sürümler için isteğe bağlı, canlıdan önce zorunlu yapılacak — DURUM.md)
+drop function if exists public.clinic_share_child(uuid, uuid);
+create or replace function public.clinic_share_child(p_clinic_id uuid, p_child_id uuid, p_consent_version text default null)
+returns json language plpgsql security definer set search_path = '' as $$
+declare
+  fid uuid := public.my_family_id();
+  base public.clinic_links%rowtype;
+  lid uuid;
+begin
+  if fid is null then raise exception 'Önce ebeveyn olarak giriş yapmalısın'; end if;
+  if not exists (select 1 from public.children where id = p_child_id and family_id = fid) then
+    raise exception 'Çocuk bulunamadı';
+  end if;
+  select * into base from public.clinic_links
+    where family_id = fid and clinic_id = p_clinic_id and status = 'active'
+    order by consent_at limit 1;
+  if not found then raise exception 'Bu uzmanla etkin paylaşım yok; uzmandan yeni kod iste'; end if;
+  select id into lid from public.clinic_links where clinic_id = p_clinic_id and child_id = p_child_id and status = 'active';
+  if lid is not null then return json_build_object('link_id', lid); end if;
+  insert into public.clinic_links (clinic_id, clinician_id, family_id, child_id, label, consent_by, consent_version)
+  values (p_clinic_id, base.clinician_id, fid, p_child_id, '', auth.uid(), left(nullif(btrim(p_consent_version), ''), 40))
+  returning id into lid;
+  return json_build_object('link_id', lid);
+end $$;
+revoke execute on function public.clinic_share_child(uuid, uuid, text) from public, anon;
+grant execute on function public.clinic_share_child(uuid, uuid, text) to authenticated;
 
 -- =====================================================================
 -- B. Uzmanın özel notu (etiket) yalnız klinikte
