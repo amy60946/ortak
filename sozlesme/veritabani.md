@@ -325,3 +325,40 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 - **`clinic_clients()`** dönüşüne `clinician_id`, `clinician_name`, `assigned uuid[]` eklendi.
 - **Bildirim alıcıları** (`clinic_link_recipients`): sorumlu + atananlar; kimse yoksa klinik sahibi. Kardeşlerin ortak zor an/paylaşım bildirimi kişi başına yalnız görebildiği çocukları içerir. Yeni bildirim türü: `client_assigned`.
 - Uzman paylaşımı yalnız görebildiği danışan için sonlandırabilir.
+
+## 11. Aile davet bağlantısı, geçmiş aktarımı, takip planı (öneri, `proposed/20261026100000_family_invite_links.sql`)
+
+Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
+
+### 11.1 Tablolar
+| Tablo | Ne | Alanlar | Okur | Yazar |
+|---|---|---|---|---|
+| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at` | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
+| `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
+| `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
+| `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
+| `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at` | P (kendi), K (`clinic_link_mine`) | yalnız RPC |
+
+`goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman okur.
+
+### 11.2 Fonksiyonlar
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `clinic_create_invite(kind, label, parent_name, parent_email)` | K | Aile: 48 saat, `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 argümanlı çağrı aynen çalışır) |
+| `clinic_invite_mark(code, channel, revoke)` | K (davet sahibi / klinik sahibi) | Kanal kaydı ya da iptal (iptal taslak planı siler) |
+| `clinic_invites_list(gün)` / `clinic_invite_stats(gün)` | K | Davet listesi + durum / uzman başına gönderilen, açılan, bağlanan, paylaşılan, süresi dolan |
+| `clinic_invites_sweep()` | K | Kendi kliniğinin süresi dolan davetleri için `invite_expired` (zamanlayıcı yoksa) |
+| `clinic_invites_expire(clinic?)` | yalnız sunucu (pg_cron) | Aynısı, bütün klinikler |
+| `clinic_invite_open(token)` | yalnız service_role (Edge Function `invite-info`) | Açılış sayfası bilgisi + `opened_at` |
+| `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{clinic, clinician, title, label, has_plan}` |
+| `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün) |
+| `clinic_invite_preview(token|kod)` | P | Kod ya da anahtar; bağlanmış davet 30 gün |
+| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı) |
+| `clinic_link_history_set(link, açık)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat |
+| `clinic_link_history_of(link)` | K | Devralınan paylaşımlar (klinik, uzman, dönem) |
+| `family_clinic_links()` | P | + `history_shared`, `history_available` |
+| `care_plan_publish(link)` | K | Ebeveynlere tek `care_plan_shared` bildirimi |
+| `family_care_plan(link)` | P | Paylaşılan hedefler + etkin/tamamlanan modüller + bu hafta uygulanan gün sayısı |
+| `handle_new_user` | tetikleyici | Ebeveyn kaydında meta `clinic_invite` (anahtar/kod) ya da e-posta eşleşmesiyle daveti bağlar; hata kaydı engellemez |
+
+Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).
