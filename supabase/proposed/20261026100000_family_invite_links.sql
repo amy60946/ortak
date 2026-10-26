@@ -9,6 +9,9 @@
 -- 2) Ebeveyn yeni uzmana paylaşırken önceki uzman(lar)ın kayıtlarını (not, hedef + puan, öneri, aile programı) aktarabilir;
 --    yeni uzman salt okur; ebeveyn istediği an geri alır. Önceki uzmanın adı, unvanı, kliniği ve kimlikleri yeni uzmana
 --    gösterilmez ("Önceki uzman 1"); metinlerde geçen adları gizlenir. Onaylanan metin sürümü kaydedilir (hukuk_notlari.md).
+--    Uzman isterse çocuğun adını (ya da takma adını) ve yaş grubunu yazar (kullanıcı kararı 26 Ekim 2026): yalnız daveti
+--    kendi ailesine bağlamış ebeveyn görür ("Efe'yi ekle ve paylaş"), açılış sayfasında görünmez; davet bitince silinir.
+--    Oyun giriş kodu davete konmaz (çocuk hesabını ebeveyn açar ve bağlar).
 -- 3) Takip planı: çocuk hedefleri (clinic_goals genişler; "aileyle paylaşılan" hedefleri aile görür, haftalık puanlar yine yalnız klinikte)
 --    + aile programı modülleri (care_modules) + ebeveynin uygulama kaydı (care_module_logs). Plan davet sırasında taslak olarak kurulabilir;
 --    aile çocuğunu paylaşınca o çocuğa taşınır.
@@ -26,6 +29,8 @@ alter table public.clinic_invites add column if not exists claimed_at timestampt
 alter table public.clinic_invites add column if not exists claimed_family uuid references public.families (id) on delete set null;
 alter table public.clinic_invites add column if not exists expired_notified_at timestamptz;
 alter table public.clinic_invites add column if not exists revoked_at timestamptz;
+alter table public.clinic_invites add column if not exists child_name text;        -- uzmanın önerisi; ebeveyn düzenler
+alter table public.clinic_invites add column if not exists child_age_group text;   -- K ≤5 · A 6–8 · B 9–12 · C 13+ (şablon yaş grupları)
 do $$ begin
   alter table public.clinic_invites add constraint clinic_invites_parent_name_len check (char_length(parent_name) <= 60);
 exception when duplicate_object then null; end $$;
@@ -34,6 +39,12 @@ do $$ begin
 exception when duplicate_object then null; end $$;
 do $$ begin
   alter table public.clinic_invites add constraint clinic_invites_channel_check check (channel is null or channel in ('whatsapp', 'email', 'sms', 'copy', 'other'));
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter table public.clinic_invites add constraint clinic_invites_child_name_len check (child_name is null or char_length(child_name) between 1 and 40);
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter table public.clinic_invites add constraint clinic_invites_child_age_group_check check (child_age_group is null or child_age_group in ('K', 'A', 'B', 'C'));
 exception when duplicate_object then null; end $$;
 create unique index if not exists clinic_invites_token_idx on public.clinic_invites (token) where token is not null;
 create index if not exists clinic_invites_email_idx on public.clinic_invites (lower(parent_email)) where parent_email is not null;
@@ -165,8 +176,10 @@ revoke execute on function public.clinic_invite_status(public.clinic_invites) fr
 -- Davet oluştur. Aile: 48 saat, bağlantı anahtarı + 6 karakter kod. Ekip: 15 dakika, 8 karakter (değişmedi).
 drop function if exists public.clinic_create_invite(text, text);
 drop function if exists public.clinic_create_invite(text, text, text, text);
+drop function if exists public.clinic_create_invite(text, text, text, text, text, text);
 create or replace function public.clinic_create_invite(p_kind text default 'family', p_label text default '',
-                                                        p_parent_name text default '', p_parent_email text default null)
+                                                        p_parent_name text default '', p_parent_email text default null,
+                                                        p_child_name text default '', p_child_age_group text default null)
 returns json language plpgsql security definer set search_path = '' as $$
 declare
   me public.clinicians%rowtype;
@@ -174,6 +187,8 @@ declare
   new_token text;
   exp timestamptz;
   email text := nullif(lower(trim(coalesce(p_parent_email, ''))), '');
+  kid text := nullif(left(btrim(coalesce(p_child_name, '')), 40), '');
+  grp text := nullif(upper(btrim(coalesce(p_child_age_group, ''))), '');
 begin
   select * into me from public.clinicians where id = auth.uid();
   if not found then raise exception 'Yalnızca uzman hesabı'; end if;
@@ -184,6 +199,8 @@ begin
     raise exception 'Bireysel pakette ekip yok; Klinik paketine geçin';
   end if;
   if email is not null and email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' then raise exception 'E-posta adresi geçersiz'; end if;
+  if grp is not null and grp not in ('K', 'A', 'B', 'C') then raise exception 'Geçersiz yaş grubu'; end if;
+  if p_kind <> 'family' then kid := null; grp := null; end if;
   -- günde en çok 100 aile daveti (kötüye kullanım sınırı)
   if p_kind = 'family' and (select count(*) from public.clinic_invites
                              where clinician_id = me.id and kind = 'family' and created_at > now() - interval '1 day') >= 100 then
@@ -198,13 +215,14 @@ begin
           and not exists (select 1 from public.invite_codes where code = new_code);
   end loop;
   if p_kind = 'family' then new_token := replace(gen_random_uuid()::text, '-', ''); end if;
-  insert into public.clinic_invites (code, clinic_id, clinician_id, kind, label, expires_at, token, parent_name, parent_email)
+  insert into public.clinic_invites (code, clinic_id, clinician_id, kind, label, expires_at, token, parent_name, parent_email,
+                                     child_name, child_age_group)
   values (new_code, me.clinic_id, me.id, p_kind, left(coalesce(p_label, ''), 60), exp, new_token,
-          left(trim(coalesce(p_parent_name, '')), 60), email);
+          left(trim(coalesce(p_parent_name, '')), 60), email, kid, grp);
   return json_build_object('code', new_code, 'token', new_token, 'expires_at', exp);
 end $$;
-revoke execute on function public.clinic_create_invite(text, text, text, text) from public, anon;
-grant execute on function public.clinic_create_invite(text, text, text, text) to authenticated;
+revoke execute on function public.clinic_create_invite(text, text, text, text, text, text) from public, anon;
+grant execute on function public.clinic_create_invite(text, text, text, text, text, text) to authenticated;
 
 -- Uzman paylaşım kanalını kaydeder (istatistik) ya da daveti iptal eder
 create or replace function public.clinic_invite_mark(p_code text, p_channel text default null, p_revoke boolean default false)
@@ -218,7 +236,7 @@ begin
   end if;
   if p_revoke then
     if inv.used_at is not null then raise exception 'Kullanılmış davet iptal edilemez'; end if;
-    update public.clinic_invites set revoked_at = now() where code = inv.code and revoked_at is null;
+    update public.clinic_invites set revoked_at = now(), child_name = null, child_age_group = null where code = inv.code and revoked_at is null;
     -- taslak plan iptalle silinir
     delete from public.clinic_goals where invite_code = inv.code;
     delete from public.care_modules where invite_code = inv.code;
@@ -298,8 +316,9 @@ begin
     perform public.clinic_invite_claim_for(inv.code, fid, auth.uid());
   end if;
   delete from public.code_attempts where user_id = auth.uid();
+  -- `label` uzmanın kendi notudur, aileye dönmez; çocuk önerisi yalnız daveti bu aileye bağlanmışsa
   return (select json_build_object('code', inv.code, 'clinic_id', inv.clinic_id, 'clinic', c.name, 'clinician', m.name, 'title', m.title,
-                                   'label', inv.label,
+                                   'child_name', inv.child_name, 'child_age_group', inv.child_age_group,
                                    'has_plan', exists (select 1 from public.clinic_goals where invite_code = inv.code)
                                             or exists (select 1 from public.care_modules where invite_code = inv.code))
             from public.clinics c, public.clinicians m where c.id = inv.clinic_id and m.id = inv.clinician_id);
@@ -308,10 +327,11 @@ revoke execute on function public.claim_clinic_invite(text) from public, anon;
 grant execute on function public.claim_clinic_invite(text) to authenticated;
 
 -- Ebeveynin bağlı ama henüz çocuk paylaşılmamış davetleri (ParentApp "Uzmanın seni bekliyor" kartı)
-create or replace function public.family_pending_invites()
-returns table (code text, clinic text, clinician text, title text, label text, claimed_at timestamptz, has_plan boolean)
+drop function if exists public.family_pending_invites();
+create function public.family_pending_invites()
+returns table (code text, clinic text, clinician text, title text, child_name text, child_age_group text, claimed_at timestamptz, has_plan boolean)
 language sql stable security definer set search_path = '' as $$
-  select i.code, c.name, m.name, m.title, i.label, i.claimed_at,
+  select i.code, c.name, m.name, m.title, i.child_name, i.child_age_group, i.claimed_at,
          exists (select 1 from public.clinic_goals g where g.invite_code = i.code)
          or exists (select 1 from public.care_modules x where x.invite_code = i.code)
     from public.clinic_invites i
@@ -345,6 +365,8 @@ begin
     return public.clinic_invite_rejected(public.code_problem(inv.used_at, inv.expires_at));
   end if;
   return (select json_build_object('clinic', c.name, 'clinician', m.name, 'title', m.title, 'expires_at', inv.expires_at, 'code', inv.code,
+                                   'child_name', case when inv.claimed_family = fid then inv.child_name end,
+                                   'child_age_group', case when inv.claimed_family = fid then inv.child_age_group end,
                                    'has_plan', exists (select 1 from public.clinic_goals where invite_code = inv.code)
                                             or exists (select 1 from public.care_modules where invite_code = inv.code))
             from public.clinics c, public.clinicians m where c.id = inv.clinic_id and m.id = inv.clinician_id);
@@ -406,7 +428,8 @@ begin
   delete from public.clinic_goals where invite_code = inv.code;
   delete from public.care_modules where invite_code = inv.code;
   update public.clinic_invites
-     set used_at = now(), used_by = auth.uid(), claimed_at = coalesce(claimed_at, now()), claimed_family = coalesce(claimed_family, fid)
+     set used_at = now(), used_by = auth.uid(), claimed_at = coalesce(claimed_at, now()), claimed_family = coalesce(claimed_family, fid),
+         child_name = null, child_age_group = null
    where code = inv.code;
   delete from public.code_attempts where user_id = auth.uid();
   if exists (select 1 from public.care_modules where link_id = any(ids)) or exists (select 1 from public.clinic_goals where link_id = any(ids) and shared) then
@@ -503,6 +526,11 @@ declare
   r record;
   n integer := 0;
 begin
+  -- biten davetlerde çocuk önerisi tutulmaz (kullanıldı, iptal, 48 saatte bağlanmadı, bağlandıktan sonra 30 gün geçti)
+  update public.clinic_invites set child_name = null, child_age_group = null
+   where (child_name is not null or child_age_group is not null) and (p_clinic is null or clinic_id = p_clinic)
+     and (used_at is not null or revoked_at is not null or (claimed_at is null and expires_at <= now())
+          or claimed_at <= now() - interval '30 days');
   for r in select * from public.clinic_invites
             where kind = 'family' and expires_at <= now() and claimed_at is null and used_at is null
               and revoked_at is null and expired_notified_at is null
@@ -542,13 +570,14 @@ drop function if exists public.clinic_invites_list(integer);
 create function public.clinic_invites_list(p_days integer default 90)
 returns table (code text, token text, clinician_id uuid, clinician text, label text, parent_name text, parent_email text,
                channel text, status text, created_at timestamptz, expires_at timestamptz, opened_at timestamptz,
-               claimed_at timestamptz, used_at timestamptz, has_plan boolean)
+               claimed_at timestamptz, used_at timestamptz, has_plan boolean, child_name text, child_age_group text)
 language sql stable security definer set search_path = '' as $$
   select i.code, case when i.used_at is null and i.revoked_at is null then i.token end, i.clinician_id, coalesce(m.name, ''), i.label,
          i.parent_name, i.parent_email, i.channel, public.clinic_invite_status(i), i.created_at, i.expires_at, i.opened_at,
          i.claimed_at, i.used_at,
          exists (select 1 from public.clinic_goals g where g.invite_code = i.code)
-         or exists (select 1 from public.care_modules x where x.invite_code = i.code)
+         or exists (select 1 from public.care_modules x where x.invite_code = i.code),
+         i.child_name, i.child_age_group
     from public.clinic_invites i
     left join public.clinicians m on m.id = i.clinician_id
    where i.kind = 'family' and i.clinic_id = public.my_clinic_id()

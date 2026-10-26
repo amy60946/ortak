@@ -333,7 +333,7 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 ### 11.1 Tablolar
 | Tablo | Ne | Alanlar | Okur | Yazar |
 |---|---|---|---|---|
-| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at` | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
+| `clinic_invites` (genişledi) | Aile daveti bağlantısı | `token` (32 hex, tekil), `parent_name` (≤ 60), `parent_email`, `channel`, `opened_at`, `claimed_at`, `claimed_family`, `expired_notified_at`, `revoked_at`, `child_name` (≤ 40, uzmanın önerisi), `child_age_group` (`K`/`A`/`B`/`C`; davet bitince ikisi de silinir) | K: yalnız kendi davetleri, sahip hepsi (önceden bütün ekip) | yalnız RPC |
 | `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
 | `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
 | `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
@@ -344,14 +344,14 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 ### 11.2 Fonksiyonlar
 | Fonksiyon | Kim | Ne |
 |---|---|---|
-| `clinic_create_invite(kind, label, parent_name, parent_email)` | K | Aile: 48 saat, `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 argümanlı çağrı aynen çalışır) |
+| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: 48 saat, `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
 | `clinic_invite_mark(code, channel, revoke)` | K (davet sahibi / klinik sahibi) | Kanal kaydı ya da iptal (iptal taslak planı siler) |
 | `clinic_invites_list(gün)` / `clinic_invite_stats(gün)` | K | Davet listesi + durum / uzman başına gönderilen, açılan, bağlanan, paylaşılan, süresi dolan |
 | `clinic_invites_sweep()` | K | Kendi kliniğinin süresi dolan davetleri için `invite_expired` (zamanlayıcı yoksa) |
 | `clinic_invites_expire(clinic?)` | yalnız sunucu (pg_cron) | Aynısı, bütün klinikler |
 | `clinic_invite_open(token)` | yalnız service_role (Edge Function `invite-info`) | Açılış sayfası bilgisi + `opened_at` |
-| `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{clinic, clinician, title, label, has_plan}` |
-| `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün) |
+| `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{code, clinic_id, clinic, clinician, title, child_name, child_age_group, has_plan}` (uzmanın notu `label` dönmez) |
+| `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün): `code, clinic, clinician, title, child_name, child_age_group, claimed_at, has_plan` |
 | `clinic_invite_preview(token|kod)` | P | Kod ya da anahtar; bağlanmış davet 30 gün |
 | `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false, rıza_sürümü=null)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı) |
 | `clinic_link_history_set(link, açık, rıza_sürümü=null)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat; onaylanan metin sürümü kaydedilir |
