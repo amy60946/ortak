@@ -309,7 +309,7 @@ Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) ya
 
 Öneri: **kalsın**, ama uzman davetiyle gelen ailede ayrı bir adım olmasın (yukarıda 6). Gerekçe: (1) ParentApp aile aboneliğiyle uzmansız da satılıyor; GameApp'ten gelen aile çocuğunu kendisi ekler; (2) kardeşler ve uzmana gitmeyen çocuklar; (3) uzman çocuk önerisini boş bırakabilir; (4) Joon da uzman daveti olsa bile ebeveynin "Manage Family" ile çocuk ekleyip silmesine izin veriyor. Uzman davetinde çocuk hazır gelir, ebeveyn yalnız kontrol edip onaylar; elle eklemede aynı ad uyarısı (6c).
 
-## 14. Uzman doğrulama — seçenekler (karar bekliyor)
+## 14. Uzman doğrulama — seçenekler ve karar
 
 Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şimdilik ParentApp'te uyarı + veli beyanı + sözleşme maddeleri (yukarıda, `hukuk_notlari.md` 3F–3H).
 
@@ -323,7 +323,33 @@ Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şi
 | 6 | Üçüncü taraf kimlik doğrulama (KYC) | Kimlik + canlı fotoğraf hizmeti | Kimliği güçlü, mesleği değil | Kişi başı ücret, yeni veri işleyen |
 | 7 | e-Devlet ile giriş / resmî kayıt sorgusu | Kurumsal entegrasyon | En güçlü | Yüksek (başvuru, sözleşme) |
 
-Önerilen sıra: şimdi 1; ilk klinik müşterisinden önce 2 (+ Klinik paketinde 3 ve 5); ParentApp'te "Doğrulanmış uzman" rozeti ya da "Doğrulanmamış uzman" etiketi. Veri: `clinicians.verified_at`, `verified_by`, belge Storage'da (yalnız yönetici) — seçim yapılınca önce ortak.
+**Karar (kullanıcı, 26 Ekim 2026): seçenek 2, yarı otomatik** — öneri `proposed/20261026050000_clinician_verification.sql`, Edge Function `clinician-verify`, meslek eşlemesi `veri/uzman_meslekleri.json`. Uyarı + veli beyanı (1) rozet olsa da kalır.
+
+### 14.1 Akış
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | "Hesabını doğrula": meslek seç (BCBA ise BACB sicil no), e-Devlet'ten indirdiği **Yükseköğretim Mezun Belgesi** PDF'ini yükle (fotoğraf/tarama yok; BCBA'da belge isteğe bağlı). | `clinician_verification_start(meslek, bacb)` → `{id, upload_path}`; Storage `verify/<uzman>/<id>.pdf`; `clinician_verification_submit(id)` |
+| 2 | [S] | Ön kontrol (birkaç saniye, kendi sunucumuzda, PDF metin katmanı): belge okunuyor mu, e-Devlet izi, mezuniyet, barkod, **ad** (hesap adı belgede mi), **bölüm** (meslek ↔ bölüm), **derece** (klinik psikolog: yüksek lisans/doktora; ön lisans lisans yerine geçmez). Yalnız kesin durumlar kendiliğinden ret: okunamayan belge, öğrenci belgesi, başka hesabın barkodu. Kişinin adı ve kimlik numarası saklanmaz. | Edge Function `clinician-verify` → `clinician_verification_autocheck` |
+| 3 | Yönetici (support/owner, iki adımlı) | Panelde ön kontrol özeti + belge. Barkodu **turkiye.gov.tr/belge-dogrulama**'da sorgular, açılan asıl belgeyi yüklenenle karşılaştırır; BCBA'da **BACB sicili** (ad + sertifika no, durum etkin, disiplin kaydı). Şüphede kısa telefon. Onay ya da nedenli ret. Belge görüntüleme ve karar denetim kaydına yazılır. | `admin_verifications`, `admin_verification_open`, `admin_verification_decide`, `admin_verification_suspend` |
+| 4 | [S] | Onayda belge dosyası silinir (panel kovadan siler), yalnız özet kalır (üniversite, bölüm, derece, mezuniyet yılı). Uzmana `verification_approved` / `verification_rejected` (neden + açıklama) / `verification_suspended`. | `clinician_verifications.summary`, `clinicians.verified_profession`, `verified_at` |
+| 5 | [P] | Davet ekranı, açılış sayfası ve Uzmanım'da **"Belgesi incelendi: Klinik psikolog"** rozeti; rozet yoksa "Belgesi incelenmedi" etiketi. Uyarı ve veli beyanı her durumda kalır. | `verified_as`: `clinic_invite_open`, `claim_clinic_invite`, `clinic_invite_preview`, `family_pending_invites`, `family_clinic_links` |
+| 6 | [S] | Uzman adını değiştirirse rozet düşer (belgedeki adla eşleşme bozulur), yeniden yükler. BCBA yılda bir yeniden bakılır (`recheck_at`). Şikâyette rozet askıya alınır. | tetikleyici `clinicians_verified_name_guard` |
+
+### 14.2 İnceleme kriterleri ve teyit kaynakları
+
+| Meslek | Aranan | Belge | Teyit kaynağı |
+|---|---|---|---|
+| Psikolog | Psikoloji lisans | e-Devlet Yükseköğretim Mezun Belgesi (barkodlu PDF) | turkiye.gov.tr/belge-dogrulama (barkod) |
+| Klinik psikolog | Psikoloji lisans + klinik psikoloji yüksek lisans/doktora | Aynı (iki derece) | Aynı |
+| PDR, ergoterapist, dil ve konuşma terapisti, özel eğitim öğretmeni, çocuk gelişimci | İlgili bölüm lisans | Aynı | Aynı |
+| Davranış analisti (BCBA) | Etkin BACB sertifikası | BACB sicil no (+ mezun belgesi) | BACB herkese açık sicil sorgusu (bacb.com) |
+| Yurt dışı mezun | Türkiye'de denklik | YÖK denklik belgesi | Barkodluysa e-Devlet, değilse elle |
+| Çocuk ve ergen psikiyatristi | Tıp + uzmanlık | Mezun belgesi + uzmanlık belgesi | Uzmanlık için herkese açık sorgu bulunamadı: elle |
+
+Ret nedenleri (`veri/uzman_meslekleri.json` `reasons`): `name_mismatch`, `barcode_invalid`, `program_mismatch`, `degree_mismatch`, `unreadable`, `student_doc`, `duplicate`, `bacb_inactive`, `name_changed`, `other`.
+
+Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o kişi olduğunu değil (ad eşleşmesi + gerektiğinde telefon). Sağlık Bakanlığı diploma tescili / meslek icra yetkisi için herkese açık sorgu bulunamadı; yetki sorumluluğu uzman sözleşmesinde (`hukuk_notlari.md` A10). Rozet "Belgesi incelendi" der, "doğrulandı" demez (A11). Ön kontrol bir örnek belgeyle denendi; ilk gerçek belgelerde e-Devlet düzeni kontrol edilip gerekirse kurallar güncellenir.
 
 ## 13. Kim kimi nasıl ekler — güncel tablo (26 Ekim 2026)
 
