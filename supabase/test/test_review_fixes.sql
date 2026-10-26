@@ -110,6 +110,19 @@ reset role;
 select tst.check((select used_at is null from public.clinic_invites where code = tst.v('again')), 'davet harcanmadı');
 select tst.check((select label from public.clinic_links where id = tst.v('Lnew')::uuid) = '', 'not sütunu boş kalır');
 select tst.check((select count(*) from public.notifications where kind = 'care_plan_shared') = 0, 'paylaşan ebeveyn kendine plan bildirimi almaz');
+-- A10. aynı uzmana başka çocuk eklerken onay metni sürümü
+reset role;
+insert into public.children (id, family_id, name, avatar)
+  values ('00000000-0000-0000-0000-00000000c003', (select family_id from public.profiles where id = '00000000-0000-0000-0000-0000000000a1'), 'Ada', 'kedi');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select public.clinic_share_child((select clinic_id from public.family_clinic_links() limit 1),
+                                 '00000000-0000-0000-0000-00000000c003', 'uzman-paylasim-v1');
+reset role;
+select tst.check((select consent_version from public.clinic_links where child_id = '00000000-0000-0000-0000-00000000c003') = 'uzman-paylasim-v1',
+                 'kardeş eklerken onay sürümü kaydedilir');
+update public.clinic_links set status = 'revoked', revoked_at = now() where child_id = '00000000-0000-0000-0000-00000000c003';
+set role authenticated;
 
 -- ---------------------------------------------------------------- C1. plan aileye "gönder" ile görünür
 set role authenticated;
