@@ -13,7 +13,7 @@ Kaynak:
 - `game-app/Assets/_Pofi/Scripts/Logic/Services/Supabase/SupabaseAuthService.cs`, `SupabaseGameService.cs`, `Services/RoutedAuthService.cs`, `Auth/LoginThrottle.cs`, `State/SyncCoordinator.cs`, `State/SaveRestore.cs`, `Tasks/ChildTask.cs`, `Tasks/TaskSync.cs`, `Economy/Wallet.cs`, `Economy/XpSystem.cs`
 - `parent-app/docs/SUPABASE.md`, `parent-app/docs/DURUM.md`, `game-app/docs/M4_SUNUCU_ONERISI.md`, `M4_UYGULAMA.md`
 
-Son güncelleme: 2026-10-19
+Son güncelleme: 2026-10-24 (3.1a hoş geldin coini, P11 ilk ödül talebi)
 
 ---
 
@@ -39,8 +39,8 @@ Son güncelleme: 2026-10-19
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] | Aile › çocuk › Genel › "Giriş kodu üret". Aynı çocuğun kullanılmamış eski kodu geçersiz olur. | `create_invite_code('child', child_id)` → **24 saat**, tek kullanım |
-| 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). | — |
-| 3 | [O] | Çocuk kodu yazar. Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
+| 2 | [P → çocuk] | Ebeveyn kodu çocuğa söyler/gösterir (uygulama dışı). ParentApp kodu yazıyla **ve QR olarak** gösterir (§2.0). | — |
+| 3 | [O] | Çocuk kodu yazar ya da QR okutur (§2.0). Oyun büyük harfe çevirir, harf/rakam dışını atar, 6 karakter değilse hata. Hatalı denemelerde istemci beklemesi: 3 serbest, sonra 15 sn → ikiye katlanarak en fazla 300 sn. | `ChildCode`, `LoginThrottle` |
 | 4 | [O] | Oturum yoksa **anonim oturum** açar. | `POST /auth/v1/signup` (anonim). Supabase'de "Anonymous Sign-Ins" açık olmalı. |
 | 5 | [O → S] | Kodu kullanır. | `redeem_child_code(code)` → `{child_id, family_id, name, avatar, age_band}` |
 | 6 | [S] | `children.user_id = auth.uid()` yapılır, kod tüketilir. Ebeveyn hesabıyla çağrılırsa reddedilir. | `children`, `invite_codes` |
@@ -49,6 +49,24 @@ Son güncelleme: 2026-10-19
 | 9 | [P] | Realtime ile çocuğun "bağlı" olduğu görünür (`linked` = `user_id` dolu). | `children` (Realtime) |
 
 Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider; bu akışı kullanmaz.
+
+### 2.0 QR ile bağlama (karar 26 Ekim 2026, kullanıcı: "QR ile ilerleriz; kodla da giriş yapılabildiği için PC'de o kullanılır")
+
+Yeni sunucu işi yok: QR yalnız 1. adımdaki **aynı** kodu taşır (aynı süre, tek kullanım, aynı `redeem_child_code`).
+
+| Konu | Kural |
+|---|---|
+| QR içeriği | `pofiadasi://baglan?kod=<KOD>` (KOD = 6 harf/rakam, büyük harf). Başka alan, çocuk adı ya da kimlik **konmaz**. |
+| ParentApp [P] | "Giriş kodu üret" ekranında kodun yanında QR (orta düzey hata düzeltme, en az 220 pt, beyaz kenar payı). Kod yazıyla da görünür kalır (bilgisayar/tarayıcıda oyun kodla açılır). Süre dolunca QR de söner. |
+| Oyun [O] — uygulama içi | Giriş ekranında "QR okut" (yalnız iOS uygulamasında; tarayıcı/bilgisayar sürümünde düğme yok, kod yazılır). Kamera yalnız bu ekranda, yalnız okumak için açılır; görüntü kaydedilmez, gönderilmez; üçüncü taraf kütüphane yok (iOS'un kendi okuyucusu). Kamera bu cihazda **ilk kez** istenmeden önce oyunun ebeveyn kapısı sorusu çıkar (geçilince bir daha sorulmaz). Okunan kod kutuya yazılır ve giriş başlar. |
+| Oyun [O] — telefonun kamerası | Oyun `pofiadasi://` şemasını tanır: sistem kamerasıyla okutulunca oyun açılır, kod kutuya **yazılır ama giriş kendiliğinden başlamaz** — çocuk "Başla"ya basar (başka bir sitenin bağlantısı cihazı habersizce başka hesaba bağlayamasın). Oturum açıksa bağlantı yok sayılır. |
+| Geçersiz QR | Şema/biçim tutmazsa "Bu QR Pofi Adası'nın değil" uyarısı; kod denemesi sayılmaz (`LoginThrottle` yalnız sunucuya giden denemede artar). |
+
+**İlk görev önerisi (karar 26 Ekim 2026, kullanıcı; ParentApp'te yapılacak):** ebeveyn "Giriş kodu üret"e bastığında çocuğun hiç
+görevi yoksa kod üretilmeden önce **yumuşak** bir adım çıkar: "Çocuğunuz adada ilk olarak panoya bakacak. Şimdi ilk görevi
+ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, tek dokunuşla ekle) + "Sonra ekleyeceğim" (kod yine
+üretilir). Kesin engel konmaz (kayıtta vazgeçmeyi önlemek için). Oyunda pano hiçbir zaman boş başlamaz: rehberin hoş geldin görevi
+(`ekonomi.md` §5A) ilk ziyarette panonun en üstündedir. Sunucu değişikliği yok (`create_invite_code` aynı).
 
 ### 2.1 Bağlantıyı kaldırma
 | # | Uygulama | Adım | Veritabanı |
@@ -77,7 +95,7 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 10a | [S] | Aynı geçişte **Güneş Taşı** yazılır: kolay 1 / orta 2 / zor 3 (`20261019030000_sun_stones`, uygulandı 19 Ekim). Geri almada o tamamlamanın taşı düşer. | tetikleyici `completions_sun_stone` → `sun_stone_ledger` |
 | 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
 | 12 | [O] | Bakiye sunucudan alınır, artış "kazanılan coin" olarak kutlanır. Aynı gün ilk onayda görev serisi bonusu XP'si verilir (coin değil). | `child_me().balance`; `TaskStreak` |
-| 12a | [O] | Onaylı her görev örneği için bir kez: zorluğa göre XP (20/35/50, sınıra sayılmaz) ve becerisine 1 yıldız (`ekonomi.md` 5B). Taş toplamı `child_me().sun_stones`'tan alınır; çocuk taşları adadaki onarım noktalarına yerleştirir. | `child_tasks` (`skill`, `difficulty`); `child_me().sun_stones` |
+| 12a | [O] | Onaylı her görev örneği için bir kez: zorluğa göre XP (6/10/14, günlük sınıra sayılmaz; görünmez günlük payı var — `ekonomi.md` 5.2) ve becerisine 1 yıldız (`ekonomi.md` 5B). Taş toplamı `child_me().sun_stones`'tan alınır; çocuk taşları adadaki onarım noktalarına yerleştirir. | `child_tasks` (`skill`, `difficulty`); `child_me().sun_stones` |
 | 13 | [P] | Ebeveyn çocuğun bakiyesini görür. | `child_balance(child_id)` |
 
 ### 3.1 Coin harcama (oyun içi, ebeveyn adımı yok)
@@ -88,6 +106,14 @@ Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider;
 | 3 | [S] | Fiyat `game_items`'tan; aynı işlem iki kez düşülmez; bakiye yetmezse reddedilir. | `coin_ledger` (`spend`) |
 | 4 | [O] | Kabul → kesinleşir. Ret (`not_enough_coins` / `unknown_item`) → eşya envanterden geri alınır, bakiye sunucudakine eşitlenir. | `Wallet.Acknowledge/Reject` |
 | 5 | [P] | Ebeveynin gördüğü bakiye düşer (bir sonraki `child_balance` çağrısında). | |
+
+### 3.1a Hoş geldin coini (coin kuralının tek istisnası; öneri `migrations/20261024100000_welcome_coins_first_reward.sql`, uygulandı 24 Ekim 2026)
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [O] | Çocuk Okti'yi **ilk kez beslediğinde** oyun hoş geldin coinini ister (çevrimdışıysa kuyrukta bekler; tekrar göndermek zararsızdır). | `claim_welcome_coins()` |
+| 2 | [S] | Bu çocuğa daha önce verilmediyse deftere **+20** (`reason='welcome'`) yazar → `{ok:true, coins:20, balance, error:null}`. Verildiyse yazmaz → `{ok:false, coins:0, balance, error:'already_claimed'}`. Ebeveyn hesabı ya da bağlı olmayan oturum: `42501`. | `coin_ledger` (`welcome`) |
+| 3 | [O] | `balance`'ı sunucu bakiyesi olarak alır (`Wallet.ApplyServerSnapshot`); `ok:true` ise kutlar ve çocuğu dükkâna (ilk aksesuar, ör. `glasses_round` 15) yönlendirebilir. `already_claimed` sessizce geçilir. | — |
+| 4 | [P] | Ebeveyn bakiyede 20 coini görür (bildirim yok). Coin geçmişi gösterilirse satır adı "Hoş geldin hediyesi". | `child_balance(child_id)`, `coin_ledger` |
 
 ### 3.2 Oyun kaydı yedeği
 | # | Uygulama | Adım | Veritabanı |
@@ -216,6 +242,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 | Ebeveyn öneriye karar verdi | ParentApp → öneriyi yapan uzman | `suggestion_decided` | clinic |
 | Gözlem notu | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
 | Ekibe yeni uzman katıldı | ClinicApp → klinik sahipleri | `team_joined` | clinic |
+| Çocuk ödül istedi (ilkinde `data.first = true`, başlık "İlk ödül talebi: …"; P11 3c) | Oyun → ebeveynler | `reward_request` | parent |
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
@@ -247,7 +274,7 @@ Teslim yolları:
 
 ParentApp olayları (22 Ekim 2026): `app.open`, `screen.<tasks|review|progress|family|create_task|task_details|chat|notifications|observation|rewards|paywall>`, `task.create` (`n`), `task.delete`, `task.review` (`approve`), `template.custom`, `child.add`, `invite.create` (`kind`), `family.join`, `message.send` (`kind`), `notification.open` (`kind`), `observation.create`, `reward.create`/`reward.update` (`kind`), `reward.delete`, `reward.give` (`n`), `reward.decide` (`approve`), `stones.deduct` (`n`, `reason`: doğru/yanlış; metin gönderilmez), `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.accept` (`n`, `new`, `history`), `invite.decline`, `care.log` (`practiced`) (uzman daveti ve takip planı, 26 Ekim 2026).
 
-ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026).
+ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.share` (`channel`), `plan.goal` (`edit`), `plan.module` (`edit`), `plan.package`, `plan.publish`, `verification.submit` (`profession`, `check`) (26 Ekim 2026).
 
 ## 10. Uzman başlatır: aile davet bağlantısı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 
@@ -259,28 +286,30 @@ Karar (kullanıcı isteği 26 Ekim): akışı uzman başlatır. Uzman isterse ö
 | 2 | [K] | İsterse davete taslak takip planı ekler (paket seç → hedef/modül düzenle). | `clinic_goals` / `care_modules` (`invite_code`) |
 | 3 | [K] | Paylaşır: WhatsApp (`wa.me/?text=`), e-posta (`mailto:`), sistem paylaşımı ya da kopyala. Mesajda bağlantı + yazılabilir kod. Kanal kaydedilir. | `clinic_invite_mark(code, channel)` |
 | 4 | Ebeveyn | Bağlantıya dokunur: `https://<alan adı>/d/<token>`. ParentApp yüklüyse doğrudan uygulama açılır (Universal Link); değilse açılış sayfası (`web/davet`): uzman adı + "App Store'dan yükle" + "Daveti uygulamada aç" (`parentapp://davet/<token>`) + kod. | Edge Function `invite-info` → `clinic_invite_open(token)` (açıldı işareti) |
-| 5 | [P] | Kayıt ekranında "Dr. X seni davet etti" bandı; kayıtta meta `clinic_invite = <token ya da kod>` gönderilir. | `handle_new_user` → davet aileye **bağlanır** (`claimed_family`); uzmana `invite_claimed` |
-| 5a | [S] | Bağlantı/kod yoksa: davette e-posta yazılıysa aynı e-postayla kayıt olan ebeveyne davet kendiliğinden bağlanır. | `handle_new_user` |
+| 5 | [P] | Bağlantıyla gelindiyse kayıt ekranında "Dr. X seni davet etti" bandı (oturum yok: `invite-info` bağlantı anahtarıyla; 6 karakterlik kodla kayıtta bant yok); kayıtta meta `clinic_invite = <token ya da kod>` gönderilir. | `handle_new_user` → davet aileye **bağlanır** (`claimed_family`); uzmana `invite_claimed` |
+| 5a | [S] | Bağlantı/kod yoksa: davette e-posta yazılıysa, aynı e-postayla kayıt olan ebeveyn e-postasını **doğruladığında** davet kendiliğinden bağlanır (26 Ekim denetimi: doğrulanmamış e-postayla eşleşme yok; "Confirm email" kapalıyken kayıtla aynı anda yapılan kendiliğinden onay eşleşme yapmaz — o sürede ebeveyn kodu yazar). | `handle_user_email_confirmed` (auth.users `email_confirmed_at`) |
 | 5b | [P] | Hesabı olan ebeveyn bağlantıyı açar ya da kodu yazar. | `claim_clinic_invite(token|kod)` |
-| 6 | [P] | Bekleyen davet ekranı (kullanıcı kararı 26 Ekim 2026): **"Dr. X, Efe (6–8) için seni davet etti. Bilgiler doğru mu?"** Ad, yaş grubu (isteğe bağlı doğum günü, cinsiyet, simge) **dolu ve düzenlenebilir**; ebeveyn ayrıca çocuk eklemez. Aynı ekranda **uzman doğrulanmaz uyarısı** (aşağıda) ve tek onay kutusu "Bu uzmanı tanıyorum ve çocuğun velisiyim"; düğme **"Onayla ve paylaş"**. Ailede başka çocuk varsa onları da işaretleyebilir. Altta "Bu davet bana ait değil" (reddet). Öneri yoksa ebeveyn adı yazar (aynı ekran). | `family_pending_invites()` (+ `child_name`, `child_age_group`), `family_accept_invite(anahtar, çocuk, çocuklar, geçmiş, onay_sürümü, geçmiş_sürümü)`, `family_decline_invite(anahtar)` |
+| 6 | [P] | Bekleyen davet ekranı (kullanıcı kararı 26 Ekim 2026): **"Dr. X, Efe (6–8) için seni davet etti. Bilgiler doğru mu?"** Ad, yaş grubu (isteğe bağlı doğum günü, cinsiyet, simge) **dolu ve düzenlenebilir**; ebeveyn ayrıca çocuk eklemez. Aynı ekranda **uzman doğrulanmaz uyarısı** (aşağıda) ve tek onay kutusu "Bu uzmanı tanıyorum ve çocuğun velisiyim"; düğme **"Onayla ve paylaş"**. Ailede başka çocuk varsa onları da işaretleyebilir. Altta "Bu davet bana ait değil" (reddet; yalnız daveti kendi ailesine bağlamış ebeveyn). Öneri yoksa ebeveyn adı yazar (aynı ekran). | `family_pending_invites()` (+ `child_name`, `child_age_group`), `family_accept_invite(anahtar, çocuk, çocuklar, geçmiş, onay_sürümü, geçmiş_sürümü)`, `family_decline_invite(anahtar)` |
 | 6b | [S] | Onayda çocuk sunucuda oluşur ve paylaşılır; ebeveyn öneriyi değiştirdiyse uzmana **"Ebeveyn çocuk bilgisini düzeltti: Efe (A) → Efecan (B)"**; onaylanan ad uzmanın danışan listesinde. Sonradan ParentApp'te yapılan düzeltmeler de danışan listesine kendiliğinden yansır. Reddedilirse uzmana "Aile davetini kabul etmedi", davet kapanır, öneri ve taslak plan silinir. | `invite_child_updated`, `invite_declined`, `clinic_clients()` |
 | 6c | [P] | Ebeveyn "Çocuk ekle" ile **aynı adda** bir çocuk eklemeye kalkarsa: bekleyen davette bu ad varsa "Uzmanının davetinde Efe zaten var — davete git"; ailede varsa "Kayıtlarında Efe adında bir çocuk var — yine de ekle / vazgeç". Sunucu da `family_accept_invite`'ta aynı adı yakalar (`{"error":"duplicate_child", child_id, name}`; ebeveyn "yine de ekle" derse `allow_duplicate: true`). | ParentApp (istemci) + `family_accept_invite` |
 | 6d | [P] | Çocuk eklenince aynı ekranda "Çocuğunun tabletini bağla": **QR + yazılı 15 dakikalık giriş kodu** (kullanıcı onayı 26 Ekim 2026); GameApp QR'ı okur ya da kod yazılır. Oyun giriş kodu davete **konmaz**. | `create_child_login_code` (bugünkü; QR yalnız aynı kodu taşır) |
-| 7 | [S] | Paylaşım açılır; taslak plan çocuğa taşınır; uzmana `clinic_shared` (mevcut), diğer ebeveyne `care_plan_shared`. | `clinic_links`, `clinic_goals`/`care_modules` (`link_id`) |
+| 7 | [S] | Paylaşım açılır; taslak plan **uzmanın önerdiği çocuğa** taşınır (öneri yoksa seçilen bütün çocuklara) ve aileye gönderilmiş sayılır; uzmana `clinic_shared` (mevcut), diğer ebeveyne `care_plan_shared` (aileye görünen bir şey varsa). Seçilen çocukların hepsi bu uzmanla zaten paylaşılıyorsa davet harcanmaz, hata döner. | `clinic_links`, `clinic_goals`/`care_modules` (`link_id`) |
 | 8 | [S] | 48 saatte kimse bağlamadıysa uzmana bir kez `invite_expired`. Zamanlayıcı (pg_cron, 15 dk) ya da ClinicApp açılışında. | `clinic_invites_expire()` / `clinic_invites_sweep()` |
-| 9 | [K] | Davetlerim: durum (gönderildi / açıldı / kayıt oldu / paylaşıldı / süresi doldu / iptal), yeniden paylaş, iptal. Sahip bütün ekibin istatistiğini görür. | `clinic_invites_list(gün)`, `clinic_invite_stats(gün)`, `clinic_invite_mark(code, null, true)` |
+| 9 | [K] | Davetlerim: durum (gönderildi / açıldı / kayıt oldu / paylaşıldı / süresi doldu / iptal / aile reddetti; kayıt olup 30 günde paylaşmayan da "süresi doldu"), yeniden paylaş, iptal. Sahip bütün ekibin istatistiğini görür (reddeden aile "kayıt" sayılmaz). | `clinic_invites_list(gün)`, `clinic_invite_stats(gün)`, `clinic_invite_mark(code, null, true)` |
 
 **Uzman doğrulanmaz uyarısı (ParentApp, davet ekranında, kullanıcı kararı 26 Ekim 2026; metin sürümü `uzman-paylasim-v1`, `hukuk_notlari.md` 3F):**
 > ClinicApp uzmanların kimliğini ve mesleki belgelerini doğrulamaz. Çocuğunun bilgilerini paylaşmadan önce bu uzmanı gerçek hayatta tanıdığından ve davetin ondan geldiğinden emin ol. Emin değilsen paylaşma; uzmanını bildiğin bir yoldan arayıp sor. Paylaşımı istediğin an Uzmanım bölümünden durdurabilirsin.
 > ☐ Bu uzmanı tanıyorum ve çocuğun velisiyim (yasal temsilcisiyim).
 
-Çocuk önerisi (kullanıcı kararı 26 Ekim 2026): yalnız ad/takma ad (≤ 40) + yaş grubu; doğum günü, cinsiyet, fotoğraf alınmaz. Açılış sayfası (`invite-info`), mesaj metni ve daveti bağlamamış aile göremez; yalnız daveti kendi ailesine bağlamış ebeveyn (`claim_clinic_invite`, `family_pending_invites`, `clinic_invite_preview`). Davet kullanılınca, iptal edilince, 48 saatte bağlanmayınca ya da bağlandıktan 30 gün sonra silinir. ParentApp'te yaş grubu → `age_band`: K, A → `A`; B, C → `B`. Uzmanın kendi notu (`label`) hiçbir aile yanıtında dönmez.
+Çocuk önerisi (kullanıcı kararı 26 Ekim 2026): yalnız ad/takma ad (≤ 40) + yaş grubu; doğum günü, cinsiyet, fotoğraf alınmaz. Açılış sayfası (`invite-info`), mesaj metni ve daveti bağlamamış aile göremez; yalnız daveti kendi ailesine bağlamış ebeveyn (`claim_clinic_invite`, `family_pending_invites`, `clinic_invite_preview`). Davet kullanılınca, iptal edilince, 48 saatte bağlanmayınca ya da bağlandıktan 30 gün sonra silinir; kullanılmadan biten davetin taslak planı bir hafta sonra silinir. Davetle oluşan çocukta yaş grubu (`age_band`): doğum günü verildiyse boş (doğum gününden otomatik), verilmediyse önerilen grup aynen (K/A/B/C; 26 Ekim denetimi, eskiden K→A, C→B). Uzmanın kendi notu (`label`) hiçbir aile yanıtında dönmez; paylaşımdaki not yalnız kliniğin okuyabildiği `clinic_link_labels` tablosundadır (aile `clinic_links`'ten okuyamaz).
+
+Ret nedenleri (`reason`, ParentApp metni gösterir): `not_found`, `expired` (48 saat / bağlandıktan 30 gün), `used` (başka aile), `accepted` (bu daveti zaten kabul ettin), `declined` (bu daveti kapattın), `revoked` (uzman iptal etti).
 
 Neden oyun kodu davette yok: çocuk hesabı davet anında yok (açmak için uzmanın çocuk hesabı açması gerekir, rıza kuralına aykırı); bağlantı ebeveynin telefonuna gelir, oyun çocuğun cihazında açılır; oyun kodu çocuk hesabının anahtarıdır (uzmanda ya da mesajın iletildiği kişide olursa çocuk gibi oyuna girip ebeveyn–çocuk mesajlarını görebilir); uzman hesapları doğrulanmıyor (kötü niyetli "uzman" riski); oyun kodu 15 dakika ve tek kullanımlık, davet 48 saat.
 
-Kurallar: Bağlanmış davet 30 gün içinde çocuk paylaşımına kullanılabilir (48 saat yalnız bağlanana kadar). Bir davet tek aileye bağlanır. Kod yolu deneme sınırına tabidir (`code_attempts`); 32 karakterlik anahtar tahmin edilemez. Uzman yalnız kendi davetlerini, sahip kliniğin bütün davetlerini görür. Ekip kodu değişmedi (15 dakika).
+Kurallar: Bağlanmış davet 30 gün içinde çocuk paylaşımına kullanılabilir (48 saat yalnız bağlanana kadar). Bir davet tek aileye bağlanır. Kod yolu deneme sınırına tabidir (`code_attempts`); başarılı kullanım sayacı **silmez** (whitehat2 W2-1; 26 Ekim denetiminde geri gelmişti, düzeltildi). 32 karakterlik anahtar tahmin edilemez. Uzman yalnız kendi davetlerini, sahip kliniğin bütün davetlerini görür. Ekip kodu değişmedi (15 dakika).
 
-Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, maliyet, izin/KVKK yükü. App Store'dan yükleme sonrası davet; (a) "Daveti uygulamada aç" dokunuşu, (b) e-posta eşleşmesi, (c) kod ile taşınır.
+Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, maliyet, izin/KVKK yükü. App Store'dan yükleme sonrası davet; (a) "Daveti uygulamada aç" dokunuşu, (b) e-posta eşleşmesi (doğrulanmış e-posta), (c) kod ile taşınır.
 
 ## 11. Uzman değişimi ve geçmiş aktarımı (aynı dosya, uygulandı)
 
@@ -288,7 +317,7 @@ Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, ma
 |---|---|---|---|
 | 1 | [P] | Uzmanım › uzman › "Paylaşımı durdur" (eski uzmanın erişimi hemen biter). | `revoke_clinic_link` (değişmedi) |
 | 2 | [P] | Yeni uzmanın bağlantısı/kodu (bölüm 10). Çocuk seçme ekranında, çocuk daha önce başka uzmanla paylaşıldıysa "Önceki uzmanın kayıtlarını da paylaş (adı ve bilgileri gizlenir)" (varsayılan açık) + açık rıza metni; onaylanan metnin sürümü kaydedilir. | `redeem_clinic_invite_children(…, p_share_history, p_consent_version)` |
-| 3 | [S] | Yeni uzman önceki paylaşımların notlarını, hedeflerini ve haftalık puanlarını, önerilerini, aile programını ve ebeveynin uygulama kayıtlarını **salt okur**. **Önceki uzman adsızdır** (26 Ekim 2026, kullanıcı kararı): adı, unvanı, kliniği ve kimlikleri yeni uzmana dönmez; "Önceki uzman 1, 2…" ve dönem (ay) görünür; metinlerde geçen klinik adı ve o kliniğin uzman adları "[önceki uzman]" ile değiştirilir (en iyi çaba). Tablolara doğrudan erişim yok, yalnız işlev. Görev/tamamlama/zor an verisini zaten görür. | `clinic_inherited_records(link)` |
+| 3 | [S] | Yeni uzman önceki (**bitmiş**; çocuğun hâlâ gördüğü başka uzman sayılmaz, 26 Ekim denetimi) paylaşımların, o paylaşım bitene kadarki notlarını, hedeflerini ve haftalık puanlarını, önerilerini, aile programını ve ebeveynin uygulama kayıtlarını **salt okur**. **Önceki uzman adsızdır** (26 Ekim 2026, kullanıcı kararı): adı, unvanı, kliniği ve kimlikleri yeni uzmana dönmez; "Önceki uzman 1, 2…" ve dönem (ay) görünür; metinlerde geçen klinik adı (ve 4+ harfli anlamlı parçaları), o kliniğin uzman adları "[önceki uzman]", e-posta ve telefon "[iletişim]" ile değiştirilir; çocuğun kendi adı değiştirilmez; aynı klinik aynı numarayı alır (en iyi çaba). Tablolara doğrudan erişim yok, yalnız işlev. Görev/tamamlama/zor an verisini zaten görür. | `clinic_inherited_records(link)` |
 | 4 | [P] | Aktarımı sonradan açıp kapatabilir (geri alınabilir rıza). Ebeveyn kendi ekranında uzman adlarını görür. | `clinic_link_history_set(link, açık, sürüm)`; `family_clinic_links()` → `history_shared`, `history_available` |
 
 Not: Önceki uzmanın notları onun mesleki kaydıdır; aktarım yalnız ebeveyn rızasıyla, okuma olarak ve önceki uzmanın kimliği gizlenerek yapılır. Dayanak: uzman sözleşmesindeki aktarım maddesi + ebeveynin açık rızası (taslak maddeler `sozlesme/hukuk_notlari.md`). Canlıda açılmadan önce hukuk onayı gerekir.
@@ -301,9 +330,9 @@ Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon 
 |---|---|---|---|
 | 1 | [K] | Danışan › Plan (ya da davet taslağı): paket seç ya da tek tek ekle. Hedef: alan, gözlenebilir davranış, ölçüm (evet-hayır / yüzde / sıklık / süre / düzey), başlangıç, hedef düzey, süre (hafta), evde destek, "aile görür". | `clinic_goals` (genişledi: `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`) |
 | 2 | [K] | Aile programı modülü: amaç, evde uygulama, kontrol listesi (≤ 8), durum (planlandı / etkin / tamamlandı). | `care_modules` |
-| 3 | [K] | "Aileyle paylaş": tek bildirim. | `care_plan_publish(link)` → ebeveynlere `care_plan_shared` |
-| 4 | [P] | Uzmanım › çocuk › Takip planı: paylaşılan hedefler (durumuyla) + etkin/tamamlanan modüller; her modülde günde tek dokunuş "Bugün uyguladım", isteğe bağlı zorluk (1–5), uygulayamadıysa neden (vakit yoktu / unuttum / çocuk direndi / nasıl yapacağımı bilemedim). | `family_care_plan(link)`, `care_module_logs` |
-| 5 | [K] | Uzman uygulama kayıtlarını görür (son 14 gün: kaç gün, ortalama zorluk, engeller); hedefleri haftalık GAS (−2…+2) ile işaretler — **puanlar aileye görünmez**. | `care_module_logs`, `goal_ratings` |
+| 3 | [K] | "Planı aileye gönder": aile planı **o anki hâliyle** görür; sonraki düzenlemeler yeniden gönderilene kadar ailede görünmez (26 Ekim denetimi; önceden her kayıt anında görünüyordu). Gönderilecek bir şey yoksa (aile görür hedef / etkin modül yok) hata; bildirim en çok 10 dakikada bir. | `care_plan_publish(link)` → `clinic_goals.pub` / `care_modules.pub` + ebeveynlere `care_plan_shared` |
+| 4 | [P] | Uzmanım › çocuk › Takip planı: gönderilmiş hedefler (durumuyla) + etkin/tamamlanan modüller (aile tablolara doğrudan bakmaz, yalnız işlev); gönderilmiş etkin modülde günde tek dokunuş "Bugün uyguladım" (gün Türkiye saatiyle; ileri tarih yok, geriye en çok 14 gün), isteğe bağlı zorluk (1–5), uygulayamadıysa neden (vakit yoktu / unuttum / çocuk direndi / nasıl yapacağımı bilemedim). | `family_care_plan(link)`, `care_module_logs` |
+| 5 | [K] | Uzman uygulama kayıtlarını görür (son 14 gün: kaç gün, ailenin bildirdiği zorluk sayıları — kolay / orta / zorlandı, engeller); paylaşım bitince kayıtlar uzmana görünmez. Hedefleri haftalık GAS (−2…+2) ile işaretler — **puanlar aileye görünmez**. | `care_module_logs`, `goal_ratings` |
 
 Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) yalnız klinikte. Planlandı durumundaki modül aileye görünmez. Ebeveynin zorluk bildirimi bir puan değildir, ekranda ölçek gibi gösterilmez. Hiçbir hedef tanı değildir; paket adları ihtiyaç alanıyla yazılır, tanı etiketi zorunlu değildir.
 
@@ -325,7 +354,7 @@ Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şi
 | 6 | Üçüncü taraf kimlik doğrulama (KYC) | Kimlik + canlı fotoğraf hizmeti | Kimliği güçlü, mesleği değil | Kişi başı ücret, yeni veri işleyen |
 | 7 | e-Devlet ile giriş / resmî kayıt sorgusu | Kurumsal entegrasyon | En güçlü | Yüksek (başvuru, sözleşme) |
 
-**Görünürlük (kullanıcı, 26 Ekim 2026):** özellik bayrağa bağlı: `clinician_verification`, **ilk sürümde KAPALI**. Kapalıyken ClinicApp'te "Belgeni yükle" satırı ve sayfası görünmez, sunucu başvuru almaz; ParentApp'te rozet de "Belgesi incelenmedi" etiketi de gösterilmez (yalnız uyarı + veli beyanı); aile yanıtlarında `verified_as` null döner. Açmak: yönetim paneli → Bayraklar → `clinician_verification` (önce kişiye istisnayla denenebilir). Karar hatırlatması `DURUM.md` Açık işler.
+**Görünürlük (kullanıcı, 26 Ekim 2026):** özellik bayrağa bağlı: `clinician_verification`, **ilk sürümde KAPALI** (bayrak uzmana göre değerlendirilir: kişiye istisna açılan uzmanın rozetini aileler de görür; "Diğer" meslekte rozet "Uzman"). Kapalıyken başvuru başlatılamaz, gönderilemez, kovaya dosya yüklenemez. Kapalıyken ClinicApp'te "Belgeni yükle" satırı ve sayfası görünmez, sunucu başvuru almaz; ParentApp'te rozet de "Belgesi incelenmedi" etiketi de gösterilmez (yalnız uyarı + veli beyanı); aile yanıtlarında `verified_as` null döner. Açmak: yönetim paneli → Bayraklar → `clinician_verification` (önce kişiye istisnayla denenebilir). Karar hatırlatması `DURUM.md` Açık işler.
 
 **Karar (kullanıcı, 26 Ekim 2026): seçenek 2, yarı otomatik** — `migrations/20261026050000_clinician_verification.sql` (uygulandı 26 Ekim 2026), Edge Function `clinician-verify`, meslek eşlemesi `veri/uzman_meslekleri.json`. Uyarı + veli beyanı (1) rozet olsa da kalır.
 
@@ -334,11 +363,11 @@ Bugün uzman hesabı doğrulanmıyor; herkes "uzman" olarak kayıt olabilir. Şi
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [K] | "Hesabını doğrula": meslek seç (BCBA ise BACB sicil no), e-Devlet'ten indirdiği **Yükseköğretim Mezun Belgesi** PDF'ini yükle (fotoğraf/tarama yok; BCBA'da belge isteğe bağlı). | `clinician_verification_start(meslek, bacb)` → `{id, upload_path}`; Storage `verify/<uzman>/<id>.pdf`; `clinician_verification_submit(id)` |
-| 2 | [S] | Ön kontrol (birkaç saniye, kendi sunucumuzda, PDF metin katmanı): belge okunuyor mu, e-Devlet izi, mezuniyet, barkod, **ad** (hesap adı belgede mi), **bölüm** (meslek ↔ bölüm), **derece** (klinik psikolog: yüksek lisans/doktora; ön lisans lisans yerine geçmez). Yalnız kesin durumlar kendiliğinden ret: okunamayan belge, öğrenci belgesi, başka hesabın barkodu. Kişinin adı ve kimlik numarası saklanmaz. | Edge Function `clinician-verify` (Verify JWT kapalı; oturumu kendisi doğrular) → `clinician_verification_autocheck` |
+| 2 | [S] | Ön kontrol (birkaç saniye, kendi sunucumuzda, PDF metin katmanı): belge okunuyor mu, e-Devlet izi, mezuniyet, barkod, **ad** (hesap adı belgede mi), **bölüm** (meslek ↔ bölüm), **derece** (klinik psikolog: yüksek lisans/doktora; ön lisans lisans yerine geçmez). Yalnız kesin durumlar kendiliğinden ret: okunamayan belge, öğrenci belgesi, başka uzmanda **onaylı/askıda** barkod (bekleyen başvurudaki aynı barkod yalnız uyarı). Elle incelenen meslekler (hekim, diğer) ve BCBA kendiliğinden reddedilmez; altyapı hatası (indirme, PDF okuyucu) ret değildir, başvuru bekler. Barkod biçimi tireyle ayrılmış harf/rakam grupları ve en az bir rakam (düz sözcük barkod sayılmaz). Her başvuru bir kez kontrol edilir. Kişinin adı, kimlik numarası ve üniversite satırı saklanmaz (26 Ekim denetimi). | Edge Function `clinician-verify` (Verify JWT kapalı; oturumu kendisi doğrular) → `clinician_verification_autocheck` |
 | 3 | Yönetici (support/owner, iki adımlı) | Panelde ön kontrol özeti + belge. Barkodu **turkiye.gov.tr/belge-dogrulama**'da sorgular, açılan asıl belgeyi yüklenenle karşılaştırır; BCBA'da **BACB sicili** (ad + sertifika no, durum etkin, disiplin kaydı). Şüphede kısa telefon. Onay ya da nedenli ret. Belge görüntüleme ve karar denetim kaydına yazılır. | `admin_verifications`, `admin_verification_open`, `admin_verification_decide`, `admin_verification_suspend` |
-| 4 | [S] | Onayda belge dosyası silinir (panel kovadan siler), yalnız özet kalır (üniversite, bölüm, derece, mezuniyet yılı). Uzmana `verification_approved` / `verification_rejected` (neden + açıklama) / `verification_suspended`. | `clinician_verifications.summary`, `clinicians.verified_profession`, `verified_at` |
+| 4 | [S] | Onayda belge dosyası silinir (panel kovadan siler), yalnız özet kalır (üniversite, bölüm, derece, mezuniyet yılı); ön kontrolün çıkardığı ayrıntı da silinir, barkod çakışma denetimi için kalır. Kendiliğinden reddedilen, geri çekilen (yeniden başlatılan) ve hesabı silinen başvuruların dosyaları `storage_trash` kuyruğuna girer, `clinician-verify` her çağrıda kovadan siler (26 Ekim denetimi). Gönderimden sonra ad değişirse onay verilemez. Uzmana `verification_approved` / `verification_rejected` (neden + açıklama) / `verification_suspended`. | `clinician_verifications.summary`, `clinicians.verified_profession`, `verified_at` |
 | 5 | [P] | Davet ekranı, açılış sayfası ve Uzmanım'da **"Belgesi incelendi: Klinik psikolog"** rozeti; rozet yoksa "Belgesi incelenmedi" etiketi. Uyarı ve veli beyanı her durumda kalır. | `verified_as`: `clinic_invite_open`, `claim_clinic_invite`, `clinic_invite_preview`, `family_pending_invites`, `family_clinic_links` |
-| 6 | [S] | Uzman adını değiştirirse rozet düşer (belgedeki adla eşleşme bozulur), yeniden yükler. BCBA yılda bir yeniden bakılır (`recheck_at`). Şikâyette rozet askıya alınır. | tetikleyici `clinicians_verified_name_guard` |
+| 6 | [S] | Uzman adını değiştirirse rozet düşer (belgedeki adla eşleşme bozulur; yalnız büyük/küçük harf ya da boşluk değişikliği düşürmez), yeniden yükler. BCBA yılda bir yeniden bakılır (`recheck_at`). Şikâyette rozet askıya alınır. | tetikleyici `clinicians_verified_name_guard` |
 
 ### 14.2 İnceleme kriterleri ve teyit kaynakları
 
@@ -404,7 +433,8 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 1 | [P] | Görevler › + › **Ödül**: önerilen ödüllerden seçer ya da kendi ödülünü oluşturur (tür: eşya/etkinlik ya da değiş tokuş; taş fiyatı; hangi çocuklar; simge; ad). | `rewards` |
 | 2 | [S] | Onaylanan görev taş verir (1/2/3). | tetikleyici `completions_stone` |
 | 3a | [P] | Ödülü doğrudan verir (değiş tokuşta kaç kez) → taş düşer, çocuğa bildirim. | `give_reward(çocuk, ödül, adet)` |
-| 3b | [O] | Çocuk oyunda ister (**henüz oyunda yok**: hatırlatıcı) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `decide_reward_request(istek, onay, not)` |
+| 3b | [O] | Çocuk oyunda ister (özellik oyunda birkaç seviye sonra açılır; seviye GameApp verisinde, sunucu seviye denetlemez) → ebeveynlere bildirim → [P] onaylar/reddeder. | `request_reward(ödül, adet)` → `{request_id, status, first}` → `decide_reward_request(istek, onay, not)` |
+| 3c | [S → P] | **İlk talep bilgisi** (kullanıcı kararı, 24 Ekim 2026; göç `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026): çocuğun oyundan gelen **ilk** isteğinde (önceki hiçbir `source='child'` isteği yokken; durum fark etmez; ebeveynin doğrudan verdiği ödül sayılmaz) bildirim yine `kind='reward_request'`, ama `data.first = true` ve başlık "İlk ödül talebi: <ad> bir ödül istiyor". Yalnız bir kez; sonraki isteklerde `first` yok. ParentApp bildirimde ve istek kartında **"İlk ödül talebi"** etiketini gösterir (ör. "Nazlı ilk kez ödül istedi"). Oyun yanıttaki `first` ile çocuğa "ilk isteğin gönderildi" diyebilir. | `notifications.data.first`; `request_reward` yanıtı `first` |
 | 4 | [P] | Bir ya da birkaç çocuk seçip taş düşer (ceza), isteğe bağlı nedenle → çocuğa bildirim. | `deduct_sun_stones(çocuk, adet, neden)` (çocuk başına) |
 | 5 | [O] | Bakiye ve hareketler: `sun_stone_balance(ben)`, `sun_stone_ledger` (kendi satırları), `rewards` (kendine açık olanlar), `reward_requests` (kendi). | — |
 

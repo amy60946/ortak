@@ -98,7 +98,7 @@ select tst.check(public.clinician_verification_autocheck(tst.v('v1')::uuid,
   '{"checks":{"name":"ok","program":"ok","degree":"ok"},"extracted":{"university":"ÖRNEK ÜNİVERSİTESİ"}}', 'YOK-1A2B-3C4D-5E6F', null) = 'pending',
   'ön kontrol yazılır, karar kişide kalır');
 reset role;
--- aynı barkodu başka uzman kullanırsa kendiliğinden ret
+-- aynı barkod başka uzmanın BEKLEYEN başvurusunda: ret değil uyarı (20261026300000; onaylıdaysa ret, aşağıda)
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
 insert into tst.kv select 'v2', public.clinician_verification_start('psikolog') ->> 'id';
@@ -107,17 +107,18 @@ select public.clinician_verification_submit(tst.v('v2')::uuid);
 reset role;
 select tst.as_user(null);   -- Edge Function sunucu anahtarıyla çağırır: oturumdaki kullanıcı yok
 set role service_role;
-select tst.check(public.clinician_verification_autocheck(tst.v('v2')::uuid, '{}', 'YOK-1A2B-3C4D-5E6F', null) = 'duplicate', 'başka hesabın barkodu: kendiliğinden ret');
+select tst.check(public.clinician_verification_autocheck(tst.v('v2')::uuid, '{}', 'YOK-1A2B-3C4D-5E6F', null) = 'pending', 'bekleyen başvurudaki barkod: ret değil');
+select tst.check(public.clinician_verification_autocheck(tst.v('v2')::uuid, '{}', 'YOK-1A2B-3C4D-5E6F', null) = 'skipped', 'her başvuru bir kez kontrol edilir');
 reset role;
-select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d2' and kind = 'verification_rejected'), 'uzmana ret bildirimi');
+select tst.check((select auto -> 'checks' ->> 'duplicate' from public.clinician_verifications where id = tst.v('v2')::uuid) = 'warn', 'çakışma uyarı olarak yazılır');
 
 -- ---------------------------------------------------------------- 3. yönetici kararı
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000f2');
 select tst.fails($$select * from public.admin_verifications('pending', 50)$$, 'iki adımlı doğrulama olmadan liste yok');
 select tst.as_mfa('00000000-0000-0000-0000-0000000000f2');
-select tst.check((select count(*) from public.admin_verifications('pending', 50)) = 1, 'bekleyen başvuru listede');
-select tst.check((select auto -> 'checks' ->> 'name' from public.admin_verifications('pending', 50)) = 'ok', 'ön kontrol panelde');
+select tst.check((select count(*) from public.admin_verifications('pending', 50)) = 2, 'bekleyen başvurular listede');
+select tst.check((select a.auto -> 'checks' ->> 'name' from public.admin_verifications('pending', 50) a where a.id = tst.v('v1')::uuid) = 'ok', 'ön kontrol panelde');
 select tst.check(public.admin_verification_open(tst.v('v1')::uuid) = tst.v('p1'), 'belge yolu döner');
 select tst.check((select count(*) from storage.objects where bucket_id = 'verify') = 2, 'yönetici kovayı okur');
 reset role;
@@ -136,6 +137,8 @@ select tst.check(exists (select 1 from public.notifications where user_id = '000
 set role authenticated;
 select tst.as_mfa('00000000-0000-0000-0000-0000000000f2');
 select tst.fails($$select public.admin_verification_decide(tst.v('v1')::uuid, true, null, null, null, null, 'tekrar')$$, 'karar verilmiş başvuru yeniden kararlanmaz');
+-- aynı barkod artık onaylı: ikinci başvuru onaylanamaz (barkod karar anında verilmese de başvurudaki barkod denetlenir)
+select tst.fails($$select public.admin_verification_decide(tst.v('v2')::uuid, true, null, null, null, null, 'deneme')$$, 'onaylı barkod ikinci uzmana onaylanmaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(public.clinician_verification_me() ->> 'verified_label' = 'Klinik psikolog', 'uzman rozetini görür');
 select tst.fails($$select * from public.admin_verifications('pending', 50)$$, 'uzman paneli çağıramaz');

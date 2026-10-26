@@ -40,6 +40,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 ## Kullanıcı ve güvenlik
 
 - Kullanıcı yazılımcı değil: Türkçe, sade, adım adım; nereye tıklayacağını söyle. Belirsiz kararda kısa soru sor; kapsam dışına çıkma.
+- **SQL Editor'de çalıştırılacak her dosya için GitHub bağlantısı verilir** (kullanıcı, 25 Ekim 2026: "her seferinde böyle ilet"): düz metin `https://raw.githubusercontent.com/amy60946/ortak/<dal>/supabase/proposed/<dosya>.sql` (Ctrl+A ile tümünü kopyala) + sayfa `https://github.com/amy60946/ortak/blob/<dal>/supabase/proposed/<dosya>.sql` ("Copy raw file" düğmesi). Dal, dosyanın gönderildiği dal; vermeden önce bağlantının açıldığı denenir.
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
 - Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.

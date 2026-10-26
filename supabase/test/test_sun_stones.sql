@@ -46,7 +46,7 @@ select tst.as_user('00000000-0000-0000-0000-0000000000c1');
 select public.redeem_child_code((select code from codes));
 select tst.check((public.child_me() ->> 'sun_stones')::int = 0, 'başlangıçta taş yok');
 select tst.check((select skill || '/' || difficulty from public.child_tasks(current_date, current_date)
-                    where task_id = '00000000-0000-0000-0000-000000007a51') = 'Öz Bakım/easy', 'child_tasks beceri ve zorluk döndürür');
+                    where task_id = '00000000-0000-0000-0000-000000007a51') = 'strength/easy', 'child_tasks beceri (anahtar: Öz Bakım → strength) ve zorluk döndürür');
 
 -- incelemesiz zor görev: "yaptım" = onay → 3 taş (coin 0 olsa da)
 select public.child_set_status('00000000-0000-0000-0000-000000007a52', current_date, 'pending');
