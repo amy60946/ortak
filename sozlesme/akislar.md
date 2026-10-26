@@ -140,7 +140,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 ### 5.2 Aile paylaşımı (ebeveynin açık rızası)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter, **7 gün** |
+| 1 | [K] | Uzman aile davet kodu üretir (isteğe bağlı etiket, ör. danışanın takma adı). | `clinic_create_invite('family', label)` → 6 karakter; **48 saat + bağlantı (öneri, bölüm 10)** |
 | 2 | [K → ebeveyn] | Kodu aileye verir (uygulama dışı). | — |
 | 3 | [P] | Ebeveyn Uzmanım › kodu yazar; **rıza vermeden önce** klinik adı, uzman adı ve unvanını görür. | `clinic_invite_preview(code)` |
 | 4 | [P] | Paylaşılacak çocuğu seçer, "Onaylıyorum, paylaş". | `redeem_clinic_invite(code, child_id)` |
@@ -260,7 +260,74 @@ Teslim yolları:
 | 2 | O, P, K | Olaylar biriktirilir, toplu gönderilir (≤ 50/çağrı, kullanıcı başına ≤ 2000/gün). Ad biçimi `alan.eylem` (küçük harf, rakam, `_`, `.`). | `track_events(app, olaylar, platform, sürüm)` → `app_events` |
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
 
-ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`.
+ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026).
+
+## 10. Uzman başlatır: aile davet bağlantısı (öneri, `proposed/20261026100000_family_invite_links.sql`, 26 Ekim 2026)
+
+Karar (kullanıcı isteği 26 Ekim): akışı uzman başlatır. Uzman isterse önce takip planını (hedefler + aile programı) kurar, sonra aileye **bağlantı** gönderir (WhatsApp / e-posta / SMS / kopyala). Aile bağlantıdan ParentApp'i yükler, kayıt olur; uzman kendiliğinden tanımlıdır. Çocuk verisi yine **ebeveynin çocuk seçip onay vermesiyle** paylaşılır (rıza kuralı değişmedi).
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | "Aileyi davet et": isteğe bağlı ebeveyn adı, e-posta, **çocuğun adı ya da takma adı + yaş grubu** (K ≤5 · A 6–8 · B 9–12 · C 13+), kendi notu (aile görmez). | `clinic_create_invite('family', label, parent_name, parent_email, child_name, child_age_group)` → `{code (6), token (32), expires_at}`; **48 saat** |
+| 2 | [K] | İsterse davete taslak takip planı ekler (paket seç → hedef/modül düzenle). | `clinic_goals` / `care_modules` (`invite_code`) |
+| 3 | [K] | Paylaşır: WhatsApp (`wa.me/?text=`), e-posta (`mailto:`), sistem paylaşımı ya da kopyala. Mesajda bağlantı + yazılabilir kod. Kanal kaydedilir. | `clinic_invite_mark(code, channel)` |
+| 4 | Ebeveyn | Bağlantıya dokunur: `https://<alan adı>/d/<token>`. ParentApp yüklüyse doğrudan uygulama açılır (Universal Link); değilse açılış sayfası (`web/davet`): uzman adı + "App Store'dan yükle" + "Daveti uygulamada aç" (`parentapp://davet/<token>`) + kod. | Edge Function `invite-info` → `clinic_invite_open(token)` (açıldı işareti) |
+| 5 | [P] | Kayıt ekranında "Dr. X seni davet etti" bandı; kayıtta meta `clinic_invite = <token ya da kod>` gönderilir. | `handle_new_user` → davet aileye **bağlanır** (`claimed_family`); uzmana `invite_claimed` |
+| 5a | [S] | Bağlantı/kod yoksa: davette e-posta yazılıysa aynı e-postayla kayıt olan ebeveyne davet kendiliğinden bağlanır. | `handle_new_user` |
+| 5b | [P] | Hesabı olan ebeveyn bağlantıyı açar ya da kodu yazar. | `claim_clinic_invite(token|kod)` |
+| 6 | [P] | Bekleyen davet kartı: "Dr. X seni bekliyor". Davette çocuk önerisi varsa tek ekran **"Efe'yi ekle ve paylaş"**: ad ve yaş grubu dolu gelir, ebeveyn düzenler; ailede çocuk zaten varsa listeden seçer. Çocuğu ebeveyn ekler (kendiliğinden eklenmez), sonra onay. Öneri yoksa bugünkü gibi çocuk ekle → seç → onay. | `family_pending_invites()` (+ `child_name`, `child_age_group`), çocuk ekleme (ParentApp'in bugünkü yolu), `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş, rıza_sürümü)` |
+| 6a | [P] | Çocuk eklenince aynı ekranda "Çocuğunun tabletini bağla": QR + 15 dakikalık giriş kodu (öneri, ParentApp/GameApp penceresinin kararı). Oyun giriş kodu davete **konmaz**. | `create_child_login_code` (bugünkü) |
+| 7 | [S] | Paylaşım açılır; taslak plan çocuğa taşınır; uzmana `clinic_shared` (mevcut), diğer ebeveyne `care_plan_shared`. | `clinic_links`, `clinic_goals`/`care_modules` (`link_id`) |
+| 8 | [S] | 48 saatte kimse bağlamadıysa uzmana bir kez `invite_expired`. Zamanlayıcı (pg_cron, 15 dk) ya da ClinicApp açılışında. | `clinic_invites_expire()` / `clinic_invites_sweep()` |
+| 9 | [K] | Davetlerim: durum (gönderildi / açıldı / kayıt oldu / paylaşıldı / süresi doldu / iptal), yeniden paylaş, iptal. Sahip bütün ekibin istatistiğini görür. | `clinic_invites_list(gün)`, `clinic_invite_stats(gün)`, `clinic_invite_mark(code, null, true)` |
+
+Çocuk önerisi (kullanıcı kararı 26 Ekim 2026): yalnız ad/takma ad (≤ 40) + yaş grubu; doğum günü, cinsiyet, fotoğraf alınmaz. Açılış sayfası (`invite-info`), mesaj metni ve daveti bağlamamış aile göremez; yalnız daveti kendi ailesine bağlamış ebeveyn (`claim_clinic_invite`, `family_pending_invites`, `clinic_invite_preview`). Davet kullanılınca, iptal edilince, 48 saatte bağlanmayınca ya da bağlandıktan 30 gün sonra silinir. ParentApp'te yaş grubu → `age_band`: K, A → `A`; B, C → `B`. Uzmanın kendi notu (`label`) hiçbir aile yanıtında dönmez.
+
+Neden oyun kodu davette yok: çocuk hesabı davet anında yok (açmak için uzmanın çocuk hesabı açması gerekir, rıza kuralına aykırı); bağlantı ebeveynin telefonuna gelir, oyun çocuğun cihazında açılır; oyun kodu çocuk hesabının anahtarıdır (uzmanda ya da mesajın iletildiği kişide olursa çocuk gibi oyuna girip ebeveyn–çocuk mesajlarını görebilir); uzman hesapları doğrulanmıyor (kötü niyetli "uzman" riski); oyun kodu 15 dakika ve tek kullanımlık, davet 48 saat.
+
+Kurallar: Bağlanmış davet 30 gün içinde çocuk paylaşımına kullanılabilir (48 saat yalnız bağlanana kadar). Bir davet tek aileye bağlanır. Kod yolu deneme sınırına tabidir (`code_attempts`); 32 karakterlik anahtar tahmin edilemez. Uzman yalnız kendi davetlerini, sahip kliniğin bütün davetlerini görür. Ekip kodu değişmedi (15 dakika).
+
+Neden üçüncü taraf "ertelenmiş bağlantı" (Branch, AppsFlyer) yok: SDK, maliyet, izin/KVKK yükü. App Store'dan yükleme sonrası davet; (a) "Daveti uygulamada aç" dokunuşu, (b) e-posta eşleşmesi, (c) kod ile taşınır.
+
+## 11. Uzman değişimi ve geçmiş aktarımı (öneri, aynı dosya)
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Uzmanım › uzman › "Paylaşımı durdur" (eski uzmanın erişimi hemen biter). | `revoke_clinic_link` (değişmedi) |
+| 2 | [P] | Yeni uzmanın bağlantısı/kodu (bölüm 10). Çocuk seçme ekranında, çocuk daha önce başka uzmanla paylaşıldıysa "Önceki uzmanın kayıtlarını da paylaş (adı ve bilgileri gizlenir)" (varsayılan açık) + açık rıza metni; onaylanan metnin sürümü kaydedilir. | `redeem_clinic_invite_children(…, p_share_history, p_consent_version)` |
+| 3 | [S] | Yeni uzman önceki paylaşımların notlarını, hedeflerini ve haftalık puanlarını, önerilerini, aile programını ve ebeveynin uygulama kayıtlarını **salt okur**. **Önceki uzman adsızdır** (26 Ekim 2026, kullanıcı kararı): adı, unvanı, kliniği ve kimlikleri yeni uzmana dönmez; "Önceki uzman 1, 2…" ve dönem (ay) görünür; metinlerde geçen klinik adı ve o kliniğin uzman adları "[önceki uzman]" ile değiştirilir (en iyi çaba). Tablolara doğrudan erişim yok, yalnız işlev. Görev/tamamlama/zor an verisini zaten görür. | `clinic_inherited_records(link)` |
+| 4 | [P] | Aktarımı sonradan açıp kapatabilir (geri alınabilir rıza). Ebeveyn kendi ekranında uzman adlarını görür. | `clinic_link_history_set(link, açık, sürüm)`; `family_clinic_links()` → `history_shared`, `history_available` |
+
+Not: Önceki uzmanın notları onun mesleki kaydıdır; aktarım yalnız ebeveyn rızasıyla, okuma olarak ve önceki uzmanın kimliği gizlenerek yapılır. Dayanak: uzman sözleşmesindeki aktarım maddesi + ebeveynin açık rızası (taslak maddeler `sozlesme/hukuk_notlari.md`). Canlıda açılmadan önce hukuk onayı gerekir.
+
+## 12. Takip planı: hedefler ve aile programı (öneri, aynı dosya)
+
+Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon (iskelet) sunuyoruz. Şablon kataloğu: `veri/takip_sablonlari.json` (7 alan, 27 hedef, 13 modül — 12 + "Gözlem ve zor an kaydı" girişi, 8 paket; kaynaklarıyla).
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Danışan › Plan (ya da davet taslağı): paket seç ya da tek tek ekle. Hedef: alan, gözlenebilir davranış, ölçüm (evet-hayır / yüzde / sıklık / süre / düzey), başlangıç, hedef düzey, süre (hafta), evde destek, "aile görür". | `clinic_goals` (genişledi: `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`) |
+| 2 | [K] | Aile programı modülü: amaç, evde uygulama, kontrol listesi (≤ 8), durum (planlandı / etkin / tamamlandı). | `care_modules` |
+| 3 | [K] | "Aileyle paylaş": tek bildirim. | `care_plan_publish(link)` → ebeveynlere `care_plan_shared` |
+| 4 | [P] | Uzmanım › çocuk › Takip planı: paylaşılan hedefler (durumuyla) + etkin/tamamlanan modüller; her modülde günde tek dokunuş "Bugün uyguladım", isteğe bağlı zorluk (1–5), uygulayamadıysa neden (vakit yoktu / unuttum / çocuk direndi / nasıl yapacağımı bilemedim). | `family_care_plan(link)`, `care_module_logs` |
+| 5 | [K] | Uzman uygulama kayıtlarını görür (son 14 gün: kaç gün, ortalama zorluk, engeller); hedefleri haftalık GAS (−2…+2) ile işaretler — **puanlar aileye görünmez**. | `care_module_logs`, `goal_ratings` |
+
+Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) yalnız klinikte. Planlandı durumundaki modül aileye görünmez. Ebeveynin zorluk bildirimi bir puan değildir, ekranda ölçek gibi gösterilmez. Hiçbir hedef tanı değildir; paket adları ihtiyaç alanıyla yazılır, tanı etiketi zorunlu değildir.
+
+## 13. Kim kimi nasıl ekler — güncel tablo (26 Ekim 2026)
+
+| Kim | Kimi / neyi | Nasıl | Geçerlilik | Durum |
+|---|---|---|---|---|
+| Ebeveyn | İkinci ebeveyn | ParentApp Aile › + › Ebeveyn › davet kodu; diğeri Aile › Hesap › "Aileye katıl" | 6 karakter, 15 dk | uygulandı |
+| Ebeveyn | Çocuğun cihazı | Aile › çocuk › "Giriş kodu üret"; GameApp'te yazılır | çocuk başına, 15 dk, tek kullanım | uygulandı |
+| Uzman | Aile | ClinicApp "Aileyi davet et" → bağlantı (WhatsApp/e-posta/SMS/kopyala) + kod; isteğe bağlı taslak takip planı | **48 saat** (bağlanınca 30 gün içinde çocuk paylaşımı) | öneri (bölüm 10) |
+| Ebeveyn | Uzman → çocuk | Kayıtta bağlantı/e-posta ile ya da sonradan kod/bağlantıyla uzman tanımlanır; çocuk seçip onay verince paylaşım başlar | — | öneri (bölüm 10) |
+| Ebeveyn | Aynı uzmana başka çocuk | Uzmanım'da "Ekle" (kodsuz) | — | uygulandı |
+| Ebeveyn | Yeni uzmana geçmiş | Paylaşırken ya da sonradan "Önceki uzmanın kayıtlarını paylaş" | geri alınabilir | öneri (bölüm 11) |
+| Ebeveyn / uzman | Paylaşımı durdurma | "Paylaşımı durdur" | hemen | uygulandı |
+| Klinik sahibi | Ekibe uzman | "Ekibe uzman davet et"; yeni uzman kayıtta "Kodum var" ya da Ekip bölümünden | 8 karakter, 15 dk; koltuk sınırı; Bireysel pakette yok | uygulandı |
+| Klinik sahibi | Ekip üyesine danışan | Danışan › "Ekip erişimi" (aç/kapat, sorumlu yap) | — | uygulandı |
+| Ekip üyesi | Aile | Kendi davet bağlantısı; davet ettiği aileyi sahip de görür | 48 saat | öneri (bölüm 10) |
 
 ---
 

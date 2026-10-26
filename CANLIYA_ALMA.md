@@ -44,6 +44,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] Kullanım Koşulları / EULA (abonelik bağlantısı uygulamada + mağazada)
 - [ ] Mesafeli Satış Sözleşmesi + Ön Bilgilendirme Formu: web satışı olmadığı için şimdilik gerekmez (abonelik koşulları Kullanım Koşulları'nda)
 - [ ] Uzman Hizmet Sözleşmesi + Veri İşleme Eki
+- [ ] Uzman değişiminde kayıt aktarımı: uzman sözleşmesi maddeleri + ebeveyn açık rıza metni (sürüm `uzman-gecis-v1`) + aydınlatma eklemeleri; taslak `sozlesme/hukuk_notlari.md`, avukata sorular 5. bölümde
 - [ ] Çerez politikası + bant (ClinicApp web)
 - [ ] "Tanı değildir" uyarı metni
 - [ ] (Claude) Uygulamalara yerleştirme + sürümlü onay kaydı
