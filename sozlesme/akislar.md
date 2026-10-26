@@ -142,7 +142,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 ### 5.1 Uzman hesabı ve ekip
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | Uzman kayıt olur; meta `account='clinician'`, `name`, `title`, `clinic_name`. | `auth.users` |
+| 1 | [K] | Uzman kayıt olur; meta `account='clinician'`, `name`, `title`, `clinic_name`, `practice` (`solo` / `clinic`; yalnız arayüz: bireyselde `clinic_name` = uzmanın adı, ana ekranda ekip bölümü yok; 26 Ekim 2026). | `auth.users` |
 | 2 | [S] | Aile **oluşturulmaz**; yeni klinik (`plan='trial'`, 14 gün, 3 koltuk) + uzman (`role='owner'`). | `handle_new_user` → `clinics`, `clinicians` |
 | 3 | [K] (sahip) | Ekip daveti üretir. | `clinic_create_invite('clinician')` → **7 gün** |
 | 4 | [K] (yeni uzman) | Kayıtta `team_code` verir; koltuk doluysa reddedilir. | `handle_new_user` → `clinicians` (`member`) |
@@ -280,7 +280,7 @@ Karar (kullanıcı isteği 26 Ekim): akışı uzman başlatır. Uzman isterse ö
 
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | "Aileyi davet et": isteğe bağlı ebeveyn adı, e-posta, **çocuğun adı ya da takma adı + yaş grubu** (K ≤5 · A 6–8 · B 9–12 · C 13+), kendi notu (aile görmez). | `clinic_create_invite('family', label, parent_name, parent_email, child_name, child_age_group)` → `{code (6), token (32), expires_at}`; **48 saat** |
+| 1 | [K] | "Aileyi davet et": isteğe bağlı ebeveyn adı, e-posta, **çocuğun adı + yaş grubu** (formda "Çocuğun adı"; kullanıcı kararı 26 Ekim 2026) (K ≤5 · A 6–8 · B 9–12 · C 13+), kendi notu (aile görmez). | `clinic_create_invite('family', label, parent_name, parent_email, child_name, child_age_group)` → `{code (6), token (32), expires_at}`; **48 saat** |
 | 2 | [K] | İsterse davete taslak takip planı ekler (paket seç → hedef/modül düzenle). | `clinic_goals` / `care_modules` (`invite_code`) |
 | 3 | [K] | Paylaşır: WhatsApp (`wa.me/?text=`), e-posta (`mailto:`), sistem paylaşımı ya da kopyala. Mesajda bağlantı + yazılabilir kod. Kanal kaydedilir. | `clinic_invite_mark(code, channel)` |
 | 4 | Ebeveyn | Bağlantıya dokunur: `https://<alan adı>/d/<token>`. ParentApp yüklüyse doğrudan uygulama açılır (Universal Link); değilse açılış sayfası (`web/davet`): uzman adı + "App Store'dan yükle" + "Daveti uygulamada aç" (`parentapp://davet/<token>`) + kod. | Edge Function `invite-info` → `clinic_invite_open(token)` (açıldı işareti) |

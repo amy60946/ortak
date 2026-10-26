@@ -81,7 +81,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 
 - **ClinicApp › Notlar** (not alanının altında): "Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma."
 - **ClinicApp › devralınan kayıtlar:** "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma".
-- **ClinicApp › davet formu (çocuk önerisi):** "Ebeveyn kayıt olunca bilgiler hazır gelir; kontrol edip onaylar, gerekirse düzeltir. Düzeltirse sana bildirim gelir. Yalnız ad/takma ad ve yaş grubu gir; tanı ya da sağlık bilgisi yazma."
+- **ClinicApp › davet formu (çocuk önerisi):** alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir."
 - **ParentApp › davet ekranı (sürüm `uzman-paylasim-v1`):**
   > ClinicApp uzmanların kimliğini ve mesleki belgelerini doğrulamaz. Çocuğunun bilgilerini paylaşmadan önce bu uzmanı gerçek hayatta tanıdığından ve davetin ondan geldiğinden emin ol. Emin değilsen paylaşma; uzmanını bildiğin bir yoldan arayıp sor. Paylaşımı istediğin an Uzmanım bölümünden durdurabilirsin.
   >
