@@ -131,6 +131,7 @@ Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyun
 | Süs | `decor_umbrella` 35 (3), `decor_sandcastle` 25 (2), `decor_palm` 50 (5), `decor_lanterns` 70 (12) |
 | Özel setler | `set_captain` 180 (9), `set_captain_hat` 70 (9), `set_star_cape` 150 (14) |
 | Komik eşyalar (F1–F17, `fancy`; göç `20261024110000_fancy_items_catalog`, uygulandı 24 Ekim 2026) | Baş: `hat_bucket` 25 (1), `hat_propeller` 30 (2), `hat_watermelon` 30 (2), `hat_cake` 35 (3), `hat_banana` 35 (3), `hat_crown_tilt` 45 (5), `hat_fishbowl` 60 (6), `hat_shark` 70 (7) · Göz: `glasses_heart` 25 (2), `glasses_nose` 30 (3), `glasses_snorkel` 40 (4), `mask_hero` 30 (4) · El (çift): `socks_arm` 25 (2), `pompom` 30 (3) · Gövde: `float_flamingo` 50 (4), `outfit_hula` 45 (5), `outfit_burger` 80 (8), `outfit_chicken` 80 (8) · Sırt: `backpack_rocket` 70 (6) |
+| Uzay kıyafetleri (`space`, Gezegen Koşusu; göç `20261026100000_space_items_catalog`, uygulandı 26 Ekim 2026) | Takım: `outfit_astro`, `outfit_pilot`, `outfit_star` 80 (3) · Baş: `hat_astro_helmet`, `hat_pilot_goggles`, `hat_star_antenna` 40 (3) · Sırt: `back_astro_pack`, `back_pilot_jetpack`, `back_star_cape` 45 (3) |
 
 ### 4.3 Coin dışı başlangıç / test
 | Ne | Değer | Not |
