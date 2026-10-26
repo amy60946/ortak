@@ -4,6 +4,7 @@
 --   * Yönetim paneli hesabı (admin_users) KORUNUR: giriş, şifre ve iki adımlı doğrulama aynen kalır.
 --     O hesabın uygulama verisi (aile/çocuk/klinik/uzman kaydı) varsa o da silinir; hesap yalnız panel hesabı olarak kalır.
 --   * Önce bütün aileler ve klinikler (bağlı her şeyle), sonra yönetici olmayan bütün hesaplar silinir.
+--   * Deneme geçmişi (trial_history) silinir: aynı e-postayla yeniden kayıt olan hesap yeniden deneme süresi alır.
 --   * Denetim kaydı (admin_audit) silinemez, kalır. Ortak ayarlar (bayraklar, app_config, fiyatlar, katalog) kalır.
 --   * Kovalardaki dosyalar (mail, abc, verify) SQL ile silinemez: Supabase → Storage'dan elle boşaltılır.
 -- Tek işlem: bir hata olursa hiçbir şey silinmez.
@@ -28,6 +29,9 @@ begin
   -- 3) Diğer bütün hesaplar (ebeveyn, uzman, çocuk cihazı, yarım kalmış kayıtlar)
   delete from auth.users u where not exists (select 1 from public.admin_users a where a.user_id = u.id);
   get diagnostics n_users = row_count;
+  -- 4) Aynı e-postalarla yeniden kayıt + yeni deneme süresi için: deneme geçmişi (e-posta özeti) ve kod deneme sınırı sıfırlanır
+  delete from public.trial_history;
+  delete from public.code_attempts;
 
   raise notice 'Silinen hesap: %, verisi temizlenen yönetici hesabı: %', n_users, n_admin_data;
 end $$;
@@ -39,4 +43,5 @@ union all select 'aile', count(*) from public.families
 union all select 'çocuk', count(*) from public.children
 union all select 'klinik', count(*) from public.clinics
 union all select 'uzman', count(*) from public.clinicians
+union all select 'deneme geçmişi', count(*) from public.trial_history
 union all select 'yönetici (korundu)', count(*) from public.admin_users;
