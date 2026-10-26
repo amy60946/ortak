@@ -89,6 +89,10 @@ select public.review_completion('00000000-0000-0000-0000-000000007a51', '0000000
 select tst.check(public.child_balance('00000000-0000-0000-0000-00000000c0de') = 30, 'dünkü görev onayı +30');
 
 -- ---------------------------------------------------------------- seviye kilidi
+-- eşikler gruba göre (migrations/20261022220000_age_bands_four.sql); bu bölüm 9–12 (B) tablosunu sınar
+reset role;
+update public.children set age_band = 'B' where id = '00000000-0000-0000-0000-00000000c0de';
+set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000c2');
 select tst.check((public.spend_coins('tx-level-0001', 'food_watermelon', 1) ->> 'error') = 'level_locked', 'kayıt yok → Sv 1, Sv 2 eşyası kilitli');
 select tst.check((public.spend_coins('tx-level-0002', 'food_apple', 1) ->> 'ok')::boolean, 'Sv 1 eşyası alınır');

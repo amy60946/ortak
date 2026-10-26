@@ -80,19 +80,28 @@ Kod biçimi:
 
 ## 4. Yaş bandı (`children.age_band`)
 
-> **Doğrulandı (21 Ekim 2026, kullanıcının SQL Editor sorgusu):** canlıda kısıt `age_band in ('A', 'B')` — **iki bant geçerli**. Üç bantlı `20261019010000_age_bands.sql` daha önce uygulanmış, ardından `20261019110000_age_bands.sql` iki banda indirmiştir (dosya sırası canlıyla aynı).
+> **UYGULANDI (22 Ekim 2026, kullanıcı kararı — XP takibi S1; `migrations/20261022220000_age_bands_four.sql`):** dört grup. Canlı kısıt `age_band in ('K', 'A', 'B', 'C')`.
+>
+> | Değer | Yaş | ParentApp etiketi | `suggest_age_band` | Oyun günlük XP sınırı |
+> |---|---|---|---|---|
+> | `K` | 5 ve altı | "5 ve altı" | yaş < 6 | 200 |
+> | `A` | 6–8 | "6–8 yaş" | doğum günü yok ya da 6 ≤ yaş < 9 | 250 |
+> | `B` | 9–12 | "9–12 yaş" | 9 ≤ yaş < 13 | 300 |
+> | `C` | 13 ve üstü | "13 ve üstü" | yaş ≥ 13 | 350 |
+>
+> Seviye eşikleri gruba göre (`game_level_bands`, oyun `levels.json` `xpToNextByBand`); sunucunun harcama seviye kilidi (`child_level`) çocuğun grubunu kullanır. B tablosu bugünküyle aynı. Eski oyun sürümü `K`'yı A sayar. Aşağıdaki iki bantlı metin (19–21 Ekim) tarihe geçti.
+> **ParentApp penceresi:** çocuk ekleme/düzenleme ekranında dört seçenek (`set_child_age_band` K/A/B/C).
 
-**Karar (19 Ekim 2026, kullanıcı):** iki bant. SQL `supabase/migrations/20261019110000_age_bands.sql` (19 Ekim 2026'da uygulandı).
+**Tek kaynak (23 Ekim 2026; `20261023040000_age_band_single_source.sql`):**
+- Sınırlar yalnız sunucudaki `public.age_band(doğum_günü, gün)` işlevinde: yaş < 6 → `K`, < 9 → `A`, < 13 → `B`, aksi `C`; doğum günü yoksa `A`. Gün verilmezse **Türkiye'nin bugünü** (`Europe/Istanbul`). Uygulamalar bu sınırları kendileri hesaplarsa yalnız gösterim içindir ve aynı kuralı kullanır.
+- `children.age_band` **yalnız ebeveynin bilerek seçtiği** gruptur; `null` = **otomatik** (doğum gününden, çocuk büyüdükçe kendiliğinden değişir). ParentApp çocuk eklerken grup yazmaz; düzenleme ekranında "Otomatik (doğum gününden)" + K/A/B/C seçenekleri vardır.
+- Etkin grup her yerde `child_age_band(child) = coalesce(age_band, age_band(birthday))`: `redeem_child_code`, `child_me` ve seviye kilidi (`child_level`) aynı değeri verir. **Oyun grubu her eşitlemede `child_me`'den okur** (girişte dondurmaz).
+- Seviye düşmez: grup büyüyünce aynı XP daha küçük seviyeye denk gelebilir; oyun ulaşılan en yüksek seviyeyi kaydında tutar (`Xp.BestLevel`), sunucu `child_level` bunu korur (aynı XP ile K tablosunun verebileceğinden yüksek olamaz).
+- **Eski kayıtlar Otomatik'e** (kullanıcı kararı, 23 Ekim 2026; uygulandı `migrations/20261023050000_age_band_reset_auto.sql`): daha önce elle ya da eski ParentApp'in kendiliğinden yazdığı gruplar bir kez silinir (`null`); iş `one_time_jobs`'a işaretlenir, yeniden çalıştırılınca sonradan bilerek seçilen grup korunur.
+- **Raporlar ve ayrıntılı analizler** kaydedilmiş gruba bakmaz (değişebilir, geçmişi yok): olay günündeki gerçek yaşı `age_years(doğum_günü, olay_günü)` ile hesaplar; grup gerekirse `age_band(doğum_günü, olay_günü)`.
+- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`).
+- Tarih: doğum günü takvim günüdür (saat dilimi yok); uygulamalar `YYYY-MM-DD`'yi yerel gün olarak okur, UTC'ye çevirmez.
 
-| Değer | Yaş | ParentApp etiketi (`ageBands.ts`) | SQL `suggest_age_band` |
-|---|---|---|---|
-| `A` | 6–8 | "6–8 yaş" | doğum günü yok **ya da** yaş < 9 |
-| `B` | 9–12 | "9–12 yaş" | yaş ≥ 9 (13+ da B) |
-| `null` | — | — | sunucu yanıtlarında `coalesce(age_band, suggest_age_band(birthday))` ile dolu gelir |
-
-- `C` (eski 13–15) **kaldırıldı**: kısıt `age_band in ('A', 'B')`; var olan `C` kayıtları göçle `B` yapılır; `set_child_age_band` `C`'yi reddeder.
-- ParentApp yalnız A/B yazar ve (eski sürümden kalma) `C` gelirse `B` gösterir.
-- Oyun bilinmeyen/boş değeri **`A`** (en güvenli) sayar (`AgeBandProfile.Parse`). Oyunun `C` profili artık kullanılmaz; gelirse `B` sayılmalı (oyun penceresi yapacak).
 - Banda bağlı oyun ayarları (tema, ses, günlük XP sınırı …): `ekonomi.md` 5. bölüm.
 - Apple Kids kategorisi bantları (5 ve altı / 6–8 / 9–11) mağaza seçimidir, oyun bantlarından ayrıdır (`game-app/docs/PLAN.md` §9).
 
@@ -111,8 +120,10 @@ Kod biçimi:
 | `task_undo` | Onay geri alındı (durum değişti ya da kayıt silindi) | Tetikleyici | − | `<completion_id>:<epoch>` |
 | `spend` | Oyunda harcama | `spend_coins` | − | istemcinin işlem kimliği (`p_tx`) |
 | `adjust` | Elle düzeltme | Kısıtta var; **yazan fonksiyon yok** (yalnız service role) | ± | — |
+| `welcome` | Hoş geldin coini (coin kuralının tek istisnası; `ekonomi.md` §2.4). Öneri `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026. | `claim_welcome_coins()` (oyun, ilk beslemede) | + (20) | `welcome` (çocuk başına tek satır) |
 
-`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim). Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
+`spend_coins` hata kodları (`error`): `null` (başarılı), `unknown_item`, `not_enough_coins`, `level_locked` (`20261019020000_server_rules`, uygulandı 19 Ekim).
+`claim_welcome_coins` hata kodları (`error`): `null` (başarılı, 20 coin yazıldı), `already_claimed` (daha önce alındı, yazılmadı). Ekranda gösterim: ParentApp coin geçmişi gösterirse `welcome` = "Hoş geldin hediyesi". Oyun eşlemesi (`ServiceError`): `NotEnoughCoins`, `UnknownItem`, diğerleri `Rejected`; HTTP 0/5xx → `Network` (kuyrukta kalır), 401/403 → `Unauthorized`.
 
 ---
 
@@ -189,6 +200,8 @@ Kod biçimi:
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
 | `saved_templates.category` (ve şablon kategorisi) | `home` / `mind` / `learn` / `health` / `focus` / `relation` (`self` → `health` taşındı) | Ev İşleri / Ruh Sağlığı / Öğrenme ve Eğitim / Sağlık ve Spor / Odak ve Öz Denetim / İlişki Kurma |
+| Kategori → beceri (`tasks.skill`, 23 Ekim 2026) | `home`→`teamwork`, `mind`→`stamina`, `learn`→`knowledge`, `health`→`strength`, `focus`→`focus`, `relation`→`kindness` | Takım Çalışması / Dayanıklılık / Bilgi / Güç / Odak / Nezaket (`ekonomi.md` 5B) |
+| Şablon yaş grubu | `K` (5 ve altı) / `A` (6–8) / `B` (9–12) / `C` (13 ve üstü) — oyunun yaş grubuyla aynı (§4) | ParentApp süzgeci; bir şablon birden çok grupta olabilir (`gorev_sablonlari.md`) |
 | `tasks.day_part` | `morning` / `noon` / `evening` / `null` | Sabah / Öğlen / Akşam / Herhangi (Anytime) |
 | `abc_events.day_part` | `morning` / `noon` / `evening` / `night` | Sabah / Öğlen / Akşam / Gece |
 | `abc_events.occurred_at` | seçilen gün + gün bölümünün temsil saati: 08:00 / 13:00 / 19:00 / 22:00 (yerel) | — |
@@ -264,6 +277,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `reward_requests.status` | `pending` (bekliyor) / `approved` (verildi, taş düştü) / `rejected` (olmadı) / `canceled` (çocuk vazgeçti) |
 | Hata `hint` | `not_enough_stones`, `too_many_requests` (5 bekleyen istek), `premium_required` |
 | Bildirim `kind` | `reward_request` (ebeveynlere), `reward_given`, `reward_decided`, `stones_deducted` (çocuğa; diğer ebeveyne bilgi) |
+| `reward_request` bildiriminin `data` alanı | `{request_id, child_id}`; çocuğun **ilk** isteğinde (oyundan gelen hiçbir önceki isteği yokken; durum fark etmez) ayrıca `"first": true` ve başlık `İlk ödül talebi: <ad> bir ödül istiyor`. Sonraki isteklerde `first` yok. Yeni `kind` yok. Öneri `20261024100000_welcome_coins_first_reward`, uygulandı 24 Ekim 2026. |
 
 ## P15. Aile daveti, geçmiş aktarımı, takip planı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 

@@ -1,0 +1,5470 @@
+{
+ "_doc": "Ev Görevleri şablon kataloğu (ortak/sozlesme/gorev_sablonlari.md). Kullanıcının referans kayıtlarından derlendi; görev adları Türkçe yazıldı ve uyarlandı. category = ana kategori (becerisini belirler), categories = süzgeç etiketleri, ages = önerilen yaş grupları (K ≤5, A 6–8, B 9–12, C 13+). Sürüm 2 (23 Ekim 2026): anahtarlar gs_<kategori>_<sıra>.",
+ "version": 2,
+ "templates": [
+  {
+   "key": "gs_home_001",
+   "title": "Akşam yemeğinden sonra toplamaya yardım et",
+   "emoji": "🍽️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 1
+  },
+  {
+   "key": "gs_home_002",
+   "title": "Akşam yemeğini hazırlamaya yardım et",
+   "emoji": "🍲",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 2
+  },
+  {
+   "key": "gs_home_003",
+   "title": "Anne ya da babana bugün neye yardım edebileceğini sor",
+   "emoji": "🙋",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 3
+  },
+  {
+   "key": "gs_home_004",
+   "title": "Annen ya da baban isteyince yardım et",
+   "emoji": "🙋",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 4
+  },
+  {
+   "key": "gs_home_005",
+   "title": "Annen ya da babanla bahçedeki yaprakları topla",
+   "emoji": "🍁",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 5
+  },
+  {
+   "key": "gs_home_006",
+   "title": "Araba yıkamaya yardım et",
+   "emoji": "🚗",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 6
+  },
+  {
+   "key": "gs_home_007",
+   "title": "Arabayı yıka",
+   "emoji": "🚗",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 7
+  },
+  {
+   "key": "gs_home_008",
+   "title": "Ayakkabılarını yerine koy",
+   "emoji": "👟",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 8
+  },
+  {
+   "key": "gs_home_009",
+   "title": "Bahçe işlerine yardım et",
+   "emoji": "🌳",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 9
+  },
+  {
+   "key": "gs_home_010",
+   "title": "Bahçede yardım et",
+   "emoji": "🌱",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 10
+  },
+  {
+   "key": "gs_home_011",
+   "title": "Bahçedeki yaprakları tırmıkla",
+   "emoji": "🍂",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 11
+  },
+  {
+   "key": "gs_home_012",
+   "title": "Banyo çöp kutusunu boşalt",
+   "emoji": "🗑️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 12
+  },
+  {
+   "key": "gs_home_013",
+   "title": "Banyodaki havluları as",
+   "emoji": "🧻",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 13
+  },
+  {
+   "key": "gs_home_014",
+   "title": "Banyoyu temizle",
+   "emoji": "🛁",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "teamwork",
+   "sort": 14
+  },
+  {
+   "key": "gs_home_015",
+   "title": "Basit bir yemeği hazırlamaya yardım et",
+   "emoji": "🥘",
+   "category": "home",
+   "categories": [
+    "home",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 15
+  },
+  {
+   "key": "gs_home_016",
+   "title": "Başkası konuşurken sözünü kesmeden bekle",
+   "emoji": "✋",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 16
+  },
+  {
+   "key": "gs_home_017",
+   "title": "Bulaşık makinesini boşalt",
+   "emoji": "🍽️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 17
+  },
+  {
+   "key": "gs_home_018",
+   "title": "Bulaşık makinesini doldur",
+   "emoji": "🍽️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 18
+  },
+  {
+   "key": "gs_home_019",
+   "title": "Bulaşıkları yıka",
+   "emoji": "🧽",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 19
+  },
+  {
+   "key": "gs_home_020",
+   "title": "Büyüklerinin söylediğini tartışmadan yap",
+   "emoji": "👂",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 20
+  },
+  {
+   "key": "gs_home_021",
+   "title": "Camları sil",
+   "emoji": "🪟",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 21
+  },
+  {
+   "key": "gs_home_022",
+   "title": "Elektrik süpürgesi çekmeye yardım et",
+   "emoji": "🧹",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "teamwork",
+   "sort": 22
+  },
+  {
+   "key": "gs_home_023",
+   "title": "Ev işlerine yardım etmeyi teklif et",
+   "emoji": "🙌",
+   "category": "home",
+   "categories": [
+    "home",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 23
+  },
+  {
+   "key": "gs_home_024",
+   "title": "Evcil hayvanına mama ve su ver",
+   "emoji": "🐾",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 24
+  },
+  {
+   "key": "gs_home_025",
+   "title": "Evdeki küçük tamirlere yardım et",
+   "emoji": "🔨",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 25
+  },
+  {
+   "key": "gs_home_026",
+   "title": "Eve gelince arabadan eşyaları taşı",
+   "emoji": "🚙",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 26
+  },
+  {
+   "key": "gs_home_027",
+   "title": "Evin genel düzenine yardım et",
+   "emoji": "🏠",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 27
+  },
+  {
+   "key": "gs_home_028",
+   "title": "Garajı ya da depoyu temizlemeye yardım et",
+   "emoji": "🧰",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 28
+  },
+  {
+   "key": "gs_home_029",
+   "title": "Geri dönüşüm kutusunu çıkar",
+   "emoji": "♻️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 29
+  },
+  {
+   "key": "gs_home_030",
+   "title": "Geri dönüşüm ve çöpü ayır",
+   "emoji": "♻️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 30
+  },
+  {
+   "key": "gs_home_031",
+   "title": "Hafif market poşetlerini taşımaya yardım et",
+   "emoji": "🛍️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 31
+  },
+  {
+   "key": "gs_home_032",
+   "title": "Haftalık ev temizliğine yardım et",
+   "emoji": "🧽",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "teamwork",
+   "sort": 32
+  },
+  {
+   "key": "gs_home_033",
+   "title": "Her yemekten sonra tabağını lavaboya bırak",
+   "emoji": "🥣",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 33
+  },
+  {
+   "key": "gs_home_034",
+   "title": "Kahvaltı için çay hazırlığına yardım et",
+   "emoji": "🫖",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 34
+  },
+  {
+   "key": "gs_home_035",
+   "title": "Kahvaltıdan sonra toplamaya yardım et",
+   "emoji": "🍳",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 35
+  },
+  {
+   "key": "gs_home_036",
+   "title": "Kardeşine ödevinde yardım et",
+   "emoji": "📖",
+   "category": "home",
+   "categories": [
+    "home",
+    "learn"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 36
+  },
+  {
+   "key": "gs_home_037",
+   "title": "Kendinin komik bir fotoğrafını çek",
+   "emoji": "🤳",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 37
+  },
+  {
+   "key": "gs_home_038",
+   "title": "Kimseyi şikâyet etmeden kendi işine odaklan",
+   "emoji": "🤫",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 38
+  },
+  {
+   "key": "gs_home_039",
+   "title": "Kirli kıyafetlerini sepete at",
+   "emoji": "🧺",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 39
+  },
+  {
+   "key": "gs_home_040",
+   "title": "Market alışverişine yardım et",
+   "emoji": "🛒",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 40
+  },
+  {
+   "key": "gs_home_041",
+   "title": "Market alışverişini yerleştirmeye yardım et",
+   "emoji": "🧃",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 41
+  },
+  {
+   "key": "gs_home_042",
+   "title": "Mobilyaların tozunu almaya yardım et",
+   "emoji": "🪶",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 42
+  },
+  {
+   "key": "gs_home_043",
+   "title": "Mutfak masasını kur",
+   "emoji": "🍴",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 43
+  },
+  {
+   "key": "gs_home_044",
+   "title": "Mutfak masasını sil",
+   "emoji": "🧽",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 44
+  },
+  {
+   "key": "gs_home_045",
+   "title": "Odanı topla (oyuncak, kıyafet, yatak)",
+   "emoji": "🧹",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "teamwork",
+   "sort": 45
+  },
+  {
+   "key": "gs_home_046",
+   "title": "Oyuncaklarını düzenle",
+   "emoji": "🧸",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "teamwork",
+   "sort": 46
+  },
+  {
+   "key": "gs_home_047",
+   "title": "Oyundan sonra ortalığı topla",
+   "emoji": "🧸",
+   "category": "home",
+   "categories": [
+    "home",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 47
+  },
+  {
+   "key": "gs_home_048",
+   "title": "Plastik bulaşıkları yıka (bir büyüğünle)",
+   "emoji": "🧽",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 48
+  },
+  {
+   "key": "gs_home_049",
+   "title": "Posta kutusundaki mektupları getir",
+   "emoji": "📬",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 49
+  },
+  {
+   "key": "gs_home_050",
+   "title": "Sofrayı kurmaya yardım et",
+   "emoji": "🍴",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 50
+  },
+  {
+   "key": "gs_home_051",
+   "title": "Sofrayı toplamaya yardım et",
+   "emoji": "🍽️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 51
+  },
+  {
+   "key": "gs_home_052",
+   "title": "Söylenmeden annene ya da babana yardım et",
+   "emoji": "⭐",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 52
+  },
+  {
+   "key": "gs_home_053",
+   "title": "Söylenmeden oyuncaklarını topla",
+   "emoji": "🧸",
+   "category": "home",
+   "categories": [
+    "home",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 53
+  },
+  {
+   "key": "gs_home_054",
+   "title": "Temiz tabakları yerleştir (kesici aletler hariç!)",
+   "emoji": "🍽️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 54
+  },
+  {
+   "key": "gs_home_055",
+   "title": "Temiz çamaşırları yerleştir",
+   "emoji": "👕",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 55
+  },
+  {
+   "key": "gs_home_056",
+   "title": "Tuvalet kâğıdını değiştir",
+   "emoji": "🧻",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 56
+  },
+  {
+   "key": "gs_home_057",
+   "title": "Yatak çarşafını değiştir",
+   "emoji": "🛏️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 57
+  },
+  {
+   "key": "gs_home_058",
+   "title": "Yatmadan önce oyuncaklarını topla",
+   "emoji": "🧸",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 58
+  },
+  {
+   "key": "gs_home_059",
+   "title": "Yeni bir selamlaşma uydur",
+   "emoji": "✋",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 59
+  },
+  {
+   "key": "gs_home_060",
+   "title": "Yerleri süpür",
+   "emoji": "🧹",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 60
+  },
+  {
+   "key": "gs_home_061",
+   "title": "Çamaşır makinesini çalıştırmaya yardım et",
+   "emoji": "🧺",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 61
+  },
+  {
+   "key": "gs_home_062",
+   "title": "Çamaşırları ayırmaya yardım et",
+   "emoji": "👕",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 62
+  },
+  {
+   "key": "gs_home_063",
+   "title": "Çiçekleri sula",
+   "emoji": "🪴",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 63
+  },
+  {
+   "key": "gs_home_064",
+   "title": "Çöpü çıkar",
+   "emoji": "🗑️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "teamwork",
+   "sort": 64
+  },
+  {
+   "key": "gs_home_065",
+   "title": "Çöpü çıkarmaya yardım et",
+   "emoji": "🗑️",
+   "category": "home",
+   "categories": [
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "teamwork",
+   "sort": 65
+  },
+  {
+   "key": "gs_mind_001",
+   "title": "1 dakika derin nefes egzersizi yap",
+   "emoji": "🌬️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "stamina",
+   "sort": 66
+  },
+  {
+   "key": "gs_mind_002",
+   "title": "10 dakika meditasyon yap",
+   "emoji": "🧘",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 67
+  },
+  {
+   "key": "gs_mind_003",
+   "title": "15 dakika meditasyon yap",
+   "emoji": "🧘",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 68
+  },
+  {
+   "key": "gs_mind_004",
+   "title": "2 dakika dans et",
+   "emoji": "🕺",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 69
+  },
+  {
+   "key": "gs_mind_005",
+   "title": "5 kez derin nefes al",
+   "emoji": "🌬️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 70
+  },
+  {
+   "key": "gs_mind_006",
+   "title": "Ailene bir not yaz",
+   "emoji": "📝",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 71
+  },
+  {
+   "key": "gs_mind_007",
+   "title": "Ailene nasıl hissettiğini anlatan bir not yaz",
+   "emoji": "💌",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 72
+  },
+  {
+   "key": "gs_mind_008",
+   "title": "Bir büyüğünle doğa yürüyüşünde yaprak ya da taş topla",
+   "emoji": "🍂",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 73
+  },
+  {
+   "key": "gs_mind_009",
+   "title": "Bir duygu çizelgesi yap ve bugün doldur",
+   "emoji": "🌈",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 74
+  },
+  {
+   "key": "gs_mind_010",
+   "title": "Bir resim çiz ve annene ya da babana göster",
+   "emoji": "🖍️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 75
+  },
+  {
+   "key": "gs_mind_011",
+   "title": "Bu hafta minnet duyduğun şeyleri yaz",
+   "emoji": "🙏",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "stamina",
+   "sort": 76
+  },
+  {
+   "key": "gs_mind_012",
+   "title": "Bugün olumlu ol",
+   "emoji": "😊",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "stamina",
+   "sort": 77
+  },
+  {
+   "key": "gs_mind_013",
+   "title": "Bugünün 3 güzel şeyini yaz",
+   "emoji": "✨",
+   "category": "mind",
+   "categories": [
+    "mind",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 78
+  },
+  {
+   "key": "gs_mind_014",
+   "title": "Cevap vermeden önce sakinleşmek için 5–10 dakika ara ver",
+   "emoji": "⏸️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 79
+  },
+  {
+   "key": "gs_mind_015",
+   "title": "Duygularını annen ya da babanla konuş",
+   "emoji": "💭",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 80
+  },
+  {
+   "key": "gs_mind_016",
+   "title": "En çok neden korktuğunu yaz",
+   "emoji": "🫂",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 81
+  },
+  {
+   "key": "gs_mind_017",
+   "title": "Evinin haritasını çiz ve ailene göster",
+   "emoji": "🗺️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 82
+  },
+  {
+   "key": "gs_mind_018",
+   "title": "Günlük tutmaya başla",
+   "emoji": "📓",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "stamina",
+   "sort": 83
+  },
+  {
+   "key": "gs_mind_019",
+   "title": "Gününü günlüğüne yaz",
+   "emoji": "📓",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "stamina",
+   "sort": 84
+  },
+  {
+   "key": "gs_mind_020",
+   "title": "Havalı bir şey boya!",
+   "emoji": "🎨",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 85
+  },
+  {
+   "key": "gs_mind_021",
+   "title": "Kendine yapacak bir iş bul ve bitir",
+   "emoji": "💡",
+   "category": "mind",
+   "categories": [
+    "mind",
+    "home",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 86
+  },
+  {
+   "key": "gs_mind_022",
+   "title": "Minnet defteri tutmaya başla",
+   "emoji": "📔",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 87
+  },
+  {
+   "key": "gs_mind_023",
+   "title": "Minnet defterine yeni bir şey yaz",
+   "emoji": "📔",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 88
+  },
+  {
+   "key": "gs_mind_024",
+   "title": "Odanda dans partisi yap",
+   "emoji": "🎶",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 89
+  },
+  {
+   "key": "gs_mind_025",
+   "title": "Sabah 5–10 dakika esne",
+   "emoji": "🌅",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 90
+  },
+  {
+   "key": "gs_mind_026",
+   "title": "Seni mutlu eden şeyleri yaz",
+   "emoji": "😊",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "stamina",
+   "sort": 91
+  },
+  {
+   "key": "gs_mind_027",
+   "title": "Tebeşirle kaldırımı süsle",
+   "emoji": "🖍️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 92
+  },
+  {
+   "key": "gs_mind_028",
+   "title": "Yeni bir dans hareketi uydur",
+   "emoji": "💃",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 93
+  },
+  {
+   "key": "gs_mind_029",
+   "title": "Üzüldüğünde 5 kez derin nefes al",
+   "emoji": "🌬️",
+   "category": "mind",
+   "categories": [
+    "mind"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "stamina",
+   "sort": 94
+  },
+  {
+   "key": "gs_learn_001",
+   "title": "'B' harfiyle başlayan 5 şey bul",
+   "emoji": "🔤",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 95
+  },
+  {
+   "key": "gs_learn_002",
+   "title": "10 dakika kitap oku",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 96
+  },
+  {
+   "key": "gs_learn_003",
+   "title": "100 parçalı yapboz yap",
+   "emoji": "🧩",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 97
+  },
+  {
+   "key": "gs_learn_004",
+   "title": "15 dakika enstrüman çal",
+   "emoji": "🎹",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 98
+  },
+  {
+   "key": "gs_learn_005",
+   "title": "15 dakika kendi başına kitap oku",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 99
+  },
+  {
+   "key": "gs_learn_006",
+   "title": "20 dakika kitap oku",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 100
+  },
+  {
+   "key": "gs_learn_007",
+   "title": "Ailene bugünle ilgili bir hikâye anlat",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 101
+  },
+  {
+   "key": "gs_learn_008",
+   "title": "Akşam yemeği için bir fıkra yaz",
+   "emoji": "😂",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 102
+  },
+  {
+   "key": "gs_learn_009",
+   "title": "Alfabeyi söylemeyi çalış",
+   "emoji": "🔠",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 103
+  },
+  {
+   "key": "gs_learn_010",
+   "title": "Alfabeyi yazmayı çalış",
+   "emoji": "✍️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 104
+  },
+  {
+   "key": "gs_learn_011",
+   "title": "Bir kitabı baştan sona oku",
+   "emoji": "📚",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 105
+  },
+  {
+   "key": "gs_learn_012",
+   "title": "Bir matematik çalışma sayfası çöz",
+   "emoji": "➗",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 106
+  },
+  {
+   "key": "gs_learn_013",
+   "title": "Bir ödevini yap",
+   "emoji": "✏️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "knowledge",
+   "sort": 107
+  },
+  {
+   "key": "gs_learn_014",
+   "title": "Birine yeni bir şey öğret",
+   "emoji": "🧑‍🏫",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 108
+  },
+  {
+   "key": "gs_learn_015",
+   "title": "Bisiklet sürmeyi öğren (kask ve destek tekerleriyle)",
+   "emoji": "🚲",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 109
+  },
+  {
+   "key": "gs_learn_016",
+   "title": "Bitkileri tanımayı öğren",
+   "emoji": "🌿",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 110
+  },
+  {
+   "key": "gs_learn_017",
+   "title": "Bütün ödevlerini bitir",
+   "emoji": "📚",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "knowledge",
+   "sort": 111
+  },
+  {
+   "key": "gs_learn_018",
+   "title": "Dijital haritayla yol bulmayı öğren",
+   "emoji": "📱",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 112
+  },
+  {
+   "key": "gs_learn_019",
+   "title": "Ev adresini ezberle",
+   "emoji": "🏡",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 113
+  },
+  {
+   "key": "gs_learn_020",
+   "title": "Farklı düğümler atmayı öğren",
+   "emoji": "🪢",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 114
+  },
+  {
+   "key": "gs_learn_021",
+   "title": "Gelecek haftanın ödevine başla",
+   "emoji": "📚",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 115
+  },
+  {
+   "key": "gs_learn_022",
+   "title": "Gününü çiz ya da yaz",
+   "emoji": "📝",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 116
+  },
+  {
+   "key": "gs_learn_023",
+   "title": "Kesik ya da yarayı temizlemeyi öğren",
+   "emoji": "🩹",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 117
+  },
+  {
+   "key": "gs_learn_024",
+   "title": "Kravat bağlamayı öğren",
+   "emoji": "👔",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 118
+  },
+  {
+   "key": "gs_learn_025",
+   "title": "Küçük bir resim sergisi hazırla",
+   "emoji": "🖼️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 119
+  },
+  {
+   "key": "gs_learn_026",
+   "title": "Okula git",
+   "emoji": "🏫",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 120
+  },
+  {
+   "key": "gs_learn_027",
+   "title": "Satranç öğren",
+   "emoji": "♟️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 121
+  },
+  {
+   "key": "gs_learn_028",
+   "title": "Sayıları yazmayı çalış",
+   "emoji": "🔢",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 122
+  },
+  {
+   "key": "gs_learn_029",
+   "title": "Temel ilk yardımı öğren",
+   "emoji": "⛑️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 123
+  },
+  {
+   "key": "gs_learn_030",
+   "title": "Yaklaşan bir sınava ya da yazılıya hazırlan",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "knowledge",
+   "sort": 124
+  },
+  {
+   "key": "gs_learn_031",
+   "title": "Yapman gereken ödevleri bir listeye yaz",
+   "emoji": "📋",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 125
+  },
+  {
+   "key": "gs_learn_032",
+   "title": "Yatmadan önce ailene 3 ilginç bilgi anlat",
+   "emoji": "🦉",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 126
+  },
+  {
+   "key": "gs_learn_033",
+   "title": "Yatmadan önce kitap oku",
+   "emoji": "📖",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 127
+  },
+  {
+   "key": "gs_learn_034",
+   "title": "Yemek yaparken malzemeleri ölçmeye yardım et",
+   "emoji": "🥄",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "knowledge",
+   "sort": 128
+  },
+  {
+   "key": "gs_learn_035",
+   "title": "Yeni bir dil öğrenmeye başla",
+   "emoji": "🌍",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 129
+  },
+  {
+   "key": "gs_learn_036",
+   "title": "Yeni bir enstrümana başla",
+   "emoji": "🎸",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "knowledge",
+   "sort": 130
+  },
+  {
+   "key": "gs_learn_037",
+   "title": "Yeni bir oyun öğren",
+   "emoji": "🎲",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 131
+  },
+  {
+   "key": "gs_learn_038",
+   "title": "Yeni bir sandviç tarifi uydur",
+   "emoji": "🥪",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 132
+  },
+  {
+   "key": "gs_learn_039",
+   "title": "Zehirli bitki ve hayvanları tanımayı öğren",
+   "emoji": "⚠️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 133
+  },
+  {
+   "key": "gs_learn_040",
+   "title": "Çarpım tablosunu tekrar et",
+   "emoji": "✖️",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 134
+  },
+  {
+   "key": "gs_learn_041",
+   "title": "Ödevini saat 17.00'den önce bitir",
+   "emoji": "⏰",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "knowledge",
+   "sort": 135
+  },
+  {
+   "key": "gs_learn_042",
+   "title": "Öğrendiğin bir şeyi paylaş",
+   "emoji": "💡",
+   "category": "learn",
+   "categories": [
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "knowledge",
+   "sort": 136
+  },
+  {
+   "key": "gs_health_001",
+   "title": "1 dakika esneme yap",
+   "emoji": "🙆",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 137
+  },
+  {
+   "key": "gs_health_002",
+   "title": "1 dakika yerinde koş",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 138
+  },
+  {
+   "key": "gs_health_003",
+   "title": "10 burpee yap",
+   "emoji": "🏋️",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 139
+  },
+  {
+   "key": "gs_health_004",
+   "title": "10 dakika esneme yap",
+   "emoji": "🧘",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 140
+  },
+  {
+   "key": "gs_health_005",
+   "title": "10 zıplama hareketi (jumping jack) yap",
+   "emoji": "🤸",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 141
+  },
+  {
+   "key": "gs_health_006",
+   "title": "20 mekik çek",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 142
+  },
+  {
+   "key": "gs_health_007",
+   "title": "20 şınav çek",
+   "emoji": "💪",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 143
+  },
+  {
+   "key": "gs_health_008",
+   "title": "3 km koş (süreni tut!)",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 144
+  },
+  {
+   "key": "gs_health_009",
+   "title": "3 şınav çek",
+   "emoji": "💪",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 145
+  },
+  {
+   "key": "gs_health_010",
+   "title": "30 dakika spor yap",
+   "emoji": "🏅",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 146
+  },
+  {
+   "key": "gs_health_011",
+   "title": "30 dakika spor çalış",
+   "emoji": "🏀",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "strength",
+   "sort": 147
+  },
+  {
+   "key": "gs_health_012",
+   "title": "5 farklı meyve ve sebze ye",
+   "emoji": "🥕",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "strength",
+   "sort": 148
+  },
+  {
+   "key": "gs_health_013",
+   "title": "5 mekik çek",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 149
+  },
+  {
+   "key": "gs_health_014",
+   "title": "5 şınav çek",
+   "emoji": "💪",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 150
+  },
+  {
+   "key": "gs_health_015",
+   "title": "Annen ya da babanla doğa yürüyüşüne çık",
+   "emoji": "🥾",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 151
+  },
+  {
+   "key": "gs_health_016",
+   "title": "Annen ya da babanla koşuya çık",
+   "emoji": "🏃",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 152
+  },
+  {
+   "key": "gs_health_017",
+   "title": "Annen ya da babanla köpeği yürüyüşe çıkar",
+   "emoji": "🐕",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 153
+  },
+  {
+   "key": "gs_health_018",
+   "title": "Annen ya da babanla top yakalama oyna",
+   "emoji": "⚾",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 154
+  },
+  {
+   "key": "gs_health_019",
+   "title": "Annen ya da babanın yardımıyla banyo yap",
+   "emoji": "🛁",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 155
+  },
+  {
+   "key": "gs_health_020",
+   "title": "Ayakkabılarını kendin giy",
+   "emoji": "👟",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 156
+  },
+  {
+   "key": "gs_health_021",
+   "title": "Az şekerli bir öğün ye",
+   "emoji": "🍎",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 157
+  },
+  {
+   "key": "gs_health_022",
+   "title": "Bisiklet sür",
+   "emoji": "🚲",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 158
+  },
+  {
+   "key": "gs_health_023",
+   "title": "Bol su iç",
+   "emoji": "💧",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 159
+  },
+  {
+   "key": "gs_health_024",
+   "title": "Deodorant kullan",
+   "emoji": "🧴",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 160
+  },
+  {
+   "key": "gs_health_025",
+   "title": "Diş ipi kullan",
+   "emoji": "🦷",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 161
+  },
+  {
+   "key": "gs_health_026",
+   "title": "Dışarıda oyna!",
+   "emoji": "🌞",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 162
+  },
+  {
+   "key": "gs_health_027",
+   "title": "Endişelendiğinde bile cesur ol",
+   "emoji": "🦁",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 163
+  },
+  {
+   "key": "gs_health_028",
+   "title": "Gün boyunca 8 bardak su iç",
+   "emoji": "💧",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 164
+  },
+  {
+   "key": "gs_health_029",
+   "title": "Günde 3 öğün ye",
+   "emoji": "🍽️",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 165
+  },
+  {
+   "key": "gs_health_030",
+   "title": "Havuzda 1 tur yüz",
+   "emoji": "🏊",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 166
+  },
+  {
+   "key": "gs_health_031",
+   "title": "Kahvaltını yap",
+   "emoji": "🥣",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 167
+  },
+  {
+   "key": "gs_health_032",
+   "title": "Köpeği yürüyüşe çıkar",
+   "emoji": "🐕",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 168
+  },
+  {
+   "key": "gs_health_033",
+   "title": "Sabah dişlerini fırçala",
+   "emoji": "🪥",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 169
+  },
+  {
+   "key": "gs_health_034",
+   "title": "Sabah ve akşam dişlerini fırçala",
+   "emoji": "🪥",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 170
+  },
+  {
+   "key": "gs_health_035",
+   "title": "Saçını tara",
+   "emoji": "💇",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 171
+  },
+  {
+   "key": "gs_health_036",
+   "title": "Sağlıklı bir akşam yemeği ye",
+   "emoji": "🥗",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 172
+  },
+  {
+   "key": "gs_health_037",
+   "title": "Sağlıklı bir öğle yemeği ye",
+   "emoji": "🥪",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 173
+  },
+  {
+   "key": "gs_health_038",
+   "title": "Sebzelerini ye",
+   "emoji": "🥦",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 174
+  },
+  {
+   "key": "gs_health_039",
+   "title": "Vitaminini ya da ilacını al (bir büyüğünle)",
+   "emoji": "💊",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 175
+  },
+  {
+   "key": "gs_health_040",
+   "title": "Yatmadan önce dişlerini fırçala",
+   "emoji": "🪥",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 176
+  },
+  {
+   "key": "gs_health_041",
+   "title": "Yemekten önce ellerini yıka",
+   "emoji": "🧼",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 177
+  },
+  {
+   "key": "gs_health_042",
+   "title": "Yemeğini söylenmeden ye",
+   "emoji": "😋",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 178
+  },
+  {
+   "key": "gs_health_043",
+   "title": "Yeni bir spor öğren",
+   "emoji": "⚽",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "strength",
+   "sort": 179
+  },
+  {
+   "key": "gs_health_044",
+   "title": "Yüzme kulaçlarını çalış",
+   "emoji": "🏊",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 180
+  },
+  {
+   "key": "gs_health_045",
+   "title": "Yüzmeyi öğren",
+   "emoji": "🏊",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "strength",
+   "sort": 181
+  },
+  {
+   "key": "gs_health_046",
+   "title": "Yüzünü yıka",
+   "emoji": "🫧",
+   "category": "health",
+   "categories": [
+    "health",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 182
+  },
+  {
+   "key": "gs_health_047",
+   "title": "İp atlamayı çalış (bir büyüğünle)",
+   "emoji": "🪢",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 183
+  },
+  {
+   "key": "gs_health_048",
+   "title": "İstemediğin eğlenceli bir etkinliği dene",
+   "emoji": "🎢",
+   "category": "health",
+   "categories": [
+    "health"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "strength",
+   "sort": 184
+  },
+  {
+   "key": "gs_focus_001",
+   "title": "'Hayır' cevabını tartışmadan kabul et",
+   "emoji": "🙂",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 185
+  },
+  {
+   "key": "gs_focus_002",
+   "title": "5 dakikadan kısa sürede giyin",
+   "emoji": "⏱️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 186
+  },
+  {
+   "key": "gs_focus_003",
+   "title": "6 kelimelik bir hikâye yaz",
+   "emoji": "📜",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 187
+  },
+  {
+   "key": "gs_focus_004",
+   "title": "Adını süslü harflerle yaz",
+   "emoji": "✒️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 188
+  },
+  {
+   "key": "gs_focus_005",
+   "title": "Aile için bir yemek hazırla (bir büyüğünle)",
+   "emoji": "👩‍🍳",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 189
+  },
+  {
+   "key": "gs_focus_006",
+   "title": "Akşam uyku hazırlığını kendin yap",
+   "emoji": "🌙",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 190
+  },
+  {
+   "key": "gs_focus_007",
+   "title": "Alarmla kendin uyan",
+   "emoji": "⏰",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 191
+  },
+  {
+   "key": "gs_focus_008",
+   "title": "Ayakkabı bağlamayı çalış",
+   "emoji": "👟",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 192
+  },
+  {
+   "key": "gs_focus_009",
+   "title": "Bir aile üyeni çiz ve resmi ona hediye et",
+   "emoji": "🎨",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 193
+  },
+  {
+   "key": "gs_focus_010",
+   "title": "Bir fikrin için küçük bir iş planı yaz",
+   "emoji": "💼",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 194
+  },
+  {
+   "key": "gs_focus_011",
+   "title": "Bir işi büyüklerinden yardım almadan bitir",
+   "emoji": "💪",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 195
+  },
+  {
+   "key": "gs_focus_012",
+   "title": "Bir yapbozu vazgeçmeden bitir",
+   "emoji": "🧩",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "learn"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 196
+  },
+  {
+   "key": "gs_focus_013",
+   "title": "Biriktirmek istediğin bir şey seç",
+   "emoji": "🎯",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 197
+  },
+  {
+   "key": "gs_focus_014",
+   "title": "Bu ay için 5 hedef yaz ve ailene göster",
+   "emoji": "🎯",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 198
+  },
+  {
+   "key": "gs_focus_015",
+   "title": "Bugün ne yapmak istediğini ailene anlat",
+   "emoji": "🗣️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 199
+  },
+  {
+   "key": "gs_focus_016",
+   "title": "Bütün gece kendi yatağında uyu",
+   "emoji": "🛏️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 200
+  },
+  {
+   "key": "gs_focus_017",
+   "title": "Büyüklerin telefondayken sessizce bekle",
+   "emoji": "🤫",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 201
+  },
+  {
+   "key": "gs_focus_018",
+   "title": "Büyüyünce ne olmak istediğini yaz",
+   "emoji": "🌟",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 202
+  },
+  {
+   "key": "gs_focus_019",
+   "title": "Büyüyünce ne olmak istediğini çiz",
+   "emoji": "🌟",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 203
+  },
+  {
+   "key": "gs_focus_020",
+   "title": "Evde bozuk bir şeyi onar (bir büyüğünle)",
+   "emoji": "🔧",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 204
+  },
+  {
+   "key": "gs_focus_021",
+   "title": "Eşyalarını topla",
+   "emoji": "🎒",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 205
+  },
+  {
+   "key": "gs_focus_022",
+   "title": "Günün bütün Ev Görevlerini bitir",
+   "emoji": "🎯",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 206
+  },
+  {
+   "key": "gs_focus_023",
+   "title": "Gününü planla",
+   "emoji": "📅",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 207
+  },
+  {
+   "key": "gs_focus_024",
+   "title": "Hafta sonu için 3 dilek yaz",
+   "emoji": "🌈",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 208
+  },
+  {
+   "key": "gs_focus_025",
+   "title": "Haftalık ders çalışma planı yap",
+   "emoji": "🗓️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 209
+  },
+  {
+   "key": "gs_focus_026",
+   "title": "Haftalık hedeflerini belirle!",
+   "emoji": "🎯",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 210
+  },
+  {
+   "key": "gs_focus_027",
+   "title": "Haftanın planını yap",
+   "emoji": "🗓️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 211
+  },
+  {
+   "key": "gs_focus_028",
+   "title": "Harçlığın için küçük bir bütçe yap",
+   "emoji": "💰",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 212
+  },
+  {
+   "key": "gs_focus_029",
+   "title": "Kalkınca odanı topla",
+   "emoji": "🛏️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 213
+  },
+  {
+   "key": "gs_focus_030",
+   "title": "Kendi kendine giyinmeyi dene!",
+   "emoji": "👕",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 214
+  },
+  {
+   "key": "gs_focus_031",
+   "title": "Kendi çamaşırını yıka",
+   "emoji": "🧺",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 215
+  },
+  {
+   "key": "gs_focus_032",
+   "title": "Kendine bir atıştırmalık hazırla",
+   "emoji": "🍎",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 216
+  },
+  {
+   "key": "gs_focus_033",
+   "title": "Kumbara edin",
+   "emoji": "🐷",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 217
+  },
+  {
+   "key": "gs_focus_034",
+   "title": "Kumbarana biraz para at",
+   "emoji": "🐷",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 218
+  },
+  {
+   "key": "gs_focus_035",
+   "title": "Kâğıttan uçak yap",
+   "emoji": "✈️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 219
+  },
+  {
+   "key": "gs_focus_036",
+   "title": "Market listesi yap",
+   "emoji": "📝",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 220
+  },
+  {
+   "key": "gs_focus_037",
+   "title": "Mızıkçılık yapmadan uyu",
+   "emoji": "😴",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 221
+  },
+  {
+   "key": "gs_focus_038",
+   "title": "Odanı bugün çok iyi temizle",
+   "emoji": "✨",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 222
+  },
+  {
+   "key": "gs_focus_039",
+   "title": "Odanın perdesini aç",
+   "emoji": "🪟",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 223
+  },
+  {
+   "key": "gs_focus_040",
+   "title": "Okul yemeğini hazırlamaya yardım et",
+   "emoji": "🥪",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 224
+  },
+  {
+   "key": "gs_focus_041",
+   "title": "Okul yemeğini kendin hazırla",
+   "emoji": "🍱",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 225
+  },
+  {
+   "key": "gs_focus_042",
+   "title": "Okul çantanı düzenle",
+   "emoji": "🎒",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 226
+  },
+  {
+   "key": "gs_focus_043",
+   "title": "Okul çantanı hazırla",
+   "emoji": "🎒",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 227
+  },
+  {
+   "key": "gs_focus_044",
+   "title": "Okula giyinerek hazırlan",
+   "emoji": "🎒",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 228
+  },
+  {
+   "key": "gs_focus_045",
+   "title": "Oyuna girmeden önce bugünkü Ev Görevlerini bitir",
+   "emoji": "✅",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "home"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 229
+  },
+  {
+   "key": "gs_focus_046",
+   "title": "Pijamanı kendin giy",
+   "emoji": "🩳",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 230
+  },
+  {
+   "key": "gs_focus_047",
+   "title": "Saat 21.00'den önce yat",
+   "emoji": "🌙",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 231
+  },
+  {
+   "key": "gs_focus_048",
+   "title": "Saat 8.00'de hazır ol",
+   "emoji": "🚪",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 232
+  },
+  {
+   "key": "gs_focus_049",
+   "title": "Sabah 6.45'te kendi kendine kalk",
+   "emoji": "⏰",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 233
+  },
+  {
+   "key": "gs_focus_050",
+   "title": "Sabah hazırlığını kendin yap",
+   "emoji": "☀️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 234
+  },
+  {
+   "key": "gs_focus_051",
+   "title": "Sabah kontrol listeni tamamla",
+   "emoji": "☑️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 235
+  },
+  {
+   "key": "gs_focus_052",
+   "title": "Söylenmeden ödevine başla",
+   "emoji": "📝",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 236
+  },
+  {
+   "key": "gs_focus_053",
+   "title": "Süre bitince oyun konsolunu kapat",
+   "emoji": "🎮",
+   "category": "focus",
+   "categories": [
+    "focus",
+    "home"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 237
+  },
+  {
+   "key": "gs_focus_054",
+   "title": "Yarın sabah için alarm kur",
+   "emoji": "⏰",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 238
+  },
+  {
+   "key": "gs_focus_055",
+   "title": "Yarını planla",
+   "emoji": "📅",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 239
+  },
+  {
+   "key": "gs_focus_056",
+   "title": "Yarının kıyafetlerini seç",
+   "emoji": "👚",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 240
+  },
+  {
+   "key": "gs_focus_057",
+   "title": "Yatağını topla",
+   "emoji": "🛏️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 241
+  },
+  {
+   "key": "gs_focus_058",
+   "title": "Yatmadan 20 dakika önce ekranları kapat",
+   "emoji": "📵",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "focus",
+   "sort": 242
+  },
+  {
+   "key": "gs_focus_059",
+   "title": "Yatmaya hazırlan",
+   "emoji": "🛌",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 243
+  },
+  {
+   "key": "gs_focus_060",
+   "title": "Çalışma masanı düzenle",
+   "emoji": "🗂️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 244
+  },
+  {
+   "key": "gs_focus_061",
+   "title": "Ödeve başlamadan bütün malzemeni hazırla",
+   "emoji": "✏️",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "focus",
+   "sort": 245
+  },
+  {
+   "key": "gs_focus_062",
+   "title": "İçeride alçak sesle konuş",
+   "emoji": "🔉",
+   "category": "focus",
+   "categories": [
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "focus",
+   "sort": 246
+  },
+  {
+   "key": "gs_relation_001",
+   "title": "3 kişiye iltifat et",
+   "emoji": "🌼",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 247
+  },
+  {
+   "key": "gs_relation_002",
+   "title": "Ailece film gecesi yap",
+   "emoji": "🎬",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 248
+  },
+  {
+   "key": "gs_relation_003",
+   "title": "Ailen için eğlenceli bir hafta sonu etkinliği planla",
+   "emoji": "🎡",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 249
+  },
+  {
+   "key": "gs_relation_004",
+   "title": "Ailende sevdiğin 3 şeyi yaz!",
+   "emoji": "💖",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 250
+  },
+  {
+   "key": "gs_relation_005",
+   "title": "Ailenin onayladığı bir arkadaşınla buluşma planla",
+   "emoji": "📆",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 251
+  },
+  {
+   "key": "gs_relation_006",
+   "title": "Ailenle film izle",
+   "emoji": "🍿",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 252
+  },
+  {
+   "key": "gs_relation_007",
+   "title": "Ailenle günübirlik bir geziye çık",
+   "emoji": "🚗",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 253
+  },
+  {
+   "key": "gs_relation_008",
+   "title": "Ailenle kart oyunu oyna",
+   "emoji": "🃏",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 254
+  },
+  {
+   "key": "gs_relation_009",
+   "title": "Ailenle kutu oyunu oyna",
+   "emoji": "🎲",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 255
+  },
+  {
+   "key": "gs_relation_010",
+   "title": "Ailenle yürüyüşe çık",
+   "emoji": "🚶",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 256
+  },
+  {
+   "key": "gs_relation_011",
+   "title": "Annen ya da babanla kısa bir kitap oku",
+   "emoji": "📚",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 257
+  },
+  {
+   "key": "gs_relation_012",
+   "title": "Annen ya da babanla nazik davranmayı çalış",
+   "emoji": "🎩",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 258
+  },
+  {
+   "key": "gs_relation_013",
+   "title": "Annen ya da babanla parka git",
+   "emoji": "🌳",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 259
+  },
+  {
+   "key": "gs_relation_014",
+   "title": "Annen ya da babanla sarılarak dinlen",
+   "emoji": "🧸",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 260
+  },
+  {
+   "key": "gs_relation_015",
+   "title": "Annene ya da babana gününün nasıl geçtiğini sor",
+   "emoji": "💬",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 261
+  },
+  {
+   "key": "gs_relation_016",
+   "title": "Annene ya da babana sarıl",
+   "emoji": "🤗",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 262
+  },
+  {
+   "key": "gs_relation_017",
+   "title": "Arkadaşlarına saygılı davran (patronluk taslamadan)",
+   "emoji": "🤝",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 263
+  },
+  {
+   "key": "gs_relation_018",
+   "title": "Arkadaşlarını annen ya da babanla konuş",
+   "emoji": "👫",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 264
+  },
+  {
+   "key": "gs_relation_019",
+   "title": "Bağırmadan nasıl hissettiğini anlat",
+   "emoji": "💬",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 265
+  },
+  {
+   "key": "gs_relation_020",
+   "title": "Bir aile büyüğünü arayıp hâlini sor",
+   "emoji": "📞",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 266
+  },
+  {
+   "key": "gs_relation_021",
+   "title": "Bir aile üyenle satranç oyna",
+   "emoji": "♟️",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 267
+  },
+  {
+   "key": "gs_relation_022",
+   "title": "Bir arkadaşına mektup yaz",
+   "emoji": "✉️",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 268
+  },
+  {
+   "key": "gs_relation_023",
+   "title": "Bir arkadaşınla vakit geçir",
+   "emoji": "👫",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 269
+  },
+  {
+   "key": "gs_relation_024",
+   "title": "Bir teşekkür notu yaz",
+   "emoji": "💐",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 270
+  },
+  {
+   "key": "gs_relation_025",
+   "title": "Biri için güzel bir şey yap",
+   "emoji": "💝",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 271
+  },
+  {
+   "key": "gs_relation_026",
+   "title": "Birine günaydın de!",
+   "emoji": "🌞",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 272
+  },
+  {
+   "key": "gs_relation_027",
+   "title": "Birine iltifat et",
+   "emoji": "🌸",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 273
+  },
+  {
+   "key": "gs_relation_028",
+   "title": "Birine neden onu sevdiğini anlatan bir kart yap",
+   "emoji": "💌",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 274
+  },
+  {
+   "key": "gs_relation_029",
+   "title": "Birini kibarca selamlamayı çalış",
+   "emoji": "👋",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 275
+  },
+  {
+   "key": "gs_relation_030",
+   "title": "Birini mutlu edecek bir sürpriz not bırak",
+   "emoji": "💌",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 276
+  },
+  {
+   "key": "gs_relation_031",
+   "title": "Bugün birini gülümset",
+   "emoji": "😄",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 277
+  },
+  {
+   "key": "gs_relation_032",
+   "title": "Bugün kardeşine hiç vurma, itme",
+   "emoji": "🤝",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 278
+  },
+  {
+   "key": "gs_relation_033",
+   "title": "En sevdiğin kitabı paylaş",
+   "emoji": "📕",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 279
+  },
+  {
+   "key": "gs_relation_034",
+   "title": "Eğlenceli bir anını paylaş",
+   "emoji": "📸",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 280
+  },
+  {
+   "key": "gs_relation_035",
+   "title": "Gurur duyduğun 3 şeyi bul",
+   "emoji": "🏆",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 281
+  },
+  {
+   "key": "gs_relation_036",
+   "title": "Kardeşin ya da arkadaşlarınla paylaş",
+   "emoji": "🤲",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 282
+  },
+  {
+   "key": "gs_relation_037",
+   "title": "Kardeşine iyi davran",
+   "emoji": "💛",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 283
+  },
+  {
+   "key": "gs_relation_038",
+   "title": "Kardeşinle açık havada piknik yap",
+   "emoji": "🧺",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 284
+  },
+  {
+   "key": "gs_relation_039",
+   "title": "Kardeşinle eğlenceli bir şey yap",
+   "emoji": "🎈",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 285
+  },
+  {
+   "key": "gs_relation_040",
+   "title": "Kardeşinle kavga etme",
+   "emoji": "🕊️",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 286
+  },
+  {
+   "key": "gs_relation_041",
+   "title": "Kardeşinle oyun oyna",
+   "emoji": "🎮",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 287
+  },
+  {
+   "key": "gs_relation_042",
+   "title": "Komik bir canavar yüzü yap",
+   "emoji": "👾",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 288
+  },
+  {
+   "key": "gs_relation_043",
+   "title": "Konuşurken söylenmeden göz teması kur",
+   "emoji": "👀",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 289
+  },
+  {
+   "key": "gs_relation_044",
+   "title": "Küçük kardeşine göz kulak ol (bir büyüğün yanındayken)",
+   "emoji": "👶",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "B",
+    "C"
+   ],
+   "difficulty": "hard",
+   "coins": 20,
+   "skill": "kindness",
+   "sort": 290
+  },
+  {
+   "key": "gs_relation_045",
+   "title": "Lütfen ve teşekkür ederim de",
+   "emoji": "🙏",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 291
+  },
+  {
+   "key": "gs_relation_046",
+   "title": "Okulda bütün gün güzel davran",
+   "emoji": "🏫",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 292
+  },
+  {
+   "key": "gs_relation_047",
+   "title": "Oyunlarda sıranı bekle",
+   "emoji": "⏳",
+   "category": "relation",
+   "categories": [
+    "relation",
+    "focus"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 293
+  },
+  {
+   "key": "gs_relation_048",
+   "title": "Rastgele bir iyilik yap",
+   "emoji": "🎁",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "medium",
+   "coins": 10,
+   "skill": "kindness",
+   "sort": 294
+  },
+  {
+   "key": "gs_relation_049",
+   "title": "Teşekkür ettiğin bir şeyi çiz",
+   "emoji": "🙏",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 295
+  },
+  {
+   "key": "gs_relation_050",
+   "title": "Yeni bir arkadaşla oyna",
+   "emoji": "🧒",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 296
+  },
+  {
+   "key": "gs_relation_051",
+   "title": "İki farklı kişiye güzel bir söz söyleyip onları gülümset",
+   "emoji": "😊",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 297
+  },
+  {
+   "key": "gs_relation_052",
+   "title": "İyi arkadaş nasıl olur, ailenle konuş",
+   "emoji": "🤗",
+   "category": "relation",
+   "categories": [
+    "relation"
+   ],
+   "ages": [
+    "K",
+    "A",
+    "B",
+    "C"
+   ],
+   "difficulty": "easy",
+   "coins": 5,
+   "skill": "kindness",
+   "sort": 298
+  }
+ ]
+}
