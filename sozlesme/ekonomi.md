@@ -97,7 +97,7 @@ Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sun
 
 48 eşya; sunucu (`game_items`) ve oyun verisi (`items.json`) 2026-10-19'da karşılaştırıldı: **fiyat ve seviye birebir aynı**.
 Oyuna 23 Ekim 2026'da 19 komik eşya eklendi (`fancy: true`); sunucuya ekleyen öneri `migrations/20261024110000_fancy_items_catalog.sql` (**uygulandı 24 Ekim 2026**, E9). Öneri uygulanınca katalog **67 eşya**.
-Uzay kıyafetleri (26 Ekim 2026, kullanıcı onayı; Gezegen Koşusu): 3 takım + 3 kask/başlık + 3 sırt parçası (`space: true`, Sv 3; takım 80, kask 40, sırt 45 coin) — öneri `proposed/20261026100000_space_items_catalog.sql` (**uygulanmadı**). Uygulanınca katalog **76 eşya**. Koşu başında çocuğun ücretsiz seçtiği takım yalnız o koşuda giyilir (oyun içi; satın alma ya da envanter değil).
+Uzay kıyafetleri (26 Ekim 2026, kullanıcı onayı; Gezegen Koşusu): 3 takım + 3 kask/başlık + 3 sırt parçası (`space: true`, Sv 3; takım 80, kask 40, sırt 45 coin) — `migrations/20261026100000_space_items_catalog.sql` (**uygulandı 26 Ekim 2026**). Katalog **76 eşya**. Koşu başında çocuğun ücretsiz seçtiği takım yalnız o koşuda giyilir (oyun içi; satın alma ya da envanter değil).
 Etkiler (gösterge artışı) yalnız oyun verisindedir.
 Bekçi testi: `supabase/test/test_items_catalog.sql` her eşyanın sunucuda oyundakiyle aynı fiyat ve seviyede olduğunu, sunucuda oyunda olmayan eşya kalmadığını denetler (oyun deposu yandayken: `../game-app`, ya da `GAME_ITEMS_JSON`); yeni eşya önce burada ve `game_items` önerisinde, sonra oyunda.
 

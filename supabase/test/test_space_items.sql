@@ -1,4 +1,4 @@
--- Uzay kıyafetleri sunucu kataloğunda (proposed/20261026100000_space_items_catalog.sql).
+-- Uzay kıyafetleri sunucu kataloğunda (migrations/20261026100000_space_items_catalog.sql).
 -- Beklenen değerler oyunun Resources/Data/items.json dosyasındaki "space": true eşyalardır (26 Ekim 2026).
 -- Oyun verisiyle canlı karşılaştırma ayrıca test_items_catalog.sql'de.
 \set ON_ERROR_STOP on

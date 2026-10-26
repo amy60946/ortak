@@ -1,5 +1,5 @@
 -- =====================================================================
--- Uzay kıyafetleri sunucu kataloğunda (öneri, 26 Ekim 2026; kullanıcı onayı: "kıyafetleri dükkânda da sat")
+-- Uzay kıyafetleri sunucu kataloğunda (UYGULANDI 26 Ekim 2026, kullanıcı Supabase SQL Editor; öneri 26 Ekim 2026; kullanıcı onayı: "kıyafetleri dükkânda da sat")
 --
 -- Gezegen Koşusu için yapılan üç uzay takımı (klasik astronot, roket pilotu, yıldız kaşifi) ve her birinin kask/başlık ve
 -- sırt parçası oyunun dükkânına eklendi (game-app Resources/Data/items.json, "space": true; 9 eşya, Sv 3).
