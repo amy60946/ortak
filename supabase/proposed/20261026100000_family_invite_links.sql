@@ -7,7 +7,8 @@
 --    Davet e-postası girilmişse aynı e-postayla kayıt olan ebeveyne davet kendiliğinden bağlanır.
 --    Uzmana bildirim: invite_claimed (aile kayıt oldu / kodu girdi), clinic_shared (mevcut: çocuk paylaşıldı), invite_expired (48 saat doldu).
 -- 2) Ebeveyn yeni uzmana paylaşırken önceki uzman(lar)ın kayıtlarını (not, hedef + puan, öneri, aile programı) aktarabilir;
---    yeni uzman salt okur; ebeveyn istediği an geri alır.
+--    yeni uzman salt okur; ebeveyn istediği an geri alır. Önceki uzmanın adı, unvanı, kliniği ve kimlikleri yeni uzmana
+--    gösterilmez ("Önceki uzman 1"); metinlerde geçen adları gizlenir. Onaylanan metin sürümü kaydedilir (hukuk_notlari.md).
 -- 3) Takip planı: çocuk hedefleri (clinic_goals genişler; "aileyle paylaşılan" hedefleri aile görür, haftalık puanlar yine yalnız klinikte)
 --    + aile programı modülleri (care_modules) + ebeveynin uygulama kaydı (care_module_logs). Plan davet sırasında taslak olarak kurulabilir;
 --    aile çocuğunu paylaşınca o çocuğa taşınır.
@@ -109,9 +110,11 @@ create table if not exists public.clinic_link_history (
   from_link_id  uuid not null references public.clinic_links (id) on delete cascade,   -- önceki paylaşım (başka uzman)
   granted_by    uuid references auth.users (id) on delete set null,
   granted_at    timestamptz not null default now(),
+  consent_version text check (char_length(consent_version) <= 40),                      -- ebeveynin onayladığı metin sürümü
   primary key (link_id, from_link_id),
   check (link_id <> from_link_id)
 );
+alter table public.clinic_link_history add column if not exists consent_version text check (char_length(consent_version) <= 40);
 create index if not exists clinic_link_history_from_idx on public.clinic_link_history (from_link_id);
 alter table public.clinic_link_history enable row level security;
 revoke all on public.clinic_link_history from anon, authenticated;
@@ -348,10 +351,12 @@ begin
 end $$;
 
 -- Çocuk paylaşımı: kod ya da bağlantı anahtarı; davet taslağındaki takip planı paylaşılan çocuk(lar)a taşınır.
--- p_share_history: önceki uzman kayıtlarını bu uzmana aç (bölüm 2).
+-- p_share_history: önceki uzman kayıtlarını bu uzmana aç (bölüm 2); p_consent_version: ebeveynin onayladığı metnin sürümü.
 drop function if exists public.redeem_clinic_invite_children(text, uuid[]);
 drop function if exists public.redeem_clinic_invite_children(text, uuid[], boolean);
-create or replace function public.redeem_clinic_invite_children(p_code text, p_child_ids uuid[], p_share_history boolean default false)
+drop function if exists public.redeem_clinic_invite_children(text, uuid[], boolean, text);
+create or replace function public.redeem_clinic_invite_children(p_code text, p_child_ids uuid[], p_share_history boolean default false,
+                                                               p_consent_version text default null)
 returns json language plpgsql security definer set search_path = '' as $$
 declare
   fid uuid := public.my_family_id();
@@ -396,7 +401,7 @@ begin
     insert into public.care_modules (link_id, clinic_id, title, aim, practice, checklist, position, status, template_key, created_by)
     select lid, clinic_id, title, aim, practice, checklist, position, status, template_key, created_by
       from public.care_modules where invite_code = inv.code;
-    if p_share_history then perform public.clinic_link_history_set(lid, true); end if;
+    if p_share_history then perform public.clinic_link_history_set(lid, true, p_consent_version); end if;
   end loop;
   delete from public.clinic_goals where invite_code = inv.code;
   delete from public.care_modules where invite_code = inv.code;
@@ -410,8 +415,8 @@ begin
   end if;
   return json_build_object('link_ids', ids, 'clinic_id', inv.clinic_id);
 end $$;
-revoke execute on function public.redeem_clinic_invite_children(text, uuid[], boolean) from public, anon;
-grant execute on function public.redeem_clinic_invite_children(text, uuid[], boolean) to authenticated;
+revoke execute on function public.redeem_clinic_invite_children(text, uuid[], boolean, text) from public, anon;
+grant execute on function public.redeem_clinic_invite_children(text, uuid[], boolean, text) to authenticated;
 
 create or replace function public.redeem_clinic_invite(p_code text, p_child_id uuid)
 returns json language plpgsql security definer set search_path = '' as $$
@@ -577,25 +582,28 @@ revoke execute on function public.clinic_invite_stats(integer) from public, anon
 grant execute on function public.clinic_invite_stats(integer) to authenticated;
 
 -- =====================================================================
--- 2. Uzman değişiminde geçmiş aktarımı (ebeveyn rızasıyla, geri alınabilir)
+-- 2. Uzman değişiminde geçmiş aktarımı (ebeveyn rızasıyla, geri alınabilir, önceki uzman adsız)
 -- =====================================================================
+-- Yeni uzman önceki kayıtlara tablolardan doğrudan erişmez; yalnız `clinic_inherited_records` ile okur. Bu işlev önceki
+-- uzmanın/kliniğin adını, unvanını ve kimliklerini döndürmez ("Önceki uzman 1", dönem ay olarak) ve metinlerde geçen
+-- klinik adını ile o kliniğin uzman adlarını "[önceki uzman]" ile değiştirir (en iyi çaba; uzman sözleşmesi nota kimlik
+-- bilgisi yazılmamasını ister, sozlesme/hukuk_notlari.md).
 drop policy if exists "geçmiş: aile okur" on public.clinic_link_history;
 create policy "geçmiş: aile okur" on public.clinic_link_history for select to authenticated
   using (exists (select 1 from public.clinic_links l where l.id = link_id and l.family_id = public.my_family_id()));
-drop policy if exists "geçmiş: klinik okur" on public.clinic_link_history;
-create policy "geçmiş: klinik okur" on public.clinic_link_history for select to authenticated
-  using (public.clinic_link_mine(link_id));
+drop policy if exists "geçmiş: klinik okur" on public.clinic_link_history;   -- uzman bu tabloyu okumaz
 
--- Önceki paylaşımın kayıtları oturumdaki uzmana devredilmiş mi?
-create or replace function public.clinic_link_inherited(p_from_link uuid)
-returns boolean language sql stable security definer set search_path = '' as $$
-  select exists (select 1 from public.clinic_link_history h where h.from_link_id = p_from_link and public.clinic_link_mine(h.link_id))
-$$;
-revoke execute on function public.clinic_link_inherited(uuid) from public, anon;
-grant execute on function public.clinic_link_inherited(uuid) to authenticated;
+-- Önceki sürümün doğrudan okuma kuralları (devralınan kayıtlar artık yalnız işlevle)
+drop policy if exists "not: devralınan" on public.clinic_notes;
+drop policy if exists "öneri: devralınan" on public.clinic_task_suggestions;
+drop policy if exists "hedef: devralınan" on public.clinic_goals;
+drop policy if exists "hedef puanı: devralınan" on public.goal_ratings;
+drop policy if exists "modül: devralınan" on public.care_modules;
+drop function if exists public.clinic_link_history_of(uuid);
 
 -- Ebeveyn: bu paylaşıma, aynı çocuğun önceki (başka klinikteki) paylaşımlarının kayıtlarını aç/kapat
-create or replace function public.clinic_link_history_set(p_link_id uuid, p_on boolean)
+drop function if exists public.clinic_link_history_set(uuid, boolean);
+create or replace function public.clinic_link_history_set(p_link_id uuid, p_on boolean, p_consent_version text default null)
 returns integer language plpgsql security definer set search_path = '' as $$
 declare
   l public.clinic_links%rowtype;
@@ -605,8 +613,8 @@ begin
   if not found or l.family_id is distinct from public.my_family_id() then raise exception 'Paylaşım bulunamadı'; end if;
   if p_on then
     if l.status <> 'active' then raise exception 'Paylaşım sona erdi'; end if;
-    insert into public.clinic_link_history (link_id, from_link_id, granted_by)
-    select l.id, o.id, auth.uid() from public.clinic_links o
+    insert into public.clinic_link_history (link_id, from_link_id, granted_by, consent_version)
+    select l.id, o.id, auth.uid(), left(nullif(btrim(p_consent_version), ''), 40) from public.clinic_links o
      where o.child_id = l.child_id and o.clinic_id <> l.clinic_id and o.consent_at <= l.consent_at
     on conflict do nothing;
   else
@@ -615,30 +623,87 @@ begin
   get diagnostics n = row_count;
   return n;
 end $$;
-revoke execute on function public.clinic_link_history_set(uuid, boolean) from public, anon;
-grant execute on function public.clinic_link_history_set(uuid, boolean) to authenticated;
+revoke execute on function public.clinic_link_history_set(uuid, boolean, text) from public, anon;
+grant execute on function public.clinic_link_history_set(uuid, boolean, text) to authenticated;
 
--- Uzman: devraldığı önceki paylaşımlar (kim, hangi klinik, hangi dönem)
-drop function if exists public.clinic_link_history_of(uuid);
-create function public.clinic_link_history_of(p_link_id uuid)
-returns table (from_link_id uuid, clinic text, clinician text, title text, consent_at timestamptz, revoked_at timestamptz)
-language sql stable security definer set search_path = '' as $$
-  select o.id, c.name, coalesce(m.name, ''), coalesce(m.title, ''), o.consent_at, o.revoked_at
-    from public.clinic_link_history h
-    join public.clinic_links o on o.id = h.from_link_id
-    join public.clinics c on c.id = o.clinic_id
-    left join public.clinicians m on m.id = o.clinician_id
-   where h.link_id = p_link_id and public.clinic_link_mine(p_link_id)
-   order by o.consent_at
-$$;
-revoke execute on function public.clinic_link_history_of(uuid) from public, anon;
-grant execute on function public.clinic_link_history_of(uuid) to authenticated;
+-- Metinde geçen adları gizle: her ad tam kelime olarak, büyük/küçük harf duyarsız. İç işlev.
+create or replace function public.clinic_redact(p_text text, p_names text[])
+returns text language plpgsql immutable set search_path = '' as $$
+declare
+  r text := coalesce(p_text, '');
+  n text;
+  w constant text := '[^[:alnum:]çğıöşüÇĞİÖŞÜâîûÂÎÛ]';
+begin
+  foreach n in array coalesce(p_names, '{}'::text[]) loop
+    n := btrim(n);
+    continue when char_length(n) < 3;
+    r := regexp_replace(r, '(^|' || w || ')(' || regexp_replace(n, '([^[:alnum:][:space:]])', '\\\1', 'g') || ')(?=$|' || w || ')',
+                        '\1[önceki uzman]', 'gi');
+  end loop;
+  return r;
+end $$;
+revoke execute on function public.clinic_redact(text, text[]) from public, anon, authenticated;
 
--- Devralınan kayıtlar salt okunur
-drop policy if exists "not: devralınan" on public.clinic_notes;
-create policy "not: devralınan" on public.clinic_notes for select to authenticated using (public.clinic_link_inherited(link_id));
-drop policy if exists "öneri: devralınan" on public.clinic_task_suggestions;
-create policy "öneri: devralınan" on public.clinic_task_suggestions for select to authenticated using (public.clinic_link_inherited(link_id));
+-- Uzman: devraldığı kayıtlar, önceki paylaşım başına bir öğe. Kimlik yok: n, "Önceki uzman n", dönem (ay), kayıtlar.
+create or replace function public.clinic_inherited_records(p_link_id uuid)
+returns jsonb language plpgsql stable security definer set search_path = '' as $$
+declare
+  res jsonb := '[]'::jsonb;
+  o public.clinic_links%rowtype;
+  nm text[];
+  k integer := 0;
+begin
+  if not public.clinic_link_mine(p_link_id) then return res; end if;
+  for o in select ol.* from public.clinic_link_history h join public.clinic_links ol on ol.id = h.from_link_id
+            where h.link_id = p_link_id order by ol.consent_at loop
+    k := k + 1;
+    -- gizlenecek adlar: klinik adı, o kliniğin uzmanlarının tam adı ve en az 3 harfli ad parçaları
+    select coalesce(array_agg(distinct x), '{}') into nm from (
+      select c.name as x from public.clinics c where c.id = o.clinic_id
+      union all select m.name from public.clinicians m where m.clinic_id = o.clinic_id or m.id = o.clinician_id
+      union all select t from public.clinicians m, regexp_split_to_table(m.name, '\s+') t
+       where (m.clinic_id = o.clinic_id or m.id = o.clinician_id) and t ~ '^[[:alpha:]çğıöşüÇĞİÖŞÜâîûÂÎÛ]{3,}$'
+    ) s where char_length(btrim(x)) >= 3;
+    res := res || jsonb_build_array(jsonb_build_object(
+      'n', k,
+      'label', 'Önceki uzman ' || k,
+      'from', to_char(o.consent_at, 'YYYY-MM'),
+      'to', case when o.revoked_at is null then null else to_char(o.revoked_at, 'YYYY-MM') end,
+      'notes', coalesce((select jsonb_agg(jsonb_build_object('body', public.clinic_redact(x.body, nm), 'created_at', x.created_at)
+                                          order by x.created_at desc)
+                           from public.clinic_notes x where x.link_id = o.id), '[]'::jsonb),
+      'suggestions', coalesce((select jsonb_agg(jsonb_build_object(
+                                 'title', public.clinic_redact(x.title, nm), 'emoji', x.emoji, 'skill', x.skill, 'category', x.category,
+                                 'description', public.clinic_redact(x.description, nm), 'note', public.clinic_redact(x.note, nm),
+                                 'recurring', x.recurring, 'status', x.status, 'created_at', x.created_at, 'decided_at', x.decided_at)
+                                 order by x.created_at desc)
+                           from public.clinic_task_suggestions x where x.link_id = o.id), '[]'::jsonb),
+      'goals', coalesce((select jsonb_agg(jsonb_build_object(
+                           'title', public.clinic_redact(g.title, nm), 'description', public.clinic_redact(g.description, nm),
+                           'domain', g.domain, 'measure', g.measure, 'baseline', public.clinic_redact(g.baseline, nm),
+                           'target', public.clinic_redact(g.target, nm), 'weeks', g.weeks,
+                           'home_support', public.clinic_redact(g.home_support, nm), 'status', g.status, 'archived', g.archived,
+                           'created_at', g.created_at,
+                           'ratings', coalesce((select jsonb_agg(jsonb_build_object('week', r.week, 'rating', r.rating) order by r.week)
+                                                  from public.goal_ratings r where r.goal_id = g.id), '[]'::jsonb))
+                           order by g.position, g.created_at)
+                     from public.clinic_goals g where g.link_id = o.id), '[]'::jsonb),
+      'modules', coalesce((select jsonb_agg(jsonb_build_object(
+                             'title', public.clinic_redact(m.title, nm), 'aim', public.clinic_redact(m.aim, nm),
+                             'practice', public.clinic_redact(m.practice, nm),
+                             'checklist', coalesce((select jsonb_agg(public.clinic_redact(c, nm)) from jsonb_array_elements_text(m.checklist) c), '[]'::jsonb),
+                             'status', m.status, 'created_at', m.created_at,
+                             'logs', coalesce((select jsonb_agg(jsonb_build_object('day', x.day, 'practiced', x.practiced,
+                                                 'difficulty', x.difficulty, 'barrier', x.barrier) order by x.day desc)
+                                                from public.care_module_logs x where x.module_id = m.id), '[]'::jsonb))
+                             order by m.position, m.created_at)
+                       from public.care_modules m where m.link_id = o.id), '[]'::jsonb)
+    ));
+  end loop;
+  return res;
+end $$;
+revoke execute on function public.clinic_inherited_records(uuid) from public, anon;
+grant execute on function public.clinic_inherited_records(uuid) to authenticated;
 
 -- Ebeveyn ParentApp'teki uzman ekranında aktarımın açık olup olmadığını görür; family_clinic_links bunu döndürür
 drop function if exists public.family_clinic_links();
@@ -681,7 +746,7 @@ $$;
 revoke execute on function public.family_link_active(uuid) from public, anon;
 grant execute on function public.family_link_active(uuid) to authenticated;
 
--- hedefler: klinik (paylaşım ya da davet taslağı), aile (paylaşılanlar), devralan uzman (okur)
+-- hedefler: klinik (paylaşım ya da davet taslağı), aile (paylaşılanlar); devralan uzman yalnız clinic_inherited_records ile
 drop policy if exists "hedef: klinik" on public.clinic_goals;
 create policy "hedef: klinik" on public.clinic_goals for all to authenticated
   using (clinic_id = public.my_clinic_id() and public.clinician_access()
@@ -692,13 +757,6 @@ create policy "hedef: klinik" on public.clinic_goals for all to authenticated
 drop policy if exists "hedef: aile okur" on public.clinic_goals;
 create policy "hedef: aile okur" on public.clinic_goals for select to authenticated
   using (shared and link_id is not null and public.family_link_active(link_id));
-drop policy if exists "hedef: devralınan" on public.clinic_goals;
-create policy "hedef: devralınan" on public.clinic_goals for select to authenticated
-  using (link_id is not null and public.clinic_link_inherited(link_id));
-drop policy if exists "hedef puanı: devralınan" on public.goal_ratings;
-create policy "hedef puanı: devralınan" on public.goal_ratings for select to authenticated
-  using (exists (select 1 from public.clinic_goals g where g.id = goal_ratings.goal_id and g.link_id is not null
-                 and public.clinic_link_inherited(g.link_id)));
 
 drop policy if exists "modül: klinik" on public.care_modules;
 create policy "modül: klinik" on public.care_modules for all to authenticated
@@ -710,9 +768,6 @@ create policy "modül: klinik" on public.care_modules for all to authenticated
 drop policy if exists "modül: aile okur" on public.care_modules;
 create policy "modül: aile okur" on public.care_modules for select to authenticated
   using (link_id is not null and status <> 'planned' and public.family_link_active(link_id));
-drop policy if exists "modül: devralınan" on public.care_modules;
-create policy "modül: devralınan" on public.care_modules for select to authenticated
-  using (link_id is not null and public.clinic_link_inherited(link_id));
 
 drop policy if exists "uygulama: aile" on public.care_module_logs;
 create policy "uygulama: aile" on public.care_module_logs for all to authenticated
@@ -723,8 +778,7 @@ create policy "uygulama: aile" on public.care_module_logs for all to authenticat
 drop policy if exists "uygulama: klinik okur" on public.care_module_logs;
 create policy "uygulama: klinik okur" on public.care_module_logs for select to authenticated
   using (exists (select 1 from public.care_modules m where m.id = module_id and m.link_id is not null
-                 and ((m.clinic_id = public.my_clinic_id() and public.clinician_access() and public.clinic_link_visible(m.link_id))
-                      or public.clinic_link_inherited(m.link_id))));
+                 and m.clinic_id = public.my_clinic_id() and public.clinician_access() and public.clinic_link_visible(m.link_id)));
 
 -- Sunucu doldurur: oluşturan, güncelleme zamanı; taşıma alanları istemciden değişmez
 create or replace function public.care_rows_guard() returns trigger
@@ -809,5 +863,8 @@ returns json language sql stable security definer set search_path = '' as $$
 $$;
 revoke execute on function public.family_care_plan(uuid) from public, anon;
 grant execute on function public.family_care_plan(uuid) to authenticated;
+
+-- Önceki sürümün yardımcı işlevi (kurallar artık kullanmıyor)
+drop function if exists public.clinic_link_inherited(uuid);
 
 -- Hesap/klinik silinirken davet taslakları da gider (invite_code FK cascade); `delete_account` değişmedi.

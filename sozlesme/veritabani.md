@@ -337,9 +337,9 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `clinic_goals` (genişledi) | Hedef: GAS + takip planı | `link_id` artık boş olabilir; `invite_code` (davet taslağı), `domain`, `measure`, `baseline`, `target`, `weeks`, `home_support`, `shared`, `status`, `position`, `template_key`, `updated_at` | K (paylaşım ya da kendi davet taslağı); **P yalnız `shared` ve etkin paylaşım**; devralan K okur | K |
 | `care_modules` | Aile programı modülü | `link_id` ya da `invite_code`, `title`, `aim`, `practice`, `checklist` (jsonb ≤ 8), `position`, `status`, `template_key`, `created_by` | K; P (etkin paylaşım; `planned` görünmez); devralan K | K |
 | `care_module_logs` | Ebeveynin uygulama kaydı | `module_id`, `family_id` (sunucu), `day`, `practiced`, `difficulty` (1–5), `barrier`, `note` (≤ 300); kişi+gün tekil | P (kendi ailesi); K (görünür paylaşım ya da devralınan) | P (yalnız `active` modüle) |
-| `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at` | P (kendi), K (`clinic_link_mine`) | yalnız RPC |
+| `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
 
-`goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman okur.
+`goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman yalnız `clinic_inherited_records` ile okur (önceki uzman adsız).
 
 ### 11.2 Fonksiyonlar
 | Fonksiyon | Kim | Ne |
@@ -353,9 +353,9 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{clinic, clinician, title, label, has_plan}` |
 | `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün) |
 | `clinic_invite_preview(token|kod)` | P | Kod ya da anahtar; bağlanmış davet 30 gün |
-| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı) |
-| `clinic_link_history_set(link, açık)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat |
-| `clinic_link_history_of(link)` | K | Devralınan paylaşımlar (klinik, uzman, dönem) |
+| `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş=false, rıza_sürümü=null)` | P | Paylaşım + taslak planın taşınması (+ isteğe bağlı geçmiş aktarımı) |
+| `clinic_link_history_set(link, açık, rıza_sürümü=null)` | P | Önceki uzman kayıtlarını bu uzmana aç/kapat; onaylanan metin sürümü kaydedilir |
+| `clinic_inherited_records(link)` | K | Devralınan kayıtlar, önceki paylaşım başına: `{n, label: "Önceki uzman n", from, to (ay), notes, suggestions, goals (+ratings), modules (+logs)}`; ad, unvan, klinik ve kimlik yok; metinlerde adlar "[önceki uzman]" |
 | `family_clinic_links()` | P | + `history_shared`, `history_available` |
 | `care_plan_publish(link)` | K | Ebeveynlere tek `care_plan_shared` bildirimi |
 | `family_care_plan(link)` | P | Paylaşılan hedefler + etkin/tamamlanan modüller + bu hafta uygulanan gün sayısı |
