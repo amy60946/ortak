@@ -50,6 +50,12 @@ Son güncelleme: 2026-10-24 (3.1a hoş geldin coini, P11 ilk ödül talebi)
 
 Not: Oyunun deneme kodları (`A1A1A1`, `B2B2B2`, `C3C3C3`) sahte arka uca gider; bu akışı kullanmaz.
 
+**İlk görev önerisi (karar 26 Ekim 2026, kullanıcı; ParentApp'te yapılacak):** ebeveyn "Giriş kodu üret"e bastığında çocuğun hiç
+görevi yoksa kod üretilmeden önce **yumuşak** bir adım çıkar: "Çocuğunuz adada ilk olarak panoya bakacak. Şimdi ilk görevi
+ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, tek dokunuşla ekle) + "Sonra ekleyeceğim" (kod yine
+üretilir). Kesin engel konmaz (kayıtta vazgeçmeyi önlemek için). Oyunda pano hiçbir zaman boş başlamaz: rehberin hoş geldin görevi
+(`ekonomi.md` §5A) ilk ziyarette panonun en üstündedir. Sunucu değişikliği yok (`create_invite_code` aynı).
+
 ### 2.1 Bağlantıyı kaldırma
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|

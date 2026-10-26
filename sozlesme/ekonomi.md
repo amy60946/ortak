@@ -193,9 +193,12 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
-- **Hediye taş (tek istisna, yalnız ada; karar 24 Ekim 2026, GameApp GB19):** ilk oyunda postacı Mavi çocuğa **1 Güneş Taşı**
-  hediye eder (hoş geldin coin'i gibi bir kez; rehberin "gift" adımı, aksiyon çıktısı olarak sayaca uçar + bilgi kartı:
-  "Bu ilk taş hediye · taşı kulübe yerine götür, sis dağılsın · yeni taşları evdeki gerçek görevleri yapınca kazanırsın").
+- **Hediye taş (tek istisna, yalnız ada; karar 24 Ekim 2026, GameApp GB19; kaynağı 26 Ekim 2026'da değişti):** ilk oyunda çocuk
+  **1 Güneş Taşı**'nı panodaki **hoş geldin görevi**yle kazanır (kullanıcı, 26 Ekim 2026: "taşın nereden, nasıl kazanıldığı
+  örnekle aktarılsın"). Mavi "panoya sana bir hoş geldin görevi bıraktım" der; Ev Görevleri'nin en üstünde Mavi mühürlü kart
+  ("Pofi Adası'na hoş geldin: oynamaya başla!", ödül 1 taş) → "Yaptım" → taş kazanma gösterisi + bilgi kartı ("hoş geldin
+  görevini yaptın · taşı kulübe yerine götür, sis dağılsın · yeni taşları evdeki gerçek görevleri yapınca kazanırsın"). Bu kart
+  **yalnız oyunda** çizilir (sunucuda görev satırı yok, ParentApp'te görünmez, ebeveyn onayı beklenmez); bir kez.
   Taş **yalnız oyun kaydında** tutulur (`SunStoneState.Gift`); **sunucuya yazılmaz**, `child_me().sun_stones`'a ve harcanabilir
   bakiyeye girmez, **gerçek ödüle harcanamaz**. Yalnız ilk onarım noktası olan **kulübe yerindeki sisi** (`spot_hut_fog`) açar;
   "yerleştirilebilir" = kazanılan + hediye − yerleştirilen. Kulübesini yapmış/başka sisi açmış eski oyuncuda hediye taş kulübe
