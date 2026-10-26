@@ -283,17 +283,18 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 
 | Alan | Değerler | Anlam |
 |---|---|---|
-| davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti · aile reddetti |
+| davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu (ya da kayıt olup 30 günde paylaşmadı) · uzman iptal etti · aile reddetti |
 | bayrak `clinician_verification` | `false` (ilk sürüm) / `true` | belge incelemesi görünür mü (ClinicApp satırı + sayfası, ParentApp rozeti/etiketi, sunucu başvurusu ve `verified_as`) |
 | `clinician_verifications.status` | `pending`, `auto_rejected`, `approved`, `rejected`, `withdrawn`, `suspended` | incelemede · ön kontrol geri çevirdi · belgesi incelendi · reddedildi · yerine yenisi geldi · askıya alındı |
 | `clinician_verifications.profession` / `clinicians.verified_profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `diger` | Türkçe ad `clinician_profession_label()`; eşleme `veri/uzman_meslekleri.json` |
 | onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |
 | `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik) |
-| `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). ParentApp `age_band`'e çevirirken K, A → `A`; B, C → `B` (§4) |
+| `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). Davetle oluşan çocukta `age_band`: doğum günü varsa boş (otomatik), yoksa bu grup aynen (§4; 26 Ekim denetiminde K→A, C→B çevirisi kaldırıldı) |
+| davet ret nedeni (`reason`) | `not_found`, `expired`, `used`, `accepted`, `declined`, `revoked`, `too_many_attempts` (hint) | bulunamadı · süresi doldu (48 saat / bağlandıktan 30 gün) · başka ailede kullanıldı · bu daveti zaten kabul ettin · bu daveti kapattın · uzman iptal etti · çok fazla hatalı deneme (`20261026300000`) |
 | `invite-info` durumu | `open`, `used`, `expired`, `revoked`, `not_found` | açılış sayfası |
 | `clinic_goals.measure` | `yesno`, `percent`, `frequency`, `duration`, `level` | evet-hayır (gün) · yüzde · sıklık · süre (dk) · düzey (yalnız GAS) |
 | `clinic_goals.status` | `active`, `achieved`, `paused` | sürüyor · ulaşıldı · ara verildi |
-| `clinic_goals.shared` | `true` / `false` | aile görür / yalnız klinik (eski hedefler `false`) |
+| `clinic_goals.shared` | `true` / `false` | aile görür / yalnız klinik (eski hedefler `false`); aile, uzman "Planı aileye gönder" deyince görür (`pub`, `20261026300000`) |
 | `care_modules.status` | `planned`, `active`, `done` | planlandı (aile görmez) · etkin · tamamlandı |
 | `care_module_logs.barrier` | `no_time`, `forgot`, `child_resisted`, `unsure` | vakit yoktu · unuttum · çocuk direndi · nasıl yapacağımı bilemedim |
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |

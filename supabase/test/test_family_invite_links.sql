@@ -108,9 +108,15 @@ set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'c3', public.clinic_create_invite('family', 'Ali', '', 'yeni@ornek.com') ->> 'code';
 reset role;
-insert into auth.users (id, is_anonymous, email, raw_user_meta_data) values
-  ('00000000-0000-0000-0000-0000000000b2', false, 'YENI@ornek.com', '{"nickname":"Veli"}');
-select tst.check((select claimed_at is not null from public.clinic_invites where code = tst.v('c3')), 'e-postası eşleşen kayıtta davet bağlanır');
+-- 20261026300000: e-postayla eşleşme yalnız e-posta GERÇEKTEN doğrulanınca (kayıtla aynı anda kendiliğinden onay eşleşmez)
+insert into auth.users (id, is_anonymous, email, raw_user_meta_data, created_at) values
+  ('00000000-0000-0000-0000-0000000000b2', false, 'YENI@ornek.com', '{"nickname":"Veli"}', now() - interval '10 minutes');
+select tst.check((select claimed_at is null from public.clinic_invites where code = tst.v('c3')), 'doğrulanmamış e-postayla davet bağlanmaz');
+update auth.users set email_confirmed_at = created_at + interval '2 seconds' where id = '00000000-0000-0000-0000-0000000000b2';
+select tst.check((select claimed_at is null from public.clinic_invites where code = tst.v('c3')), 'kayıtla aynı anda kendiliğinden onay eşleşmez');
+update auth.users set email_confirmed_at = null where id = '00000000-0000-0000-0000-0000000000b2';
+update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000b2';
+select tst.check((select claimed_at is not null from public.clinic_invites where code = tst.v('c3')), 'e-postası doğrulanınca davet bağlanır');
 -- bozuk anahtar kaydı engellemez
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000b3', false, '{"nickname":"X","clinic_invite":"YOKKOD"}');
@@ -138,15 +144,19 @@ select tst.check(public.redeem_clinic_invite_children(tst.v('t1'), array['000000
 insert into tst.kv select 'L1', link_id::text from public.family_clinic_links() limit 1;
 select tst.check((select count(*) from public.family_pending_invites()) = 0, 'bekleyen davet kalmaz');
 -- aile: paylaşılan hedef + modül görünür, gizli hedef görünmez
-select tst.check(tst.cnt('public.clinic_goals') = 1 and tst.cnt('public.care_modules') = 1, 'aile paylaşılan hedefi ve modülü görür');
-select tst.check(json_array_length(public.family_care_plan(tst.v('L1')::uuid) -> 'goals') = 1, 'aile plan özeti');
+-- 20261026300000: aile tablolara bakmaz, yalnız gönderilen sürümü işlevle okur; davet taslağı paylaşımla gönderilir
+select tst.check(tst.cnt('public.clinic_goals') = 0 and tst.cnt('public.care_modules') = 0, 'aile plan tablolarını doğrudan okumaz');
+select tst.check(json_array_length(public.family_care_plan(tst.v('L1')::uuid) -> 'goals') = 1
+                 and json_array_length(public.family_care_plan(tst.v('L1')::uuid) -> 'modules') = 1, 'aile paylaşılan hedefi ve modülü görür');
+insert into tst.kv select 'M1', (public.family_care_plan(tst.v('L1')::uuid) -> 'modules') -> 0 ->> 'id';
 select tst.check(not exists (select 1 from public.notifications where user_id = auth.uid() and kind = 'care_plan_shared'), 'paylaşan ebeveyn kendine bildirim almaz');
 -- uygulama kaydı
-insert into public.care_module_logs (module_id, difficulty, note) select id, 2, 'iyi gitti' from public.care_modules;
-insert into public.care_module_logs (module_id, day, practiced, barrier) select id, current_date - 1, false, 'forgot' from public.care_modules;
+insert into public.care_module_logs (module_id, difficulty, note) values (tst.v('M1')::uuid, 2, 'iyi gitti');
+insert into public.care_module_logs (module_id, day, practiced, barrier) values (tst.v('M1')::uuid, current_date - 1, false, 'forgot');
+select tst.fails($$insert into public.care_module_logs (module_id, day) values (tst.v('M1')::uuid, current_date + 5)$$, 'ileri tarihli kayıt yok');
 select tst.check((select bool_and(family_id = public.my_family_id()) from public.care_module_logs), 'aile kimliği sunucudan');
 select tst.check(((public.family_care_plan(tst.v('L1')::uuid) -> 'modules') -> 0 ->> 'practiced_week')::int = 1, 'haftalık uygulama sayısı');
-select tst.fails($$insert into public.care_module_logs (module_id) select id from public.care_modules$$, 'aynı gün ikinci kayıt yok');
+select tst.fails($$insert into public.care_module_logs (module_id) values (tst.v('M1')::uuid)$$, 'aynı gün ikinci kayıt yok');
 update public.clinic_goals set title = 'x';
 reset role;
 select tst.check((select title from public.clinic_goals where link_id = tst.v('L1')::uuid and shared) = 'Sabah rutinini hatırlatmasız bitirir', 'hedef değişmedi');
@@ -228,13 +238,16 @@ select tst.check(position('Dr. Ece' in tst.v('R')) = 0 and position('Mavi' in ts
 -- metinde geçen ad gizlenir; başka kelimelere dokunulmaz
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 reset role;
-insert into public.clinic_notes (link_id, clinic_id, author_id, body)
-  select tst.v('L1')::uuid, clinic_id, id, 'Ece Hanım görüştü (Mavi Klinik değil, Mavi). Becerisi arttı; ece' from public.clinicians where id = '00000000-0000-0000-0000-0000000000d1';
+-- (önceki dönemin son anında yazılmış not: dönem bittikten sonraki kayıtlar aktarılmaz)
+insert into public.clinic_notes (link_id, clinic_id, author_id, body, created_at)
+  select tst.v('L1')::uuid, clinic_id, id, 'Ece Hanım görüştü (Mavi Klinik değil, Mavi). Becerisi arttı; ece; ece@ornek.com 0532 123 45 67',
+         (select revoked_at from public.clinic_links where id = tst.v('L1')::uuid)
+    from public.clinicians where id = '00000000-0000-0000-0000-0000000000d1';
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d3');
 select tst.check(public.clinic_inherited_records(tst.v('L2')::uuid) -> 0 -> 'notes' -> 0 ->> 'body'
-                 = '[önceki uzman] Hanım görüştü ([önceki uzman] Klinik değil, [önceki uzman]). Becerisi arttı; [önceki uzman]',
-                 'metindeki uzman ve klinik adı gizlenir, "Becerisi" bozulmaz');
+                 = '[önceki uzman] Hanım görüştü ([önceki uzman] Klinik değil, [önceki uzman]). Becerisi arttı; [önceki uzman]; [iletişim] [iletişim]',
+                 'metindeki uzman ve klinik adı, e-posta ve telefon gizlenir, "Becerisi" bozulmaz');
 select tst.fails($$select public.clinic_redact('x', array['x'])$$, 'gizleme işlevi istemciye kapalı');
 update public.clinic_notes set body = 'değişti';
 delete from public.clinic_notes;
@@ -256,6 +269,8 @@ select tst.check(jsonb_array_length(public.clinic_inherited_records(tst.v('L2'):
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'c6', public.clinic_create_invite('family', '') ->> 'code';
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
+-- 20261026300000: yalnız BİTEN paylaşımlar "önceki uzman"dır; çocuğun hâlâ gördüğü uzman (L2) aktarılmaz
+select public.revoke_clinic_link(tst.v('L2')::uuid);
 select public.redeem_clinic_invite_children(tst.v('c6'), array['00000000-0000-0000-0000-00000000c009'::uuid], true, 'uzman-gecis-v1');
 select tst.check((select count(*) from public.family_clinic_links() where history_shared) = 1, 'paylaşırken geçmiş birlikte açılır');
 
@@ -282,19 +297,20 @@ select tst.fails($$select public.family_accept_invite(tst.v('t8'), null, array['
 insert into tst.kv select 'A8', public.family_accept_invite(tst.v('t8'), '{"name":"Elanur","age_group":"C","birthday":"2014-05-01","gender":"kız"}',
                                                           null, false, 'uzman-paylasim-v1')::text;
 select tst.check(json_array_length(tst.v('A8')::json -> 'link_ids') = 1, 'düzeltilen çocuk oluşur ve paylaşılır');
-select tst.check((select name = 'Elanur' and age_band = 'B' and birthday = '2014-05-01' from public.children
-                   where id = ((tst.v('A8')::json -> 'child_ids') ->> 0)::uuid), 'ebeveynin düzelttiği bilgi kaydedilir (C → B bandı)');
+select tst.check((select name = 'Elanur' and age_band is null and birthday = '2014-05-01' from public.children
+                   where id = ((tst.v('A8')::json -> 'child_ids') ->> 0)::uuid), 'ebeveynin düzelttiği bilgi kaydedilir (doğum günü var: yaş grubu otomatik)');
 select tst.check((select consent_version from public.clinic_links where id = ((tst.v('A8')::json -> 'link_ids') ->> 0)::uuid) = 'uzman-paylasim-v1',
                  'paylaşım onayı metin sürümü kaydedilir');
 select tst.check(public.family_accept_invite(tst.v('c10'), '{"name":"Can","age_group":"A"}') -> 'link_ids' is not null, 'öneri aynen onaylanır');
-select tst.check(public.family_accept_invite(tst.v('c10'), '{"name":"Can 2"}') ->> 'reason' = 'used'
+select tst.check((select age_band from public.children where name = 'Can') = 'A', 'doğum günü yoksa önerilen yaş grubu (K/A/B/C) aynen');
+select tst.check(public.family_accept_invite(tst.v('c10'), '{"name":"Can 2"}') ->> 'reason' = 'accepted'
                  and not exists (select 1 from public.children where name = 'Can 2'), 'kullanılan davet yeniden onaylanamaz, çocuk oluşmaz');
 -- yanlış aile reddeder
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.fails($$select public.family_decline_invite(tst.v('c9'))$$, 'başka aile reddedemez');
 select tst.as_user('00000000-0000-0000-0000-0000000000b4');
 select public.family_decline_invite(tst.v('c9'));
-select tst.check(public.claim_clinic_invite(tst.v('c9')) ->> 'reason' = 'expired', 'reddedilen davet kapanır');
+select tst.check(public.claim_clinic_invite(tst.v('c9')) ->> 'reason' = 'declined', 'reddedilen davet kapanır (neden: kapattın)');
 select tst.check((select count(*) from public.family_pending_invites()) = 0, 'bekleyen davet kalmaz');
 -- uzman tarafı
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
