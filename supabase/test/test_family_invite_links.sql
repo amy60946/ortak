@@ -55,7 +55,7 @@ insert into tst.kv select 'i1', (public.clinic_create_invite('family', 'Nazlı',
 insert into tst.kv values ('c1', (tst.v('i1')::json) ->> 'code'), ('t1', (tst.v('i1')::json) ->> 'token');
 select tst.check(tst.v('t1') ~ '^[0-9a-f]{32}$', 'bağlantı anahtarı 32 karakter');
 select tst.check(char_length(tst.v('c1')) = 6, 'yazılabilir kod 6 karakter');
-select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('c1')) between interval '47 hours 59 minutes' and interval '48 hours 1 minute', 'aile daveti 48 saat');
+select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('c1')) between interval '71 hours 59 minutes' and interval '72 hours 1 minute', 'aile daveti 3 gün (20261027000000)');
 select tst.check((select parent_email from public.clinic_invites where code = tst.v('c1')) = 'ayse@ornek.com', 'e-posta küçük harfe');
 select tst.fails($$select public.clinic_create_invite('family', '', '', 'bozuk')$$, 'geçersiz e-posta reddedilir');
 select tst.check((select child_name = 'Deniz' and child_age_group = 'A' from public.clinic_invites where code = tst.v('c1')), 'çocuk önerisi: ad + yaş grubu');
@@ -122,7 +122,7 @@ insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000b3', false, '{"nickname":"X","clinic_invite":"YOKKOD"}');
 select tst.check(exists (select 1 from public.profiles where id = '00000000-0000-0000-0000-0000000000b3'), 'geçersiz davetle kayıt yine açılır');
 
--- ---------------------------------------------------------------- 3. 48 saat sonra: bağlı aile kullanır, başkası kullanamaz
+-- ---------------------------------------------------------------- 3. süre dolduktan sonra: bağlı aile kullanır, başkası kullanamaz
 update public.clinic_invites set expires_at = now() - interval '1 hour' where code in (tst.v('c1'), tst.v('c3'));
 insert into public.children (id, family_id, name, avatar)
   values ('00000000-0000-0000-0000-00000000c009', (select family_id from public.profiles where id = '00000000-0000-0000-0000-0000000000b1'), 'Deniz', 'kedi');
@@ -134,7 +134,7 @@ select tst.check(public.clinic_invite_preview(tst.v('c7')) ->> 'clinician' = 'Dr
                  and public.clinic_invite_preview(tst.v('c7')) ->> 'child_name' is null, 'bağlamamış aile kodla çocuk adını göremez');
 select tst.check(tst.cnt('public.clinic_invites') = 0, 'aile davet tablosunu okumaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
-select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'clinician' = 'Dr. Ece', 'bağlayan aile 48 saatten sonra da önizler');
+select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'clinician' = 'Dr. Ece', 'bağlayan aile süre dolduktan sonra da önizler');
 select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'child_name' = 'Deniz', 'bağlayan aile çocuk önerisini görür');
 select tst.check(public.claim_clinic_invite(tst.v('t1')) ->> 'child_name' = 'Deniz'
                  and public.claim_clinic_invite(tst.v('t1')) ->> 'label' is null, 'uzmanın kendi notu aileye dönmez');

@@ -121,7 +121,7 @@ select set_config('request.headers', '', false);
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'fam', public.clinic_create_invite('family', 'Nazlı') ->> 'code';
 insert into tst.kv select 'team', public.clinic_create_invite('clinician', '') ->> 'code';
-select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('fam')) between interval '47 hours 59 minutes' and interval '48 hours 1 minute', 'uzman aile daveti 48 saat (20261026100000)');
+select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('fam')) between interval '71 hours 59 minutes' and interval '72 hours 1 minute', 'uzman aile daveti 3 gün (20261027000000)');
 select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('team')) <= interval '15 minutes', 'ekip kodu 15 dakika');
 select tst.fails($$select public.redeem_child_code('ABCDEF')$$, 'uzman hesabı çocuk kodu kullanamaz (L7)');
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
