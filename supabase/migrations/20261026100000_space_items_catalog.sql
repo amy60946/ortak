@@ -10,6 +10,11 @@
 --
 -- Uygulama: Supabase → SQL Editor → bu dosyanın tamamı → Run. Tekrar çalıştırılabilir (on conflict … do update).
 -- Test: supabase/test/test_space_items.sql, test_items_catalog.sql (bash supabase/test/run.sh).
+--
+-- Sıra notu (26 Ekim 2026 denetimi): 20261026100000_family_invite_links ile aynı zaman damgası. Canlıda bu dosya sabah,
+-- family_invite_links öğleden sonra uygulandı; klasör (ad) sırasında ise sonra gelir. İkisi birbirinden bağımsızdır (bu dosya
+-- yalnız game_items satırı yazar, öteki game_items'a dokunmaz): hangi sırayla çalışsa sonuç aynı. Ad değiştirilmedi
+-- (günlük ve sözleşme bu adla anıyor).
 -- =====================================================================
 
 insert into public.game_items (item_id, price, min_level) values

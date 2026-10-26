@@ -67,7 +67,7 @@ Ek kurallar:
 |---|---|---|---|---|
 | `invite_codes.kind` | `parent` | İkinci ebeveyn daveti (`join_family`) | 24 saat, tek kullanım | SQL (uygulandı) |
 | `invite_codes.kind` | `child` | Çocuğun oyuna giriş kodu (`redeem_child_code`); `child_id` zorunlu | 24 saat, tek kullanım; aynı çocuğa yeni kod eskisini geçersiz kılar | SQL (uygulandı) |
-| `clinic_invites.kind` | `family` | Uzmanın aile daveti: 6 karakter kod + 32 karakter bağlantı anahtarı (`token`, `https://<alan adı>/d/<token>`) | 15 dk (uygulandı) → **48 saat**; aileye bağlanınca 30 gün (`20261026100000`) | uygulandı |
+| `clinic_invites.kind` | `family` | Uzmanın aile daveti: 6 karakter kod + 32 karakter bağlantı anahtarı (`token`, `https://<alan adı>/d/<token>`) | 15 dk → 48 saat (`20261026100000`) → **3 gün** (`20261027000000`, öneri); aileye bağlanınca 30 gün | 3 gün: öneri |
 | `clinic_invites.kind` | `clinician` | Klinik ekibine katılım kodu (yalnız `owner` üretir; kayıtta `team_code`) | 7 gün, tek kullanım | uygulandı |
 
 Kod biçimi:
@@ -172,7 +172,7 @@ Kod biçimi:
 | `completions.decline_reason` | `hard` / `no_time` / `did_not_want` / `other` / null | "Yapamam" nedeni. |
 | `goal_ratings.rating` | −2, −1, 0, +1, +2 | GAS haftalık puanı. |
 | `abc_events.intensity` | 1 … 5 (varsayılan 3) | Gözlem notundaki olayın şiddeti. |
-| Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title` | Uzman kaydı (aile oluşturulmaz). |
+| Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title`, `practice` (`solo` / `clinic`) | Uzman kaydı (aile oluşturulmaz). `practice` sunucuda kullanılmaz (ikisi de klinik açar); ClinicApp bireyselde ekip bölümünü gizler. |
 
 ### 7.1 Klinikle ilgili tutarsızlıklar
 | # | Konu | Ayrıntı |
@@ -288,9 +288,11 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `clinician_verifications.status` | `pending`, `auto_rejected`, `approved`, `rejected`, `withdrawn`, `suspended` | incelemede · ön kontrol geri çevirdi · belgesi incelendi · reddedildi · yerine yenisi geldi · askıya alındı |
 | `clinician_verifications.profession` / `clinicians.verified_profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `diger` | Türkçe ad `clinician_profession_label()`; eşleme `veri/uzman_meslekleri.json` |
 | onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |
-| `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik) |
+| `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik); sistem e-postası da `email` yazar (ayrımı `email_status`) |
+| `clinic_invites.email_status` | `sending`, `sent`, `failed` / boş | sistem e-postası: gönderiliyor · gönderildi · gönderilemedi · hiç gönderilmedi (`20261027000000`, öneri) |
+| `invite-email` yanıtı (`reason`) | `not_configured`, `not_found`, `no_email`, `closed`, `expired`, `no_access`, `limit_invite`, `too_soon`, `limit_day`, `send_failed` (+ `detail`, ör. `EAUTH`) | e-posta ayarı yok · davet yok/yetki yok · davette e-posta yok · aile bağladı/iptal/ret/kullanıldı · süresi doldu · üyelik etkin değil · davet başına 3 · 60 sn dolmadı · günde 30 davet · gönderilemedi (SMTP kullanıcı/uygulama şifresi hatalıysa `EAUTH`) |
 | `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). Davetle oluşan çocukta `age_band`: doğum günü varsa boş (otomatik), yoksa bu grup aynen (§4; 26 Ekim denetiminde K→A, C→B çevirisi kaldırıldı) |
-| davet ret nedeni (`reason`) | `not_found`, `expired`, `used`, `accepted`, `declined`, `revoked`, `too_many_attempts` (hint) | bulunamadı · süresi doldu (48 saat / bağlandıktan 30 gün) · başka ailede kullanıldı · bu daveti zaten kabul ettin · bu daveti kapattın · uzman iptal etti · çok fazla hatalı deneme (`20261026300000`) |
+| davet ret nedeni (`reason`) | `not_found`, `expired`, `used`, `accepted`, `declined`, `revoked`, `too_many_attempts` (hint) | bulunamadı · süresi doldu (3 gün / bağlandıktan 30 gün) · başka ailede kullanıldı · bu daveti zaten kabul ettin · bu daveti kapattın · uzman iptal etti · çok fazla hatalı deneme (`20261026300000`) |
 | `invite-info` durumu | `open`, `used`, `expired`, `revoked`, `not_found` | açılış sayfası |
 | `clinic_goals.measure` | `yesno`, `percent`, `frequency`, `duration`, `level` | evet-hayır (gün) · yüzde · sıklık · süre (dk) · düzey (yalnız GAS) |
 | `clinic_goals.status` | `active`, `achieved`, `paused` | sürüyor · ulaşıldı · ara verildi |

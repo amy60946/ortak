@@ -403,19 +403,20 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `clinicians` (genişledi) | Rozet | `verified_profession`, `verified_at` (uzman yazamaz; ad değişince düşer) | değişmedi | yönetici kararı |
 | `clinic_links` (genişledi) | Paylaşım | `consent_version` (ebeveynin onayladığı paylaşım metni, ör. `uzman-paylasim-v1`), `plan_published_at`; `label` sütunu artık hep boş (not `clinic_link_labels`'ta) | değişmedi | `family_accept_invite` yazar |
 | `clinic_link_history` | Geçmiş aktarımı rızası | `link_id` (yeni), `from_link_id` (önceki), `granted_by`, `granted_at`, `consent_version` (onaylanan metin sürümü) | P (kendi) | yalnız RPC |
-| `clinic_link_labels` (`20261026300000`, öneri) | Uzmanın paylaşım notu (etiket) | `link_id`, `clinic_id`, `label` (≤ 60) | K (görünür paylaşım); **aile okumaz** | `clinic_links.label` yazımı tetikleyiciyle buraya taşınır |
-| `storage_trash` (`20261026300000`, öneri) | Silinecek kova dosyaları | `bucket`, `path` | yalnız service_role (`storage_trash_take/done`) | tetikleyici (`clinician_verifications`) |
+| `clinic_link_labels` (`20261026300000`, uygulandı 26 Ekim 2026) | Uzmanın paylaşım notu (etiket) | `link_id`, `clinic_id`, `label` (≤ 60) | K (görünür paylaşım); **aile okumaz** | `clinic_links.label` yazımı tetikleyiciyle buraya taşınır |
+| `storage_trash` (`20261026300000`, uygulandı 26 Ekim 2026) | Silinecek kova dosyaları | `bucket`, `path` | yalnız service_role (`storage_trash_take/done`) | tetikleyici (`clinician_verifications`) |
 
 `goal_ratings` (GAS puanı) aileye **kapalı** kalır; devralan uzman yalnız `clinic_inherited_records` ile okur (önceki uzman adsız).
 
 ### 15.2 Fonksiyonlar
 | Fonksiyon | Kim | Ne |
 |---|---|---|
-| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: 48 saat, `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
+| `clinic_create_invite(kind, label, parent_name, parent_email, child_name, child_age_group)` | K | Aile: **3 gün** (72 saat, `20261027000000` öneri; önce 48 saat), `{code, token, expires_at}`; ekip: 15 dk (imza değişti; eski 2 ve 4 argümanlı çağrılar aynen çalışır). Çocuk önerisi yalnız aile davetinde; yaş grubu `K`/`A`/`B`/`C` |
 | `clinic_invite_mark(code, channel, revoke)` | K (davet sahibi / klinik sahibi) | Kanal kaydı ya da iptal (iptal taslak planı siler) |
 | `clinic_invites_list(gün)` / `clinic_invite_stats(gün)` | K | Davet listesi + durum / uzman başına gönderilen, açılan, bağlanan, paylaşılan, süresi dolan |
 | `clinic_invites_sweep()` | K | Kendi kliniğinin süresi dolan davetleri için `invite_expired` (zamanlayıcı yoksa) |
 | `clinic_invites_expire(clinic?)` | yalnız sunucu (pg_cron) | Aynısı, bütün klinikler |
+| `clinic_invite_email_take(code, uzman)` / `clinic_invite_email_done(code, ok)` | yalnız service_role (Edge Function `invite-email`) | Sistem e-postası (`20261027000000`, öneri): hak al (davet açık, e-postası var, üyelik etkin; davet başına 3, 60 sn'de bir, uzman başına günde 30 davet) → `{code, token, expires_at, to, clinician, title, clinic}` (çocuk önerisi ve not yok) ya da `{error}`; sonuç `sent`/`failed` (gönderilemeyen sayılmaz). `clinic_invites` + `email_count`, `email_sent_at`, `email_status`; `clinic_invites_list` bu üçünü de döndürür |
 | `clinic_invite_open(token)` | yalnız service_role (Edge Function `invite-info`) | Açılış sayfası bilgisi + `opened_at` |
 | `claim_clinic_invite(token|kod)` | P | Daveti aileye bağlar (çocuk paylaşılmaz); `{code, clinic_id, clinic, clinician, title, child_name, child_age_group, has_plan}` (uzmanın notu `label` dönmez) |
 | `family_pending_invites()` | P | Bağlı, henüz paylaşılmamış davetler (30 gün): `code, clinic, clinician, title, child_name, child_age_group, claimed_at, has_plan` |

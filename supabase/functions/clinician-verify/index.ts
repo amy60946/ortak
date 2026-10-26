@@ -8,7 +8,7 @@
 // başvuru bekler, yönetici inceler. Elle incelenen meslekler (hekim, diğer) ve BCBA'nın isteğe bağlı belgesi kendiliğinden reddedilmez.
 // Her başvuru bir kez kontrol edilir. Her çağrıda karar verilmiş / geri çekilmiş başvuruların dosyaları kovadan silinir (storage_trash).
 // Meslek tablosu veri/uzman_meslekleri.json ile aynı (Supabase panelinden tek dosya yapıştırılabilsin diye burada da tutulur).
-// Saf işlevlerin testi: analyze.test.ts. Düzeltmeler: proposed/20261026300000_review_fixes.sql (26 Ekim 2026 denetimi).
+// Saf işlevlerin testi: analyze.test.ts. Düzeltmeler: migrations/20261026300000_review_fixes.sql (26 Ekim 2026 denetimi).
 
 export type Degree = 'lisans' | 'yuksek_lisans';
 export type Profession = { programs: string[]; degree: Degree | null; manual?: boolean; bacb?: boolean };

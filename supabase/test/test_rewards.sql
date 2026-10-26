@@ -163,6 +163,14 @@ set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(tst.err($$insert into public.rewards (family_id, title, cost) values (public.my_family_id(), 'Yeni', 1)$$) like 'Bu özellik Premium%', 'ücretsiz planda ödül eklenmez');
 select tst.check(tst.err($$select public.deduct_sun_stones('00000000-0000-0000-0000-00000000c001', 1)$$) like 'Bu özellik Premium%', 'ücretsiz planda taş düşülmez');
+select tst.as_user('00000000-0000-0000-0000-0000000000a2');
+select tst.check(tst.err($$update public.rewards set title = 'Değişti' where id = '00000000-0000-0000-0000-0000000000b1'$$) like 'Bu özellik Premium%', 'ücretsiz planda ödül düzenlenmez');
+-- ödül ekleyen ebeveyn hesabını siler (aile ücretsiz planda, ailede başka ebeveyn var): engellenmemeli (20261026500000)
+reset role;
+select public.account_delete_of('00000000-0000-0000-0000-0000000000a1');
+select tst.check(not exists (select 1 from auth.users where id = '00000000-0000-0000-0000-0000000000a1'), 'ücretsiz planda ödül ekleyen ebeveyn hesabını silebilir');
+select tst.check((select created_by from public.rewards where id = '00000000-0000-0000-0000-0000000000b1') is null, 'ödül ailede kalır, ekleyen boşalır');
+set role authenticated;
 
 set role anon;
 select tst.fails($$select public.sun_stones_spendable('00000000-0000-0000-0000-00000000c001')$$, 'anon çağıramaz');
