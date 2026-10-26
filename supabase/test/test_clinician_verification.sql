@@ -41,6 +41,29 @@ insert into auth.users (id, is_anonymous, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, 'anne@example.com', '{"nickname":"Anne"}');
 insert into public.admin_users (user_id, role) values ('00000000-0000-0000-0000-0000000000f2', 'support');
 
+-- 0. bayrak kapalıyken (ilk sürüm): başvuru yok, rozet dönmez
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check(not (public.clinician_verification_me() ->> 'enabled')::boolean, 'bayrak ilk sürümde kapalı');
+select tst.fails($$select public.clinician_verification_start('psikolog')$$, 'kapalıyken başvuru yok');
+reset role;
+update public.clinicians set verified_profession = 'psikolog', verified_at = now() where id = '00000000-0000-0000-0000-0000000000d2';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d2');
+insert into tst.kv select 'i0', public.clinic_create_invite('family', '') ->> 'code';
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.check(public.clinic_invite_preview(tst.v('i0')) ->> 'verified_as' is null, 'kapalıyken aileye rozet dönmez');
+reset role;
+update public.clinicians set verified_profession = null, verified_at = null where id = '00000000-0000-0000-0000-0000000000d2';
+-- kişiye istisnayla denenebilir, sonra herkese açılır
+insert into public.user_flags (user_id, key, enabled, reason) values ('00000000-0000-0000-0000-0000000000d1', 'clinician_verification', true, 'deneme');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check((public.clinician_verification_me() ->> 'enabled')::boolean, 'kişiye istisna açar');
+reset role;
+delete from public.user_flags where key = 'clinician_verification';
+update public.feature_flags set enabled = true where key = 'clinician_verification';
+
 set role authenticated;
 -- ---------------------------------------------------------------- 1. başvuru + yükleme
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');

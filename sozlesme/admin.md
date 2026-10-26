@@ -51,6 +51,8 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_verification_decide(id, onay, ret_nedeni, açıklama, barkod, özet, gerekçe)` | support | Onay → rozet (`clinicians.verified_profession/verified_at`) + bildirim; ret → neden kodu + uzmana açıklama. Özet yalnız `{university, program, degree, graduation_year}`. Dönen belge yolunu panel kovadan **siler** |
 | `admin_verification_suspend(uzman, açıklama, gerekçe)` | support | Rozeti askıya alır (şikâyet, BCBA süresi) |
 
+Bayrak `clinician_verification` (öneri `20261026050000`, varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
+
 ## Uygulamaların okuması: `client_config(app)`
 
 Her uygulama açılışta (ve ön plana gelince) çağırır: `{"app": {"min_version", "maintenance", "banner"}, "flags": {"<key>": true|false}}`.
