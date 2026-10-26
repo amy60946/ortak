@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ParentApp daveti</title>
+<!--
+  Uzmanın aile davet bağlantısının açılış sayfası (ortak/sozlesme/akislar.md 10).
+  Adres: https://<alan adı>/d/<anahtar>  (ya da ?t=<anahtar>). Alan adının kökünde
+  /.well-known/apple-app-site-association (bu klasördeki örnek) yayınlanınca ParentApp yüklü telefonda bağlantı
+  doğrudan uygulamayı açar; yüklü değilse bu sayfa görünür.
+  Ayarlar: SUPABASE_URL (herkese açık), STORE_URL (ParentApp App Store / TestFlight bağlantısı), APP_SCHEME.
+-->
+<style>
+  :root { --navy: #0F1B3D; --bg: #F5F6F8; --muted: #5B6274; --gold: #E9B22B; --line: #E1E4EA; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--navy); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 32px 16px 40px; display: flex; flex-direction: column; gap: 18px; }
+  .brand { font-size: 13px; font-weight: 700; color: #6B7286; letter-spacing: .5px; }
+  h1 { margin: 0; font-size: 26px; line-height: 32px; }
+  .card { background: #fff; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .who { font-size: 16px; font-weight: 700; }
+  .muted { color: var(--muted); font-size: 14px; line-height: 20px; margin: 0; }
+  .step { display: flex; gap: 12px; align-items: flex-start; }
+  .num { flex: none; width: 28px; height: 28px; border-radius: 14px; background: var(--gold); font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 16px; font-weight: 700; font-size: 16px; text-decoration: none; }
+  .primary { background: var(--navy); color: #fff; }
+  .secondary { background: #fff; color: var(--navy); border: 1px solid var(--line); }
+  .code { font-size: 28px; font-weight: 800; letter-spacing: 6px; }
+  .note { font-size: 12px; color: var(--muted); line-height: 18px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">ParentApp</div>
+  <section id="loading"><p class="muted">Davet yükleniyor…</p></section>
+
+  <section id="open" hidden>
+    <h1>Uzmanın seni davet ediyor</h1>
+    <div class="card">
+      <div class="who" id="who"></div>
+      <p class="muted">Çocuğunun ev rutinini ve uzmanın hazırladığı takip planını ParentApp'te birlikte izleyeceksiniz. Hangi çocuğunu paylaşacağına sen karar verirsin; istediğin an durdurabilirsin.</p>
+    </div>
+    <div class="card">
+      <div class="step"><span class="num">1</span><p class="muted"><b>ParentApp'i yükle</b></p></div>
+      <a class="btn primary" id="store" href="#">App Store'dan yükle</a>
+      <div class="step"><span class="num">2</span><p class="muted"><b>Yükledikten sonra buraya dönüp daveti aç.</b> Kayıt olurken uzmanın kendiliğinden tanımlanır.</p></div>
+      <a class="btn secondary" id="openApp" href="#">Daveti uygulamada aç</a>
+    </div>
+    <div class="card">
+      <p class="muted">Uygulama kodu sorarsa:</p>
+      <div class="code" id="code"></div>
+      <p class="note" id="exp"></p>
+    </div>
+  </section>
+
+  <section id="closed" hidden>
+    <h1 id="closedTitle">Bu davet artık geçerli değil</h1>
+    <div class="card"><p class="muted" id="closedText">Uzmanından yeni bir davet bağlantısı iste. Davetler 48 saat geçerlidir.</p></div>
+    <a class="btn secondary" id="openApp2" href="#">ParentApp'i aç</a>
+  </section>
+</main>
+<script>
+  var SUPABASE_URL = 'https://uhelhxqgpcjemadhsifx.supabase.co';
+  var STORE_URL = '';            // ParentApp App Store bağlantısı (yayınlanınca); boşsa düğme gizlenir
+  var APP_SCHEME = 'parentapp';  // ParentApp app.json "scheme"
+
+  function $(id) { return document.getElementById(id); }
+  var m = location.pathname.match(/\/d\/([0-9a-fA-F]{32})/);
+  var token = (m ? m[1] : new URLSearchParams(location.search).get('t') || '').toLowerCase();
+  var deep = APP_SCHEME + '://davet/' + token;
+  $('openApp').href = deep;
+  $('openApp2').href = APP_SCHEME + '://';
+  if (STORE_URL) $('store').href = STORE_URL; else $('store').hidden = true;
+
+  function show(id) { ['loading', 'open', 'closed'].forEach(function (x) { $(x).hidden = x !== id; }); }
+  if (!/^[0-9a-f]{32}$/.test(token)) { show('closed'); }
+  else fetch(SUPABASE_URL + '/functions/v1/invite-info?t=' + token)
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d.status === 'open') {
+        $('who').textContent = [d.clinician, d.title].filter(Boolean).join(' · ') + (d.clinic ? ' — ' + d.clinic : '');
+        $('code').textContent = d.code || '';
+        if (d.expires_at) $('exp').textContent = 'Davet ' + new Date(d.expires_at).toLocaleString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) + ' tarihine kadar geçerli.';
+        show('open');
+      } else {
+        if (d.status === 'used') {
+          $('closedTitle').textContent = 'Bu davet kullanıldı';
+          $('closedText').textContent = 'Davet bir ailede kullanıldı. Sen kabul ettiysen ParentApp’i açman yeterli; değilse uzmanından yeni davet iste.';
+        }
+        show('closed');
+      }
+    })
+    .catch(function () { show('closed'); });
+</script>
+</body>
+</html>
