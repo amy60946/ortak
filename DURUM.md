@@ -4,6 +4,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] **BEKLEMEDE — GameApp QR TestFlight'ı (kullanıcı, 26 Ekim 2026: "ParentApp'te QR hazır olunca birlikte"):** oyun tarafı hazır (`akislar.md` §2.0). ParentApp penceresi "Giriş kodu üret" ekranına QR'ı ekleyince haber verir; GameApp penceresi o zaman TestFlight derlemesi gönderir.
 - [ ] **HATIRLATMA (kullanıcı, 26 Ekim 2026) — GameApp sesli okuma eksikleri:** yeni/değişen her okunacak metin için ses üretilir; liste `python3 -I art/voice/build_voice.py <klasör> --missing` (game-app). 26 Ekim'de 26 satır eksik (rehber/hikâye değişiklikleri, tanışma tanıtımı "Ben meraklı ve şakacı bir ahtapotum…", hoş geldin görevi). Ses ortamı olan oturumda `build_voice.py` çalıştırılır; sayı 0 olana dek bu madde açık kalır. Kural ayrıntısı game-app `CLAUDE.md`.
 - [ ] **BEKLEMEDE — Canlıya alma süreci (kullanıcı, 23 Ekim 2026: "devam edelim" deyince buradan sürer).** Liste `CANLIYA_ALMA.md`, plan belgesi https://claude.ai/artifact/7DAFNbjtvLMLTwKiG7DRv7
   - **Bitenler:** kararlar (Apple hesabı kişisel, e-posta Resend, Kids Kategorisi yok, Google Play sonra, ödeme RevenueCat — ParentApp + ClinicApp, klinik sahibi birey olarak öder, oyun kodla açılmaya devam eder); `clinic_billing` + `admin` göçleri uygulandı; yönetim paneli canlı (Cloudflare Workers), ilk owner + iki adımlı doğrulama.
