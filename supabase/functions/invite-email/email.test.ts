@@ -36,6 +36,12 @@ test('alan adı yokken bağlantı yok, kod adımları var; varken bağlantı', (
   assert.ok(b.html.includes('Daveti aç') && b.html.includes('https://ornek.com/kvkk'));
 });
 
+test('mağaza bağlantısı varken 1. adım App Store sayfasına bağlanır', () => {
+  const b = buildInviteEmail(inv, { ...env, storeUrl: 'https://apps.apple.com/tr/app/x' });
+  assert.ok(b.html.includes(`<a href="https://apps.apple.com/tr/app/x"`) && b.html.includes('uygulamasını yükleyin</a>'));
+  assert.ok(b.text.includes('uygulamasını yükleyin: https://apps.apple.com/tr/app/x'));
+});
+
 test('ad ve unvan HTML ve başlıkta zararsızlaştırılır', () => {
   const b = buildInviteEmail({ ...inv, clinician: 'Ece <b>"X"</b>\r\nBcc: kotu@ornek.com', title: '<script>' }, env);
   assert.ok(!b.html.includes('<b>') && !b.html.includes('<script>'));

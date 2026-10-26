@@ -75,7 +75,9 @@ export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
     <div style="font-size:12px;color:#8A91A3;margin-top:6px">${esc(until)} tarihine kadar geçerli</div>
   </td></tr></table>
   <table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 8px">
-    ${link ? step(1, `Aşağıdaki düğmeyle daveti açın.`) : step(1, `App Store'dan ${esc(brand)} uygulamasını yükleyin.`)}
+    ${link ? step(1, `Aşağıdaki düğmeyle daveti açın.`) : step(1, e.storeUrl
+      ? `<a href="${esc(e.storeUrl)}" style="color:${navy};font-weight:700">App Store'dan ${esc(brand)} uygulamasını yükleyin</a>.`
+      : `App Store'dan ${esc(brand)} uygulamasını yükleyin.`)}
     ${step(2, `Kayıt olun; açılan <strong>“Kodun var mı?”</strong> ekranına kodu yazın.`)}
     ${step(3, `Hesabınız varsa: <strong>Aile › Hesap › Kod gir</strong> bölümüne kodu yazın.`)}
   </table>
