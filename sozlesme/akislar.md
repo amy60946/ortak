@@ -253,17 +253,22 @@ Karar (kullanıcı isteği 26 Ekim): akışı uzman başlatır. Uzman isterse ö
 
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [K] | "Aileyi davet et": isteğe bağlı ebeveyn adı, e-posta, kendi notu (ör. çocuğun takma adı). | `clinic_create_invite('family', label, parent_name, parent_email)` → `{code (6), token (32), expires_at}`; **48 saat** |
+| 1 | [K] | "Aileyi davet et": isteğe bağlı ebeveyn adı, e-posta, **çocuğun adı ya da takma adı + yaş grubu** (K ≤5 · A 6–8 · B 9–12 · C 13+), kendi notu (aile görmez). | `clinic_create_invite('family', label, parent_name, parent_email, child_name, child_age_group)` → `{code (6), token (32), expires_at}`; **48 saat** |
 | 2 | [K] | İsterse davete taslak takip planı ekler (paket seç → hedef/modül düzenle). | `clinic_goals` / `care_modules` (`invite_code`) |
 | 3 | [K] | Paylaşır: WhatsApp (`wa.me/?text=`), e-posta (`mailto:`), sistem paylaşımı ya da kopyala. Mesajda bağlantı + yazılabilir kod. Kanal kaydedilir. | `clinic_invite_mark(code, channel)` |
 | 4 | Ebeveyn | Bağlantıya dokunur: `https://<alan adı>/d/<token>`. ParentApp yüklüyse doğrudan uygulama açılır (Universal Link); değilse açılış sayfası (`web/davet`): uzman adı + "App Store'dan yükle" + "Daveti uygulamada aç" (`parentapp://davet/<token>`) + kod. | Edge Function `invite-info` → `clinic_invite_open(token)` (açıldı işareti) |
 | 5 | [P] | Kayıt ekranında "Dr. X seni davet etti" bandı; kayıtta meta `clinic_invite = <token ya da kod>` gönderilir. | `handle_new_user` → davet aileye **bağlanır** (`claimed_family`); uzmana `invite_claimed` |
 | 5a | [S] | Bağlantı/kod yoksa: davette e-posta yazılıysa aynı e-postayla kayıt olan ebeveyne davet kendiliğinden bağlanır. | `handle_new_user` |
 | 5b | [P] | Hesabı olan ebeveyn bağlantıyı açar ya da kodu yazar. | `claim_clinic_invite(token|kod)` |
-| 6 | [P] | Bekleyen davet kartı: "Dr. X seni bekliyor — çocuğunu paylaş". Çocuk ekleyince çocuk seçme + onay (varsayılan seçili). | `family_pending_invites()`, `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş)` |
+| 6 | [P] | Bekleyen davet kartı: "Dr. X seni bekliyor". Davette çocuk önerisi varsa tek ekran **"Efe'yi ekle ve paylaş"**: ad ve yaş grubu dolu gelir, ebeveyn düzenler; ailede çocuk zaten varsa listeden seçer. Çocuğu ebeveyn ekler (kendiliğinden eklenmez), sonra onay. Öneri yoksa bugünkü gibi çocuk ekle → seç → onay. | `family_pending_invites()` (+ `child_name`, `child_age_group`), çocuk ekleme (ParentApp'in bugünkü yolu), `redeem_clinic_invite_children(token|kod, çocuklar, paylaş_geçmiş, rıza_sürümü)` |
+| 6a | [P] | Çocuk eklenince aynı ekranda "Çocuğunun tabletini bağla": QR + 15 dakikalık giriş kodu (öneri, ParentApp/GameApp penceresinin kararı). Oyun giriş kodu davete **konmaz**. | `create_child_login_code` (bugünkü) |
 | 7 | [S] | Paylaşım açılır; taslak plan çocuğa taşınır; uzmana `clinic_shared` (mevcut), diğer ebeveyne `care_plan_shared`. | `clinic_links`, `clinic_goals`/`care_modules` (`link_id`) |
 | 8 | [S] | 48 saatte kimse bağlamadıysa uzmana bir kez `invite_expired`. Zamanlayıcı (pg_cron, 15 dk) ya da ClinicApp açılışında. | `clinic_invites_expire()` / `clinic_invites_sweep()` |
 | 9 | [K] | Davetlerim: durum (gönderildi / açıldı / kayıt oldu / paylaşıldı / süresi doldu / iptal), yeniden paylaş, iptal. Sahip bütün ekibin istatistiğini görür. | `clinic_invites_list(gün)`, `clinic_invite_stats(gün)`, `clinic_invite_mark(code, null, true)` |
+
+Çocuk önerisi (kullanıcı kararı 26 Ekim 2026): yalnız ad/takma ad (≤ 40) + yaş grubu; doğum günü, cinsiyet, fotoğraf alınmaz. Açılış sayfası (`invite-info`), mesaj metni ve daveti bağlamamış aile göremez; yalnız daveti kendi ailesine bağlamış ebeveyn (`claim_clinic_invite`, `family_pending_invites`, `clinic_invite_preview`). Davet kullanılınca, iptal edilince, 48 saatte bağlanmayınca ya da bağlandıktan 30 gün sonra silinir. ParentApp'te yaş grubu → `age_band`: K, A → `A`; B, C → `B`. Uzmanın kendi notu (`label`) hiçbir aile yanıtında dönmez.
+
+Neden oyun kodu davette yok: çocuk hesabı davet anında yok (açmak için uzmanın çocuk hesabı açması gerekir, rıza kuralına aykırı); bağlantı ebeveynin telefonuna gelir, oyun çocuğun cihazında açılır; oyun kodu çocuk hesabının anahtarıdır (uzmanda ya da mesajın iletildiği kişide olursa çocuk gibi oyuna girip ebeveyn–çocuk mesajlarını görebilir); uzman hesapları doğrulanmıyor (kötü niyetli "uzman" riski); oyun kodu 15 dakika ve tek kullanımlık, davet 48 saat.
 
 Kurallar: Bağlanmış davet 30 gün içinde çocuk paylaşımına kullanılabilir (48 saat yalnız bağlanana kadar). Bir davet tek aileye bağlanır. Kod yolu deneme sınırına tabidir (`code_attempts`); 32 karakterlik anahtar tahmin edilemez. Uzman yalnız kendi davetlerini, sahip kliniğin bütün davetlerini görür. Ekip kodu değişmedi (15 dakika).
 

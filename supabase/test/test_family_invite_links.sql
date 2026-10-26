@@ -51,13 +51,17 @@ insert into auth.users (id, is_anonymous, raw_user_meta_data) values
 -- ---------------------------------------------------------------- 1. davet oluşturma
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
-insert into tst.kv select 'i1', (public.clinic_create_invite('family', 'Nazlı', 'Ayşe', 'Ayse@Ornek.com')) ::text;
+insert into tst.kv select 'i1', (public.clinic_create_invite('family', 'Nazlı', 'Ayşe', 'Ayse@Ornek.com', ' Deniz ', 'a')) ::text;
 insert into tst.kv values ('c1', (tst.v('i1')::json) ->> 'code'), ('t1', (tst.v('i1')::json) ->> 'token');
 select tst.check(tst.v('t1') ~ '^[0-9a-f]{32}$', 'bağlantı anahtarı 32 karakter');
 select tst.check(char_length(tst.v('c1')) = 6, 'yazılabilir kod 6 karakter');
 select tst.check((select expires_at - created_at from public.clinic_invites where code = tst.v('c1')) between interval '47 hours 59 minutes' and interval '48 hours 1 minute', 'aile daveti 48 saat');
 select tst.check((select parent_email from public.clinic_invites where code = tst.v('c1')) = 'ayse@ornek.com', 'e-posta küçük harfe');
 select tst.fails($$select public.clinic_create_invite('family', '', '', 'bozuk')$$, 'geçersiz e-posta reddedilir');
+select tst.check((select child_name = 'Deniz' and child_age_group = 'A' from public.clinic_invites where code = tst.v('c1')), 'çocuk önerisi: ad + yaş grubu');
+select tst.fails($$select public.clinic_create_invite('family', '', '', null, 'Efe', 'X')$$, 'geçersiz yaş grubu reddedilir');
+select tst.check((select child_name from public.clinic_invites_list(30) where code = tst.v('c1')) = 'Deniz', 'uzman listesinde çocuk önerisi');
+insert into tst.kv select 'c7', public.clinic_create_invite('family', '', '', null, 'Gizli', 'K') ->> 'code';
 select public.clinic_invite_mark(tst.v('c1'), 'whatsapp');
 select tst.check((select channel from public.clinic_invites where code = tst.v('c1')) = 'whatsapp', 'kanal kaydı');
 -- taslak plan (davete bağlı)
@@ -70,12 +74,13 @@ select tst.check((select created_by from public.care_modules limit 1) = auth.uid
 
 -- üye sahibin davetini görmez; sahip üyenin davetini görür
 select tst.as_user('00000000-0000-0000-0000-0000000000d2');
-insert into tst.kv select 'c2', public.clinic_create_invite('family', 'Efe') ->> 'code';
+insert into tst.kv select 'c2', public.clinic_create_invite('family', 'Efe', '', null, 'Efe', 'B') ->> 'code';
 select tst.check(tst.cnt('public.clinic_invites') = 1, 'üye yalnız kendi davetini görür');
+select tst.check((select count(*) from public.clinic_invites_list(30)) = 1, 'üye listesi yalnız kendi daveti');
 select tst.check(tst.cnt('public.clinic_goals') = 0 and tst.cnt('public.care_modules') = 0, 'üye sahibin taslak planını görmez');
 select tst.fails($$select public.clinic_invite_mark(tst.v('c1'), null, true)$$, 'üye sahibin davetini iptal edemez');
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
-select tst.check((select count(*) from public.clinic_invites_list(30)) = 2, 'sahip ekibin davetlerini listeler');
+select tst.check((select count(*) from public.clinic_invites_list(30)) = 3, 'sahip ekibin davetlerini listeler');
 select tst.check((select status from public.clinic_invites_list(30) where code = tst.v('c1')) = 'sent', 'durum: gönderildi');
 select tst.as_user('00000000-0000-0000-0000-0000000000d3');
 select tst.check(tst.cnt('public.clinic_invites') = 0 and (select count(*) from public.clinic_invites_list(30)) = 0, 'başka klinik görmez');
@@ -85,6 +90,7 @@ select tst.fails($$select public.clinic_invite_open(tst.v('t1'))$$, 'istemci ba�
 reset role;
 set role service_role;
 select tst.check(public.clinic_invite_open(tst.v('t1')) ->> 'clinician' = 'Dr. Ece', 'sayfa uzmanı gösterir');
+select tst.check(position('Deniz' in public.clinic_invite_open(tst.v('t1'))::text) = 0, 'açılış sayfasında çocuk adı yok');
 select tst.check(public.clinic_invite_open('0000') ->> 'status' = 'not_found', 'bilinmeyen anahtar');
 reset role;
 select tst.check((select opened_at is not null from public.clinic_invites where code = tst.v('c1')), 'açıldı işaretlenir');
@@ -118,8 +124,15 @@ set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(public.claim_clinic_invite(tst.v('t1')) ->> 'reason' = 'used', 'başka ailenin bağladığı davet kullanılamaz');
 select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'reason' = 'used', 'önizleme de reddeder');
+select tst.check(public.clinic_invite_preview(tst.v('c7')) ->> 'clinician' = 'Dr. Ece'
+                 and public.clinic_invite_preview(tst.v('c7')) ->> 'child_name' is null, 'bağlamamış aile kodla çocuk adını göremez');
+select tst.check(tst.cnt('public.clinic_invites') = 0, 'aile davet tablosunu okumaz');
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
 select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'clinician' = 'Dr. Ece', 'bağlayan aile 48 saatten sonra da önizler');
+select tst.check(public.clinic_invite_preview(tst.v('c1')) ->> 'child_name' = 'Deniz', 'bağlayan aile çocuk önerisini görür');
+select tst.check(public.claim_clinic_invite(tst.v('t1')) ->> 'child_name' = 'Deniz'
+                 and public.claim_clinic_invite(tst.v('t1')) ->> 'label' is null, 'uzmanın kendi notu aileye dönmez');
+select tst.check((select child_name = 'Deniz' and child_age_group = 'A' from public.family_pending_invites()), 'bekleyen davette çocuk önerisi');
 select tst.check((select count(*) from public.family_pending_invites()) = 1 and (select has_plan from public.family_pending_invites()), 'bekleyen davet + plan var');
 select tst.check(public.redeem_clinic_invite_children(tst.v('t1'), array['00000000-0000-0000-0000-00000000c009'::uuid]) -> 'link_ids' is not null, 'bağlantı anahtarıyla çocuk paylaşılır');
 insert into tst.kv select 'L1', link_id::text from public.family_clinic_links() limit 1;
@@ -138,6 +151,7 @@ update public.clinic_goals set title = 'x';
 reset role;
 select tst.check((select title from public.clinic_goals where link_id = tst.v('L1')::uuid and shared) = 'Sabah rutinini hatırlatmasız bitirir', 'hedef değişmedi');
 select tst.check(not exists (select 1 from public.clinic_goals where invite_code = tst.v('c1')), 'taslak silindi');
+select tst.check((select child_name is null and child_age_group is null from public.clinic_invites where code = tst.v('c1')), 'paylaşınca çocuk önerisi silinir');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(tst.cnt('public.care_module_logs') = 2, 'uzman ebeveynin uygulama kaydını görür');
@@ -159,10 +173,19 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d2');
 select tst.check(public.clinic_invites_sweep() = 1, 'süresi dolan davet bildirilir');
 select tst.check(public.clinic_invites_sweep() = 0, 'bir kez bildirilir');
 select tst.check(exists (select 1 from public.notifications where user_id = auth.uid() and kind = 'invite_expired'), 'uzmana: kullanılmadı');
+reset role;
+select tst.check((select child_name is null from public.clinic_invites where code = tst.v('c2')), 'süresi dolunca çocuk önerisi silinir');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d2');
 select tst.fails($$select public.clinic_invites_expire()$$, 'zamanlayıcı işlevi istemciye kapalı');
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into tst.kv select 'c4', public.clinic_create_invite('family', 'İptal') ->> 'code';
 insert into public.care_modules (invite_code, clinic_id, title) values (tst.v('c4'), public.my_clinic_id(), 'Taslak');
+select public.clinic_invite_mark(tst.v('c7'), null, true);
+reset role;
+select tst.check((select child_name is null from public.clinic_invites where code = tst.v('c7')), 'iptalde çocuk önerisi silinir');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select public.clinic_invite_mark(tst.v('c4'), null, true);
 select tst.check((select status from public.clinic_invites_list(30) where code = tst.v('c4')) = 'revoked', 'iptal');
 reset role;

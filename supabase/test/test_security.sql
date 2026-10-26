@@ -42,7 +42,7 @@ select tst.check(not exists (
    where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
      and not exists (select 1 from pg_depend d where d.objid = p.oid and d.deptype = 'e')), 'anon hiçbir public fonksiyonu çalıştıramaz');
 select tst.check(has_function_privilege('authenticated', 'public.join_family(text)', 'execute'), 'giriş yapan join_family çağırabilir');
-select tst.check(has_function_privilege('authenticated', 'public.clinic_create_invite(text, text, text, text)', 'execute'), 'giriş yapan uzman davet üretebilir');
+select tst.check(has_function_privilege('authenticated', 'public.clinic_create_invite(text, text, text, text, text, text)', 'execute'), 'giriş yapan uzman davet üretebilir');
 select tst.check(has_function_privilege('authenticated', 'public.register_push_token(text, text, text)', 'execute'), 'push kaydı çalışır');
 select tst.check(not has_function_privilege('authenticated', 'public.notify(uuid, text, text, text, text, jsonb, uuid, uuid)', 'execute'), 'iç fonksiyon kapalı kalır');
 select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee in ('anon', 'authenticated') and table_schema = 'public' and privilege_type = 'TRUNCATE'), 'TRUNCATE yetkisi yok');

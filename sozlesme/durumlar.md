@@ -271,6 +271,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 |---|---|---|
 | davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu · uzman iptal etti |
 | `clinic_invites.channel` | `whatsapp`, `email`, `sms`, `copy`, `other` | uzmanın paylaşım yolu (istatistik) |
+| `clinic_invites.child_age_group` | `K`, `A`, `B`, `C` | 5 ve altı · 6–8 · 9–12 · 13 ve üstü (şablon yaş grupları). ParentApp `age_band`'e çevirirken K, A → `A`; B, C → `B` (§4) |
 | `invite-info` durumu | `open`, `used`, `expired`, `revoked`, `not_found` | açılış sayfası |
 | `clinic_goals.measure` | `yesno`, `percent`, `frequency`, `duration`, `level` | evet-hayır (gün) · yüzde · sıklık · süre (dk) · düzey (yalnız GAS) |
 | `clinic_goals.status` | `active`, `achieved`, `paused` | sürüyor · ulaşıldı · ara verildi |
