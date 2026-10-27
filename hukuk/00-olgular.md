@@ -9,7 +9,7 @@
 | Veri sorumlusu | `[ŞİRKET UNVANI]` (şahıs şirketi kurulacak), `[ADRES]`, `[MERSİS/VKN]`. İletişim: `kvkk@[ALAN ADI]`, `destek@[ALAN ADI]`. Alan adı henüz alınmadı. |
 | **Pofi Adası (GameApp)** | Çocuk oyunu, iOS. Hedef yaş 6–12 (yaş grupları K ≤5, A 6–8, B 9–12, C 13+). Ücretsiz; **uygulama içi satın alma yok, reklam yok, üçüncü taraf analiz/izleme aracı yok**. Çocuğun e-postası/şifresi yok: ebeveynin oluşturduğu çocuk profiline, ebeveynin gösterdiği 15 dakikalık tek kullanımlık kod ya da QR ile cihazdan bağlanılır (cihazda anonim oturum). Kamera yalnız QR okumak için, görüntü saklanmaz. Mağaza kategorisi: normal oyun (Kids kategorisi değil). |
 | **ParentApp** | Ebeveyn uygulaması, iOS. E-posta + şifre ile kayıt. Aile aboneliği (aylık/yıllık, App Store üzerinden; RevenueCat ile doğrulama), 7 gün deneme, ücretsiz planda sınırlı özellik. İkinci ebeveyn davet edilebilir. |
-| **ClinicApp** | Uzman (psikolog, klinik psikolog, PDR, ergoterapist, dil-konuşma terapisti, özel eğitim, çocuk gelişimi, BCBA, çocuk psikiyatristi, diğer) uygulaması; iPad + web. Klinik/uzman aboneliği (klinik sahibi birey olarak öder; App Store/RevenueCat; panelden elle üyelik), 7 gün deneme (yönetim panelinden uzatılabilir). Ekip (klinik sahibi + üyeler). |
+| **ClinicApp** | Uzman (psikolog, klinik psikolog, PDR, ergoterapist, dil-konuşma terapisti, özel eğitim, çocuk gelişimi, BCBA, çocuk psikiyatristi, diğer) uygulaması; iPad + web. Klinik/uzman aboneliği (klinik sahibi birey olarak öder; iPad'de App Store — satıcı Apple, doğrulama App Store Server API ile doğrudan, RevenueCat yok; **web'de iyzico ödeme formu — satıcı Platform, canlıda kapalı**; panelden elle üyelik), 7 gün deneme (yönetim panelinden uzatılabilir). Ekip (klinik sahibi + üyeler). |
 | Yönetim paneli | Yalnız işletme ekibi (rol: sahip, finans, destek, izleyici). İki adımlı doğrulama zorunlu; her değişiklik gerekçeli ve silinemez denetim kaydında. Mesaj içeriği, fotoğraf, ses, uzman not metni panelde yok. |
 
 Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-aile arasında aracılık/yönlendirme yapmaz; uzmanın aileyle çalışması için bir araçtır. Hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir. Acil durum hizmeti değildir (acil: 112).
@@ -39,7 +39,7 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Tanışma sağlık soruları | **Açık rıza** `saglik-yanit-v1` (isteğe bağlı) | `intake_answers.consent_version` |
 | Uzman davet e-postası | Uzmanın beyanı (ebeveynin bilgisiyle) | davet başına en çok 3 e-posta (ilk + yeniden gönderimler), davet 3 gün geçerli |
 | Uzman belge incelemesi | Uzmanın talebi (isteğe bağlı) | `clinician_verifications`; dosya karar sonrası silinir |
-| Abonelik | Sözleşmenin ifası (Apple satıcıdır) | App Store + RevenueCat bildirimi |
+| Abonelik | Sözleşmenin ifası (App Store'da satıcı Apple; ClinicApp web'de satıcı Platform) | ParentApp: App Store + RevenueCat; ClinicApp: App Store Server API (`clinic-billing`) ve web'de iyzico |
 | Hesap silme | Kullanıcı talebi | Uygulama içi `delete_account()`; aile/klinik verisi birlikte silinir; tek ebeveyn kalmışsa aile silinir |
 | Yetkili ekip erişimi | Meşru menfaat / sözleşmenin ifası | iki adımlı, gerekçeli, silinemez denetim kaydı; tanışma yanıtları gerekçeyle açılır, sağlık yanıtları varsayılan gizli |
 | Kullanım ölçümü | Meşru menfaat | içerik yok, üçüncü taraf yok |
@@ -57,7 +57,8 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | hepsi | `[SUPABASE BÖLGESİ]` (yurt dışı olabilir) |
 | Apple | App Store (satış ve abonelik — satıcı Apple'dır), bildirim (APNs) | abonelik işlemleri, bildirim jetonu, bildirim başlığı ve metni | ABD/AB |
 | Expo (yedek bildirim yolu) | Cihaz Expo bildirim anahtarı verirse bildirim Expo Push API üzerinden Apple'a iletilir | bildirim jetonu, bildirim başlığı ve metni | ABD |
-| RevenueCat | Abonelik durum doğrulaması | uygulama kullanıcı kimliği (rastgele kimlik), satın alma kayıtları | ABD |
+| RevenueCat | ParentApp abonelik durum doğrulaması (ClinicApp kullanmaz) | uygulama kullanıcı kimliği (rastgele kimlik), satın alma kayıtları | ABD |
+| iyzico (web ödemesi, canlıda kapalı) | ClinicApp web'de üyelik ödemesi (ödeme formu, yenileme, iptal) | klinik sahibinin adı, soyadı, e-postası, T.C. kimlik no, cep telefonu, fatura adresi (şehir, adres), kart bilgisi (kart bilgisi yalnız iyzico'da; T.C. no ve adres bizde saklanmaz, yalnız iletilir) | Türkiye |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | e-posta adresi, e-posta içeriği | ABD/AB |
 | Cloudflare | Yönetim paneli barındırma | ekip oturumu (kullanıcı verisi panelde tarayıcıya gelir) | küresel |
 | (test dönemi) Google Gmail SMTP | Test e-postaları | e-posta | ABD |
