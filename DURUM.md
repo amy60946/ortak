@@ -4,6 +4,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 ## Açık işler
 
+- [ ] **HATIRLATMA — ParentApp (kullanıcı, 27 Ekim 2026):** (1) açılıştaki "Başla / Hesabım var" ekranı marka renkleri ve görselleriyle sonra tasarlanacak; (2) uygulamaya girmeden hemen önce ekranın altında açılan **tek seferlik tanıtım teklifi** (tam ekran değil) sonra eklenecek; (3) İnceleme'de Onayla / Reddet / Tekrar dene ve ebeveyn notunun oyuna ulaştığı (GameApp'te görünüp görünmediği) uçtan uca kontrol edilecek.
 - [ ] **E-POSTAYLA AİLE DAVETİ (kullanıcı kararı 26 Ekim 2026: "hazırla, 3 gün yap, kodu kopyala yedeği kalsın, ana hedef e-posta; testler için kişisel e-postamdan gitsin").** Göç `migrations/20261027000000_invite_email.sql` (**uygulandı 26 Ekim 2026**; + `test_invite_email.sql`), Edge Function `supabase/functions/invite-email` (+ `email.test.ts`), karar `sozlesme/akislar.md` 10 (güncelleme), hukuk taslağı `hukuk_notlari.md` A13.
   1. [x] **Kullanıcı (26 Ekim 2026):** SQL uygulandı (davet 3 gün; e-posta alanları ve işlevleri).
   2. [x] **Kullanıcı (26 Ekim 2026; test gönderimi, kendi Gmail hesabından):** Google hesabında 2 adımlı doğrulama açık → https://myaccount.google.com/apppasswords → "ParentApp test" adında uygulama şifresi (16 harf; sohbete yazılmaz) → Supabase → Edge Functions → Secrets: `SMTP_USER` = Gmail adresi, `SMTP_PASS` = uygulama şifresi (boşluksuz).
