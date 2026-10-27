@@ -1,4 +1,4 @@
--- İnceleme ayrıntısı (proposed/20261027130000_review_detail.sql): motivasyon, taş ayarı, not, tekrar dene.
+-- İnceleme ayrıntısı (migrations/20261027130000_review_detail.sql): motivasyon, taş ayarı, not, tekrar dene.
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

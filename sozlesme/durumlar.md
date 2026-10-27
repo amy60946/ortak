@@ -17,7 +17,7 @@ Son güncelleme: 2026-10-19
 
 ## 1. Görev tamamlama durumu (`completions.status`)
 
-SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`; öneri `20261027130000_review_detail` ile + `'retry'`.
+SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`; `20261027130000_review_detail`, uygulandı ile + `'retry'`.
 
 | Sunucu değeri | Anlamı | Kim yazar | Oyun (C# `ChildTaskStatus`) | ParentApp (TS `CompletionStatus`, etiket) | Coin |
 |---|---|---|---|---|---|
@@ -26,7 +26,7 @@ SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rej
 | `approved` | Ebeveyn onayladı (ya da inceleme gerektirmeyen görevde çocuk "Yaptım" dedi) | ParentApp; inceleme yoksa sunucu `pending`→`approved` çevirir | `Approved` | `approved` — "Tamamlandı" | **+coins** (tetikleyici) |
 | `declined` | Çocuk "Yapamam" dedi | Oyun (`child_set_status`) | `DeclinedByChild` | `declined` — "Yapamadı" | — |
 | `rejected` | Ebeveyn not yazarak reddetti | ParentApp (`review_completion`) | `RejectedByParent` | `rejected` — "Reddedildi" | — (önce `approved` idiyse **−coins**) |
-| `retry` (öneri 27 Ekim 2026) | Ebeveyn "Tekrar dene" dedi: görev çocuğa geri döner, notu oyunda görünür | ParentApp (`review_completion(..., 'retry', not)`) | eski oyun: bilinmeyen → `Assigned` (yapılacaklara döner); GameApp önerisi: `RetryByParent` (Atandı gibi işaretlenebilir + not) | `retry` — "Tekrar denesin" | — (önce `approved` idiyse **−coins**, −taş) |
+| `retry` (uygulandı 27 Ekim 2026) | Ebeveyn "Tekrar dene" dedi: görev çocuğa geri döner, notu oyunda görünür | ParentApp (`review_completion(..., 'retry', not)`) | eski oyun: bilinmeyen → `Assigned` (yapılacaklara döner); GameApp önerisi: `RetryByParent` (Atandı gibi işaretlenebilir + not) | `retry` — "Tekrar denesin" | — (önce `approved` idiyse **−coins**, −taş) |
 
 Ek kurallar:
 - `approved` ve `rejected` **nihai** durumdur: çocuk değiştiremez (`child_set_status` "Ebeveyn karar verdi" hatası; C# `ChildTask.IsFinal`).
@@ -191,7 +191,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (öneri 27 Ekim 2026), `gift` (çocuğa: hediye geldi; öneri `20261027140000`), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
@@ -309,7 +309,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
 
-## P16. Tanışma soruları (`proposed/20261027120000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+## P16. Tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
 
 Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `veri/tanisma_sorulari.json` (ParentApp `src/data/intake.ts`'ten `tools/intake_json.sh` ile üretilir; yönetim paneli bunu kullanır).
 

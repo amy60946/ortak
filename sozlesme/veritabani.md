@@ -48,7 +48,7 @@ Anahtarlar: istemcilere yalnız **publishable/anon** anahtar girer. `service_rol
 | `children` | Çocuk | `id`, `family_id`, `name` (1–60 karakter), `avatar`, `gender` (`'kız'`/`'erkek'`/null), `birthday`, `user_id` (oyunun anonim oturumu; unique), `age_band` (M4) | P (ekle/düzenle/sil; `user_id` hariç); `user_id` yalnız `redeem_child_code` / `unlink_child_device` ile | P (aile), O (yalnız kendi satırı: `user_id = auth.uid()`) |
 | `tasks` | Görev (tekrarlı görev **tek satır**) | `title` (1–120), `emoji` (`'⭐'`), `skill`, `description`, `start_date`, `recurring`, `end_date`, `reminder` (`HH:MM`), `requires_review` (varsayılan `true`), `repeat_kind`, `repeat_days`, `sort_order` | P | P, O (yalnız kendisine atanmışlar; oyun pratikte `child_tasks` RPC'si üzerinden okur) |
 | `task_assignments` | Görev ↔ çocuk ataması ve ödülü | PK (`task_id`, `child_id`), `family_id`, `difficulty` (`easy`/`medium`/`hard`), `coins` (0–50) | P | P, O (kendi atamaları) |
-| `completions` | Bir görevin bir gündeki durumu | `task_id`, `child_id`, `date`, `status`, `parent_note` (M4, ≤ 300), `reviewed_at`, `reviewed_by`, `created_at`; öneri `20261027130000`: `motivation` (1–5), `stones` (0–6); **unique (`task_id`, `child_id`, `date`)** | O (`child_set_status` RPC'si), P (doğrudan + `review_completion`) | P, O (kendi satırları) |
+| `completions` | Bir görevin bir gündeki durumu | `task_id`, `child_id`, `date`, `status`, `parent_note` (M4, ≤ 300), `reviewed_at`, `reviewed_by`, `created_at`; `20261027130000`, uygulandı: `motivation` (1–5), `stones` (0–6); **unique (`task_id`, `child_id`, `date`)** | O (`child_set_status` RPC'si), P (doğrudan + `review_completion`) | P, O (kendi satırları) |
 | `messages` | Posta (ebeveyn ↔ çocuk) | `child_id`, `sender` (`parent`/`child`), `sender_id`, `kind` (`text`/`image`/`audio`), `body` (≤ 2000), `media_path`, `duration_ms` | P (sender=`parent`); çocuk (sender=`child`) RLS ile izinli | P, çocuk (kendi mesajları) |
 | `saved_templates` | Kaydedilen hazır/özel görev şablonları | `template_key` (ör. `t1`), `is_custom`, `saved`, `title`, `emoji`, `category` (`home`/`mind`/`learn`/`self`), `difficulty`, `skill` | P | P |
 | `task_templates` (uygulandı `20261023010000`, 23 Ekim 2026) | Ev Görevleri şablon kataloğu (Türkçe; `gorev_sablonlari.md`; sürüm 2 temizliği `migrations/20261023030000`) | `key` (`gs_<kategori>_<sıra>`), `title`, `emoji`, `category` (ana = beceri), `categories` (süzgeç etiketleri), `age_bands` (K/A/B/C), `difficulty`, `coins`, `skill`, `sort`, `active` | yalnız göç | P, K, O (oturumlu herkes okur; RLS select `active`) |
@@ -66,8 +66,8 @@ Notlar:
 |---|---|---|---|---|
 | `children.age_band` | Ebeveynin seçtiği yaş grubu (isteğe bağlı) | `'K'` (≤5) / `'A'` (6–8) / `'B'` (9–12) / `'C'` (13+) / null = otomatik (doğum gününden, `durumlar.md` §4) | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
 | `completions.parent_note` | Ebeveynin ret/onay/tekrar dene notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
-| `completions.motivation` (öneri 27 Ekim 2026) | "Motive etmek ne kadar zordu?" ebeveyn gözlemi | 1 çok kolay … 5 çok zor, null = yanıtsız | P (`review_completion`) | P, K (bağlı ve rızalı; "tamamlama: bağlı klinik okur") |
-| `completions.stones` (öneri 27 Ekim 2026) | Onayda verilen Güneş Taşı | 0–6, null = zorluğa göre (yalnız `approved`'da dolu) | P (`review_completion`) | P, K |
+| `completions.motivation` (uygulandı 27 Ekim 2026) | "Motive etmek ne kadar zordu?" ebeveyn gözlemi | 1 çok kolay … 5 çok zor, null = yanıtsız | P (`review_completion`) | P, K (bağlı ve rızalı; "tamamlama: bağlı klinik okur") |
+| `completions.stones` (uygulandı 27 Ekim 2026) | Onayda verilen Güneş Taşı | 0–6, null = zorluğa göre (yalnız `approved`'da dolu) | P (`review_completion`) | P, K |
 | `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`; öneri §12: + `welcome`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`; öneri §12: `claim_welcome_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
 | `sun_stone_ledger` | Güneş Taşı defteri (`20261019030000_sun_stones`, uygulandı 19 Ekim). Toplam = `sum(amount)` (en az 0) | `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`adjust`), `ref`; unique (`child_id`, `reason`, `ref`) | yalnız tetikleyici `completions_sun_stone` | P (aile), O (kendi) |
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
@@ -112,7 +112,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `game_save_get()` | `jsonb` (yoksa null) | O | Oyun kaydı yedeğini okur. |
 | `game_save_put(p_data jsonb)` | `void` | O | Yedeği yazar (en fazla 262 144 bayt). |
 | `set_child_age_band(p_child_id uuid, p_band text)` | `void` | P | Grubu yazar (`K`/`A`/`B`/`C`; null = otomatik). |
-| `review_completion(p_task_id, p_child_id, p_date, p_status, p_note default null, p_motivation default null, p_stones default null)` | `void` | P | Ebeveyn kararı: `approved`/`rejected`/`pending`/`retry` (öneri `20261027130000`: + `retry`, motivasyon 1–5, taş 0–6; retry yalnız bugün, hint `retry_past`). Kayıt yoksa oluşturur; `parent_note`, `reviewed_at`, `reviewed_by` yazar. ParentApp onay ve ret için bunu çağırır (19 Ekim kararı). Eski 5 parametreli çağrılar aynen çalışır. |
+| `review_completion(p_task_id, p_child_id, p_date, p_status, p_note default null, p_motivation default null, p_stones default null)` | `void` | P | Ebeveyn kararı: `approved`/`rejected`/`pending`/`retry` (`20261027130000`, uygulandı: + `retry`, motivasyon 1–5, taş 0–6; retry yalnız bugün, hint `retry_past`). Kayıt yoksa oluşturur; `parent_note`, `reviewed_at`, `reviewed_by` yazar. ParentApp onay ve ret için bunu çağırır (19 Ekim kararı). Eski 5 parametreli çağrılar aynen çalışır. |
 | `unlink_child_device(p_child_id uuid)` | `void` | P | `children.user_id = null`. Oyun bir sonraki kontrolde "bağlantın kapatıldı" der. |
 | `child_balance(p_child_id uuid)` | `integer` | P | Aynı ailedeki çocuğun coin bakiyesi. |
 | `suggest_age_band(p_birthday date)` | `text` | P, iç | `age_band(p_birthday)` ile aynı (eski ad, korunur). |
@@ -454,7 +454,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `clinician_survey_keys(tür)` | K | Geçerli anahtarlar (`profession`, `challenges`, `features`, `intent`); `veri/uzman_anketi.json` ile aynı |
 | `admin_kpi_clinician_survey(gün)` | yönetim paneli (`admin_require`, 2 adımlı) | Toplam sayılar: cevaplayan, geçen, seçenek başına sayı; kişi kimliği dönmez |
 
-## 17. ParentApp ilk kurulum ve tanışma soruları (`proposed/20261027120000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+## 17. ParentApp ilk kurulum ve tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
 
 | Tablo / alan | Kim okur | Kim yazar | Not |
 |---|---|---|---|
@@ -483,7 +483,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
 | Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste |
 
-## 19. Ebeveyn görevleri ve hediye dükkânı (`proposed/20261027140000_parent_tasks_gifts.sql`, öneri 27 Ekim 2026; akış `akislar.md` 18)
+## 19. Ebeveyn görevleri ve hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 18)
 
 | Tablo | Ne | Alanlar | Kim yazar | Kim okur |
 |---|---|---|---|---|

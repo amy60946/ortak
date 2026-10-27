@@ -1,4 +1,4 @@
--- Ebeveyn görevleri, ebeveyn taşı, hediye dükkânı (proposed/20261027140000_parent_tasks_gifts.sql).
+-- Ebeveyn görevleri, ebeveyn taşı, hediye dükkânı (migrations/20261027140000_parent_tasks_gifts.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

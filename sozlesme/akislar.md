@@ -92,7 +92,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 | 8 | [P] | Realtime ile değişiklik gelir; **İnceleme** ekranında `pending` olanlar listelenir; Görevler'de durum etiketi (Onay bekliyor / Tamamlandı / Yapamadı / Reddedildi). | `completions` (Realtime) |
 | 9a | [P] | **Onay:** kayıt `approved` yapılır. | `review_completion(..., 'approved')` (19 Ekim kararı; önceden doğrudan `completions` update) |
 | 9b | [P] | **Ret:** ebeveyn isterse not yazar ("Yatak dağınık kalmış"); kayıt silinmez. | `review_completion(task, child, date, 'rejected', note)` |
-| 9c | [P] | **İnceleme ayrıntısı** (öneri `20261027130000_review_detail`, 27 Ekim 2026): satıra dokununca alt sayfa — "Motive etmek ne kadar zordu?" (1–5, isteğe bağlı, uzmana akar), Güneş Taşı − / + (0–6, varsayılan zorluğa göre), not (≤ 140, oyunda görünür), **Reddet / Tekrar dene / Onayla**. Satırdaki ✓ hızlı onay olarak kalır. | `review_completion(task, child, date, status, note, motivation, stones)` |
+| 9c | [P] | **İnceleme ayrıntısı** (`20261027130000_review_detail`, uygulandı, 27 Ekim 2026): satıra dokununca alt sayfa — "Motive etmek ne kadar zordu?" (1–5, isteğe bağlı, uzmana akar), Güneş Taşı − / + (0–6, varsayılan zorluğa göre), not (≤ 140, oyunda görünür), **Reddet / Tekrar dene / Onayla**. Satırdaki ✓ hızlı onay olarak kalır. | `review_completion(task, child, date, status, note, motivation, stones)` |
 | 9d | [P → O] | **Tekrar dene:** kayıt `retry` olur, çocuğa `task_retry` bildirimi (not gövdede). Oyunda Atandı + tekrar bayrağı: "Yaptım" yeniden açık, kartta "Bir daha dener misin? Ailenden not: …" (not yoksa "Ailen bir daha denemeni istiyor"), Mavi haber verir; onay notu da kutlamada ve onaylı kartta (game-app 2bd61af; eski sürüm: Atandı, not görünmez). Çocuk yeniden "Yaptım" der → adım 6. Yalnız bugünün görevi. | `review_completion(..., 'retry', note)` → `child_set_status` |
 | 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) verilen tutar düşülür; görev/atama silinirse kazanılan coin kalır. | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
 | 10a | [S] | Aynı geçişte **Güneş Taşı** yazılır: kolay 1 / orta 2 / zor 3 (`20261019030000_sun_stones`, uygulandı 19 Ekim). Geri almada o tamamlamanın taşı düşer. | tetikleyici `completions_sun_stone` → `sun_stone_ledger` |
@@ -236,7 +236,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 |---|---|---|---|
 | Çocuk "Yaptım" (inceleme bekliyor ya da incelemesiz onay) | Oyun → ailenin bütün ebeveynleri | `task_done` | parent |
 | Çocuk "Yapamam" | Oyun → ebeveynler | `task_declined` | parent |
-| Ebeveyn onayladı / reddetti / tekrar dene dedi | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` ("… onaylanmadı") / `task_retry` ("…: bir daha dener misin?", öneri 27 Ekim 2026) | child |
+| Ebeveyn onayladı / reddetti / tekrar dene dedi | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` ("… onaylanmadı") / `task_retry` ("…: bir daha dener misin?", 27 Ekim 2026) | child |
 | Yeni görev atandı (yalnız yeni atama; düzenleme bildirim üretmez) | ParentApp → çocuk | `task_assigned` | child |
 | Posta | çocuk → ebeveynler / ebeveyn → çocuk | `message` | parent / child |
 | Çocuğun cihazı koda bağlandı | Oyun → ebeveynler | `device_linked` | parent |
@@ -424,7 +424,7 @@ Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp 
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
-## 16. ParentApp ilk kurulum ve tanışma soruları (öneri `proposed/20261027120000_parent_setup_intake.sql`, 27 Ekim 2026)
+## 16. ParentApp ilk kurulum ve tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
 
 Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
 
@@ -447,7 +447,7 @@ Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısa
 
 Kurallar: Yanıt satırı kişi + çocuk + soru başına tek (`unique nulls not distinct`); her ebeveyn kendi yanıtını yazar, aile üyeleri okur, başka aile göremez. Uzman bu sürümde yanıtları görmez (ileride ebeveyn izniyle; paylaşım onay metni sürümü değişir). Yönetim paneli: `admin_intake(aile, gerekçe)` kişi bazlı (support/owner, denetim kaydı), `admin_intake_summary(gün)` yalnız sayılar. Bu göçten önceki ebeveynler kurulumu yapmış sayılır (`setup_completed_at` dolu).
 
-## 18. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (öneri `proposed/20261027140000_parent_tasks_gifts.sql`, kullanıcı isteği 27 Ekim 2026)
+## 18. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; kullanıcı isteği 27 Ekim 2026)
 
 Amaç: ailece ya da yalnız ebeveynin yapacağı görevler; ebeveyn de taş kazanır ve taşla çocuğuna oyunda hediye gönderir (Joon "parent quests + gift shop" örneği, kopya değil).
 
