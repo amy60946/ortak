@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""ortak/hukuk/*.md → supabase/proposed/<ad>.sql (legal_documents taslak gövdeleri).
+"""ortak/hukuk/*.md → supabase/proposed/<zaman>_legal_seed.sql (legal_documents taslak gövdeleri).
 
 Kullanım: python3 tools/legal_seed.py [çıktı.sql]
+- İlk seed `migrations/20261027210000_legal_seed.sql` (uygulandı 27 Ekim 2026). Metin değişince yeni dosya üretilir:
+  varsayılan çıktı `supabase/proposed/<UTC zaman>_legal_seed.sql`; her seed bütün metinleri taşıdığı için proposed'daki
+  eski (uygulanmamış) seed dosyası silinir, kullanıcıya yalnız en yenisi verilir.
 - Herkese açık metinlerden başlıktaki künye tablosu ve "## Avukata notlar" bölümü çıkarılır (iç notlar yayımlanmaz).
 - Yalnız taslak (draft) satırlar güncellenir; yayımlanmış sürüm değişmez (yeni metin = yeni sürüm: dosyadaki "Sürüm" alanını artır).
 - İç belgeler (saklama-imha, ihlal prosedürü, uygulama içi metinler, olgular) yüklenmez.
@@ -53,9 +56,16 @@ def q(s: str) -> str:
 
 
 def main() -> None:
-    out = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'supabase/proposed/20261027210000_legal_seed.sql'
+    if len(sys.argv) > 1:
+        out = pathlib.Path(sys.argv[1])
+    else:
+        import datetime
+        for old in (ROOT / 'supabase/proposed').glob('*_legal_seed.sql'):
+            old.unlink()   # uygulanmamış eski seed: yerini en yenisi alır
+        stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')
+        out = ROOT / f'supabase/proposed/{stamp}_legal_seed.sql'
     parts = ['-- Yasal metin taslakları (üretildi: python3 tools/legal_seed.py; kaynak ortak/hukuk/*.md). Elle düzenleme.',
-             '-- Önkoşul: 20261027200000_legal.sql. Yalnız taslak satırlar güncellenir; yayımlanmış sürüm değişmez. Tekrar çalıştırılabilir.', '']
+             '-- Önkoşul: migrations/20261027200000_legal.sql. Yalnız taslak satırlar güncellenir; yayımlanmış sürüm değişmez. Tekrar çalıştırılabilir.', '']
     for name, (key, apps, req) in FILES.items():
         f = HUKUK / name
         if not f.exists():

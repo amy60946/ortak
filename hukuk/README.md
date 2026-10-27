@@ -5,7 +5,7 @@
 ## Nasıl çalışır
 
 1. Metinler bu klasörde Markdown; başlıktaki künyede **anahtar** ve **sürüm** yazar.
-2. `python3 tools/legal_seed.py` → `supabase/proposed/20261027210000_legal_seed.sql`: taslaklar veritabanına (`legal_documents`) yüklenir. İç notlar ("Avukata notlar") ve künye herkese açık metne girmez.
+2. `python3 tools/legal_seed.py` → `supabase/proposed/<zaman>_legal_seed.sql` (ilk seed `migrations/20261027210000_legal_seed.sql`, uygulandı 27 Ekim 2026; metin değişince yeni seed üretilip kullanıcıya verilir): taslaklar veritabanına (`legal_documents`) yüklenir. İç notlar ("Avukata notlar") ve künye herkese açık metne girmez.
 3. Uygulamalar metni herkese açık adresten gösterir: Edge Function `legal` (`…/functions/v1/legal?doc=<anahtar>`); alan adı alınınca kendi adresimize taşınır. Taslakların üstünde "TASLAK" bandı çıkar.
 4. Onay isteyen metinler (koşullar, sözleşme, aydınlatma okundu) kayıtta ve sürüm değişince uygulama açılışında onaylatılır: `legal_pending(app)` → `legal_accept(app, [{key, version}])`; kayıt `legal_acceptances`.
 5. Avukat onayı gelince yönetim paneli › Hukuk › Yayımla (yalnız sahip). Yayındaki metin değişmez; düzeltme = yeni sürüm (dosyada `Sürüm` artırılır, seed yeniden üretilir).
