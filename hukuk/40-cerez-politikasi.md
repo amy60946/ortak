@@ -37,9 +37,7 @@
 
 Bu depolamada danışan bilgisi, not, mesaj ya da başka kişisel içerik tutulmaz. Danışan kayıtları tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır. Kullanım ölçümünün oturum kimliği yalnız sayfa açıkken bellekte tutulur, tarayıcıya yazılmaz.
 
-**Ödeme sırasında (yalnız web, yalnız klinik sahibi):** üyelik satın alırken iyzico'nun güvenli ödeme formu sayfaya iyzico'dan yüklenir; kart bilgileri doğrudan iyzico'ya gider. Bu form ödeme ve dolandırıcılık önleme için iyzico'nun kendi zorunlu çerezlerini ya da depolamasını kullanabilir; bunlar iyzico'nun gizlilik politikasına tabidir. Ödeme ekranını açmadığınız sürece iyzico'ya bağlantı kurulmaz.
-
-**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); ödeme formu dışında üçüncü taraf betik yüklenmez.
+**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); üçüncü taraf betik yüklenmez. ClinicApp web'de satın alma yoktur; üyelik iPhone/iPad'deki ClinicApp'ten App Store ile alınır.
 
 ## 4. Kullanmadıklarımız
 
@@ -95,7 +93,7 @@ Giriş yaptıktan sonra Ayarlar › Yasal metinler › Çerez Politikası'ndan h
 
 ## Avukata notlar
 
-1. **Depolama listesinin teyidi (Klinik penceresi, 27 Ekim 2026: yapıldı):** ClinicApp web kodu tarandı; 3. bölümdeki tablo gerçek listedir (oturum anahtarı — kayıttaki e-posta, ad ve unvan dahil —, e-posta bağlantısı doğrulama kodu, rehber işareti, bant işareti). `sessionStorage`, çerez ve IndexedDB kullanılmıyor; kullanım ölçümünün oturum kimliği yalnız bellekte. Tanıtım sayfası Google Fonts'u dışarıdan yüklüyordu; yazı tipi sitenin kendi dosyasına alındı (dış istek yok). Ödeme formu (iyzico) web'de üçüncü taraf betik ve olası zorunlu çerezler getiriyor; 3. bölüme eklendi — iyzico'nun alt işleyen/bağımsız veri sorumlusu niteliği avukata.
+1. **Depolama listesinin teyidi (Klinik penceresi, 27 Ekim 2026: yapıldı):** ClinicApp web kodu tarandı; 3. bölümdeki tablo gerçek listedir (oturum anahtarı — kayıttaki e-posta, ad ve unvan dahil —, e-posta bağlantısı doğrulama kodu, rehber işareti, bant işareti). `sessionStorage`, çerez ve IndexedDB kullanılmıyor; kullanım ölçümünün oturum kimliği yalnız bellekte. Tanıtım sayfası Google Fonts'u dışarıdan yüklüyordu; yazı tipi sitenin kendi dosyasına alındı (dış istek yok). Web'de satın alma yok (kullanıcı kararı 22 Ekim 2026); koddaki eski iyzico ödeme formu web'de gösterilmez.
 2. **Barındırma sağlayıcısı (7.1):** ClinicApp web'in nerede yayınlanacağı belli değil (olgu dosyasında yalnız yönetim paneli için Cloudflare var). Cloudflare kullanılırsa bot koruması gibi özellikler kendi zorunlu çerezlerini yerleştirebilir; sağlayıcı ve çerezleri netleşince tabloya ve alt işleyen listesine eklenmeli.
 3. **Arayüz tercihlerinin "zorunlu" sayılması (3):** Kurul rehberi, kullanıcının açıkça yaptığı seçimi hatırlayan depolamayı hangi koşulda zorunlu kabul ediyor? İşlevsel sayılırsa bu satır için onay gerekir ya da tercihler sunucuda (hesaba bağlı) tutulmalı.
 4. **Rehberin güncel sürümü:** Dayanak satırında KVKK Kurumu'nun 2022 tarihli çerez rehberi anıldı; güncel sürüm ve varsa yeni Kurul kararları kontrol edilmeli.

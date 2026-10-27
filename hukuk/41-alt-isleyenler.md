@@ -19,10 +19,9 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | 1 | Supabase | Alt işleyen | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Üçü + ekip paneli | [SUPABASE BÖLGESİ] | Kullanımda |
 | 2 | Apple | Satışta bağımsız veri sorumlusu; bildirimde alt işleyen | App Store satışı ve aboneliği; anlık bildirim (APNs) | Üçü | ABD / AB | Kullanımda |
 | 3 | Expo | Alt işleyen | Yedek bildirim yolu | ParentApp, ClinicApp (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
-| 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp (ClinicApp kullanmaz; App Store'u doğrudan doğrular) | ABD | Kurulum aşamasında |
+| 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
 | 5 | Resend | Alt işleyen | İşlem e-postaları | ParentApp, ClinicApp | ABD / AB | Alan adı alınınca |
 | 6 | Cloudflare | Alt işleyen | Ekip yönetim panelinin barındırılması | Ekip paneli | Küresel ağ | Kullanımda |
-| 8 | iyzico | Ödeme hizmetinde bağımsız veri sorumlusu (ödeme kuruluşu, 6493 s. Kanun); öneri | ClinicApp web üyelik ödemesi | ClinicApp web | Türkiye | Kodda var; canlıda kapalı |
 | 7 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | ClinicApp (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
 
 ## 3. Ayrıntılar
@@ -69,20 +68,9 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Rol | Alt işleyen |
 | Amaç | App Store aboneliğinin geçerli olup olmadığını doğrulamak ve durum değişikliğini (yenileme, iptal, iade) sunucumuza bildirmek |
 | Veri | Uygulama kullanıcı kimliği (Supabase'in verdiği rastgele kimlik; ad ve e-posta gönderilmez), satın alma kayıtları (ürün, işlem kimliği, tarih, durum, mağaza ülkesi). [Uygulamadaki RevenueCat kütüphanesinin ayrıca gönderdiği cihaz ve uygulama bilgileri RevenueCat belgelerinden teyit edilip eklenecek] |
-| İlgili kişiler | Abone olan ebeveynler |
+| İlgili kişiler | Abone olan ebeveynler ve klinik sahibi uzmanlar |
 | Konum | ABD |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
-
-### 3.4a iyzico (ClinicApp web ödemesi)
-
-| | |
-|---|---|
-| Rol | Ödeme hizmetinde bağımsız veri sorumlusu (lisanslı ödeme kuruluşu); öneri, avukat teyit edecek |
-| Amaç | ClinicApp web sürümünde üyelik ödemesinin alınması, yenilenmesi ve iptali |
-| Veri | Klinik sahibinin adı, soyadı, e-postası, T.C. kimlik numarası, cep telefonu, fatura adresi (şehir, adres) ve kart bilgisi. Kart bilgisi yalnız iyzico'nun ödeme formuna girilir, bize gelmez. T.C. kimlik no, telefon ve adres sunucumuzdan iyzico'ya iletilir, bizde saklanmaz. |
-| İlgili kişiler | ClinicApp web'den üyelik alan klinik sahipleri |
-| Konum | Türkiye |
-| Aktarım güvencesi | Yurt içi aktarım (KVKK md. 8); yurt dışı aktarım yok |
 
 ### 3.5 Resend
 
