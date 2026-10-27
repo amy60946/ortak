@@ -1,5 +1,7 @@
 # Hukuk notları — uzman daveti, çocuk önerisi, kayıt aktarımı, sorumluluk
 
+> **Tam metin taslakları artık `hukuk/` klasöründe** (hukuk arşivi, dizin `hukuk/README.md`, 27 Ekim 2026). Bu dosya karar notları ve avukata sorular olarak kalır; maddeler oradaki metinlere işlendi.
+
 > Taslak (26 Ekim 2026, kullanıcı istekleri). Avukata gidecek **madde önerileridir, hukuki görüş değildir.** Canlıda açılmadan önce hukuk onayı gerekir. Yeri: `CANLIYA_ALMA.md` 1.5 (Uzman Hizmet Sözleşmesi + Veri İşleme Eki, Açık Rıza Metni, Aydınlatma Metni). Akış: `akislar.md` 11.
 
 Amaçlar: (1) ebeveyn çocuğunun takibini başka bir uzmana taşıdığında önceki uzmanın kayıtları yeni uzmana kesintisiz geçsin, önceki uzmanın kimliği gizli kalsın; (2) uzmanın davette girdiği çocuk bilgisi aile onaylamadan önce sunucuda durabilsin; (3) uzman kimliği doğrulanmadığı için yetki, onay ve doğrulama yükümlülüğü sözleşmeyle ebeveyne ve uzmana yazılsın, işletme korunsun. Aktarım için iki dayanak birlikte gerekir: **uzmanın sözleşmeyle verdiği izin** ve **ebeveynin açık rızası**.
