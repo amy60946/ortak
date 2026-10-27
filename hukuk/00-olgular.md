@@ -9,7 +9,7 @@
 | Veri sorumlusu | `[ŞİRKET UNVANI]` (şahıs şirketi kurulacak), `[ADRES]`, `[MERSİS/VKN]`. İletişim: `kvkk@[ALAN ADI]`, `destek@[ALAN ADI]`. Alan adı henüz alınmadı. |
 | **Pofi Adası (GameApp)** | Çocuk oyunu, iOS. Hedef yaş 6–12 (yaş grupları K ≤5, A 6–8, B 9–12, C 13+). Ücretsiz; **uygulama içi satın alma yok, reklam yok, üçüncü taraf analiz/izleme aracı yok**. Çocuğun e-postası/şifresi yok: ebeveynin oluşturduğu çocuk profiline, ebeveynin gösterdiği 15 dakikalık tek kullanımlık kod ya da QR ile cihazdan bağlanılır (cihazda anonim oturum). Kamera yalnız QR okumak için, görüntü saklanmaz. Mağaza kategorisi: normal oyun (Kids kategorisi değil). |
 | **ParentApp** | Ebeveyn uygulaması, iOS. E-posta + şifre ile kayıt. Aile aboneliği (aylık/yıllık, App Store üzerinden; RevenueCat ile doğrulama), 7 gün deneme, ücretsiz planda sınırlı özellik. İkinci ebeveyn davet edilebilir. |
-| **ClinicApp** | Uzman (psikolog, klinik psikolog, PDR, ergoterapist, dil-konuşma terapisti, özel eğitim, çocuk gelişimi, BCBA, çocuk psikiyatristi, diğer) uygulaması; iPad + web. Klinik/uzman aboneliği (klinik sahibi birey olarak öder; App Store/RevenueCat; panelden elle üyelik), 14 gün deneme. Ekip (klinik sahibi + üyeler). |
+| **ClinicApp** | Uzman (psikolog, klinik psikolog, PDR, ergoterapist, dil-konuşma terapisti, özel eğitim, çocuk gelişimi, BCBA, çocuk psikiyatristi, diğer) uygulaması; iPad + web. Klinik/uzman aboneliği (klinik sahibi birey olarak öder; App Store/RevenueCat; panelden elle üyelik), 7 gün deneme (yönetim panelinden uzatılabilir). Ekip (klinik sahibi + üyeler). |
 | Yönetim paneli | Yalnız işletme ekibi (rol: sahip, finans, destek, izleyici). İki adımlı doğrulama zorunlu; her değişiklik gerekçeli ve silinemez denetim kaydında. Mesaj içeriği, fotoğraf, ses, uzman not metni panelde yok. |
 
 Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-aile arasında aracılık/yönlendirme yapmaz; uzmanın aileyle çalışması için bir araçtır. Hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir. Acil durum hizmeti değildir (acil: 112).
@@ -22,7 +22,11 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 
 **Uzman (ClinicApp):** ad, unvan, e-posta, klinik adı, ekip rolü; isteğe bağlı mesleki belge incelemesi (e-Devlet barkodlu mezuniyet belgesi — ad, T.C. kimlik no, okul, bölüm, derece, tarih içerir; BACB sicil no). Belge yalnız inceleme için okunur, karar verilince silinir; saklanan: özet (üniversite, bölüm, derece, yıl), barkod, karar kaydı; kimlik no saklanmaz. Karşılama anketi yanıtları (meslek, zorluklar, yararlı özellikler, geliş nedeni). Uzmanın danışanla ilgili girdileri: notlar (aile görmez), hedefler ve haftalık değerlendirmeler, görev önerileri, takip planı (gönderilince aile görür), etiketler. Davet bilgileri: ebeveynin adı ve e-postası, çocuğun adı/takma adı ve yaş grubu (aile onayına kadar; bağlanmamış davet 3 günde, bağlanmış onaylanmamış en geç 30 günde silinir). Abonelik; kullanım kayıtları.
 
-**Herkes:** kullanım kayıtları (uygulama açma günleri, oturum sayısı, sürüm, platform, ekran/özellik olay adları — serbest metin ve içerik yok); bildirim kayıtları ve okunma; destek/ekip işlemlerinin denetim kaydı; giriş kodu deneme kayıtları (kötüye kullanım sınırı, IP dahil, 15 dakika); deneme geçmişi (yalnız e-posta özetinin SHA-256'sı, tekrar deneme suistimaline karşı).
+**Herkes:** kullanım kayıtları (uygulama açma günleri, oturum sayısı, sürüm, platform, ekran/özellik olay adları — serbest metin ve içerik yok); bildirim kayıtları ve okunma; destek/ekip işlemlerinin denetim kaydı; giriş kodu deneme kayıtları (kötüye kullanım sınırı, IP dahil, 15 dakika); deneme geçmişi (yalnız ParentApp aileleri; yalnız e-posta özetinin SHA-256'sı, tekrar deneme suistimaline karşı).
+
+**Bildirim metinleri:** bazı bildirimlerin başlık/metninde çocuğun adı geçebilir (ör. "Efe görevi tamamladı"); bu metin bildirim sağlayıcısı (Apple, yedek yolda Expo) üzerinden telefona iletilir. Sağlık bilgisi bildirim metnine konmaz.
+
+**Aile ya da çocuk silinince:** uzmanla paylaşım kaydı aileye bağlı olduğu için o çocuğa ait uzman notları, hedefleri ve takip planı da silinir (bugünkü sistem). Uzmanın mesleki kayıt saklama yükümlülüğüyle çatışabilir — avukat ve ürün kararı bekliyor.
 
 ## 3. Akışlar ve onaylar (sistemde var)
 
@@ -33,7 +37,7 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Uzmanla çocuk paylaşımı | **Açık rıza** `uzman-paylasim-v1` + "uzmanı tanıyorum, veliyim" kutusu | `clinic_links.consent_*`; ebeveyn istediği an geri alır |
 | Önceki uzman kayıtlarının yeni uzmana aktarımı | **Açık rıza** `uzman-gecis-v1` + uzman sözleşmesinde önceden izin | `clinic_link_history`; önceki uzmanın kimliği gizli |
 | Tanışma sağlık soruları | **Açık rıza** `saglik-yanit-v1` (isteğe bağlı) | `intake_answers.consent_version` |
-| Uzman davet e-postası | Uzmanın beyanı (ebeveynin bilgisiyle) | tek e-posta + en çok 3 yeniden gönderim, 3 gün |
+| Uzman davet e-postası | Uzmanın beyanı (ebeveynin bilgisiyle) | davet başına en çok 3 e-posta (ilk + yeniden gönderimler), davet 3 gün geçerli |
 | Uzman belge incelemesi | Uzmanın talebi (isteğe bağlı) | `clinician_verifications`; dosya karar sonrası silinir |
 | Abonelik | Sözleşmenin ifası (Apple satıcıdır) | App Store + RevenueCat bildirimi |
 | Hesap silme | Kullanıcı talebi | Uygulama içi `delete_account()`; aile/klinik verisi birlikte silinir; tek ebeveyn kalmışsa aile silinir |
@@ -51,7 +55,8 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Sağlayıcı | Ne için | Veri | Konum |
 |---|---|---|---|
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | hepsi | `[SUPABASE BÖLGESİ]` (yurt dışı olabilir) |
-| Apple | App Store (satış ve abonelik — satıcı Apple'dır), bildirim (APNs) | abonelik işlemleri, bildirim jetonu | ABD/AB |
+| Apple | App Store (satış ve abonelik — satıcı Apple'dır), bildirim (APNs) | abonelik işlemleri, bildirim jetonu, bildirim başlığı ve metni | ABD/AB |
+| Expo (yedek bildirim yolu) | Cihaz Expo bildirim anahtarı verirse bildirim Expo Push API üzerinden Apple'a iletilir | bildirim jetonu, bildirim başlığı ve metni | ABD |
 | RevenueCat | Abonelik durum doğrulaması | uygulama kullanıcı kimliği (rastgele kimlik), satın alma kayıtları | ABD |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | e-posta adresi, e-posta içeriği | ABD/AB |
 | Cloudflare | Yönetim paneli barındırma | ekip oturumu (kullanıcı verisi panelde tarayıcıya gelir) | küresel |

@@ -59,6 +59,22 @@
 | Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç) | **yapılacak:** zamanlanmış imha işi |
 | ClinicApp web | Çerez/yerel depolama | cerez-clinicapp-web | — |
 
+## Yazım sırasında bulunan sorunlar (27 Ekim 2026; ürün ya da avukat kararı bekler)
+
+| # | Sorun | Kimin işi |
+|---|---|---|
+| 1 | ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği **varsayılan açık** (`akislar.md` 11 #2). Açık rıza önceden işaretli olamaz; varsayılan kapalı olmalı. | ParentApp penceresi |
+| 2 | Tanışma sorularında "çocuk bir uzmanla (psikolog vb.) çalışıyor mu" ve davranış sıklığı soruları (öfke nöbeti, endişe…) sağlık sorusu olarak işaretli değil; rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı. | Avukat → ParentApp |
+| 3 | `uzman-paylasim-v1` bugün yalnız uyarı + veli beyanını kayıt ediyor; taslak rıza cümlesi ve kısa aydınlatma eklendiği için yayında `uzman-paylasim-v2` olmalı; v1 onaylarının yeterliliği avukata. | Avukat → ParentApp |
+| 4 | Aile ya da çocuk silinince uzmanın o danışana ait notları ve hedefleri de siliniyor; uzmanın kayıt saklama yükümlülüğüyle çatışabilir. | Avukat + ürün (ortak) |
+| 5 | Tek bir çocuk profilini ya da yalnız oyun kaydını silmenin yolu yok (KVKK md. 7, Apple 5.1.1(v)). | Avukat → ParentApp/GameApp |
+| 6 | `CANLIYA_ALMA.md` 4'te ParentApp için Sentry/PostHog planı var; eklenirse "üçüncü taraf analiz yok" cümleleri, aydınlatmalar ve alt işleyenler değişir. | Kullanıcı kararı |
+| 7 | Tanı/ilaç yanıtlarının uygulamada somut amacı yazılı değil (KVKK md. 4 amaçla sınırlılık); kullanılmıyorsa soru kaldırılmalı. | Ürün + avukat |
+| 8 | Ön kontrolün kendiliğinden reddettiği belge başvurularına itiraz yolu yok (md. 11/1-g). | ClinicApp + panel |
+| 9 | ClinicApp üyeliği bitince erişim tümüyle kapanıyor ve veri süresiz kalıyor; sözleşme sona erme/dışa aktarma süresi öneriyor (`[SÜRE]`). | Avukat + ürün |
+| 10 | Uzmanlar için toplu dışa aktarma ve KVKK "kopya" talebi için veri dışa aktarma yok (bugün yalnız yazdırılabilir rapor). | ortak + uygulamalar |
+| 11 | `akislar.md` 1.1 ve 2'de kod süresi "24 saat" yazıyor; sistem 15 dakika. | ortak (belge düzeltmesi) |
+
 ## Canlıdan önce yapılacaklar (hukuk)
 
 1. Avukatla bu klasör + `sozlesme/hukuk_notlari.md` 5. bölüm (sorular) gözden geçirilir; yer tutucular (`[ŞİRKET UNVANI]`, `[ADRES]`, `[ALAN ADI]`, `[SUPABASE BÖLGESİ]`, `[SÜRE]`) doldurulur.

@@ -97,7 +97,7 @@ Verilerinizi reklam için kullanmayız, satmayız, profil çıkarmak için kulla
 
 **5.3. Uzman — yalnız açık rızanızla.** Bir uzmanın davetini onaylar ve çocuğunuzu seçerseniz:
 - **Kim görür:** davet eden uzman; o kliniğin sahibi; klinik sahibinin bu paylaşımı atadığı ekip üyeleri.
-- **Ne görür:** çocuğun profil bilgileri; görevleri ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; zor an kayıtları ve ses kayıtları; takip planı uygulama kayıtlarınız; görev önerilerine kararlarınız.
+- **Ne görür:** çocuğun profil bilgileri; görevleri ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; zor an kayıtları ve ses kayıtları; takip planı uygulama kayıtlarınız; görev önerilerine kararlarınız. Bu kayıtların paylaşımdan önceki geçmişi de görünür.
 - **Ne görmez:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı.
 - Uzman bu kayıtları **yalnız okur**, değiştiremez. Size görev önerebilir ve takip planı gönderebilir; kabul edip etmemek size kalmıştır.
 - **Durdurma:** Uzmanım bölümünden "Paylaşımı durdur" dediğiniz an uzmanın erişimi biter. Uzmanın o güne kadar ClinicApp'e yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır; bu kayıtları siz görmezsiniz.
