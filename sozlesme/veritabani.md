@@ -441,7 +441,7 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 
 Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).
 
-## 16. Uzman karşılama anketi (`proposed/20261027100000_clinician_survey.sql`, öneri 27 Ekim 2026; akış `akislar.md` 15)
+## 16. Uzman karşılama anketi (`migrations/20261027100000_clinician_survey.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 15)
 
 | Tablo | Ne | Alanlar | Kim yazar | Kim okur |
 |---|---|---|---|---|
@@ -467,7 +467,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `admin_intake(aile, gerekçe)` | admin support/owner (2FA) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
 | `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok, sağlık soruları (`child_diagnosis`, `child_medication`) hariç (hukuk_notlari I4) |
 
-## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026; metinler `hukuk/`)
+## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`migrations/20261027200000_legal.sql` + `20261027210000_legal_seed.sql`, uygulandı 27 Ekim 2026; Edge Function `legal` yayında; metinler `hukuk/`)
 
 | Tablo | Ne | Erişim |
 |---|---|---|
@@ -481,7 +481,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `legal_pending(app)` | authenticated | Güncel sürümü onaylanmamış, onay isteyen metinler (kayıt sonrası ve açılışta) |
 | `legal_accept(app, [{key, version}])` | authenticated | Yalnız o uygulamanın güncel, onay isteyen sürümleri; `app='child'` yalnız veli (ParentApp) çağırır. Dönüş: kalan bekleyenler |
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
-| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste |
+| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`); JSON isteği yönlenmez |
 
 ## 19. Ebeveyn görevleri ve hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 18)
 

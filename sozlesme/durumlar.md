@@ -333,7 +333,7 @@ Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `
 
 Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (`saglik-yanit-v1`). Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.
 
-## P17. Yasal metinler ve KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026)
+## P17. Yasal metinler ve KVKK başvuruları (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026)
 
 | Alan | Değerler | Anlam |
 |---|---|---|

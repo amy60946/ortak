@@ -1,4 +1,4 @@
--- Yasal metinler, onay kaydı, KVKK başvuruları (proposed/20261027200000_legal.sql)
+-- Yasal metinler, onay kaydı, KVKK başvuruları (migrations/20261027200000_legal.sql, uygulandı 27 Ekim 2026)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$

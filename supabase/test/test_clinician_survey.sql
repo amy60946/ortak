@@ -1,4 +1,4 @@
--- Uzman karşılama anketi (proposed/20261027100000_clinician_survey.sql)
+-- Uzman karşılama anketi (migrations/20261027100000_clinician_survey.sql, uygulandı 27 Ekim 2026)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$

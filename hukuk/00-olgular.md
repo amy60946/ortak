@@ -43,7 +43,7 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Hesap silme | Kullanıcı talebi | Uygulama içi `delete_account()`; aile/klinik verisi birlikte silinir; tek ebeveyn kalmışsa aile silinir |
 | Yetkili ekip erişimi | Meşru menfaat / sözleşmenin ifası | iki adımlı, gerekçeli, silinemez denetim kaydı; tanışma yanıtları gerekçeyle açılır, sağlık yanıtları varsayılan gizli |
 | Kullanım ölçümü | Meşru menfaat | içerik yok, üçüncü taraf yok |
-| Kullanım Koşulları kabulü / Aydınlatmanın gösterilmesi | Sözleşmenin kurulması; ispat (md. 5/2-e) | Öneri `20261027200000_legal.sql`: sürümlü kayıt `legal_acceptances` (kim, hangi metin, sürüm, uygulama, zaman); hesap silinse de rastgele hesap kimliğiyle kalır (e-posta/ad yok), saklama süresi sonunda imha |
+| Kullanım Koşulları kabulü / Aydınlatmanın gösterilmesi | Sözleşmenin kurulması; ispat (md. 5/2-e) | `migrations/20261027200000_legal.sql` (uygulandı 27 Ekim 2026): sürümlü kayıt `legal_acceptances` (kim, hangi metin, sürüm, uygulama, zaman); hesap silinse de rastgele hesap kimliğiyle kalır (e-posta/ad yok), saklama süresi sonunda imha |
 
 ## 4. Sanal değerler
 
