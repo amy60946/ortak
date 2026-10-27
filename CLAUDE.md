@@ -44,6 +44,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
 - Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.
+- **Hukuk arşivi (kullanıcı isteği 27 Ekim 2026):** hukuki her karar/madde `sozlesme/hukuk_notlari.md`'ye yazılır (avukata sorular dahil). Canlıya alma süreci yeniden başlarken ve herhangi bir ürün canlıya alınmadan önce kullanıcıya bu arşivi hatırlat (`CANLIYA_ALMA.md` 1.5).
 - Klinik sınır: hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir; uzman verisi yalnız ebeveyn rızasıyla ve geri alınabilir şekilde paylaşılır.
 
 ## Referanslar

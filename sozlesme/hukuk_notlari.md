@@ -1,5 +1,7 @@
 # Hukuk notları — uzman daveti, çocuk önerisi, kayıt aktarımı, sorumluluk
 
+> **Tam metin taslakları artık `hukuk/` klasöründe** (hukuk arşivi, dizin `hukuk/README.md`, 27 Ekim 2026). Bu dosya karar notları ve avukata sorular olarak kalır; maddeler oradaki metinlere işlendi.
+
 > Taslak (26 Ekim 2026, kullanıcı istekleri). Avukata gidecek **madde önerileridir, hukuki görüş değildir.** Canlıda açılmadan önce hukuk onayı gerekir. Yeri: `CANLIYA_ALMA.md` 1.5 (Uzman Hizmet Sözleşmesi + Veri İşleme Eki, Açık Rıza Metni, Aydınlatma Metni). Akış: `akislar.md` 11.
 
 Amaçlar: (1) ebeveyn çocuğunun takibini başka bir uzmana taşıdığında önceki uzmanın kayıtları yeni uzmana kesintisiz geçsin, önceki uzmanın kimliği gizli kalsın; (2) uzmanın davette girdiği çocuk bilgisi aile onaylamadan önce sunucuda durabilsin; (3) uzman kimliği doğrulanmadığı için yetki, onay ve doğrulama yükümlülüğü sözleşmeyle ebeveyne ve uzmana yazılsın, işletme korunsun. Aktarım için iki dayanak birlikte gerekir: **uzmanın sözleşmeyle verdiği izin** ve **ebeveynin açık rızası**.
@@ -89,6 +91,22 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
   > ☐ Bu uzmanı tanıyorum ve çocuğun velisiyim (yasal temsilcisiyim). — kutu işaretlenmeden "Onayla ve paylaş" açılmaz. Altta: "Bu davet bana ait değil".
 - **ParentApp › onay ekranı:** B'deki metin + düğme.
 
+### I. Kullanıcının platforma verdiği aktarım ve işleme yetkileri (taslak, 27 Ekim 2026; kullanıcı isteği)
+
+> Amaç: ebeveyn ve uzmanın, sistemin veriyi **hangi amaçla, kime ve nasıl aktarabileceğine** sözleşmede açıkça yetki vermesi. Ebeveyn Kullanım Koşulları (F) ve Uzman Hizmet Sözleşmesi (A) sonuna eklenir; aydınlatma metinleri (C) aynı listeyi kısa hâliyle içerir. Her madde onay ekranında sürümle kaydedilir (bkz. I10). **Avukat notu:** KVKK'da açık rıza hizmet şartına bağlanamaz; hizmet için zorunlu aktarımlar "sözleşmenin ifası / meşru menfaat / kanuni yükümlülük" dayanağıyla yazılır, açık rıza yalnız isteğe bağlı olanlarda (sağlık yanıtları, uzmanla paylaşım, önceki uzman kayıtları) ayrı onay kutusuyla alınır. Hangi maddenin hangi dayanağa dayanacağını avukat işaretler.
+
+1. **Hizmet sağlayıcılarına aktarım.** Kullanıcı; verilerinin hizmetin sunulması için gereken ölçüde, platformun adına ve talimatıyla çalışan hizmet sağlayıcılara aktarılmasına yetki verir: veri barındırma ve veritabanı (Supabase), e-posta gönderimi (Resend), bildirim (Apple Push Notification), uygulama içi satın alma ve abonelik doğrulama (Apple, RevenueCat), yönetim paneli barındırma (Cloudflare). Bu sağlayıcılar veriyi yalnız bu hizmet için işler, kendi amaçlarıyla kullanmaz.
+2. **Yurt dışına aktarım.** Yukarıdaki sağlayıcıların sunucuları yurt dışında olabilir. Kullanıcı, verilerinin KVKK md. 9'daki usule (standart sözleşme ve Kurul'a bildirim) uygun olarak bu sunuculara aktarılmasına yetki verir. Sağlık verisi (tanı/ilaç yanıtları, uzman notları) için ayrıca açık rıza alınır. *(Avukat: Supabase bölgesi ve standart sözleşme metni; `CANLIYA_ALMA.md` 1.6.)*
+3. **Yetkili ekip erişimi.** Kullanıcı; platformun yetkili ekip üyelerinin, yalnız destek talebini yanıtlamak, güvenlik ve kötüye kullanım incelemesi, ödeme/abonelik sorunları ve kanuni yükümlülükler için hesap bilgilerine ve kullanım kayıtlarına erişebileceğini kabul eder. Erişim iki adımlı girişle, gerekçe yazılarak yapılır ve her erişim değiştirilemez denetim kaydına geçer. Mesaj içerikleri, fotoğraflar, ses kayıtları ve uzman notlarının metni ekip ekranlarında gösterilmez.
+4. **Tanışma yanıtları (ParentApp ilk kurulum).** Ebeveyn; verdiği tanışma yanıtlarının (hedefler, çocuğun düzeni, ilgi alanları, motive edenler) uygulamayı kişiselleştirmek, destek vermek ve **kimliksiz toplamlar** hâlinde ürünü geliştirmek için işlenmesine, yetkili ekip üyesinin destek amacıyla gerekçeli ve kayıtlı olarak görüntülemesine yetki verir. Sağlık yanıtları (tanı, ilaç) isteğe bağlıdır, ayrı açık rızayla (`saglik-yanit-v1`) verilir, ekip ekranında varsayılan gizlidir ve toplam raporlarda gösterilmez. Ebeveyn bu yanıtları istediği an değiştirebilir ya da silebilir.
+5. **Uzmanla paylaşım ve önceki uzman kayıtları.** Ebeveynin seçtiği uzmanla paylaşım (F, `uzman-paylasim-v1`) ve önceki uzman kayıtlarının aktarımı (B, `uzman-gecis-v1`) ayrı onay ekranlarıyla verilir; bu madde onların yerine geçmez, yalnız varlığını hatırlatır.
+6. **Uzmanın yetkisi.** Uzman; girdiği kayıtların ebeveynin izniyle ailenin uygulamasında gösterilmesine, ebeveyn izin verirse adı gizlenerek sonraki uzmana salt okunur açılmasına (A2–A3), belge incelemesi için yüklediği belgenin yetkili ekipçe incelenmesine (A11–A12) ve karşılama anketindeki yanıtlarının kimliksiz toplamlar hâlinde ürün geliştirmede kullanılmasına yetki verir.
+7. **Kullanım ve ölçüm verisi.** Kullanıcı; uygulamayı açma günü, sürüm, platform ve hangi ekranın/özelliğin kullanıldığı gibi kişisel içerik barındırmayan kullanım kayıtlarının hizmetin işleyişini ölçmek, hataları bulmak ve ürünü geliştirmek için işlenmesine yetki verir. Bu kayıtlarda serbest metin, mesaj içeriği ya da sağlık bilgisi bulunmaz; üçüncü taraf reklam ya da izleme aracı kullanılmaz.
+8. **Kanuni zorunluluk.** Mahkeme, savcılık ya da yetkili kamu kurumunun usulüne uygun talebi hâlinde veriler, talep kapsamıyla sınırlı olarak bu mercilere aktarılabilir; kanunen yasak değilse kullanıcı bilgilendirilir.
+9. **İşletme devri.** Platformun birleşme, devir ya da varlık satışı hâlinde veriler, aynı amaçlarla ve aynı koruma düzeyiyle devralan tarafa aktarılabilir; kullanıcı önceden bilgilendirilir ve hesabını silme hakkı saklıdır. *(Avukat: şahıs şirketi aşamasında bu maddenin geçerliliği ve bildirim süresi.)*
+10. **Onay kaydı ve sürüm.** Kullanıcının hangi metni (Kullanım Koşulları, Aydınlatma, açık rızalar) hangi sürümle ve ne zaman onayladığı kaydedilir; metin değişince yeni sürüm yeniden onaylatılır. *(Yazılım: Kullanım Koşulları ve Aydınlatma onayının sürümlü kaydı henüz yok; açık rızalar sürümlü kaydediliyor — DURUM açık iş.)*
+11. **Hesap silindikten sonra.** Hesap silinince kişisel veriler silinir; yalnız kanunen saklanması gereken kayıtlar (ör. ödeme kayıtları) ve değiştirilemez denetim kaydı, kişiyi doğrudan tanımlayan bilgi (e-posta) çıkarılarak saklama süresince tutulur.
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
@@ -117,3 +135,6 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 8. "Uzmanı tanıyorum ve veliyim" onay kutusu ile sorumluluk maddeleri (3F) tüketici mevzuatı açısından ne ölçüde geçerli; sorumluluk sınırı (3G) nasıl yazılmalı?
 9. Belge incelemesi sonrası gösterilen "Belgesi incelendi" ifadesi ve inceleme kapsamı (A11) yeterince açık mı; inceleme hatasında sorumluluk nasıl sınırlanır?
 10. Uzman doğrulaması yapılmadan çalışmak için ek bir yükümlülük var mı (ör. sağlık meslek mensuplarını listeleyen platformlar, uzaktan sağlık hizmetleri mevzuatı kapsamına girip girmediği)? Doğrulama seçenekleri `akislar.md` 14.
+11. Bölüm I'deki her maddenin dayanağı (sözleşmenin ifası, meşru menfaat, kanuni yükümlülük, açık rıza) hangisi; hangileri ayrı onay kutusu ister?
+12. Yurt dışı aktarım (I2) için 2024 KVKK değişikliği sonrası standart sözleşme yeterli mi; sağlık verisi için ek şart var mı?
+13. Yetkili ekip erişimi (I3, I4): destek amaçlı kişi bazında tanışma yanıtı görüntüleme aydınlatmada açıkça yazılınca yeterli mi; sağlık yanıtları ekipçe hiç görülmemeli mi?

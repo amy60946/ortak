@@ -178,6 +178,8 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 
 Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
 
+**Günlük rutin önerisi (kullanıcı isteği 27 Ekim 2026; veritabanı değişmedi):** Uzman Öneriler sekmesinde hazır bir rutini (ör. "Güne hazır sabah", 6 görev) tek seferde önerir. Katalog `veri/hazir_rutinler.json` (ParentApp'in hazır rutinleriyle aynı; görevler `gorev_sablonlari.json` anahtarlarıyla). Uzman görevleri seçip çıkarabilir (çocukta aynı adlı görev ya da bekleyen öneri varsa baştan seçili gelmez); her görev **ayrı bir öneri** satırı olur (`clinic_task_suggestions`; hatırlatma saati rutinden, tekrar: hafta içi = haftalık Pzt–Cum, her gün = günlük, haftalık = görevin günleri), `note` = "<Rutin adı> rutini" (+ uzmanın notu). Ebeveyn ParentApp'te her öneriyi ayrı kabul/ret eder (bugünkü akış). Alternatifler (tek öneri olarak paket, uzmanın kendi rutini, takip planına bağlama, yaşa göre seçim) karar bekliyor (DURUM HATIRLATMA).
+
 ### 5.5 Zor an (ABC) kaydı
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
@@ -463,3 +465,14 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
+
+## 17. Yasal metin onayı ve KVKK başvurusu (öneri `proposed/20261027200000_legal.sql`, 27 Ekim 2026; metinler `hukuk/`)
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] / [K] | Kayıt ekranında koşullar için onay kutusu ("Kullanım Koşulları'nı okudum, kabul ediyorum"; işaretlenmeden hesap açılmaz) ve altında **kutusuz** aydınlatma satırı ("Kişisel verilerinin nasıl işlendiğini Aydınlatma Metni'nde anlatıyoruz"); bağlantılar `legal` adresine. Aydınlatma onay değil bilgilendirmedir; gösterildiği kaydedilir. Açık rızalar bu ekrana konmaz. Metinler `hukuk/50-uygulama-ici-metinler.md`. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))` |
+| 2 | [P] / [K] | Her açılışta (ve ön plana gelince) `legal_pending(app)`; boş değilse "Koşullarımız güncellendi" ekranı (`summary` + bağlantı) → kabul etmeden devam edilmez; "Hesabımı sil" seçeneği görünür. | `legal_accept` |
+| 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. | `legal_accept('child', …)` |
+| 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |
+| 5 | [P] / [K] | Ayarlar › Yasal metinler: `legal_documents_for(app)` listesi (sürüm, onay tarihi); KVKK başvurusu formu (tür + açıklama) → `kvkk_request_create`; "Başvurularım" `my_kvkk_requests`. | — |
+| 6 | Yönetim paneli | Hukuk › KVKK başvuruları (30 gün), e-postayla gelenleri kayda alma; Hukuk › Yasal metinler › Yayımla (avukat onayından sonra). | `admin_*` |
