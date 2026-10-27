@@ -45,17 +45,52 @@ def public_body(text: str) -> tuple[str, str, str]:
     i += 1
     while i < len(lines) and (lines[i].startswith('|') or not lines[i].strip()):   # künye tablosu (H1'in hemen altı)
         i += 1
+    # künyenin altındaki iç kaynak notu ("> Taslak, 27 Ekim … Olgular: hukuk/…") yayımlanmaz
+    if i < len(lines) and lines[i].startswith('> Taslak'):
+        while i < len(lines) and lines[i].startswith('>'):
+            i += 1
+    while i < len(lines) and not lines[i].strip():
+        i += 1
     out += [''] + lines[i:]
     body = '\n'.join(out)
     body = re.split(r'\n##\s+Avukata notlar.*', body, maxsplit=1)[0].rstrip() + '\n'
-    return title, ver, body
+    return title, ver, clean_internal(body)
+
+
+# Herkese açık metinde iç atıf kalmasın: <!-- iç -->…<!-- /iç --> blokları, dosya/yol atıflı parantezler silinir;
+# başka metne atıf (dosya adı ya da anahtar) o metnin sayfasına bağlantı olur (/yasal/<anahtar>; uygulamalar bu yolu kendi okuyucusunda açar).
+INTERNAL = r'(?:hukuk/|sozlesme/|supabase/|CANLIYA_ALMA|DURUM\.md|hukuk_notlari|\.md\b|\.sql\b)'
+
+
+def clean_internal(body: str) -> str:
+    body = re.sub(r'<!--\s*iç\s*-->.*?<!--\s*/iç\s*-->\n?', '', body, flags=re.S)
+    body = re.sub(r'\s*\((?:[^()\n]*?)`[^`\n]*' + INTERNAL + r'[^`\n]*`(?:[^()\n]*?)\)', '', body)
+    def link(m: re.Match) -> str:
+        ref = m.group(1)
+        name = ref.split('/')[-1]
+        key = FILES.get(name, (None,))[0] if name in FILES else (ref if ref in KEYS else None)
+        return f'[{TITLES.get(key, key)}](/yasal/{key})' if key else m.group(0)
+    body = re.sub(r'`((?:hukuk/)?[0-9]{2}-[a-z0-9-]+\.md|[a-z][a-z0-9-]+)`', link, body)
+    return body
+
+
+KEYS = {v[0] for v in FILES.values()}
+TITLES: dict = {}
 
 
 def q(s: str) -> str:
     return "'" + s.replace("'", "''") + "'"
 
 
+def load_titles() -> None:
+    for name, (key, _, _) in FILES.items():
+        f = HUKUK / name
+        if f.exists():
+            TITLES[key] = next((l[2:].strip() for l in f.read_text(encoding='utf-8').splitlines() if l.startswith('# ')), key)
+
+
 def main() -> None:
+    load_titles()
     if len(sys.argv) > 1:
         out = pathlib.Path(sys.argv[1])
     else:
