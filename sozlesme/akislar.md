@@ -181,6 +181,8 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 
 Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'te 22 Ekim 2026'dan beri).
 
+**Günlük rutin önerisi (kullanıcı isteği 27 Ekim 2026; veritabanı değişmedi):** Uzman Öneriler sekmesinde hazır bir rutini (ör. "Güne hazır sabah", 6 görev) tek seferde önerir. Katalog `veri/hazir_rutinler.json` (ParentApp'in hazır rutinleriyle aynı; görevler `gorev_sablonlari.json` anahtarlarıyla). Uzman görevleri seçip çıkarabilir (çocukta aynı adlı görev ya da bekleyen öneri varsa baştan seçili gelmez); her görev **ayrı bir öneri** satırı olur (`clinic_task_suggestions`; hatırlatma saati rutinden, tekrar: hafta içi = haftalık Pzt–Cum, her gün = günlük, haftalık = görevin günleri), `note` = "<Rutin adı> rutini" (+ uzmanın notu). Ebeveyn ParentApp'te her öneriyi ayrı kabul/ret eder (bugünkü akış). Alternatifler (tek öneri olarak paket, uzmanın kendi rutini, takip planına bağlama, yaşa göre seçim) karar bekliyor (DURUM HATIRLATMA).
+
 ### 5.5 Gözlem notu (ABC kaydı; eski adı "Zor an")
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
