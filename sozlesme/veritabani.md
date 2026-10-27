@@ -315,7 +315,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
-| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
+| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` + `from_avatar` (ebeveyn satırında gönderenin `profiles.avatar`'ı; öneri `20261027220000_parent_avatar_game`) |
 | `sun_stones_spendable(p_child_id)` | P (aile), O (yalnız kendisi) | Harcanabilir bakiye (`child_me.sun_stones_spendable` da). `child_me.sun_stones` = kazanılan (ada), değişmedi |
 | `give_reward(p_child_id, p_reward_id, p_quantity default 1)` | P | `{request_id, balance}` |
 | `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
@@ -497,6 +497,6 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 |---|---|---|
 | `parent_task_done(görev, gün, yapıldı=true)` → yeni bakiye | P | Kendi atamasını işaretler / geri alır; gün bugün − 7 … + 1 (hint `date_range`), görev o gün olmalı (`not_on_date`), atanmış olmalı (`not_assigned`) |
 | `send_gift(çocuk, eşya, not)` → `{ok, balance, gift_id, error}` | P | `error`: `unknown_item` / `not_enough_stones`; başarıda taş düşer, çocuğa `gift` bildirimi |
-| `child_gifts_pending()` → (id, item_id, from_name, note, created_at) | O | Kapatılmamış hediyeler, eskiden yeniye |
+| `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (öneri `20261027220000_parent_avatar_game`; hesabı silinmişse null) |
 | `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
 

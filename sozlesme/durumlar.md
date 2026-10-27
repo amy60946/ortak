@@ -150,7 +150,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `children.gender` | `kız` / `erkek` / null (Türkçe, `ı` harfiyle) |
-| `profiles.avatar` varsayılanı | `erkek` |
+| `profiles.avatar` varsayılanı | `erkek` (eski kimlik; Okti karşılığı `okti_baba_1`, aşağıda §6a) |
 | `messages.sender` | `parent` / `child` |
 | `messages.kind` | `text` (body zorunlu) / `image` / `audio` (media_path zorunlu) |
 | Storage kovası | `mail`, yol `<family_id>/<dosya>` |
@@ -158,6 +158,22 @@ Kod biçimi:
 | Oyun giriş hataları (`AuthErrorKind`, yalnız oyun içi) | `None`, `InvalidCode`, `Revoked`, `Network`, `Throttled`, `Unknown` |
 
 ---
+
+
+## 6a. Ebeveyn avatarları: Okti (kullanıcı seçimi 27 Ekim 2026)
+
+Ebeveynin oyundaki ve ParentApp'teki yüzü, Okti'nin üç anne ve üç baba hâli. Görseller game-app `art/parent_avatars/` (oyundaki yetişkin Okti modeli + oyun eşyaları); ParentApp kopyası `assets/avatars/okti_*.jpg`. Değer `profiles.avatar`'a yazılır; çocuk oyunda `child_messages` / `child_gifts_pending` yanıtındaki `from_avatar` ile görür (`proposed/20261027220000_parent_avatar_game.sql`).
+
+| Kimlik | Ad | Ayrım |
+|---|---|---|
+| `okti_anne_1` | Çiçekli | kirpik, yanak pembesi, başta mercan çiçek, mercan tişört |
+| `okti_anne_2` | Hasır şapkalı | kirpik, yanak pembesi, hasır şapka, nane yeşili tişört |
+| `okti_anne_3` | Fiyonklu | kirpik, yanak pembesi, pembe fiyonk + yuvarlak gözlük |
+| `okti_baba_1` | Bıyıklı | bıyık, kahverengi yuvarlak gözlük, koyu mavi tişört |
+| `okti_baba_2` | Kaptan | kaş, kaptan şapkası, beyaz tişört |
+| `okti_baba_3` | Kasketli | kaş, kırmızı kasket, turuncu tişört |
+
+Eski değerler: `kadın` → `okti_anne_1`, `erkek` → `okti_baba_1` gibi gösterilir (veri değiştirilmez). Tanınmayan değer ya da `null`: varsayılan Okti yüzü. ClinicApp ebeveyn avatarı göstermiyorsa değişiklik gerekmez.
 
 ## 7. Klinik (ClinicApp) — uygulandı
 
