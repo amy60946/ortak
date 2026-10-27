@@ -17,7 +17,7 @@ Son güncelleme: 2026-10-19
 
 ## 1. Görev tamamlama durumu (`completions.status`)
 
-SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`.
+SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`; öneri `20261027130000_review_detail` ile + `'retry'`.
 
 | Sunucu değeri | Anlamı | Kim yazar | Oyun (C# `ChildTaskStatus`) | ParentApp (TS `CompletionStatus`, etiket) | Coin |
 |---|---|---|---|---|---|
@@ -26,15 +26,18 @@ SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rej
 | `approved` | Ebeveyn onayladı (ya da inceleme gerektirmeyen görevde çocuk "Yaptım" dedi) | ParentApp; inceleme yoksa sunucu `pending`→`approved` çevirir | `Approved` | `approved` — "Tamamlandı" | **+coins** (tetikleyici) |
 | `declined` | Çocuk "Yapamam" dedi | Oyun (`child_set_status`) | `DeclinedByChild` | `declined` — "Yapamadı" | — |
 | `rejected` | Ebeveyn not yazarak reddetti | ParentApp (`review_completion`) | `RejectedByParent` | `rejected` — "Reddedildi" | — (önce `approved` idiyse **−coins**) |
+| `retry` (öneri 27 Ekim 2026) | Ebeveyn "Tekrar dene" dedi: görev çocuğa geri döner, notu oyunda görünür | ParentApp (`review_completion(..., 'retry', not)`) | eski oyun: bilinmeyen → `Assigned` (yapılacaklara döner); GameApp önerisi: `RetryByParent` (Atandı gibi işaretlenebilir + not) | `retry` — "Tekrar denesin" | — (önce `approved` idiyse **−coins**, −taş) |
 
 Ek kurallar:
 - `approved` ve `rejected` **nihai** durumdur: çocuk değiştiremez (`child_set_status` "Ebeveyn karar verdi" hatası; C# `ChildTask.IsFinal`).
+- `retry` nihai **değildir**: çocuk yeniden `pending` (Yaptım) ya da `declined` diyebilir. Ebeveyn yalnız bugünün (± 1 gün) görevi için `retry` verebilir (hint `retry_past`); geçmiş gün oyunda "kaçırıldı"dır.
+- İnceleme ayrıntısı (aynı öneri): `completions.motivation` 1 (çok kolay) … 5 (çok zor) = "motive etmek ne kadar zordu?" (ebeveyn gözlemi, isteğe bağlı; puan ya da tanı değildir; paylaşım açıksa uzman okur). `completions.stones` 0–6 = onayda verilen taş (boş = zorluğa göre, `ekonomi.md` 5A).
 - Çocuğun geçişleri (C# `TaskRules.CanChange` ve SQL `child_set_status` ile aynı): `Assigned → pending | declined`; `pending | declined → assigned` (geri al = kaydı sil).
 - `child_set_status` girdisi yalnız `pending` / `declined` / `assigned` kabul eder. C# `StatusText`: `ChildDone→"pending"`, `DeclinedByChild→"declined"`, `Assigned→"assigned"`, onay/ret için `null` (gönderilmez).
 - C# `ParseStatus`: bilinmeyen her değer `Assigned` sayılır.
 - **"Kaçırıldı" (missed)** yalnız oyunda hesaplanır, sunucuda yoktur: durum `Assigned` ve yerel saat görev gününün sonunu (23:59:59.9999999) geçtiyse. Ceza yok; oyun o görevin işaretlenmesine izin vermez.
 - ParentApp görev listesinde birden fazla çocuğa atanmış görev için tek etiket seçer: herhangi biri `pending` → `pending`; hepsi `approved` → `approved`; biri `rejected` → `rejected`; biri `declined` → `declined`.
-- ParentApp **İnceleme** ekranı yalnız `pending` olanları listeler.
+- ParentApp **İnceleme** ekranı yalnız `pending` olanları listeler. Birden çok çocuklu görev etiketinde `retry`, `pending`'den sonra gelir.
 
 ### 1.1 Tutarsızlıklar / dikkat edilecekler
 | # | Konu | Ayrıntı |
@@ -188,7 +191,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (öneri 27 Ekim 2026), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |

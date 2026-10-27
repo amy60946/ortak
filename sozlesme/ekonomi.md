@@ -192,6 +192,7 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 ## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
 
 - **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
+- **İncelemede ayar (öneri `proposed/20261027130000_review_detail.sql`, kullanıcı isteği 27 Ekim 2026):** ebeveyn onaylarken o tamamlamanın taşını **0–6** arasında seçebilir (`review_completion(..., p_stones)` → `completions.stones`; boş = zorluğa göre). 0 seçilirse defter satırı yazılmaz. Geri almada verilen kadar düşer (değişmedi). Coin ödülü bu ayardan etkilenmez. Üst sınır 6 = zor görevin iki katı (ada ilerlemesi dengesi; oyun değişmez, taş toplamı `child_me().sun_stones`'tan gelir).
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
