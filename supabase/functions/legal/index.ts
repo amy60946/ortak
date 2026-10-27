@@ -1,5 +1,6 @@
 // legal: yasal metinlerin herkese açık adresi (mağaza "Gizlilik Politikası" bağlantısı, kayıt ekranında okuma, web).
 // Alan adı alınana dek: https://<proje>.supabase.co/functions/v1/legal?doc=gizlilik  (sözleşme: sozlesme/admin.md, hukuk/README.md)
+// Tarayıcı isteği LEGAL_PUBLIC_URL tanımlıysa oraya (/yasal/<anahtar>) yönlendirilir; uygulamalar ve sayfa üretici format=json kullanır.
 //   GET ?doc=<anahtar>[&v=<sürüm>][&format=html|json]   güncel (yayındaki; yoksa taslak) ya da belirtilen sürüm
 //   GET (doc yok)                                        metin listesi
 // "Verify JWT" KAPALI yayınlanır: oturum gerekmez, yalnız okur. Tablo anon'a kapalı; işlev sunucu anahtarıyla yalnız
@@ -45,6 +46,13 @@ if (typeof Deno !== 'undefined') {
     const ver = url.searchParams.get('v') ?? '';
     const asJson = url.searchParams.get('format') === 'json';
     const env = (k: string) => Deno!.env.get(k) ?? '';
+    // Supabase kendi alan adında HTML'i düz metin (text/plain) gönderir; tarayıcıdan gelen istek herkese açık sayfaya yönlendirilir
+    // (secret LEGAL_PUBLIC_URL, ör. yönetim panelinin adresi; sayfalar orada /yasal altında). JSON isteği burada yanıtlanır.
+    const pub = env('LEGAL_PUBLIC_URL').replace(/\/+$/, '');
+    if (pub && !asJson && (!doc || (KEY.test(doc) && (!ver || VER.test(ver))))) {
+      const to = doc ? `${pub}/yasal/${doc}${ver ? `?v=${ver}` : ''}` : `${pub}/yasal`;
+      return new Response(null, { status: 302, headers: { ...BASE_HEADERS, Location: to, 'Cache-Control': 'public, max-age=300' } });
+    }
     const { createClient } = await import('jsr:@supabase/supabase-js@2');
     const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } });
 
