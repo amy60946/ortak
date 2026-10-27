@@ -85,7 +85,7 @@ Her işlemin dayanağı KVKK'daki şu şartlardır: **md. 5/2-c** sözleşmenin 
 | 19 | Mahkeme ya da yetkili kurumların usulüne uygun talepleri | Talep kapsamındaki veriler | md. 5/2-a ve md. 5/2-ç |
 | 20 | Hukuki uyuşmazlıklarda hakkımızı korumak | Uyuşmazlıkla ilgili veriler | md. 5/2-e |
 
-\* Avukatın teyit edeceği dayanaklar (bkz. Avukata notlar).
+\* Avukatın teyit edeceği dayanaklar.
 
 Verilerinizi reklam için kullanmayız, satmayız, profil çıkarmak için kullanmayız. Yapay zekâ hizmetlerine göndermeyiz.
 

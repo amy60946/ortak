@@ -191,7 +191,9 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 
 ## Ek-A: Teknik ve idari tedbirler
 
+<!-- iç -->
 "Durum" sütunu bugünkü sistemi gösterir; "yapılacak" olanlar canlıya almadan önce tamamlanır (`CANLIYA_ALMA.md` 1.5–1.6).
+<!-- /iç -->
 
 ### Teknik tedbirler
 
