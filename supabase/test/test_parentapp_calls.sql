@@ -63,6 +63,11 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 insert into public.care_modules (clinic_id, link_id, title, checklist, status)
   values ((select clinic_id from public.clinic_links where id = tst.v('link')::uuid), tst.v('link')::uuid, 'Rutin', '["a","b"]', 'active');
 insert into public.clinic_goals (clinic_id, link_id, title, shared) values ((select clinic_id from public.clinic_links where id = tst.v('link')::uuid), tst.v('link')::uuid, 'Hedef', true);
+-- kabulde plan anlık görüntüsü alınmış olabilir: 10 dakikalık bildirim aralığını sıfırla (review_fixes)
+reset role;
+update public.clinic_links set plan_published_at = null where id = tst.v('link')::uuid;
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select public.care_plan_publish(tst.v('link')::uuid);
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 insert into tst.kv values ('plan', public.family_care_plan(tst.v('link')::uuid)::text);
@@ -93,7 +98,7 @@ insert into tst.kv values ('i2', public.clinic_create_invite('family', '', '', '
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select public.claim_clinic_invite((tst.v('i2')::json) ->> 'code');
 insert into tst.kv values ('acc2', public.family_accept_invite((tst.v('i2')::json) ->> 'code', '{"name":"Efecan","age_group":"C","gender":"erkek","avatar":"kurt"}'::jsonb, null, false, 'uzman-paylasim-v1', null)::text);
-select tst.check((select age_band from public.children where name = 'Efecan') = 'B', 'yaş grubu C → B');
+select tst.check((select age_band from public.children where name = 'Efecan') = 'C', 'yaş grubu aynen yazılır (review_fixes: C kalır)');
 reset role;
 select tst.check(exists (select 1 from public.notifications where kind = 'invite_child_updated' and user_id = '00000000-0000-0000-0000-0000000000d1'), 'düzeltme uzmana bildirildi');
 set role authenticated;
@@ -105,8 +110,8 @@ select public.family_decline_invite((tst.v('i3')::json) ->> 'code');
 select tst.check((select count(*) from public.family_pending_invites()) = 0, 'ret sonrası bekleyen yok');
 -- kullanılmış davet → reason used
 insert into tst.kv values ('used', public.claim_clinic_invite(tst.v('code'))::text);
--- Not: aynı ailenin kullandığı davet claim'de yine başarı döner (ParentApp bekleyen listeye bakar)
-select tst.check((tst.v('used')::json ->> 'code') = tst.v('code'), 'kullanılmış davet aynı aileye bilgi olarak döner');
+-- review_fixes (ortak#51): aynı ailenin kullandığı davet reason 'accepted' döner (ParentApp: "Bu daveti zaten kabul ettin")
+select tst.check((tst.v('used')::json ->> 'reason') = 'accepted', 'kendi kullandığın davet: accepted');
 select tst.check(not exists (select 1 from public.family_pending_invites() where code = tst.v('code')), 'kullanılmış davet bekleyenlerde yok');
 reset role;
 

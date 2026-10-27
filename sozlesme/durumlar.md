@@ -301,3 +301,25 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.barrier` | `no_time`, `forgot`, `child_resisted`, `unsure` | vakit yoktu · unuttum · çocuk direndi · nasıl yapacağımı bilemedim |
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
+
+## P16. Tanışma soruları (`proposed/20261027100000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+
+`intake_answers.question_key` ve seçenek anahtarları (`answer` = seçenek anahtarları dizisi; tek seçimde tek eleman). Soru metinleri ParentApp'te (`parent-app/src/data/intake.ts`), sürüm `v1`.
+
+| Anahtar | Kime | Tür | Seçenekler |
+|---|---|---|---|
+| `main_goal` | ebeveyn | tek | `motivation`, `structure`, `behavior`, `executive`, `relationship`, `my_stress` |
+| `other_goals` | ebeveyn | çoklu | aynı + `other` |
+| `heard_from` | ebeveyn | tek | `expert`, `friend_family`, `social_ad`, `google`, `app_store`, `tiktok`, `other` |
+| `task_conflict_freq`, `reminder_freq`, `prompt_conflict_freq` | ebeveyn | tek | `every_day`, `most_days`, `some_days`, `never` |
+| `relate_reminding`, `relate_rewards_fade`, `relate_no_energy` | ebeveyn | tek | `yes`, `no` |
+| `child_routine` | çocuk | tek | `yes`, `struggle`, `not_really` |
+| `child_diagnosis` (sağlık, isteğe bağlı) | çocuk | çoklu | `adhd`, `autism`, `odd`, `anxiety_depression`, `other`, `none`, `prefer_not` |
+| `child_medication` (sağlık, isteğe bağlı) | çocuk | tek | `yes`, `no`, `not_diagnosed`, `prefer_not` |
+| `child_therapists` | çocuk | çoklu | `behavior`, `speech_ot`, `psych`, `other`, `none` |
+| `child_organizing`, `child_effort_avoid`, `child_rules_argue`, `child_tantrums`, `child_feelings`, `child_worry` | çocuk | tek | `every_day`, `most_days`, `some_days`, `never` (geçen hafta) |
+| `child_goals` | çocuk | çoklu | `chores`, `focus`, `impulses`, `bedtime`, `siblings`, `emotions`, `other` |
+| `child_interests` | çocuk | çoklu | `sports`, `books`, `games_tech`, `arts`, `music_dance`, `animals_nature`, `other` |
+| `child_motivators` | çocuk | çoklu | `screen_time`, `allowance`, `family_activity`, `friends_time`, `treats`, `other` |
+
+Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (`saglik-yanit-v1`). Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.

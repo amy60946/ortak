@@ -51,6 +51,8 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_verification_open(id)` | support | Belge yolunu döner ve görüntülemeyi denetim kaydına yazar. Panel bunu doğrudan değil, Edge Function **`verify-doc`** (`{action:'open', id}`) üzerinden çağırır; işlev 2 dk imzalı bağlantı döner. `20261026400000` (uygulandı 26 Ekim) ile `verify` kovası yöneticiye doğrudan kapalı (panel dışından açılıp kayıtsız kalamaz). Karar sonrası dosyaları `verify-doc` `{action:'purge'}` siler (`storage_trash`, `admin_can_review`) |
 | `admin_verification_decide(id, onay, ret_nedeni, açıklama, barkod, özet, gerekçe)` | support | Onay → rozet (`clinicians.verified_profession/verified_at`) + bildirim; ret → neden kodu + uzmana açıklama. Özet yalnız `{university, program, degree, graduation_year}`. Dönen belge yolunu panel kovadan **siler** |
 | `admin_verification_suspend(uzman, açıklama, gerekçe)` | support | Rozeti askıya alır (şikâyet, BCBA süresi) |
+| `admin_intake(aile, gerekçe)` | support | ParentApp tanışma soruları (`20261027100000`, öneri): kişi bazlı yanıtlar (kullanıcı kararı 27 Ekim 2026; canlıdan önce avukat onayı); her açılış denetim kaydında (`intake.view`). Sağlık yanıtları (tanı, ilaç) dahil |
+| `admin_intake_summary(gün)` | okur | Soru × seçenek dağılımı, yalnız sayılar |
 
 Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
 

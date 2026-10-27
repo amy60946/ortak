@@ -438,3 +438,16 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 | `handle_user_email_confirmed` | tetikleyici (auth.users `email_confirmed_at`) | E-posta doğrulanınca (kayıttan ≥ 1 dk sonra) davetteki e-postayla eşleşen açık daveti bağlar |
 
 Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).
+
+## 16. ParentApp ilk kurulum ve tanışma soruları (`proposed/20261027100000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+
+| Tablo / alan | Kim okur | Kim yazar | Not |
+|---|---|---|---|
+| `intake_answers` (`family_id`, `user_id`, `child_id?`, `question_key`, `answer` jsonb dizi, `version`, `consent_version?`) | aile üyeleri | yalnız yanıtlayan (kendi satırı; aile/kişi kimliği sunucudan) | Kişi + çocuk + soru başına tek satır (`unique nulls not distinct`), upsert `onConflict: user_id,child_id,question_key`. Çocuk aileye ait olmalı; seçenekler `^[a-z0-9_]{1,40}$`; sağlık sorularında rıza sürümü (durumlar.md P16). Uzman erişimi yok. |
+| `profiles.setup_completed_at` | aile | `parent_setup_complete()` | İlk kurulum bitti mi; göçten önceki ebeveynler dolu. İstemci doğrudan yazamaz (sütun izni yok). |
+
+| Fonksiyon | Kim | Ne yapar |
+|---|---|---|
+| `parent_setup_complete()` | ebeveyn | Kurulumu bitti olarak işaretler (bir kez) |
+| `admin_intake(aile, gerekçe)` | admin support/owner (2FA) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
+| `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok |

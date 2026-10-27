@@ -105,6 +105,12 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 | Yanlış aileye giden davet | `family_decline_invite` → davet kapanır, öneri silinir, uzmana `invite_declined` |
 | Test | `test/test_family_invite_links.sql` 5. ve 6. bölüm |
 
+### H. ParentApp tanışma soruları — sağlık yanıtları (sürüm `saglik-yanit-v1`, öneri 27 Ekim 2026)
+
+> Çocuğumun tanısı ve ilaç kullanımı hakkındaki yanıtlarımın, uygulamanın bana ve çocuğuma uygun öneriler sunması amacıyla saklanmasına ve hizmetin yürütülmesi için yetkili ekip tarafından görülebilmesine açık rıza veriyorum. Bu soruları yanıtlamak zorunda değilim; yanıtlarımı istediğim an silebilirim.
+
+Ekranda kısa satır + i (tam metin i'de). "Belirtmek istemiyorum" seçilirse rıza istenmez. Yönetim panelinde kişi bazlı görünürlük kullanıcı kararıdır (27 Ekim 2026); aydınlatma metnine eklenmeli.
+
 ## 5. Avukata sorular
 
 1. Notlar için veri sorumlusu kim: klinik mi, platform mu, ikisi mi?
@@ -117,3 +123,4 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 8. "Uzmanı tanıyorum ve veliyim" onay kutusu ile sorumluluk maddeleri (3F) tüketici mevzuatı açısından ne ölçüde geçerli; sorumluluk sınırı (3G) nasıl yazılmalı?
 9. Belge incelemesi sonrası gösterilen "Belgesi incelendi" ifadesi ve inceleme kapsamı (A11) yeterince açık mı; inceleme hatasında sorumluluk nasıl sınırlanır?
 10. Uzman doğrulaması yapılmadan çalışmak için ek bir yükümlülük var mı (ör. sağlık meslek mensuplarını listeleyen platformlar, uzaktan sağlık hizmetleri mevzuatı kapsamına girip girmediği)? Doğrulama seçenekleri `akislar.md` 14.
+11. ParentApp tanışma soruları: tanı/ilaç yanıtlarının (özel nitelikli sağlık verisi) kişi bazlı olarak yönetim panelinde görülmesi için açık rıza metni (H) ve aydınlatma yeterli mi; amaç ve saklama süresi nasıl yazılmalı; anonim özetle sınırlamak daha mı uygun?

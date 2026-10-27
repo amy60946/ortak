@@ -405,6 +405,29 @@ Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
+## 15. ParentApp ilk kurulum ve tanışma soruları (öneri `proposed/20261027100000_parent_setup_intake.sql`, 27 Ekim 2026)
+
+Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
+
+| # | Ekran | Ne olur | Veritabanı |
+|---|---|---|---|
+| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. | — |
+| 2 | Uzman kodu? | "Bir uzmandan davet kodu aldın mı?" Hayır → kayıt · Evet → kod ekranı → kayıt · "Hesabım var" → giriş. Davet bağlantısıyla gelen bu soruyu görmez. | kayıt meta `clinic_invite` (kod ya da bağlantı anahtarı) |
+| 3 | Kayıt | Ad, e-posta, şifre (bugünkü ekran). | `handle_new_user` (davet aileye bağlanır) |
+| 4 | Aile soruları | Ana hedef, diğer hedefler, bizi nereden duydun, kısa giriş, üç sıklık sorusu (araya bir "yalnız değilsin" ekranı). Her yanıt hemen kaydedilir. | `intake_answers` (`child_id` boş) |
+| 5 | Sıradaki | "Çocuğunu ekle" · "Kodla aileye katıl". | — |
+| 6a | Çocuk ekle | Uzman daveti bekliyorsa davet ekranı (öneri dolu, uyarı + veli beyanı, `family_accept_invite`); yoksa ad, cinsiyet, doğum günü, simge. | `children` |
+| 7a | Çocuk soruları | Çocuğu ekleyen ebeveyn yanıtlar (düzen, tanı*, ilaç*, uzmanlar, geçen hafta 6 sıklık sorusu, hedefler, ilgi alanları, motive edenler). *İsteğe bağlı, rıza satırı. | `intake_answers` (`child_id`) |
+| 8a | Çocukların | Adlar (düzenlenebilir), "Sonra başka çocuk da ekleyebilirsin", Devam · Başka çocuk ekle (6a'ya döner). | `children.name` |
+| 9 | Hazırlanıyor | ~1,5 sn "Her çocuk için odak alanlarını belirliyoruz". | — |
+| 6b | Kodla katıl | Tek kutu (`CodeEntry`: önce uzman daveti, değilse `join_family`); uzman koduysa 6a'nın davet ekranına geçer. Aileye katılan 7a–8a'yı görmez. | `join_family` |
+| 10 | Seni nasıl görsün? | Takma ad + ebeveyn avatarı (oyunda çocuğun gördüğü). | `profiles.nickname/avatar` |
+| 11 | Tanıdık mı? ×3 | Üç cümle + sade çizim, Evet/Hayır. | `intake_answers` (`relate_*`) |
+| 12 | Bitti | `parent_setup_complete()`; uygulamaya girilir. Sonra (planlandı): ekranın altında tek seferlik tanıtım teklifi. | `profiles.setup_completed_at` |
+| 13 | Çocuğun cihazını kur | Uygulamada ilk iş: çocuk seç → "Başka cihaz" (Pofi Adası indirme bağlantısı paylaş + giriş kodu QR/yazılı) · "Bu cihaz" (App Store) · "Kurdum" / "Sonra yaparım". | `create_invite_code('child')` |
+
+Kurallar: Yanıt satırı kişi + çocuk + soru başına tek (`unique nulls not distinct`); her ebeveyn kendi yanıtını yazar, aile üyeleri okur, başka aile göremez. Uzman bu sürümde yanıtları görmez (ileride ebeveyn izniyle; paylaşım onay metni sürümü değişir). Yönetim paneli: `admin_intake(aile, gerekçe)` kişi bazlı (support/owner, denetim kaydı), `admin_intake_summary(gün)` yalnız sayılar. Bu göçten önceki ebeveynler kurulumu yapmış sayılır (`setup_completed_at` dolu).
+
 ## P9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |
