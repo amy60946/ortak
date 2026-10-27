@@ -6,7 +6,7 @@ Biçim: `tarih · ürün · ne değişti · etkisi / kim ne yapmalı`. En yeni k
 
 - [ ] **UZMAN KARŞILAMA ANKETİ (kullanıcı isteği 27 Ekim 2026; Joon'un kayıt sonrası ekranları örnek, kopya değil).** Öneri `proposed/20261027100000_clinician_survey.sql` (+ `test_clinician_survey.sql`), seçenekler `veri/uzman_anketi.json`, akış `sozlesme/akislar.md` 15. ClinicApp ekranı hazır (sunucu yokken anket çıkmaz).
   1. **Kullanıcı:** SQL'i uygula.
-  2. **Yönetim paneli (GameApp2):** `admin_kpi_clinician_survey(gün)` ile "Uzman anketi" kartı (toplamlar; Türkçe adlar `veri/uzman_anketi.json`).
+  2. [x] **Yönetim paneli (GameApp2, 27 Ekim yayında `2642e05`):** Özet → "Uzman karşılama anketi" kartı (yanıtlayan/geçen/oran + dört bölüm çubuklu; SQL yoksa "bekleniyor"). `admin_kpi_clinician_survey(gün)` ile (toplamlar; Türkçe adlar `veri/uzman_anketi.json`).
   3. **Karar bekleyen (kullanıcı):** kayıt formunda serbest "Unvanın" yerine meslek listesi mi; yeni hesapta "örnek danışan" gösterilsin mi; anket sorularına ekleme/çıkarma.
 - [ ] **E-POSTAYLA AİLE DAVETİ (kullanıcı kararı 26 Ekim 2026: "hazırla, 3 gün yap, kodu kopyala yedeği kalsın, ana hedef e-posta; testler için kişisel e-postamdan gitsin").** Göç `migrations/20261027000000_invite_email.sql` (**uygulandı 26 Ekim 2026**; + `test_invite_email.sql`), Edge Function `supabase/functions/invite-email` (+ `email.test.ts`), karar `sozlesme/akislar.md` 10 (güncelleme), hukuk taslağı `hukuk_notlari.md` A13.
   1. [x] **Kullanıcı (26 Ekim 2026):** SQL uygulandı (davet 3 gün; e-posta alanları ve işlevleri).
