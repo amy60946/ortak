@@ -306,7 +306,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
 
-## P17. Yasal metinler ve KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026)
+## P17. Yasal metinler ve KVKK başvuruları (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026)
 
 | Alan | Değerler | Anlam |
 |---|---|---|

@@ -386,7 +386,7 @@ Ret nedenleri (`veri/uzman_meslekleri.json` `reasons`): `name_mismatch`, `barcod
 
 Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o kişi olduğunu değil (ad eşleşmesi + gerektiğinde telefon). Sağlık Bakanlığı diploma tescili / meslek icra yetkisi için herkese açık sorgu bulunamadı; yetki sorumluluğu uzman sözleşmesinde (`hukuk_notlari.md` A10). Rozet "Belgesi incelendi" der, "doğrulandı" demez (A11). Ön kontrol bir örnek belgeyle denendi; ilk gerçek belgelerde e-Devlet düzeni kontrol edilip gerekirse kurallar güncellenir.
 
-## 15. Uzman karşılama anketi (öneri `proposed/20261027100000_clinician_survey.sql`, kullanıcı isteği 27 Ekim 2026)
+## 15. Uzman karşılama anketi (`migrations/20261027100000_clinician_survey.sql`, uygulandı 27 Ekim 2026; kullanıcı isteği 27 Ekim 2026)
 
 Kullanıcı Joon Health'in kayıt sonrası ekranlarını örnek gösterdi; Joon yalnız referanstır (metin ve düzen kopyalanmaz). Amaç: uzmanı tanımak (meslek, ihtiyaç, geliş nedeni), ilk adımı ona göre önermek ve ürün kararları için toplu veri.
 
@@ -466,7 +466,7 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
 
-## 17. Yasal metin onayı ve KVKK başvurusu (öneri `proposed/20261027200000_legal.sql`, 27 Ekim 2026; metinler `hukuk/`)
+## 17. Yasal metin onayı ve KVKK başvurusu (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026; metinler `hukuk/`)
 
 | Adım | Kim | Ne | Sunucu |
 |---|---|---|---|

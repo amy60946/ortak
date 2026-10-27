@@ -439,7 +439,7 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 
 Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).
 
-## 16. Uzman karşılama anketi (`proposed/20261027100000_clinician_survey.sql`, öneri 27 Ekim 2026; akış `akislar.md` 15)
+## 16. Uzman karşılama anketi (`migrations/20261027100000_clinician_survey.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 15)
 
 | Tablo | Ne | Alanlar | Kim yazar | Kim okur |
 |---|---|---|---|---|
@@ -452,7 +452,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `clinician_survey_keys(tür)` | K | Geçerli anahtarlar (`profession`, `challenges`, `features`, `intent`); `veri/uzman_anketi.json` ile aynı |
 | `admin_kpi_clinician_survey(gün)` | yönetim paneli (`admin_require`, 2 adımlı) | Toplam sayılar: cevaplayan, geçen, seçenek başına sayı; kişi kimliği dönmez |
 
-## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026; metinler `hukuk/`)
+## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`migrations/20261027200000_legal.sql` + `20261027210000_legal_seed.sql`, uygulandı 27 Ekim 2026; Edge Function `legal` yayında; metinler `hukuk/`)
 
 | Tablo | Ne | Erişim |
 |---|---|---|

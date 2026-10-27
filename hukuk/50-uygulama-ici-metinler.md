@@ -16,7 +16,7 @@
 | Hitap | ParentApp ve ClinicApp: "sen" (uygulamaların mevcut dili). Pofi Adası: çocuğa kısa ve sade; ebeveyn kapısının arkası ebeveyne "sen" |
 | Değişkenler | `{süslü parantez}` = uygulamanın doldurduğu değer (ör. `{fiyat}`). `[KÖŞELİ]` = canlıdan önce bir kez doldurulacak yer tutucu |
 | Bağlantılar | Altı çizili metin = ilgili belgeyi açan bağlantı (anahtar tabloda) |
-| Onay kaydı | Onay isteyen metinler `legal_accept(app, [{key, version}])` ile kaydedilir; bekleyenler `legal_pending(app)` (`proposed/20261027200000_legal.sql`) |
+| Onay kaydı | Onay isteyen metinler `legal_accept(app, [{key, version}])` ile kaydedilir; bekleyenler `legal_pending(app)` (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026) |
 | Kayıt sırasında | Kayıt anında oturum henüz açık değil (e-posta doğrulaması). İşaretlenen sürümler kayıt bilgisine eklenir; ilk girişte `legal_accept` ile yazılır ya da ilk girişte `legal_pending` ekranı gösterilir |
 | Pofi Adası sesli okuma | Çocuğa gösterilen her yeni metin için ses üretilir (game-app `CLAUDE.md`, `build_voice.py --missing`) |
 | Değişiklik | Bu belgedeki bir metin değişirse bağlı belgeyle tutarlılığı kontrol edilir; açık rıza metni değişirse rıza sürümü de değişir (`-v2`) |
