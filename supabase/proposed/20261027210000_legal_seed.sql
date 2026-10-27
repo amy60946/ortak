@@ -1283,7 +1283,7 @@ values ('sozlesme-uzman', 'v1', 'ClinicApp Uzman Hizmet Sözleşmesi', '{clinic}
 
 10.3. **Ödeyen klinik sahibidir.** Üyeliği yalnız klinik sahibi, kendi Apple hesabıyla ve birey olarak satın alır. Üyelik, paketin izin verdiği ölçüde kliniğin bütün ekibine erişim sağlar; ekip üyeleri ayrıca ödeme yapmaz. Bireysel pakette yalnız klinik sahibi erişir. ClinicApp web sürümünde satın alma yapılmaz; iPhone ya da iPad'deki ClinicApp'te alınan üyelik, uzman hesabına bağlı olduğu için web sürümünde de geçerlidir.
 
-10.4. **Deneme süresi.** Yeni klinik, ödeme bilgisi istenmeden 14 (on dört) gün ücretsiz deneme süresinden yararlanır. Deneme süresinin sonunda ücretli pakete geçilmezse hiçbir ücret alınmaz ve erişim madde 10.7'ye göre kapanır. Platform deneme süresini kendi takdiriyle uzatabilir.
+10.4. **Deneme süresi.** Yeni klinik, ödeme bilgisi istenmeden 7 (yedi) gün ücretsiz deneme süresinden yararlanır (Platform süreyi uzatabilir). Deneme süresinin sonunda ücretli pakete geçilmezse hiçbir ücret alınmaz ve erişim madde 10.7'ye göre kapanır. Platform deneme süresini kendi takdiriyle uzatabilir.
 
 10.5. **Otomatik yenileme ve iptal.** App Store üyelikleri, iptal edilmedikçe her dönem sonunda aynı süre için otomatik yenilenir ve ücret Apple hesabına yansıtılır. Klinik sahibi üyeliğini her zaman Apple hesabının abonelik ayarlarından (iPhone/iPad: Ayarlar › Apple hesabı › Abonelikler) iptal edebilir; yenilemenin durması için iptalin Apple'ın belirlediği süre içinde (bugün dönem bitiminden en az 24 saat önce) yapılması gerekir. İptal, ödenmiş dönemin sonunda geçerli olur. ClinicApp hesabını silmek üyeliği kendiliğinden iptal etmez.
 
@@ -1887,10 +1887,14 @@ values ('cerez-clinicapp-web', 'v1', 'ClinicApp Web Çerez Politikası', '{clini
 
 | Ne | Tür | Amaç | Ne kadar kalır | Taraf | Kategori |
 |---|---|---|---|---|---|
-| Oturum bilgisi (kimlik doğrulama sağlayıcısının erişim ve yenileme anahtarı) | Yerel depolama | Giriş yaptığınızı hatırlamak, isteklerinizin size ait olduğunu sunucuda doğrulamak | Oturumunuz açık kaldığı sürece; **Çıkış yap** ile silinir; anahtar kısa sürelidir ve oturum sürdükçe yenilenir | Birinci taraf (anahtar Supabase kimlik doğrulama hizmetiyle doğrulanır) | Zorunlu |
-| Arayüz tercihleri (ör. ilk kullanım rehberinin gösterildiği, seçtiğiniz sekme ya da görünüm) | Yerel depolama | Sizin yaptığınız seçimleri bir sonraki açılışta hatırlamak | Siz silene kadar ya da çıkışta | Birinci taraf | Zorunlu (sizin açıkça yaptığınız seçimin hatırlanması) |
+| Oturum bilgisi (`sb-<proje>-auth-token`): kimlik doğrulama sağlayıcısının erişim ve yenileme anahtarı ile hesabınızın e-posta adresi ve kayıtta yazdığınız bilgiler (ad, unvan) | Yerel depolama | Giriş yaptığınızı hatırlamak, isteklerinizin size ait olduğunu sunucuda doğrulamak | Oturumunuz açık kaldığı sürece; **Çıkış yap** ile silinir; anahtar kısa sürelidir ve oturum sürdükçe yenilenir | Birinci taraf (anahtar Supabase kimlik doğrulama hizmetiyle doğrulanır) | Zorunlu |
+| E-posta bağlantısı doğrulama kodu (`sb-<proje>-auth-token-code-verifier`) | Yerel depolama | Şifre yenileme ya da e-posta doğrulama bağlantısının yalnız onu isteyen tarayıcıda açılabilmesi (güvenlik) | Bağlantı kullanılınca silinir | Birinci taraf | Zorunlu |
+| İlk kullanım rehberinin gösterildiği (`clinic.onboarding.v1.<hesap kimliği>`) | Yerel depolama | Rehberi her açılışta yeniden göstermemek | Siz silene kadar | Birinci taraf | Zorunlu (sizin kapattığınız rehberin hatırlanması) |
+| Bu bilgilendirme bandının kapatıldığı (`clinicapp.cookie-notice.v1`) | Yerel depolama | Bandı bir daha göstermemek | Siz silene kadar | Birinci taraf | Zorunlu |
 
-Bu depolamada kişisel içerik (danışan bilgisi, not, mesaj) tutulmaz. Danışan kayıtları ve hesap bilgileriniz tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır.
+Bu depolamada danışan bilgisi, not, mesaj ya da başka kişisel içerik tutulmaz. Danışan kayıtları tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır. Kullanım ölçümünün oturum kimliği yalnız sayfa açıkken bellekte tutulur, tarayıcıya yazılmaz.
+
+**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); üçüncü taraf betik yüklenmez. ClinicApp web'de satın alma yoktur; üyelik iPhone/iPad'deki ClinicApp'ten App Store ile alınır.
 
 ## 4. Kullanmadıklarımız
 
@@ -1931,6 +1935,8 @@ KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'
 9.1. Kullandığımız depolama değişirse bu politikayı güncelleriz; tablo her zaman güncel listeyi gösterir.
 
 9.2. İleride zorunlu olmayan bir çerez ya da depolama (ör. analiz) eklemeye karar verirsek: önce bu politikayı güncelleriz, web sürümüne kabul ve reddin eşit kolaylıkta sunulduğu bir onay ekranı ekleriz ve **açık rızanızı almadan** o depolamayı kullanmayız. Onayınızı istediğiniz an geri alabilirsiniz.
+
+9.3. **Tanıtım sayfaları ve reklam ölçümü.** Ürünlerimizi tanıttığımız web sayfalarında reklam ya da ziyaretçi ölçüm aracı (ör. sosyal medya pikseli) kullanmaya karar verirsek bu araçlar sayfa açılınca **yüklenmez**; yalnız bilgilendirme bandında "Kabul et"e bastığınızda yüklenir ve "Reddet" aynı kolaylıkta sunulur. Sayfayı ziyaret etmek onay sayılmaz. Bu durumda önce bu politikayı, Gizlilik Politikası'nı ve Hizmet Sağlayıcılar Listesi'ni güncelleriz. Uygulamaların içinde (Pofi Adası, ParentApp, ClinicApp) reklam ya da izleme aracı kullanılmaz.
 
 ---
 

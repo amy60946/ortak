@@ -160,7 +160,7 @@
 
 10.3. **Ödeyen klinik sahibidir.** Üyeliği yalnız klinik sahibi, kendi Apple hesabıyla ve birey olarak satın alır. Üyelik, paketin izin verdiği ölçüde kliniğin bütün ekibine erişim sağlar; ekip üyeleri ayrıca ödeme yapmaz. Bireysel pakette yalnız klinik sahibi erişir. ClinicApp web sürümünde satın alma yapılmaz; iPhone ya da iPad'deki ClinicApp'te alınan üyelik, uzman hesabına bağlı olduğu için web sürümünde de geçerlidir.
 
-10.4. **Deneme süresi.** Yeni klinik, ödeme bilgisi istenmeden 14 (on dört) gün ücretsiz deneme süresinden yararlanır. Deneme süresinin sonunda ücretli pakete geçilmezse hiçbir ücret alınmaz ve erişim madde 10.7'ye göre kapanır. Platform deneme süresini kendi takdiriyle uzatabilir.
+10.4. **Deneme süresi.** Yeni klinik, ödeme bilgisi istenmeden 7 (yedi) gün ücretsiz deneme süresinden yararlanır (Platform süreyi uzatabilir). Deneme süresinin sonunda ücretli pakete geçilmezse hiçbir ücret alınmaz ve erişim madde 10.7'ye göre kapanır. Platform deneme süresini kendi takdiriyle uzatabilir.
 
 10.5. **Otomatik yenileme ve iptal.** App Store üyelikleri, iptal edilmedikçe her dönem sonunda aynı süre için otomatik yenilenir ve ücret Apple hesabına yansıtılır. Klinik sahibi üyeliğini her zaman Apple hesabının abonelik ayarlarından (iPhone/iPad: Ayarlar › Apple hesabı › Abonelikler) iptal edebilir; yenilemenin durması için iptalin Apple'ın belirlediği süre içinde (bugün dönem bitiminden en az 24 saat önce) yapılması gerekir. İptal, ödenmiş dönemin sonunda geçerli olur. ClinicApp hesabını silmek üyeliği kendiliğinden iptal etmez.
 

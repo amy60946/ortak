@@ -30,10 +30,14 @@
 
 | Ne | Tür | Amaç | Ne kadar kalır | Taraf | Kategori |
 |---|---|---|---|---|---|
-| Oturum bilgisi (kimlik doğrulama sağlayıcısının erişim ve yenileme anahtarı) | Yerel depolama | Giriş yaptığınızı hatırlamak, isteklerinizin size ait olduğunu sunucuda doğrulamak | Oturumunuz açık kaldığı sürece; **Çıkış yap** ile silinir; anahtar kısa sürelidir ve oturum sürdükçe yenilenir | Birinci taraf (anahtar Supabase kimlik doğrulama hizmetiyle doğrulanır) | Zorunlu |
-| Arayüz tercihleri (ör. ilk kullanım rehberinin gösterildiği, seçtiğiniz sekme ya da görünüm) | Yerel depolama | Sizin yaptığınız seçimleri bir sonraki açılışta hatırlamak | Siz silene kadar ya da çıkışta | Birinci taraf | Zorunlu (sizin açıkça yaptığınız seçimin hatırlanması) |
+| Oturum bilgisi (`sb-<proje>-auth-token`): kimlik doğrulama sağlayıcısının erişim ve yenileme anahtarı ile hesabınızın e-posta adresi ve kayıtta yazdığınız bilgiler (ad, unvan) | Yerel depolama | Giriş yaptığınızı hatırlamak, isteklerinizin size ait olduğunu sunucuda doğrulamak | Oturumunuz açık kaldığı sürece; **Çıkış yap** ile silinir; anahtar kısa sürelidir ve oturum sürdükçe yenilenir | Birinci taraf (anahtar Supabase kimlik doğrulama hizmetiyle doğrulanır) | Zorunlu |
+| E-posta bağlantısı doğrulama kodu (`sb-<proje>-auth-token-code-verifier`) | Yerel depolama | Şifre yenileme ya da e-posta doğrulama bağlantısının yalnız onu isteyen tarayıcıda açılabilmesi (güvenlik) | Bağlantı kullanılınca silinir | Birinci taraf | Zorunlu |
+| İlk kullanım rehberinin gösterildiği (`clinic.onboarding.v1.<hesap kimliği>`) | Yerel depolama | Rehberi her açılışta yeniden göstermemek | Siz silene kadar | Birinci taraf | Zorunlu (sizin kapattığınız rehberin hatırlanması) |
+| Bu bilgilendirme bandının kapatıldığı (`clinicapp.cookie-notice.v1`) | Yerel depolama | Bandı bir daha göstermemek | Siz silene kadar | Birinci taraf | Zorunlu |
 
-Bu depolamada kişisel içerik (danışan bilgisi, not, mesaj) tutulmaz. Danışan kayıtları ve hesap bilgileriniz tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır.
+Bu depolamada danışan bilgisi, not, mesaj ya da başka kişisel içerik tutulmaz. Danışan kayıtları tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır. Kullanım ölçümünün oturum kimliği yalnız sayfa açıkken bellekte tutulur, tarayıcıya yazılmaz.
+
+**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); üçüncü taraf betik yüklenmez. ClinicApp web'de satın alma yoktur; üyelik iPhone/iPad'deki ClinicApp'ten App Store ile alınır.
 
 ## 4. Kullanmadıklarımız
 
@@ -75,6 +79,8 @@ KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'
 
 9.2. İleride zorunlu olmayan bir çerez ya da depolama (ör. analiz) eklemeye karar verirsek: önce bu politikayı güncelleriz, web sürümüne kabul ve reddin eşit kolaylıkta sunulduğu bir onay ekranı ekleriz ve **açık rızanızı almadan** o depolamayı kullanmayız. Onayınızı istediğiniz an geri alabilirsiniz.
 
+9.3. **Tanıtım sayfaları ve reklam ölçümü.** Ürünlerimizi tanıttığımız web sayfalarında reklam ya da ziyaretçi ölçüm aracı (ör. sosyal medya pikseli) kullanmaya karar verirsek bu araçlar sayfa açılınca **yüklenmez**; yalnız bilgilendirme bandında "Kabul et"e bastığınızda yüklenir ve "Reddet" aynı kolaylıkta sunulur. Sayfayı ziyaret etmek onay sayılmaz. Bu durumda önce bu politikayı, Gizlilik Politikası'nı ve Hizmet Sağlayıcılar Listesi'ni güncelleriz. Uygulamaların içinde (Pofi Adası, ParentApp, ClinicApp) reklam ya da izleme aracı kullanılmaz.
+
 ---
 
 ## Bilgilendirme bandı (öneri)
@@ -89,7 +95,7 @@ Giriş yaptıktan sonra Ayarlar › Yasal metinler › Çerez Politikası'ndan h
 
 ## Avukata notlar
 
-1. **Depolama listesinin teyidi:** `clinic-app` deposu bu pencereden okunamadı. Tablo, Expo web + Supabase kimlik doğrulamasının olağan davranışına göre yazıldı (oturum anahtarı yerel depolamada). Canlıdan önce **Klinik penceresi** ClinicApp web kodundaki bütün `localStorage` / `sessionStorage` / çerez kullanımlarını, harici yazı tipi ya da betik yüklemelerini (ör. Google Fonts) ve kullanım olaylarının oturum kimliğinin nerede tutulduğunu listelemeli; tablo buna göre düzeltilmeli.
+1. **Depolama listesinin teyidi (Klinik penceresi, 27 Ekim 2026: yapıldı):** ClinicApp web kodu tarandı; 3. bölümdeki tablo gerçek listedir (oturum anahtarı — kayıttaki e-posta, ad ve unvan dahil —, e-posta bağlantısı doğrulama kodu, rehber işareti, bant işareti). `sessionStorage`, çerez ve IndexedDB kullanılmıyor; kullanım ölçümünün oturum kimliği yalnız bellekte. Tanıtım sayfası Google Fonts'u dışarıdan yüklüyordu; yazı tipi sitenin kendi dosyasına alındı (dış istek yok). Web'de satın alma yok (kullanıcı kararı 22 Ekim 2026); koddaki eski iyzico ödeme formu web'de gösterilmez.
 2. **Barındırma sağlayıcısı (7.1):** ClinicApp web'in nerede yayınlanacağı belli değil (olgu dosyasında yalnız yönetim paneli için Cloudflare var). Cloudflare kullanılırsa bot koruması gibi özellikler kendi zorunlu çerezlerini yerleştirebilir; sağlayıcı ve çerezleri netleşince tabloya ve alt işleyen listesine eklenmeli.
 3. **Arayüz tercihlerinin "zorunlu" sayılması (3):** Kurul rehberi, kullanıcının açıkça yaptığı seçimi hatırlayan depolamayı hangi koşulda zorunlu kabul ediyor? İşlevsel sayılırsa bu satır için onay gerekir ya da tercihler sunucuda (hesaba bağlı) tutulmalı.
 4. **Rehberin güncel sürümü:** Dayanak satırında KVKK Kurumu'nun 2022 tarihli çerez rehberi anıldı; güncel sürüm ve varsa yeni Kurul kararları kontrol edilmeli.
