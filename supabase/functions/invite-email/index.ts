@@ -10,6 +10,8 @@
 //   İsteğe bağlı: INVITE_BASE_URL (ör. https://alanadi.com/d/), PARENTAPP_STORE_URL, PRIVACY_URL, BRAND_NAME (varsayılan ParentApp)
 // İçerik: uzmanın unvanı + adı, kod, yükleme adımları, son geçerlilik. Çocuğun adı ve uzmanın notu e-postaya girmez; konu satırında
 // unvan yok (sağlık çağrışımı bildirim ekranında görünmesin). Yanıtlar uzmanın e-postasına gider (Reply-To).
+// Kod adımı ParentApp'in iki akışında da doğru (27 Ekim): yeni ilk kurulumda kod kayıttan önce sorulur ("Bir uzmandan davet kodu
+// aldın mı?" → Evet), eski sürümde kayıttan sonra ("Kodun var mı?"); hesabı olan Aile › Hesap › Kod gir.
 // Saf işlevlerin testi: email.test.ts.
 
 export type InviteMail = { code: string; token: string | null; expires_at: string; to: string; clinician: string; title: string; clinic: string };
@@ -40,7 +42,7 @@ export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
     `${who}${from} sizi ${brand} uygulamasına ${m.code} koduyla davet ediyor.`,
     '',
     link ? `Daveti açın: ${link}` : `1) ${brand} uygulamasını yükleyin${e.storeUrl ? `: ${e.storeUrl}` : ' (App Store)'}.`,
-    link ? `Uygulama kod sorarsa: ${m.code}` : `2) Kayıt olun; açılan "Kodun var mı?" ekranına bu kodu yazın: ${m.code}`,
+    link ? `Uygulama kod sorarsa: ${m.code}` : `2) Uygulamayı açın; davet kodu sorulduğunda ("Bir uzmandan davet kodu aldın mı?") bu kodu yazın: ${m.code}`,
     `Hesabınız varsa: Aile › Hesap › Kod gir bölümüne kodu yazın.`,
     '',
     `Davet ${until} tarihine kadar geçerli.`,
@@ -78,7 +80,7 @@ export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
     ${link ? step(1, `Aşağıdaki düğmeyle daveti açın.`) : step(1, e.storeUrl
       ? `<a href="${esc(e.storeUrl)}" style="color:${navy};font-weight:700">App Store'dan ${esc(brand)} uygulamasını yükleyin</a>.`
       : `App Store'dan ${esc(brand)} uygulamasını yükleyin.`)}
-    ${step(2, `Kayıt olun; açılan <strong>“Kodun var mı?”</strong> ekranına kodu yazın.`)}
+    ${step(2, `Uygulamayı açın; <strong>davet kodu sorulduğunda</strong> bu kodu yazın.`)}
     ${step(3, `Hesabınız varsa: <strong>Aile › Hesap › Kod gir</strong> bölümüne kodu yazın.`)}
   </table>
   ${link || e.storeUrl ? `<p style="margin:18px 0 6px">${link ? btn(link, 'Daveti aç', true) : btn(e.storeUrl, `${brand} uygulamasını yükle`, true)}</p>` : ''}
