@@ -63,7 +63,7 @@
 
 | # | Sorun | Kimin işi |
 |---|---|---|
-| 1 | ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği **varsayılan açık** (`akislar.md` 11 #2). Açık rıza önceden işaretli olamaz; varsayılan kapalı olmalı. | ParentApp penceresi |
+| 1 | ~~ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği varsayılan açık~~ **Düzeltildi 27 Ekim 2026** (parent-app c33ebad): varsayılan kapalı. | ParentApp penceresi |
 | 2 | Tanışma sorularında "çocuk bir uzmanla (psikolog vb.) çalışıyor mu" ve davranış sıklığı soruları (öfke nöbeti, endişe…) sağlık sorusu olarak işaretli değil; rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı. | Avukat → ParentApp |
 | 3 | `uzman-paylasim-v1` bugün yalnız uyarı + veli beyanını kayıt ediyor; taslak rıza cümlesi ve kısa aydınlatma eklendiği için yayında `uzman-paylasim-v2` olmalı; v1 onaylarının yeterliliği avukata. | Avukat → ParentApp |
 | 4 | Aile ya da çocuk silinince uzmanın o danışana ait notları ve hedefleri de siliniyor; uzmanın kayıt saklama yükümlülüğüyle çatışabilir. | Avukat + ürün (ortak) |
