@@ -445,6 +445,21 @@ Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısa
 
 Kurallar: Yanıt satırı kişi + çocuk + soru başına tek (`unique nulls not distinct`); her ebeveyn kendi yanıtını yazar, aile üyeleri okur, başka aile göremez. Uzman bu sürümde yanıtları görmez (ileride ebeveyn izniyle; paylaşım onay metni sürümü değişir). Yönetim paneli: `admin_intake(aile, gerekçe)` kişi bazlı (support/owner, denetim kaydı), `admin_intake_summary(gün)` yalnız sayılar. Bu göçten önceki ebeveynler kurulumu yapmış sayılır (`setup_completed_at` dolu).
 
+## 17. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (öneri `proposed/20261027140000_parent_tasks_gifts.sql`, kullanıcı isteği 27 Ekim 2026)
+
+Amaç: ailece ya da yalnız ebeveynin yapacağı görevler; ebeveyn de taş kazanır ve taşla çocuğuna oyunda hediye gönderir (Joon "parent quests + gift shop" örneği, kopya değil).
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Görev ayrıntılarında çocukların altında **Ebeveynler (isteğe bağlı)**: kendini ya da ailedeki diğer ebeveyni seç, zorluk (Kolay/Orta/Zor = 1/2/3 taş). Çocukla birlikte seçilirse ailece görevdir; yalnız ebeveyn de olabilir (çocuk ataması yok). | `parent_assignments` (aile yazar; yalnız ailedeki ebeveyne) |
+| 2 | [P] | Görevler'de ebeveyn avatarları görevde görünür; bana atanan görevde yuvarlak **Yaptım** düğmesi (bugün − 7 … bugün + 1). Yapan ebeveynin avatarında ✓. Süzgeçte **Ben** (bana atananlar). Ebeveyn görevi incelenmez. | `parent_task_done(görev, gün, yapıldı)` → `parent_completions` + `parent_stone_ledger` (`task` / `task_undo`) |
+| 3 | [O] | Oyun değişmez: çocuğun görevi yine `child_tasks`'tan (ailece görevde yalnız çocuk satırı). | — |
+| 4 | [P] | Aile › Ben › Genel: **Güneş Taşım** (kullanılabilir, bu hafta kazanılan / hediye) → **Geçmiş** (Güneş Taşı hesabı: bu hafta / bu ay / tümü, tarih, açıklama, taş, kalan) ve **Hediye dükkânı**. Aile › çocuk › Genel: **Güneş Taşı · N › Hesap** (çocuğun defteri: görev onayı, ödül, düşülen, hedef). Gelişim ayrıntıları Gelişim sekmesinde kalır. | `parent_stone_ledger`, `sun_stone_ledger` (aile okur) |
+| 5 | [P] | Hediye dükkânı: çocuk seçilir, eşya (Giyecek / Ev / Süs), isteğe bağlı not (≤ 140) → **Hediye gönder**. Taş yetmezse düğme "Taş yetmiyor · N eksik". | `gift_items` (fiyat), `send_gift(çocuk, eşya, not)` → `child_gifts` + `parent_stone_ledger` (`gift`) + çocuğa `gift` bildirimi |
+| 6 | [O] | Oyun açılışta / senkronda bekleyen hediyeleri alır, posta kutusunda gösterir (gönderen adı + not), eşyayı envantere ekler, sonra kapatır. Aynı hediye iki kez eklenmesin diye hediye kimliğiyle tekilleştirir. Eski sürüm hediyeyi görmez; kayıt bekler. | `child_gifts_pending()`, `claim_child_gift(id)` |
+
+Olaylar (ParentApp): `task.parent_done` (`on`), `gift.send` (`item`, `stones`).
+
 ## P9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
 
 | # | Kim | Ne olur | Nerede |

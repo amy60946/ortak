@@ -466,3 +466,21 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `parent_setup_complete()` | ebeveyn | Kurulumu bitti olarak işaretler (bir kez) |
 | `admin_intake(aile, gerekçe)` | admin support/owner (2FA) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
 | `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok |
+
+## 18. Ebeveyn görevleri ve hediye dükkânı (`proposed/20261027140000_parent_tasks_gifts.sql`, öneri 27 Ekim 2026; akış `akislar.md` 17)
+
+| Tablo | Ne | Alanlar | Kim yazar | Kim okur |
+|---|---|---|---|---|
+| `parent_assignments` | Görevin ebeveyn ataması | pk (`task_id`, `user_id`), `family_id`, `difficulty` (easy/medium/hard) | P (aile; tetikleyici: görev ve kişi aynı aileden, kimlik alanları değişmez) | P (aile) |
+| `parent_completions` | Ebeveynin "Yaptım" işareti | pk (`task_id`, `user_id`, `date`), `family_id`, `done_at` | yalnız `parent_task_done` | P (aile) |
+| `parent_stone_ledger` | Ebeveynin taş defteri; bakiye = toplam (en az 0) | `user_id`, `family_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`gift`), `ref` (görev\|gün:zaman ya da hediye kimliği), `item_id?`, `child_id?`; unique (`user_id`, `reason`, `ref`) | yalnız işlevler | P (aile) |
+| `gift_items` | Hediye dükkânı (oyunun kalıcı eşyaları) | `item_id` (→ `game_items`), `stones` (= ceil(coin / 10)), `sort` | göç | herkes (giriş yapmış) |
+| `child_gifts` | Gönderilen hediye | `id`, `family_id`, `child_id`, `item_id`, `from_user`, `from_name` (gönderenin takma adı), `note?` (≤ 140), `stones`, `created_at`, `claimed_at?` | yalnız `send_gift` / `claim_child_gift` | P (aile), O (kendi) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `parent_task_done(görev, gün, yapıldı=true)` → yeni bakiye | P | Kendi atamasını işaretler / geri alır; gün bugün − 7 … + 1 (hint `date_range`), görev o gün olmalı (`not_on_date`), atanmış olmalı (`not_assigned`) |
+| `send_gift(çocuk, eşya, not)` → `{ok, balance, gift_id, error}` | P | `error`: `unknown_item` / `not_enough_stones`; başarıda taş düşer, çocuğa `gift` bildirimi |
+| `child_gifts_pending()` → (id, item_id, from_name, note, created_at) | O | Kapatılmamış hediyeler, eskiden yeniye |
+| `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
+

@@ -238,6 +238,14 @@ ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sab
 - Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
 - Raporlar (ParentApp, ClinicApp) beceri dağılımını bu altı anahtarla gösterir; hiçbiri tanı ya da puan değildir.
 
+## 5C. Ebeveynin Güneş Taşı ve hediye dükkânı (öneri `proposed/20261027140000_parent_tasks_gifts.sql`, kullanıcı isteği 27 Ekim 2026)
+
+- Ebeveyn, kendisine atanan görevde "Yaptım" deyince taş kazanır: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`, çocukla aynı). İnceleme yok. Geri alınırsa verilen düşer; görev silinirse kazanılan kalır.
+- Ebeveynin taşı **ayrı defterdedir** (`parent_stone_ledger`); çocuğun ada ilerlemesine (`sun_stone_balance`) ve ödül bakiyesine (`stone_balance`) karışmaz.
+- Tek harcama: **hediye**. Fiyat = oyundaki coin fiyatı / 10, yukarı yuvarlanır, en az 1 (ör. Yuvarlak gözlük 15 coin → 2 taş, Akvaryum 100 → 10). Dükkânda yalnız kalıcı eşyalar (giyilebilir, ev, süs); yiyecek, temizlik, tohum ve özel setler yok.
+- Gerekçe: günde 1–2 ebeveyn göreviyle 1–2 haftada orta boy bir hediye; coin ekonomisini bozmaz (hediye çocuğun coin'ini artırmaz, eşyayı verir).
+- Hediye seviye kilidini aşar mı: **GameApp kararı** (öneri: hediye edilen eşya envantere girer; giyme/yerleştirme kuralı oyundaki gibi).
+
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
 En fazla seviye **15**. Büyüme evresi: Yavru Sv1, Genç **Sv5**, Yetişkin **Sv10**.
