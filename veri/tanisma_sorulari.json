@@ -1,5 +1,5 @@
 {
-  "_doc": "ParentApp tanışma soruları (ilk kurulum). Kaynak: parent-app/src/data/intake.ts (tools/intake_json.sh ile üretilir); sözleşme sozlesme/durumlar.md P16, akislar.md 16. Sıra uygulamadaki adım sırasıdır. who: parent = aile/ebeveyn sorusu (child_id boş), child = çocuk başına (child_id dolu). {ad}: çocuğun adı. health: true = isteğe bağlı sağlık sorusu, 'prefer_not' dışındaki yanıt açık rıza ister (consent_version). exclusive: seçilince diğerleri kalkar. Yanıtlar intake_answers.answer içinde seçenek anahtarları dizisidir.",
+  "_doc": "ParentApp tanışma soruları (ilk kurulum). Kaynak: parent-app/src/data/intake.ts (tools/intake_json.sh ile üretilir); sözleşme sozlesme/durumlar.md P16, akislar.md 16. Sıra uygulamadaki adım sırasıdır. who: parent = aile/ebeveyn sorusu (child_id boş), child = çocuk başına (child_id dolu). {ad}: çocuğun adı. health: true = isteğe bağlı sağlık sorusu, 'prefer_not' dışındaki yanıt açık rıza ister (consent_version). exclusive: seçilince diğerleri kalkar. exclude: adı geçen sorunun yanıtları bu soruda seçenek olarak gösterilmez (ana hedef 'başka neler' sorusunda tekrar edilmez). Yanıtlar intake_answers.answer içinde seçenek anahtarları dizisidir.",
   "version": "v1",
   "consent_version": "saglik-yanit-v1",
   "questions": [
@@ -42,6 +42,7 @@
       "type": "multi",
       "health": false,
       "title": "Bunların yanında başka neler önemli?",
+      "exclude": "main_goal",
       "options": [
         {
           "key": "motivation",

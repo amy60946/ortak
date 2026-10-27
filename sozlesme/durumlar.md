@@ -318,7 +318,7 @@ Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `
 | Anahtar | Kime | Tür | Seçenekler |
 |---|---|---|---|
 | `main_goal` | ebeveyn | tek | `motivation`, `structure`, `behavior`, `executive`, `relationship`, `my_stress` |
-| `other_goals` | ebeveyn | çoklu | aynı + `other` |
+| `other_goals` | ebeveyn | çoklu | aynı + `other`; `main_goal`'da seçilen seçenek burada gösterilmez (yanıtlar ayrık: ana hedef + diğerleri) |
 | `heard_from` | ebeveyn | tek | `expert`, `friend_family`, `social_ad`, `google`, `app_store`, `tiktok`, `other` |
 | `task_conflict_freq`, `reminder_freq`, `prompt_conflict_freq` | ebeveyn | tek | `every_day`, `most_days`, `some_days`, `never` |
 | `relate_reminding`, `relate_rewards_fade`, `relate_no_energy` | ebeveyn | tek | `yes`, `no` |
