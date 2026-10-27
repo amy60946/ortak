@@ -176,8 +176,7 @@ Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağla
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | [SUPABASE BÖLGESİ] |
 | Apple | App Store satışı ve aboneliği (satıcı Apple'dır), anlık bildirim (APNs) | ABD / AB |
 | Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | ABD |
-| RevenueCat | ParentApp abonelik durumunun doğrulanması | ABD |
-| iyzico | ClinicApp web sürümünde üyelik ödemesi (kart bilgisi yalnız iyzico'da) | Türkiye |
+| RevenueCat | Abonelik durumunun doğrulanması | ABD |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | ABD / AB |
 | Cloudflare | Ekip yönetim panelinin barındırılması | Küresel ağ |
 
@@ -623,7 +622,7 @@ values ('aydinlatma-uzman', 'v1', 'ClinicApp Uzman Aydınlatma Metni', '{clinic}
 
 ## 2. İşlediğimiz kişisel veriler ve toplama yöntemi
 
-2.1. Aşağıdaki verileri, siz ClinicApp'e (iPad ya da web) girdiğinizde ve uygulamayı kullandıkça otomatik yollarla; üyelik bilgisini ayrıca Apple'dan (iPad) ve web'de iyzico'dan gelen ödeme bildirimleriyle topluyoruz.
+2.1. Aşağıdaki verileri, siz ClinicApp'e (iPad ya da web) girdiğinizde ve uygulamayı kullandıkça otomatik yollarla; üyelik bilgisini ayrıca Apple ve RevenueCat'ten gelen bildirimlerle topluyoruz.
 
 | Kategori | Veriler | Nereden |
 |---|---|---|
@@ -633,7 +632,7 @@ values ('aydinlatma-uzman', 'v1', 'ClinicApp Uzman Aydınlatma Metni', '{clinic}
 | Hesap güvenliği | Şifre (yalnız kimlik doğrulama sağlayıcısında, geri çevrilemez biçimde özetlenmiş; biz göremeyiz), oturum bilgileri, kod deneme kayıtları (IP adresi dahil) | Giriş ve kod ekranları |
 | Mesleki belge incelemesi (isteğe bağlı) | Seçtiğiniz meslek; e-Devlet barkodlu Yükseköğretim Mezun Belgesi (belgede ad soyad, T.C. kimlik numarası, üniversite, bölüm, derece, mezuniyet tarihi yer alır); BACB sicil numarası; ön kontrol sonucu; inceleme kararı ve ret nedeni | "Belgeni yükle" sayfası |
 | Karşılama anketi (isteğe bağlı) | Mesleğiniz, ailelerle çalışırken zorlandığınız alanlar, işinize yarayacak özellikler, ClinicApp'e geliş nedeniniz (yalnız klinik sahibine sorulur) ya da anketi geçtiğiniz bilgisi | İlk girişteki anket ekranı |
-| Üyelik | Paket, dönem (aylık / yıllık), dönem sonu, otomatik yenileme durumu, mağaza/ödeme işlem kimliği, ödeme olayları. **Web'den ödemede** ödeme için gereken ad, soyad, T.C. kimlik no, cep telefonu ve fatura adresi iyzico'ya iletilir; bunları saklamayız. **Kart bilginiz bizde değil; App Store'da Apple'da, web'de iyzico'dadır.** | ClinicApp üyelik ekranı, Apple, iyzico |
+| Üyelik | Paket, dönem (aylık / yıllık), dönem sonu, otomatik yenileme durumu, mağaza işlem kimliği, ödeme olayları; RevenueCat'te hesabınıza bağlı rastgele kullanıcı kimliği. **Kart bilginiz bizde değil, Apple'dadır.** | ClinicApp üyelik ekranı, Apple, RevenueCat |
 | Bildirim | Cihazınızın bildirim jetonu, size gönderilen bildirimler ve okunma bilgisi | ClinicApp (iPad) |
 | Kullanım kayıtları | Uygulamayı açtığınız günler, oturum sayısı, uygulama sürümü, platform, kullandığınız ekran ve özelliklerin olay adları (serbest metin ve içerik yazılmaz) | ClinicApp, otomatik |
 | Destek ve denetim | Destek yazışmalarınız; yetkili ekibimizin hesabınızda yaptığı işlemlerin denetim kaydı (kim, ne, ne zaman, hangi gerekçeyle) | Destek kanalları, yönetim paneli |
@@ -672,7 +671,7 @@ values ('aydinlatma-uzman', 'v1', 'ClinicApp Uzman Aydınlatma Metni', '{clinic}
 |---|---|---|---|
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | `[SUPABASE BÖLGESİ]` |
 | Apple | App Store (üyelik satışı; satıcı Apple'dır), bildirim gönderimi (APNs) | Üyelik işlemleri, bildirim jetonu ve bildirim metni | ABD / AB |
-| iyzico | Web'den üyelik ödemesi (ödeme kuruluşu) | Ad, soyad, e-posta, T.C. kimlik no, cep telefonu, fatura adresi, kart bilgisi (yalnız iyzico'da) | Türkiye |
+| RevenueCat | Üyelik durumunun doğrulanması | Rastgele kullanıcı kimliği, satın alma kayıtları | ABD |
 | Resend | İşlem e-postaları (e-posta doğrulama, şifre sıfırlama, sizin adınıza aile daveti) | E-posta adresiniz, adınız, unvanınız, klinik adınız, e-posta içeriği | ABD / AB |
 | Cloudflare | Yönetim panelinin barındırılması | Yetkili ekibin ekranına gelen hesap ve üyelik bilgileri | Küresel |
 | Google (Gmail SMTP) — yalnız test dönemi | Test e-postaları | E-posta adresi, e-posta içeriği | ABD |
@@ -1280,11 +1279,9 @@ values ('sozlesme-uzman', 'v1', 'ClinicApp Uzman Hizmet Sözleşmesi', '{clinic}
 
 10.1. **Paketler.** ClinicApp, Bireysel ve Klinik paketleriyle, aylık ya da yıllık dönemlerle sunulur. Paketlerin içeriği, koltuk sayısı ve KDV dahil fiyatı ClinicApp'in Üyelik ekranında ve App Store'da satın almadan önce gösterilir.
 
-10.2. **Satıcı ve ödeme yolu.** **iPad (App Store):** satıcı Apple'dır. Üyelik App Store üzerinden, uygulama içi satın alma olarak satılır. Ödeme, faturalama, iade ve otomatik yenileme Apple'ın kurallarına ve Apple Medya Hizmetleri Hüküm ve Koşulları'na tabidir. Platform kart bilgisini görmez; üyelik durumunu Apple'ın sunucusundan (App Store Server API ve bildirimleri) doğrular. Satın almaya ilişkin belge ve makbuzlar Apple tarafından sağlanır.
+10.2. **Satıcı Apple'dır.** Üyelik App Store üzerinden, uygulama içi satın alma olarak satılır. Ödeme, faturalama, iade ve otomatik yenileme Apple'ın kurallarına ve Apple Medya Hizmetleri Hüküm ve Koşulları'na tabidir. Platform kart bilgisini görmez; üyelik durumunu Apple ve RevenueCat'ten gelen bildirimlerle doğrular. Satın almaya ilişkin belge ve makbuzlar Apple tarafından sağlanır.
 
-10.2a. **Web (iyzico).** ClinicApp web sürümünden alınan üyelikte satıcı Platformdur; ödeme lisanslı ödeme kuruluşu iyzico'nun ödeme formuyla alınır, kart bilgisi Platforma gelmez. Ödeme için klinik sahibinin adı, soyadı, T.C. kimlik numarası, cep telefonu ve fatura adresi iyzico'ya iletilir; Platform bunları saklamaz. Web üyeliği her dönem sonunda iyzico üzerinden yenilenir; klinik sahibi yenilemeyi ClinicApp web › Üyelik'ten kapatabilir, üyelik dönem sonuna kadar açık kalır. Fatura `[FATURA KESEN / e-Arşiv]` ile düzenlenir. Web satışında ön bilgilendirme ve iade koşulları `[AVUKAT: uzman tacir/serbest meslek sayılırsa Mesafeli Sözleşmeler Yönetmeliği uygulanmaz; tüketici sayılırsa ön bilgilendirme formu ve cayma istisnası gerekir]`. *(Web ödemesi canlıda kapalı; açılmadan önce bu madde avukatla kesinleşir.)*
-
-10.3. **Ödeyen klinik sahibidir.** Üyeliği yalnız klinik sahibi, birey olarak (iPad'de kendi Apple hesabıyla, web'de iyzico ile) satın alır. Üyelik, paketin izin verdiği ölçüde kliniğin bütün ekibine erişim sağlar; ekip üyeleri ayrıca ödeme yapmaz. Bireysel pakette yalnız klinik sahibi erişir. ClinicApp web sürümünde satın alma yapılmaz; iPhone ya da iPad'deki ClinicApp'te alınan üyelik, uzman hesabına bağlı olduğu için web sürümünde de geçerlidir.
+10.3. **Ödeyen klinik sahibidir.** Üyeliği yalnız klinik sahibi, kendi Apple hesabıyla ve birey olarak satın alır. Üyelik, paketin izin verdiği ölçüde kliniğin bütün ekibine erişim sağlar; ekip üyeleri ayrıca ödeme yapmaz. Bireysel pakette yalnız klinik sahibi erişir. ClinicApp web sürümünde satın alma yapılmaz; iPhone ya da iPad'deki ClinicApp'te alınan üyelik, uzman hesabına bağlı olduğu için web sürümünde de geçerlidir.
 
 10.4. **Deneme süresi.** Yeni klinik, ödeme bilgisi istenmeden 7 (yedi) gün ücretsiz deneme süresinden yararlanır (Platform süreyi uzatabilir). Deneme süresinin sonunda ücretli pakete geçilmezse hiçbir ücret alınmaz ve erişim madde 10.7'ye göre kapanır. Platform deneme süresini kendi takdiriyle uzatabilir.
 
@@ -1578,7 +1575,7 @@ values ('veri-isleme-eki', 'v1', 'Veri İşleme Eki (ClinicApp Uzman Hizmet Söz
 | Cloudflare | Yönetim panelinin barındırılması; danışan kayıtlarının içeriği panelde gösterilmez, yalnız sayılar | Küresel |
 | Google (Gmail SMTP) — yalnız test dönemi | Test davet e-postaları; canlı kullanımda kullanılmaz | ABD |
 
-Apple (App Store) ve iyzico (web ödemesi) yalnız üyelik ve ödeme bilgisini işler; danışan kayıtlarına erişmez.
+Apple (App Store) ve RevenueCat yalnız üyelik bilgisini işler; danışan kayıtlarına erişmez.
 
 8.2. **Alt işleyen sözleşmeleri.** Platform her alt işleyenle, bu Ek'tekinden daha az koruyucu olmayan veri koruma yükümlülüklerini içeren yazılı bir sözleşme yapar. Platform, alt işleyenin bu yükümlülüklere aykırılığından Uzmana karşı, yardımcı kişinin fiilinden sorumluluk kuralları (TBK md. 116) çerçevesinde sorumludur.
 
@@ -1897,9 +1894,7 @@ values ('cerez-clinicapp-web', 'v1', 'ClinicApp Web Çerez Politikası', '{clini
 
 Bu depolamada danışan bilgisi, not, mesaj ya da başka kişisel içerik tutulmaz. Danışan kayıtları tarayıcınızda kalıcı olarak saklanmaz; ekranda görüntülenmek üzere sunucudan alınır. Kullanım ölçümünün oturum kimliği yalnız sayfa açıkken bellekte tutulur, tarayıcıya yazılmaz.
 
-**Ödeme sırasında (yalnız web, yalnız klinik sahibi):** üyelik satın alırken iyzico'nun güvenli ödeme formu sayfaya iyzico'dan yüklenir; kart bilgileri doğrudan iyzico'ya gider. Bu form ödeme ve dolandırıcılık önleme için iyzico'nun kendi zorunlu çerezlerini ya da depolamasını kullanabilir; bunlar iyzico'nun gizlilik politikasına tabidir. Ödeme ekranını açmadığınız sürece iyzico'ya bağlantı kurulmaz.
-
-**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); ödeme formu dışında üçüncü taraf betik yüklenmez.
+**Yazı tipleri ve betikler:** ClinicApp web ve tanıtım sayfası yazı tiplerini ve simgelerini kendi sunucumuzdan yükler (Google Fonts gibi dış hizmetlere istek gitmez); üçüncü taraf betik yüklenmez. ClinicApp web'de satın alma yoktur; üyelik iPhone/iPad'deki ClinicApp'ten App Store ile alınır.
 
 ## 4. Kullanmadıklarımız
 
@@ -1977,10 +1972,9 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | 1 | Supabase | Alt işleyen | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Üçü + ekip paneli | [SUPABASE BÖLGESİ] | Kullanımda |
 | 2 | Apple | Satışta bağımsız veri sorumlusu; bildirimde alt işleyen | App Store satışı ve aboneliği; anlık bildirim (APNs) | Üçü | ABD / AB | Kullanımda |
 | 3 | Expo | Alt işleyen | Yedek bildirim yolu | ParentApp, ClinicApp (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
-| 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp (ClinicApp kullanmaz; App Store'u doğrudan doğrular) | ABD | Kurulum aşamasında |
+| 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
 | 5 | Resend | Alt işleyen | İşlem e-postaları | ParentApp, ClinicApp | ABD / AB | Alan adı alınınca |
 | 6 | Cloudflare | Alt işleyen | Ekip yönetim panelinin barındırılması | Ekip paneli | Küresel ağ | Kullanımda |
-| 8 | iyzico | Ödeme hizmetinde bağımsız veri sorumlusu (ödeme kuruluşu, 6493 s. Kanun); öneri | ClinicApp web üyelik ödemesi | ClinicApp web | Türkiye | Kodda var; canlıda kapalı |
 | 7 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | ClinicApp (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
 
 ## 3. Ayrıntılar
@@ -2027,20 +2021,9 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Rol | Alt işleyen |
 | Amaç | App Store aboneliğinin geçerli olup olmadığını doğrulamak ve durum değişikliğini (yenileme, iptal, iade) sunucumuza bildirmek |
 | Veri | Uygulama kullanıcı kimliği (Supabase'in verdiği rastgele kimlik; ad ve e-posta gönderilmez), satın alma kayıtları (ürün, işlem kimliği, tarih, durum, mağaza ülkesi). [Uygulamadaki RevenueCat kütüphanesinin ayrıca gönderdiği cihaz ve uygulama bilgileri RevenueCat belgelerinden teyit edilip eklenecek] |
-| İlgili kişiler | Abone olan ebeveynler |
+| İlgili kişiler | Abone olan ebeveynler ve klinik sahibi uzmanlar |
 | Konum | ABD |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
-
-### 3.4a iyzico (ClinicApp web ödemesi)
-
-| | |
-|---|---|
-| Rol | Ödeme hizmetinde bağımsız veri sorumlusu (lisanslı ödeme kuruluşu); öneri, avukat teyit edecek |
-| Amaç | ClinicApp web sürümünde üyelik ödemesinin alınması, yenilenmesi ve iptali |
-| Veri | Klinik sahibinin adı, soyadı, e-postası, T.C. kimlik numarası, cep telefonu, fatura adresi (şehir, adres) ve kart bilgisi. Kart bilgisi yalnız iyzico'nun ödeme formuna girilir, bize gelmez. T.C. kimlik no, telefon ve adres sunucumuzdan iyzico'ya iletilir, bizde saklanmaz. |
-| İlgili kişiler | ClinicApp web'den üyelik alan klinik sahipleri |
-| Konum | Türkiye |
-| Aktarım güvencesi | Yurt içi aktarım (KVKK md. 8); yurt dışı aktarım yok |
 
 ### 3.5 Resend
 

@@ -174,8 +174,7 @@ Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağla
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | [SUPABASE BÖLGESİ] |
 | Apple | App Store satışı ve aboneliği (satıcı Apple'dır), anlık bildirim (APNs) | ABD / AB |
 | Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | ABD |
-| RevenueCat | ParentApp abonelik durumunun doğrulanması | ABD |
-| iyzico | ClinicApp web sürümünde üyelik ödemesi (kart bilgisi yalnız iyzico'da) | Türkiye |
+| RevenueCat | Abonelik durumunun doğrulanması | ABD |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | ABD / AB |
 | Cloudflare | Ekip yönetim panelinin barındırılması | Küresel ağ |
 
