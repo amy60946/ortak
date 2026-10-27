@@ -111,6 +111,8 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 
 Ekranda kısa satır + i (tam metin i'de). "Belirtmek istemiyorum" seçilirse rıza istenmez. Yönetim panelinde kişi bazlı görünürlük kullanıcı kararıdır (27 Ekim 2026); aydınlatma metnine eklenmeli.
 
+Yönetim paneli (27 Ekim 2026): aile kartında sağlık yanıtları varsayılan gizli, "göster" ile açılır; her açılış gerekçeli ve denetim kayıtlı (`admin_intake`). Özet işlevi `admin_intake_summary` sağlık sorularının **kimliksiz toplamlarını** da döndürür, panel bunları göstermez. Avukat veri en aza indirme gereği görürse özet işlevinden çıkarılır (tek satırlık SQL değişikliği).
+
 ## 5. Avukata sorular
 
 1. Notlar için veri sorumlusu kim: klinik mi, platform mu, ikisi mi?
