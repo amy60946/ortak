@@ -1936,6 +1936,8 @@ KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'
 
 9.2. İleride zorunlu olmayan bir çerez ya da depolama (ör. analiz) eklemeye karar verirsek: önce bu politikayı güncelleriz, web sürümüne kabul ve reddin eşit kolaylıkta sunulduğu bir onay ekranı ekleriz ve **açık rızanızı almadan** o depolamayı kullanmayız. Onayınızı istediğiniz an geri alabilirsiniz.
 
+9.3. **Tanıtım sayfaları ve reklam ölçümü.** Ürünlerimizi tanıttığımız web sayfalarında reklam ya da ziyaretçi ölçüm aracı (ör. sosyal medya pikseli) kullanmaya karar verirsek bu araçlar sayfa açılınca **yüklenmez**; yalnız bilgilendirme bandında "Kabul et"e bastığınızda yüklenir ve "Reddet" aynı kolaylıkta sunulur. Sayfayı ziyaret etmek onay sayılmaz. Bu durumda önce bu politikayı, Gizlilik Politikası'nı ve Hizmet Sağlayıcılar Listesi'ni güncelleriz. Uygulamaların içinde (Pofi Adası, ParentApp, ClinicApp) reklam ya da izleme aracı kullanılmaz.
+
 ---
 
 ## Bilgilendirme bandı (öneri)
