@@ -332,3 +332,16 @@ Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `
 | `child_motivators` | çocuk | çoklu | `screen_time`, `allowance`, `family_activity`, `friends_time`, `treats`, `other` |
 
 Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (`saglik-yanit-v1`). Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.
+
+## P17. Yasal metinler ve KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026)
+
+| Alan | Değerler | Anlam |
+|---|---|---|
+| `legal_documents.key` | `gizlilik`, `aydinlatma-ebeveyn`, `aydinlatma-cocuk`, `aydinlatma-uzman`, `kosullar-parentapp`, `kosullar-gameapp`, `sozlesme-uzman`, `veri-isleme-eki`, `acik-riza-metinleri`, `cerez-clinicapp-web`, `alt-isleyenler`, `kvkk-basvuru` | kaynak `hukuk/` (dizin `hukuk/README.md`) |
+| `legal_documents.version` | `v1`, `v2` … | yeni metin = yeni sürüm |
+| `legal_documents.status` | `draft`, `published`, `retired` | taslak · yayında · eski |
+| `legal_documents.apps` / `legal_acceptances.app` | `parent`, `child`, `clinic`, `web` (onayda web yok) | `child` = GameApp metni, veli onaylar |
+| `kvkk_requests.kind` | `info`, `access`, `correct`, `delete`, `object`, `third_parties`, `damages`, `other` | md. 11 hakları: bilgi · erişim/kopya · düzeltme · silme · itiraz · aktarılan kişiler · zarar giderimi · diğer |
+| `kvkk_requests.status` | `received`, `in_progress`, `answered`, `rejected` | alındı · işlemde · yanıtlandı · reddedildi |
+| `kvkk_requests.channel` | `app`, `email`, `written`, `kep` | uygulama · e-posta · yazılı · KEP |
+| bildirim `kind` | `kvkk_answered` | başvuru kapandı (yanıt e-postada) |

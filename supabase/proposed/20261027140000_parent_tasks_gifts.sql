@@ -1,4 +1,4 @@
--- Ebeveyn görevleri, ebeveynin Güneş Taşı ve hediye dükkânı (kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 17,
+-- Ebeveyn görevleri, ebeveynin Güneş Taşı ve hediye dükkânı (kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 18,
 -- ekonomi.md 5C). Joon "parent quests + gift shop" örnekleri, kopya değil.
 --
 -- 1. Görev ebeveyne de atanabilir (kendisine ya da ailedeki diğer ebeveyne): parent_assignments. Aynı görev çocuğa da

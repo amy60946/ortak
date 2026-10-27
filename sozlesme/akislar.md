@@ -447,7 +447,7 @@ Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısa
 
 Kurallar: Yanıt satırı kişi + çocuk + soru başına tek (`unique nulls not distinct`); her ebeveyn kendi yanıtını yazar, aile üyeleri okur, başka aile göremez. Uzman bu sürümde yanıtları görmez (ileride ebeveyn izniyle; paylaşım onay metni sürümü değişir). Yönetim paneli: `admin_intake(aile, gerekçe)` kişi bazlı (support/owner, denetim kaydı), `admin_intake_summary(gün)` yalnız sayılar. Bu göçten önceki ebeveynler kurulumu yapmış sayılır (`setup_completed_at` dolu).
 
-## 17. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (öneri `proposed/20261027140000_parent_tasks_gifts.sql`, kullanıcı isteği 27 Ekim 2026)
+## 18. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (öneri `proposed/20261027140000_parent_tasks_gifts.sql`, kullanıcı isteği 27 Ekim 2026)
 
 Amaç: ailece ya da yalnız ebeveynin yapacağı görevler; ebeveyn de taş kazanır ve taşla çocuğuna oyunda hediye gönderir (Joon "parent quests + gift shop" örneği, kopya değil).
 
@@ -508,3 +508,14 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
+
+## 17. Yasal metin onayı ve KVKK başvurusu (öneri `proposed/20261027200000_legal.sql`, 27 Ekim 2026; metinler `hukuk/`)
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] / [K] | Kayıt ekranında koşullar için onay kutusu ("Kullanım Koşulları'nı okudum, kabul ediyorum"; işaretlenmeden hesap açılmaz) ve altında **kutusuz** aydınlatma satırı ("Kişisel verilerinin nasıl işlendiğini Aydınlatma Metni'nde anlatıyoruz"); bağlantılar `legal` adresine. Aydınlatma onay değil bilgilendirmedir; gösterildiği kaydedilir. Açık rızalar bu ekrana konmaz. Metinler `hukuk/50-uygulama-ici-metinler.md`. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))` |
+| 2 | [P] / [K] | Her açılışta (ve ön plana gelince) `legal_pending(app)`; boş değilse "Koşullarımız güncellendi" ekranı (`summary` + bağlantı) → kabul etmeden devam edilmez; "Hesabımı sil" seçeneği görünür. | `legal_accept` |
+| 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. | `legal_accept('child', …)` |
+| 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |
+| 5 | [P] / [K] | Ayarlar › Yasal metinler: `legal_documents_for(app)` listesi (sürüm, onay tarihi); KVKK başvurusu formu (tür + açıklama) → `kvkk_request_create`; "Başvurularım" `my_kvkk_requests`. | — |
+| 6 | Yönetim paneli | Hukuk › KVKK başvuruları (30 gün), e-postayla gelenleri kayda alma; Hukuk › Yasal metinler › Yayımla (avukat onayından sonra). | `admin_*` |
