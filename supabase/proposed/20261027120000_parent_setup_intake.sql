@@ -1,4 +1,4 @@
--- ParentApp ilk kurulum ve tanışma soruları (kullanıcı kararları 27 Ekim 2026; sozlesme/akislar.md 15)
+-- ParentApp ilk kurulum ve tanışma soruları (kullanıcı kararları 27 Ekim 2026; sozlesme/akislar.md 16)
 --
 -- Akış: Başla → uzman kodu var mı → kayıt → aile soruları → çocuk ekle (uzman taslağıyla ya da elle) → çocuk soruları
 --       → çocukların → takma ad + avatar → üç "tanıdık geliyor mu?" → uygulama (+ çocuğun cihazını kur).

@@ -1,4 +1,4 @@
--- ParentApp ilk kurulum ve tanışma soruları (proposed/20261027100000_parent_setup_intake.sql)
+-- ParentApp ilk kurulum ve tanışma soruları (proposed/20261027120000_parent_setup_intake.sql)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$

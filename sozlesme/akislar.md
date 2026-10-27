@@ -274,7 +274,7 @@ Teslim yolları:
 
 ParentApp olayları (22 Ekim 2026): `app.open`, `screen.<tasks|review|progress|family|create_task|task_details|chat|notifications|observation|rewards|paywall>`, `task.create` (`n`), `task.delete`, `task.review` (`approve`), `template.custom`, `child.add`, `invite.create` (`kind`), `family.join`, `message.send` (`kind`), `notification.open` (`kind`), `observation.create`, `reward.create`/`reward.update` (`kind`), `reward.delete`, `reward.give` (`n`), `reward.decide` (`approve`), `stones.deduct` (`n`, `reason`: doğru/yanlış; metin gönderilmez), `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `code.redeem` (`kind`: invite/family/accepted), `code.skip`, `invite.accept` (`n`, `new`, `history`), `invite.decline`, `care.log` (`practiced`) (uzman daveti ve takip planı, 26 Ekim 2026).
 
-ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.share` (`channel`), `invite.email` (`sent`, `reason`; sistem e-postası, 26 Ekim 2026), `plan.goal` (`edit`), `plan.module` (`edit`), `plan.package`, `plan.publish`, `verification.submit` (`profession`, `check`) (26 Ekim 2026).
+ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.share` (`channel`), `invite.email` (`sent`, `reason`; sistem e-postası, 26 Ekim 2026), `survey.done` (`intent`, `profession`) / `survey.skip` (`step`) (karşılama anketi, 27 Ekim 2026), `plan.goal` (`edit`), `plan.module` (`edit`), `plan.package`, `plan.publish`, `verification.submit` (`profession`, `check`) (26 Ekim 2026).
 
 ## 10. Uzman başlatır: aile davet bağlantısı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 
@@ -386,6 +386,20 @@ Ret nedenleri (`veri/uzman_meslekleri.json` `reasons`): `name_mismatch`, `barcod
 
 Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o kişi olduğunu değil (ad eşleşmesi + gerektiğinde telefon). Sağlık Bakanlığı diploma tescili / meslek icra yetkisi için herkese açık sorgu bulunamadı; yetki sorumluluğu uzman sözleşmesinde (`hukuk_notlari.md` A10). Rozet "Belgesi incelendi" der, "doğrulandı" demez (A11). Ön kontrol bir örnek belgeyle denendi; ilk gerçek belgelerde e-Devlet düzeni kontrol edilip gerekirse kurallar güncellenir.
 
+## 15. Uzman karşılama anketi (öneri `proposed/20261027100000_clinician_survey.sql`, kullanıcı isteği 27 Ekim 2026)
+
+Kullanıcı Joon Health'in kayıt sonrası ekranlarını örnek gösterdi; Joon yalnız referanstır (metin ve düzen kopyalanmaz). Amaç: uzmanı tanımak (meslek, ihtiyaç, geliş nedeni), ilk adımı ona göre önermek ve ürün kararları için toplu veri.
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Kayıttan sonraki **ilk girişte bir kez** (cevap ya da "geç" kaydı yoksa) tam ekran: "Hoş geldin, <ad>". Üst sağda **"Şimdilik geç"** (kayıt sayılır, bir daha sorulmaz). | `clinician_survey_me()` → null ise gösterilir |
+| 2 | [K] | 1/4 **Mesleğin ne?** (tek seçim, 15 seçenek; doğrulama meslekleri + oyun terapisti, sanat/müzik/drama terapisti, aile danışmanı, okul rehber öğretmeni, öğrenci/stajyer) | — |
+| 3 | [K] | 2/4 **Ailelerle çalışırken en çok neyde zorlanıyorsun?** (çoklu, 6) · 3/4 **Hangileri işine en çok yarar?** (çoklu, 6) | — |
+| 4 | [K] (yalnız klinik sahibi) | 4/4 **Seni ClinicApp'e ne getirdi?** (tek): denemek · bir aileyi bağlamak · kliniğimin ekibine katılmak · kliniğimde tek düzen. Ekip üyesine sorulmaz (kodla katıldı). | `clinician_survey_save(meslek, zorluklar[], özellikler[], neden, geçti)` |
+| 5 | [K] | **"Hazırsın"** ekranı nedene göre ilk adım: denemek / aile → "İlk aileni davet et" (davet penceresi açılır); ekip → ekip kodu kutusu + "Ekibe katıl" (`clinic_join_team`); tek düzen → "Paketleri gör"; her zaman "Panele geç". Ardından (davet/paket seçilmediyse) ilk kullanım rehberi. | — |
+
+Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp kopyası `src/data/survey.json`). Cevaplar **aileye ve diğer uzmanlara görünmez**; tablo doğrudan okunamaz (yalnız RPC). Yönetim paneli yalnız **toplam sayılar** görür: `admin_kpi_clinician_survey(gün)` → `{answered, skipped, profession{}, challenges{}, features{}, intent{}}` (kişi listesi yok). Hesap silinince cevap da silinir. Olaylar: `survey.done` (`intent`, `profession`), `survey.skip` (`step`).
+
 ## 13. Kim kimi nasıl ekler — güncel tablo (26 Ekim 2026)
 
 | Kim | Kimi / neyi | Nasıl | Geçerlilik | Durum |
@@ -405,7 +419,7 @@ Sınırlar: e-Devlet sorgusu belgenin gerçek olduğunu gösterir, yükleyenin o
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
 
-## 15. ParentApp ilk kurulum ve tanışma soruları (öneri `proposed/20261027100000_parent_setup_intake.sql`, 27 Ekim 2026)
+## 16. ParentApp ilk kurulum ve tanışma soruları (öneri `proposed/20261027120000_parent_setup_intake.sql`, 27 Ekim 2026)
 
 Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
 

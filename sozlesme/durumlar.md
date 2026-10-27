@@ -285,6 +285,10 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 |---|---|---|
 | davet durumu (`clinic_invite_status`, `clinic_invites_list.status`) | `sent`, `opened`, `claimed`, `shared`, `expired`, `revoked`, `declined` | gönderildi · bağlantı açıldı · aile kayıt oldu/kodu girdi · çocuk paylaşıldı · 48 saat doldu (ya da kayıt olup 30 günde paylaşmadı) · uzman iptal etti · aile reddetti |
 | bayrak `clinician_verification` | `false` (ilk sürüm) / `true` | belge incelemesi görünür mü (ClinicApp satırı + sayfası, ParentApp rozeti/etiketi, sunucu başvurusu ve `verified_as`) |
+| `clinician_surveys.profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `oyun_terapisti`, `sanat_terapisti`, `aile_danismani`, `okul_rehber`, `ogrenci`, `diger` | karşılama anketi mesleği (ilk dokuzu + `diger` doğrulama meslekleriyle aynı; Türkçe adlar `veri/uzman_anketi.json`) |
+| `clinician_surveys.challenges` | `home_followthrough`, `home_data`, `unpaid_time`, `no_system`, `between_sessions`, `progress_report` | evde düzenli uygulama · evden gözlem bilgisi · seans dışı ücretsiz zaman · düzenli sistem yok · seanslar arası iletişim · ilerlemeyi ölçme/gösterme |
+| `clinician_surveys.features` | `plan_templates`, `parent_logging`, `reward_routines`, `progress_report`, `report_export`, `parent_materials` | hazır şablonlar · ebeveynin telefondan kaydı · ödüllü rutin · ilerleme raporu · PDF rapor · aileye materyal |
+| `clinician_surveys.intent` | `trial`, `family`, `team`, `org` | denemek · bir aileyi bağlamak · ekibe katılmak · klinikte tek düzen (yalnız klinik sahibine sorulur) |
 | `clinician_verifications.status` | `pending`, `auto_rejected`, `approved`, `rejected`, `withdrawn`, `suspended` | incelemede · ön kontrol geri çevirdi · belgesi incelendi · reddedildi · yerine yenisi geldi · askıya alındı |
 | `clinician_verifications.profession` / `clinicians.verified_profession` | `psikolog`, `klinik_psikolog`, `pdr`, `ergoterapist`, `dil_konusma`, `ozel_egitim`, `cocuk_gelisimi`, `bcba`, `hekim`, `diger` | Türkçe ad `clinician_profession_label()`; eşleme `veri/uzman_meslekleri.json` |
 | onay metni sürümleri | `uzman-paylasim-v1` (`clinic_links.consent_version`), `uzman-gecis-v1` (`clinic_link_history.consent_version`) | metin değişince sürüm adı artar (`hukuk_notlari.md`) |
@@ -302,7 +306,7 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
 
-## P16. Tanışma soruları (`proposed/20261027100000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+## P16. Tanışma soruları (`proposed/20261027120000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
 
 `intake_answers.question_key` ve seçenek anahtarları (`answer` = seçenek anahtarları dizisi; tek seçimde tek eleman). Soru metinleri ParentApp'te (`parent-app/src/data/intake.ts`), sürüm `v1`.
 

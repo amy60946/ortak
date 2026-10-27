@@ -439,7 +439,20 @@ Akışlar: `akislar.md` 10–13. Durum adları: `durumlar.md` P15.
 
 Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status, clinic, clinician, title, code?, expires_at}`. Açılış sayfası: `web/davet/index.html` (+ `apple-app-site-association.example.json`).
 
-## 16. ParentApp ilk kurulum ve tanışma soruları (`proposed/20261027100000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
+## 16. Uzman karşılama anketi (`proposed/20261027100000_clinician_survey.sql`, öneri 27 Ekim 2026; akış `akislar.md` 15)
+
+| Tablo | Ne | Alanlar | Kim yazar | Kim okur |
+|---|---|---|---|---|
+| `clinician_surveys` | Uzmanın kayıt sonrası anket cevabı (uzman başına bir satır) | `clinician_id` (pk, uzman silinince silinir), `profession`, `challenges text[]`, `features text[]`, `intent`, `skipped`, `version`, `created_at`, `updated_at` | yalnız RPC | yalnız RPC (RLS açık, doğrudan erişim yok) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `clinician_survey_me()` | K | Kendi cevabı `{profession, challenges, features, intent, skipped, version, updated_at}` ya da null (anket gösterilir) |
+| `clinician_survey_save(meslek, zorluklar[], özellikler[], neden, geçti=false)` | K | Kaydet/güncelle; bilinmeyen anahtar reddedilir, tekrarlar tekilleşir |
+| `clinician_survey_keys(tür)` | K | Geçerli anahtarlar (`profession`, `challenges`, `features`, `intent`); `veri/uzman_anketi.json` ile aynı |
+| `admin_kpi_clinician_survey(gün)` | yönetim paneli (`admin_require`, 2 adımlı) | Toplam sayılar: cevaplayan, geçen, seçenek başına sayı; kişi kimliği dönmez |
+
+## 17. ParentApp ilk kurulum ve tanışma soruları (`proposed/20261027120000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
 
 | Tablo / alan | Kim okur | Kim yazar | Not |
 |---|---|---|---|
