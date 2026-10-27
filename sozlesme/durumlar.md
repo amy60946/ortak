@@ -311,6 +311,8 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 
 ## P16. Tanışma soruları (`proposed/20261027120000_parent_setup_intake.sql`, öneri 27 Ekim 2026)
 
+Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `veri/tanisma_sorulari.json` (ParentApp `src/data/intake.ts`'ten `tools/intake_json.sh` ile üretilir; yönetim paneli bunu kullanır).
+
 `intake_answers.question_key` ve seçenek anahtarları (`answer` = seçenek anahtarları dizisi; tek seçimde tek eleman). Soru metinleri ParentApp'te (`parent-app/src/data/intake.ts`), sürüm `v1`.
 
 | Anahtar | Kime | Tür | Seçenekler |

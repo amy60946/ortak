@@ -1,0 +1,612 @@
+{
+  "_doc": "ParentApp tanışma soruları (ilk kurulum). Kaynak: parent-app/src/data/intake.ts (tools/intake_json.sh ile üretilir); sözleşme sozlesme/durumlar.md P16, akislar.md 16. Sıra uygulamadaki adım sırasıdır. who: parent = aile/ebeveyn sorusu (child_id boş), child = çocuk başına (child_id dolu). {ad}: çocuğun adı. health: true = isteğe bağlı sağlık sorusu, 'prefer_not' dışındaki yanıt açık rıza ister (consent_version). exclusive: seçilince diğerleri kalkar. Yanıtlar intake_answers.answer içinde seçenek anahtarları dizisidir.",
+  "version": "v1",
+  "consent_version": "saglik-yanit-v1",
+  "questions": [
+    {
+      "key": "main_goal",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Şu sıralar en çok neye ihtiyacın var?",
+      "options": [
+        {
+          "key": "motivation",
+          "label": "Çocuğumun görevlerini isteyerek yapması"
+        },
+        {
+          "key": "structure",
+          "label": "Evde daha düzenli ve tutarlı bir akış"
+        },
+        {
+          "key": "behavior",
+          "label": "Çocuğumun davranışlarında olumlu değişim"
+        },
+        {
+          "key": "executive",
+          "label": "Planlama, sıraya koyma ve odaklanma becerileri"
+        },
+        {
+          "key": "relationship",
+          "label": "Çocuğumla daha keyifli bir ilişki"
+        },
+        {
+          "key": "my_stress",
+          "label": "Ebeveyn olarak daha az yorulmak"
+        }
+      ]
+    },
+    {
+      "key": "other_goals",
+      "who": "parent",
+      "type": "multi",
+      "health": false,
+      "title": "Bunların yanında başka neler önemli?",
+      "options": [
+        {
+          "key": "motivation",
+          "label": "Çocuğumun görevlerini isteyerek yapması"
+        },
+        {
+          "key": "structure",
+          "label": "Evde daha düzenli ve tutarlı bir akış"
+        },
+        {
+          "key": "behavior",
+          "label": "Çocuğumun davranışlarında olumlu değişim"
+        },
+        {
+          "key": "executive",
+          "label": "Planlama, sıraya koyma ve odaklanma becerileri"
+        },
+        {
+          "key": "relationship",
+          "label": "Çocuğumla daha keyifli bir ilişki"
+        },
+        {
+          "key": "my_stress",
+          "label": "Ebeveyn olarak daha az yorulmak"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir şey"
+        }
+      ]
+    },
+    {
+      "key": "heard_from",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Bizi nereden duydun?",
+      "options": [
+        {
+          "key": "expert",
+          "label": "Uzman, öğretmen ya da doktor"
+        },
+        {
+          "key": "friend_family",
+          "label": "Arkadaş ya da aile"
+        },
+        {
+          "key": "social_ad",
+          "label": "Instagram ya da Facebook"
+        },
+        {
+          "key": "google",
+          "label": "Google"
+        },
+        {
+          "key": "app_store",
+          "label": "App Store"
+        },
+        {
+          "key": "tiktok",
+          "label": "TikTok"
+        },
+        {
+          "key": "other",
+          "label": "Diğer"
+        }
+      ]
+    },
+    {
+      "key": "task_conflict_freq",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Görevler ve ev işleri yüzünden ne sıklıkla tartışma çıkıyor?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "reminder_freq",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Bir şeyi yapması için çocuğuna ne sıklıkla hatırlatman gerekiyor?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "prompt_conflict_freq",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Hatırlatmak ne sıklıkla gerginliğe ya da öfke patlamasına dönüşüyor?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_routine",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "{ad} için oturmuş bir günlük düzen var mı?",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Evet"
+        },
+        {
+          "key": "struggle",
+          "label": "Var ama sürdürmekte zorlanıyoruz"
+        },
+        {
+          "key": "not_really",
+          "label": "Pek yok"
+        }
+      ]
+    },
+    {
+      "key": "child_diagnosis",
+      "who": "child",
+      "type": "multi",
+      "health": true,
+      "title": "{ad} için konmuş ya da düşündüğünüz bir tanı var mı?",
+      "options": [
+        {
+          "key": "adhd",
+          "label": "Dikkat eksikliği ve hiperaktivite (DEHB)"
+        },
+        {
+          "key": "autism",
+          "label": "Otizm spektrumu"
+        },
+        {
+          "key": "odd",
+          "label": "Karşıt olma, karşı gelme"
+        },
+        {
+          "key": "anxiety_depression",
+          "label": "Kaygı ya da depresyon"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir tanı"
+        },
+        {
+          "key": "none",
+          "label": "Tanı yok",
+          "exclusive": true
+        },
+        {
+          "key": "prefer_not",
+          "label": "Belirtmek istemiyorum",
+          "exclusive": true
+        }
+      ]
+    },
+    {
+      "key": "child_medication",
+      "who": "child",
+      "type": "single",
+      "health": true,
+      "title": "{ad} düzenli kullandığı bir ilaç var mı?",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Evet"
+        },
+        {
+          "key": "no",
+          "label": "Hayır"
+        },
+        {
+          "key": "not_diagnosed",
+          "label": "Tanı konmadı"
+        },
+        {
+          "key": "prefer_not",
+          "label": "Belirtmek istemiyorum"
+        }
+      ]
+    },
+    {
+      "key": "child_therapists",
+      "who": "child",
+      "type": "multi",
+      "health": false,
+      "title": "{ad} şu uzmanlardan biriyle çalışıyor mu?",
+      "options": [
+        {
+          "key": "behavior",
+          "label": "Davranış terapisti"
+        },
+        {
+          "key": "speech_ot",
+          "label": "Dil-konuşma terapisti ya da ergoterapist"
+        },
+        {
+          "key": "psych",
+          "label": "Psikolog ya da psikiyatrist"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir uzman"
+        },
+        {
+          "key": "none",
+          "label": "Bir uzmanla çalışmıyor",
+          "exclusive": true
+        }
+      ]
+    },
+    {
+      "key": "child_organizing",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… işlerini sıraya koymakta zorlandı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_effort_avoid",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… uzun dikkat isteyen işlerden kaçındı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_rules_argue",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… kurallara itiraz etti ya da büyüklerle tartıştı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_tantrums",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… öfke nöbeti geçirdi ya da çabuk sinirlendi?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_feelings",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… duygularını anlamakta ya da anlatmakta zorlandı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_worry",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… olmadan önce bir şeyler için endişelendi?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_goals",
+      "who": "child",
+      "type": "multi",
+      "health": false,
+      "title": "{ad} için hedeflerin neler?",
+      "options": [
+        {
+          "key": "chores",
+          "label": "Görevlerini düzenli tamamlamak"
+        },
+        {
+          "key": "focus",
+          "label": "Yaptığı işe odaklanmak"
+        },
+        {
+          "key": "impulses",
+          "label": "Ani davranışlarını yönetmek"
+        },
+        {
+          "key": "bedtime",
+          "label": "Uyku saatine uymak"
+        },
+        {
+          "key": "siblings",
+          "label": "Kardeşleri ve ailesiyle iyi geçinmek"
+        },
+        {
+          "key": "emotions",
+          "label": "Duygularını daha iyi düzenlemek"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir hedef"
+        }
+      ]
+    },
+    {
+      "key": "child_interests",
+      "who": "child",
+      "type": "multi",
+      "health": false,
+      "title": "{ad} nelerden hoşlanır?",
+      "options": [
+        {
+          "key": "sports",
+          "label": "Spor ve açık havada oyun"
+        },
+        {
+          "key": "books",
+          "label": "Kitaplar"
+        },
+        {
+          "key": "games_tech",
+          "label": "Oyunlar ve teknoloji"
+        },
+        {
+          "key": "arts",
+          "label": "Resim ve el işi"
+        },
+        {
+          "key": "music_dance",
+          "label": "Müzik ve dans"
+        },
+        {
+          "key": "animals_nature",
+          "label": "Hayvanlar ve doğa"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir şey"
+        }
+      ]
+    },
+    {
+      "key": "child_motivators",
+      "who": "child",
+      "type": "multi",
+      "health": false,
+      "title": "{ad} en çok neyle motive olur?",
+      "options": [
+        {
+          "key": "screen_time",
+          "label": "Ekran ya da oyun süresi"
+        },
+        {
+          "key": "allowance",
+          "label": "Harçlık"
+        },
+        {
+          "key": "family_activity",
+          "label": "Aileyle bir etkinlik"
+        },
+        {
+          "key": "friends_time",
+          "label": "Arkadaşlarıyla fazladan oyun"
+        },
+        {
+          "key": "treats",
+          "label": "Küçük ikramlar"
+        },
+        {
+          "key": "other",
+          "label": "Başka bir şey"
+        }
+      ]
+    },
+    {
+      "key": "relate_reminding",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Bu sana tanıdık geliyor mu? \"Bir işin yapılması için defalarca hatırlatmam gerekiyor.\"",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Evet"
+        },
+        {
+          "key": "no",
+          "label": "Hayır"
+        }
+      ]
+    },
+    {
+      "key": "relate_rewards_fade",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Bu sana tanıdık geliyor mu? \"Denediğim çizelge ve ödüller bir süre işe yarıyor, sonra etkisi kayboluyor.\"",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Evet"
+        },
+        {
+          "key": "no",
+          "label": "Hayır"
+        }
+      ]
+    },
+    {
+      "key": "relate_no_energy",
+      "who": "parent",
+      "type": "single",
+      "health": false,
+      "title": "Bu sana tanıdık geliyor mu? \"Gün bittiğinde kendime ayıracak enerjim kalmıyor.\"",
+      "options": [
+        {
+          "key": "yes",
+          "label": "Evet"
+        },
+        {
+          "key": "no",
+          "label": "Hayır"
+        }
+      ]
+    }
+  ]
+}
