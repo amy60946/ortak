@@ -17,6 +17,7 @@
 |---|---|---|---|---|
 | `00-olgular.md` | — | metin yazarları (tek kaynak) | — | iç |
 | `02-ornekler-ve-turk-hukuku.md` | — | örnek alınan ilkeler + Türk hukuku eşlemesi | — | iç |
+| `03-joon-karsilastirma.md` | — | Joon'un gizlilik ve kullanım koşullarıyla madde madde karşılaştırma; alınan/alınmayan ilkeler, gelecek özellik kuralları (K1–K5) | — | iç |
 | `01-gizlilik-politikasi.md` | `gizlilik` | herkes; mağaza bağlantısı | — | taslak |
 | `10-aydinlatma-ebeveyn.md` | `aydinlatma-ebeveyn` | ParentApp | okundu | taslak |
 | `11-aydinlatma-cocuk-ve-veli.md` | `aydinlatma-cocuk` | veli (ParentApp, çocuk bağlarken) + oyun içi kısa not | okundu (veli) | taslak |
@@ -75,6 +76,7 @@
 | 10 | Uzmanlar için toplu dışa aktarma ve KVKK "kopya" talebi için veri dışa aktarma yok (bugün yalnız yazdırılabilir rapor). | ortak + uygulamalar |
 | 11 | `akislar.md` 1.1 ve 2'de kod süresi "24 saat" yazıyor; sistem 15 dakika. | ortak (belge düzeltmesi) |
 | 12 | ~~ClinicApp ödeme yolları (iyzico)~~ **Geri alındı (27 Ekim 2026, kullanıcı):** Klinik penceresinin "web'de iyzico metinlerde yok" bulgusu hatalıydı. Karar (22 Ekim 2026, `DURUM.md`): ClinicApp üyeliği yalnız iPhone/iPad'den App Store ile, RevenueCat üzerinden alınır; web'de satış yok, iyzico kullanılmaz (`clinic-billing`'deki iyzico kodu ileride kendi sisteme geçiş için durur, yayınlanmaz). Metinler o karara döndürüldü (ortak#78'deki iyzico eklemeleri geri alındı; deneme süresi 7 gün düzeltmesi korundu). | — |
+| 13 | Tanışma sorularında yalnız sağlık sorularında "söylemek istemiyorum" var; Joon'da olduğu gibi **bütün** sorular atlanabilir olmalı (KVKK md. 4 ölçülülük; `03-joon-karsilastirma.md` J2). Yanıtların neyi değiştirdiği aydınlatmada somut yazılmalı (J3). | ParentApp (ürün) |
 
 ## Canlıdan önce yapılacaklar (hukuk)
 
