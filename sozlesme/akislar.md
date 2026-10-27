@@ -465,3 +465,14 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
+
+## 17. Yasal metin onayı ve KVKK başvurusu (öneri `proposed/20261027200000_legal.sql`, 27 Ekim 2026; metinler `hukuk/`)
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] / [K] | Kayıt ekranında iki ayrı satır: "Kullanım Koşulları'nı okudum, kabul ediyorum" ve "Aydınlatma Metni'ni okudum" (bağlantılar `legal` adresine). Açık rızalar bu ekrana konmaz. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))` |
+| 2 | [P] / [K] | Her açılışta (ve ön plana gelince) `legal_pending(app)`; boş değilse "Koşullarımız güncellendi" ekranı (`summary` + bağlantı) → kabul etmeden devam edilmez; "Hesabımı sil" seçeneği görünür. | `legal_accept` |
+| 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. | `legal_accept('child', …)` |
+| 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |
+| 5 | [P] / [K] | Ayarlar › Yasal metinler: `legal_documents_for(app)` listesi (sürüm, onay tarihi); KVKK başvurusu formu (tür + açıklama) → `kvkk_request_create`; "Başvurularım" `my_kvkk_requests`. | — |
+| 6 | Yönetim paneli | Hukuk › KVKK başvuruları (30 gün), e-postayla gelenleri kayda alma; Hukuk › Yasal metinler › Yayımla (avukat onayından sonra). | `admin_*` |

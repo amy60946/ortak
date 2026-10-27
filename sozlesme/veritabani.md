@@ -452,3 +452,18 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `clinician_survey_keys(tür)` | K | Geçerli anahtarlar (`profession`, `challenges`, `features`, `intent`); `veri/uzman_anketi.json` ile aynı |
 | `admin_kpi_clinician_survey(gün)` | yönetim paneli (`admin_require`, 2 adımlı) | Toplam sayılar: cevaplayan, geçen, seçenek başına sayı; kişi kimliği dönmez |
 
+## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026; metinler `hukuk/`)
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `legal_documents` | `key` + `version` (pk), başlık, `apps` (parent/child/clinic/web), `requires_acceptance`, `summary` (yeniden onayda "ne değişti"), `body_md`, `status` draft/published/retired | Tablo kapalı; uygulamalar RPC, herkese açık okuma Edge Function `legal`. Yayındaki metin değişmez (tetikleyici) |
+| `legal_acceptances` | kullanıcı × metin × sürüm, `app`, zaman | kendi satırını okur; yazma `legal_accept` |
+| `kvkk_requests` | başvuru: kullanıcı (silinse null), yanıt e-postası, app, kanal, tür, açıklama, durum, alınış, `due_at` (+30 gün), iç not | kendi başvurusunun iç not dışı alanlarını okur; yazma RPC |
+
+| RPC | Kim | Ne |
+|---|---|---|
+| `legal_documents_for(app)` | authenticated | Uygulamanın güncel metinleri (yayındaki; yoksa en yeni taslak) + kullanıcının onay zamanı |
+| `legal_pending(app)` | authenticated | Güncel sürümü onaylanmamış, onay isteyen metinler (kayıt sonrası ve açılışta) |
+| `legal_accept(app, [{key, version}])` | authenticated | Yalnız o uygulamanın güncel, onay isteyen sürümleri; `app='child'` yalnız veli (ParentApp) çağırır. Dönüş: kalan bekleyenler |
+| `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
+| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste |

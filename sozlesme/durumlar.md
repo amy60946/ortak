@@ -305,3 +305,16 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.barrier` | `no_time`, `forgot`, `child_resisted`, `unsure` | vakit yoktu · unuttum · çocuk direndi · nasıl yapacağımı bilemedim |
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
+
+## P17. Yasal metinler ve KVKK başvuruları (`proposed/20261027200000_legal.sql`, öneri 27 Ekim 2026)
+
+| Alan | Değerler | Anlam |
+|---|---|---|
+| `legal_documents.key` | `gizlilik`, `aydinlatma-ebeveyn`, `aydinlatma-cocuk`, `aydinlatma-uzman`, `kosullar-parentapp`, `kosullar-gameapp`, `sozlesme-uzman`, `veri-isleme-eki`, `acik-riza-metinleri`, `cerez-clinicapp-web`, `alt-isleyenler`, `kvkk-basvuru` | kaynak `hukuk/` (dizin `hukuk/README.md`) |
+| `legal_documents.version` | `v1`, `v2` … | yeni metin = yeni sürüm |
+| `legal_documents.status` | `draft`, `published`, `retired` | taslak · yayında · eski |
+| `legal_documents.apps` / `legal_acceptances.app` | `parent`, `child`, `clinic`, `web` (onayda web yok) | `child` = GameApp metni, veli onaylar |
+| `kvkk_requests.kind` | `info`, `access`, `correct`, `delete`, `object`, `third_parties`, `damages`, `other` | md. 11 hakları: bilgi · erişim/kopya · düzeltme · silme · itiraz · aktarılan kişiler · zarar giderimi · diğer |
+| `kvkk_requests.status` | `received`, `in_progress`, `answered`, `rejected` | alındı · işlemde · yanıtlandı · reddedildi |
+| `kvkk_requests.channel` | `app`, `email`, `written`, `kep` | uygulama · e-posta · yazılı · KEP |
+| bildirim `kind` | `kvkk_answered` | başvuru kapandı (yanıt e-postada) |
