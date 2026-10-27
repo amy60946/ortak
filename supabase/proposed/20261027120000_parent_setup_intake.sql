@@ -9,7 +9,7 @@
 -- Sağlık soruları (child_diagnosis, child_medication): isteğe bağlı; "belirtmek istemiyorum" dışında bir yanıt
 --   consent_version ister (açık rıza metni sürümü, ör. 'saglik-yanit-v1').
 -- Yönetim paneli (kullanıcı kararı: kişi bazlı): admin_intake(aile, gerekçe) yalnız support/owner, her açılış admin_audit'e
---   yazılır; admin_intake_summary(gün) yalnız sayılar (kimlik yok), okuyan her rol. Canlıdan önce avukat onayı (hukuk_notlari.md).
+--   yazılır; admin_intake_summary(gün) yalnız sayılar (kimlik yok, sağlık soruları hariç), okuyan her rol. Canlıdan önce avukat onayı (hukuk_notlari.md).
 -- profiles.setup_completed_at: ilk kurulum bitti mi; bu göçten önceki ebeveynler bitmiş sayılır. parent_setup_complete() ile yazılır.
 
 -- ---------------------------------------------------------------- profiles.setup_completed_at
@@ -135,6 +135,7 @@ begin
       from (select a.question_key q, opt o, count(*) n, count(distinct a.family_id) f
               from public.intake_answers a, jsonb_array_elements_text(a.answer) opt
              where a.updated_at > now() - make_interval(days => greatest(1, least(coalesce(p_days, 90), 3650)))
+               and a.question_key not in ('child_diagnosis', 'child_medication') -- sağlık yanıtı toplamlarda yok (hukuk_notlari I4)
              group by 1, 2) s), '[]'::json);
 end $$;
 revoke execute on function public.admin_intake_summary(integer) from public, anon;

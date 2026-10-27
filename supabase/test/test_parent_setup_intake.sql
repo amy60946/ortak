@@ -109,6 +109,10 @@ select tst.check(json_array_length(public.admin_intake(tst.v('fam'), 'destek tal
   'kişi bazlı yanıtlar');
 select tst.check(exists (select 1 from json_array_elements(public.admin_intake(tst.v('fam'), 'destek talebi')) e
   where e ->> 'member' = 'Ayşe' and e ->> 'question' = 'main_goal'), 'yanıtlayan kişi görünür');
-select tst.check(json_array_length(public.admin_intake_summary(30)) >= 4, 'özet yalnız sayılar');
+select tst.check(json_array_length(public.admin_intake_summary(30)) >= 3, 'özet yalnız sayılar (sağlık dışı 3 yanıt)');
+select tst.check(not exists (select 1 from json_array_elements(public.admin_intake_summary(30)) e
+  where e ->> 'question' in ('child_diagnosis', 'child_medication')), 'özette sağlık soruları yok (hukuk_notlari I4)');
+select tst.check(exists (select 1 from json_array_elements(public.admin_intake(tst.v('fam'), 'destek talebi')) e
+  where e ->> 'question' = 'child_diagnosis'), 'kişi bazlı görünümde sağlık yanıtı var (panelde varsayılan gizli)');
 reset role;
-select tst.check((select count(*) from public.admin_audit where action = 'intake.view') = 2, 'her açılış denetim kaydında');
+select tst.check((select count(*) from public.admin_audit where action = 'intake.view') = 3, 'her açılış denetim kaydında');

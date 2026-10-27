@@ -465,7 +465,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 |---|---|---|
 | `parent_setup_complete()` | ebeveyn | Kurulumu bitti olarak işaretler (bir kez) |
 | `admin_intake(aile, gerekçe)` | admin support/owner (2FA) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
-| `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok |
+| `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok, sağlık soruları (`child_diagnosis`, `child_medication`) hariç (hukuk_notlari I4) |
 
 ## 18. Ebeveyn görevleri ve hediye dükkânı (`proposed/20261027140000_parent_tasks_gifts.sql`, öneri 27 Ekim 2026; akış `akislar.md` 17)
 
