@@ -31,6 +31,7 @@ insert into public.admin_users (user_id, role) values ('00000000-0000-0000-0000-
 insert into public.children (id, family_id, name, avatar, user_id)
 select '00000000-0000-0000-0000-00000000c001', family_id, 'Efe', 'bear', '00000000-0000-0000-0000-0000000000c9' from public.profiles where id = '00000000-0000-0000-0000-0000000000a1';
 
+delete from public.legal_documents;   -- seed taslakları yerine test metinleri
 insert into public.legal_documents (key, version, title, apps, requires_acceptance, body_md, status, published_at) values
   ('kosullar-parentapp', 'v1', 'ParentApp Kullanım Koşulları', '{parent}', true, '# Koşullar v1', 'published', now()),
   ('aydinlatma-ebeveyn', 'v1', 'Ebeveyn Aydınlatma Metni', '{parent}', true, '# Aydınlatma', 'draft', null),
@@ -83,17 +84,20 @@ select tst.check((public.legal_pending('parent') -> 0 ->> 'summary') = 'Abonelik
 -- KVKK başvurusu
 select tst.fails($$select public.kvkk_request_create('parent', 'correct', '')$$, 'düzeltme talebi açıklama ister');
 select tst.check((public.kvkk_request_create('parent', 'access', '') ->> 'status') = 'received', 'erişim başvurusu alınır');
-select tst.check(json_array_length(public.my_kvkk_requests()) = 1, 'kendi başvurusunu görür');
+select tst.check((public.kvkk_request_create('parent', 'delete', 'oyun kaydı silinsin', '00000000-0000-0000-0000-00000000c001') ->> 'status') = 'received', 'veli çocuğu adına başvurur');
+select tst.fails($$select public.kvkk_request_create('parent', 'info', '', gen_random_uuid())$$, 'başka ailenin çocuğu adına başvurulamaz');
+select tst.check(json_array_length(public.my_kvkk_requests()) = 2, 'kendi başvurularını görür');
 select tst.fails($$select answer_note from public.kvkk_requests$$, 'iç notu göremez');
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(json_array_length(public.my_kvkk_requests()) = 0, 'başkasının başvurusunu görmez');
 select tst.as_user('00000000-0000-0000-0000-0000000000f2', 'aal2');
-select tst.check(json_array_length(public.admin_kvkk_requests('open', 50)) = 1, 'destek açık başvuruları görür');
+select tst.check(json_array_length(public.admin_kvkk_requests('open', 50)) = 2, 'destek açık başvuruları görür');
+select tst.check((select x ->> 'child' from json_array_elements(public.admin_kvkk_requests('open', 50)) x where x ->> 'kind' = 'delete') = 'Efe', 'çocuk adı görünür');
 select tst.check((public.admin_kvkk_requests('open', 50) -> 0 ->> 'email') = 'anne@example.com', 'yanıt adresi');
 select tst.check(public.admin_kvkk_request_log('dis@example.com', 'other', 'email', 'info', 'bilgi', now() - interval '3 days', 'e-postayla geldi') is not null, 'e-postayla gelen kayda alınır');
 select tst.check((select (x ->> 'due_at')::timestamptz < now() + interval '28 days' from json_array_elements(public.admin_kvkk_requests('open', 50)) x where x ->> 'email' = 'dis@example.com'), 'süre alınış tarihinden işler');
 reset role;
-insert into tst.kv select 'rid', id::text from public.kvkk_requests where email = 'anne@example.com';
+insert into tst.kv select 'rid', id::text from public.kvkk_requests where email = 'anne@example.com' and kind = 'access';
 set role authenticated;
 select tst.fails($$select public.admin_kvkk_request_update((select v::uuid from tst.kv where k = 'rid'), 'rejected', '', 'ret')$$, 'ret gerekçe ister');
 select public.admin_kvkk_request_update((select v::uuid from tst.kv where k = 'rid'), 'answered', 'veri kopyası e-postayla gönderildi', 'yanıtlandı');
@@ -107,6 +111,6 @@ select tst.check(json_array_length(public.admin_user_legal('00000000-0000-0000-0
 reset role;
 -- hesap silinince onaylar gider, başvuru kişisiz kalır (e-posta kapanana dek)
 select public.account_delete_of('00000000-0000-0000-0000-0000000000a1');
-select tst.check((select count(*) from public.legal_acceptances where user_id = '00000000-0000-0000-0000-0000000000a1') = 0, 'silmede onaylar gider');
-select tst.check((select user_id from public.kvkk_requests where email = 'anne@example.com') is null, 'başvuru kayıtta kalır, hesaba bağı kopar');
+select tst.check((select count(*) from public.legal_acceptances where user_id = '00000000-0000-0000-0000-0000000000a1') = 3, 'hesap silinse de onay kaydı kalır (ispat; kimliksiz)');
+select tst.check((select bool_and(user_id is null) from public.kvkk_requests where email = 'anne@example.com'), 'başvuru kayıtta kalır, hesaba bağı kopar');
 select 'YASAL METİN TESTLERİ GEÇTİ' as sonuc;

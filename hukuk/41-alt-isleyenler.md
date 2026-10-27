@@ -18,10 +18,11 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 |---|---|---|---|---|---|---|
 | 1 | Supabase | Alt işleyen | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Üçü + ekip paneli | [SUPABASE BÖLGESİ] | Kullanımda |
 | 2 | Apple | Satışta bağımsız veri sorumlusu; bildirimde alt işleyen | App Store satışı ve aboneliği; anlık bildirim (APNs) | Üçü | ABD / AB | Kullanımda |
-| 3 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
-| 4 | Resend | Alt işleyen | İşlem e-postaları | ParentApp, ClinicApp | ABD / AB | Alan adı alınınca |
-| 5 | Cloudflare | Alt işleyen | Ekip yönetim panelinin barındırılması | Ekip paneli | Küresel ağ | Kullanımda |
-| 6 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | ClinicApp (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
+| 3 | Expo | Alt işleyen | Yedek bildirim yolu | ParentApp, ClinicApp (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
+| 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
+| 5 | Resend | Alt işleyen | İşlem e-postaları | ParentApp, ClinicApp | ABD / AB | Alan adı alınınca |
+| 6 | Cloudflare | Alt işleyen | Ekip yönetim panelinin barındırılması | Ekip paneli | Küresel ağ | Kullanımda |
+| 7 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | ClinicApp (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
 
 ## 3. Ayrıntılar
 
@@ -48,7 +49,19 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Konum | ABD / AB |
 | Aktarım güvencesi | Bildirim için: [standart sözleşme imzalanacak] + Kurul'a bildirim. Satış için: Apple'ın kendi koşulları |
 
-### 3.3 RevenueCat
+### 3.3 Expo (yedek bildirim yolu)
+
+| | |
+|---|---|
+| Rol | Alt işleyen |
+| Amaç | Cihaz Apple anahtarı yerine Expo bildirim anahtarı kaydettiyse anlık bildirimi Expo Push hizmeti üzerinden Apple'a iletmek |
+| Veri | Expo bildirim anahtarı, bildirim başlığı ve metni (çocuğun adı geçebilir; sağlık bilgisi konmaz) |
+| İlgili kişiler | Ebeveynler, uzmanlar; bildirim metninde adı geçen çocuklar |
+| Konum | ABD |
+| Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
+| Durum | Yedek yol; canlıda kapatılırsa bu satır listeden çıkar |
+
+### 3.4 RevenueCat
 
 | | |
 |---|---|
@@ -59,7 +72,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Konum | ABD |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
 
-### 3.4 Resend
+### 3.5 Resend
 
 | | |
 |---|---|
@@ -71,7 +84,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
 | Durum | Alan adı alınınca kullanılmaya başlar; reklam ya da kampanya e-postası için kullanılmaz |
 
-### 3.5 Cloudflare
+### 3.6 Cloudflare
 
 | | |
 |---|---|
@@ -82,7 +95,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Konum | Küresel ağ |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |
 
-### 3.6 Google (Gmail SMTP) — yalnız test dönemi
+### 3.7 Google (Gmail SMTP) — yalnız test dönemi
 
 | | |
 |---|---|
@@ -132,6 +145,6 @@ Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `kvkk@[ALAN ADI]`
 
 1. **Standart sözleşme pratiği:** Supabase, Apple, RevenueCat, Resend ve Cloudflare gibi yabancı şirketlerin Kurul'un Türkçe standart sözleşmesini değiştirmeden imzalaması pratikte zor olabilir. İmzalamazlarsa hangi yol kalır (bağlayıcı şirket kuralları, arızi aktarım istisnası, açık rıza)? Kurul'a bildirimin veri sorumlusunca mı veri işleyence mi yapılacağı ve tek bildirimle birden çok sağlayıcının kapsanıp kapsanamayacağı.
 2. **Apple'ın rolü:** Satışta bağımsız veri sorumlusu, APNs'te alt işleyen olarak yazıldı. Bu ayrım ve APNs için ayrıca sözleşme/güvence gerekip gerekmediği. Bildirim metninde çocuk adı geçiyor; bildirim içeriğini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir — ürün kararı.
-3. **Listede olmayan, kodda olan Expo Push:** Sunucu, `ExponentPushToken[...]` biçimli anahtar gelirse bildirimi Expo Push API'ye (exp.host, ABD) gönderiyor (`migrations/20261019130000_notifications.sql`, "yedek yol"). Karar: canlıda kapatılacak mı, yoksa 7. alt işleyen olarak eklenecek mi? Eklenirse veri: Expo anahtarı + bildirim başlığı ve metni. Ayrıca `CANLIYA_ALMA.md` 4'te planlanan Sentry ve PostHog eklenirse bu liste, gizlilik politikası ve ClinicApp web çerez onayı önceden değişmeli.
+3. **Expo yedek yolu ve planlanan araçlar:** Expo Push (`00-olgular.md` §5) canlıda kapatılacak mı, yoksa listede mi kalacak? Kalırsa standart sözleşme gerekir. `CANLIYA_ALMA.md` 4'te planlanan Sentry ve PostHog eklenirse bu liste, gizlilik politikası ve ClinicApp web çerez onayı önceden değişmeli.
 4. **Uzmana itiraz hakkı ve süre (6. bölüm):** Uzman veri sorumlusu sayılırsa (gizlilik 4. bölüm seçenek A) bu kural Veri İşleme Eki'nin parçası olur; süre (öneri 30 gün) ve fesih sonucu onaylanmalı.
 5. **Test dönemi Gmail:** Test e-postalarının gerçek kişilere (pilot uzman ve aileler) gitmesi durumunda bu dönem için de aktarım güvencesi gerekip gerekmediği.

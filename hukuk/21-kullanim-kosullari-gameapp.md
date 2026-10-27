@@ -98,7 +98,7 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`.
 
 ## Avukata notlar
 
-1. **Kabulün yeri ve kaydı:** koşullar çocuk bağlanmadan önce ParentApp'te veliye onaylatılacak; bu onayın sürümlü kaydı (`legal_acceptances`) henüz yazılmadı. Çocuk oyunu App Store'dan kendisi indirdiğinde App Store EULA bağlantısı ve "veli kabul eder" kurgusu yeterli mi?
+1. **Kabulün yeri ve kaydı:** koşullar çocuk bağlanmadan önce ParentApp'te veliye onaylatılacak; bu onayın sürümlü kaydı önerisi hazır (`legal_accept('child', …)`, `20261027200000_legal.sql`). Çocuk oyunu App Store'dan kendisi indirdiğinde App Store EULA bağlantısı ve "veli kabul eder" kurgusu yeterli mi?
 2. **Silme yolu:** olgulara göre çocuğun verisi yalnız ebeveyn hesabı silinince siliniyor; tek bir çocuk profilini ya da yalnız oyun kaydını silme yolu ve oyunun içinden silme talebi yolu yok. Apple 5.1.1(v) ve KVKK md. 7 açısından yeterli mi, yoksa ParentApp'e "Çocuk profilini sil" eklenmeli mi?
 3. **Sorumluluk ve uyuşmazlığın atıfla düzenlenmesi:** bu metin sorumluluk, değişiklik ve uyuşmazlık için ParentApp koşullarına atıf yapıyor. Veli ParentApp koşullarını zaten kabul ettiği için atıf yeterli mi, yoksa bu maddeler burada da tekrarlanmalı mı?
 4. "Aile aboneliği bitince çocuk cezalandırılmaz (oyun ve birikimler kalır)" kuralı karar bekliyor (`CANLIYA_ALMA.md` 2.2); kabul edilirse 4. maddeye bir cümle eklenir.

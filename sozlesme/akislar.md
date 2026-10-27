@@ -470,7 +470,7 @@ Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz;
 
 | Adım | Kim | Ne | Sunucu |
 |---|---|---|---|
-| 1 | [P] / [K] | Kayıt ekranında iki ayrı satır: "Kullanım Koşulları'nı okudum, kabul ediyorum" ve "Aydınlatma Metni'ni okudum" (bağlantılar `legal` adresine). Açık rızalar bu ekrana konmaz. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))` |
+| 1 | [P] / [K] | Kayıt ekranında koşullar için onay kutusu ("Kullanım Koşulları'nı okudum, kabul ediyorum"; işaretlenmeden hesap açılmaz) ve altında **kutusuz** aydınlatma satırı ("Kişisel verilerinin nasıl işlendiğini Aydınlatma Metni'nde anlatıyoruz"); bağlantılar `legal` adresine. Aydınlatma onay değil bilgilendirmedir; gösterildiği kaydedilir. Açık rızalar bu ekrana konmaz. Metinler `hukuk/50-uygulama-ici-metinler.md`. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))` |
 | 2 | [P] / [K] | Her açılışta (ve ön plana gelince) `legal_pending(app)`; boş değilse "Koşullarımız güncellendi" ekranı (`summary` + bağlantı) → kabul etmeden devam edilmez; "Hesabımı sil" seçeneği görünür. | `legal_accept` |
 | 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. | `legal_accept('child', …)` |
 | 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |

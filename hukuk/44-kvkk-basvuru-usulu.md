@@ -60,7 +60,7 @@ Amacımız verinizi başkasına vermemektir.
 | Verinizin işlenip işlenmediğini öğrenmek; işlenmişse bilgi istemek; amacını ve amaca uygun kullanılıp kullanılmadığını öğrenmek | Hangi verinizi, hangi amaçla, hangi hukuki sebeple işlediğimizi ve ne kadar sakladığımızı yazarız | Gizlilik Politikası ve aydınlatma metinleri |
 | Verinizin bir kopyasını almak | Hesabınıza ait verilerin okunabilir bir dökümünü güvenli bir bağlantıyla göndeririz. Başka kişilere ait veriler (ör. diğer ebeveynin yazdıkları) ayıklanabilir | [Verimi indir — yapılınca eklenecek] |
 | Eksik ya da yanlış verinin düzeltilmesi | Düzeltir, sonucunu bildiririz | Profil ve çocuk bilgilerini düzenlemek |
-| Verinin silinmesi ya da yok edilmesi | Şartlar oluşmuşsa siler, sonucunu bildiririz. Kanunen saklamak zorunda olduğumuz kayıtları (ör. ödeme kayıtları) yalnız o amaçla ve süresi kadar tutarız | Hesabımı sil; çocuk profilini sil; sağlık yanıtlarını sil; mesaj ve kayıtları silmek |
+| Verinin silinmesi ya da yok edilmesi | Şartlar oluşmuşsa siler, sonucunu bildiririz. Kanunen saklamak zorunda olduğumuz kayıtları (ör. ödeme kayıtları) yalnız o amaçla ve süresi kadar tutarız | Hesabımı sil; sağlık yanıtlarını sil; mesaj ve kayıtları silmek; [çocuk profilini sil — ParentApp'e eklenecek] |
 | Verinin yurt içinde ya da yurt dışında aktarıldığı kişileri öğrenmek | Alıcıları ve ülkelerini yazarız | Hizmet Sağlayıcılar Listesi (`alt-isleyenler`) |
 | Düzeltme ve silmenin, verinin aktarıldığı kişilere bildirilmesi | Verinin aktarıldığı hizmet sağlayıcılara ve gerekiyorsa uzmana bildiririz | — |
 | Yalnız otomatik sistemlerle yapılan bir analizin aleyhinize sonucuna itiraz | İtirazınızı inceleriz. Bugün sizin hakkınızda yalnız otomatik sistemlerle sonuç doğuran bir karar vermiyoruz | — |
@@ -79,7 +79,7 @@ Amacımız verinizi başkasına vermemektir.
 - Pofi Adası'nda çocuğun ayrı bir hesabı yoktur; profilini veli ParentApp'te oluşturur. Çocuğun verisiyle ilgili talepleri veli yapar.
 - **Ailede kayıtlı ebeveynseniz:** ParentApp › Ayarlar › KVKK başvurusu › "Kimin için?" › çocuğunuzu seçin. Ebeveyn hesabınız ve çocuğu eklerken verdiğiniz veli beyanı yeterlidir.
 - **Ailede kayıtlı olmayan veli ya da vasi iseniz:** `kvkk@[ALAN ADI]`, yazılı ya da KEP yoluyla başvurun ve velayet ya da vesayetinizi gösteren belgeyi ekleyin.
-- Çocuğun profilini ve ona bağlı verileri (görevler, mesajlar, oyun kaydı) silmek için başvuru gerekmez: ParentApp'te çocuğun profilini silmeniz yeterlidir.
+- Çocuğun cihazının oyunla bağlantısını başvuru gerekmeden hemen kapatabilirsiniz: ParentApp › Aile › çocuk › Cihaz bağlantısını kaldır. Çocuğun profilinin ve ona bağlı verilerin (görevler, mesajlar, oyun kaydı) silinmesini bu sayfadaki yollarla isteyebilirsiniz; ailenin tamamı için hesabınızı silmeniz yeterlidir.
 
 ## 8. Uzmanla ilgili kayıtlar: kime başvurursunuz?
 
@@ -111,9 +111,18 @@ Başvurunuzu, kanalını, türünü, açıklamanızı, durumunu, tarihlerini ve 
 
 Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@[ALAN ADI]`
 
-## Ek: Yanıt şablonları (iç kullanım — yayımlanmaz)
+## Avukata notlar
 
-> Seed sırasında bu bölüm ve "Avukata notlar" herkese açık metne alınmaz. `[NO]` = `kvkk_requests.id`'nin kısa hâli, `[SON TARİH]` = `due_at`.
+1. **T.C. kimlik numarası:** Tebliğ başvuruda T.C. kimlik numarası istiyor; uygulama içi (hesaba bağlı) başvuruda veri en aza indirme açısından istememek mümkün mü? Bugünkü öneri SQL'i (`kvkk_request_create`) kimlik numarası almıyor.
+2. **Klinik yönlendirmesi (8. bölüm):** Veri sorumlusu seçimine (gizlilik 4. bölüm A/B) bağlı. A seçilirse, bize gelen başvurunun kliniğe iletilmesi ve 30 günlük sürenin kimde işlediği Veri İşleme Eki'ne yazılmalı.
+3. **Ailede kayıtlı olmayan veli:** Ayrı yaşayan ya da velayeti olmayan ebeveynin başvurusunda ne kadar veri verilir; ailedeki kayıtlı ebeveyne haber verilir mi?
+4. **Kimlik doğrulama süresi:** Kimlik doğrulaması beklenirken 30 günlük süre işlemeye devam eder mi?
+5. **Çocuğun kendi başvurusu:** Ayırt etme gücü olan çocuğun (ör. 15+) kendi başına başvurusu nasıl karşılanır (`hukuk_notlari.md` 5/6).
+6. **Tek çocuğu silme:** ParentApp'te tek bir çocuk profilini silme ekranı yok (`README.md` sorun 5); bugün yalnız başvuruyla ya da bütün aileyi silerek yapılabiliyor. Ekran yapılınca 5. ve 7. bölüm güncellenir.
+
+### Yanıt şablonları (iç kullanım; avukat gözden geçirir, yayımlanmaz)
+
+> "Avukata notlar" bölümü herkese açık metne alınmadığı için şablonlar burada durur (`tools/legal_seed.py`). `[NO]` = `kvkk_requests.id`'nin kısa hâli, `[SON TARİH]` = `due_at`.
 
 **Ş1 — Alındı**
 > Başvurunuz [ALINIŞ TARİHİ] tarihinde bize ulaştı. Başvuru no: [NO]. En geç [SON TARİH] tarihine kadar yanıtlayacağız.
@@ -144,11 +153,3 @@ Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@[ALA
 
 **Ş10 — Zarar giderimi talebi**
 > Zarar giderimi talebinizi ([NO]) aldık ve hukuk danışmanımızla birlikte inceliyoruz. En geç [SON TARİH] tarihine kadar gerekçeli yanıt vereceğiz.
-
-## Avukata notlar
-
-1. **T.C. kimlik numarası:** Tebliğ başvuruda T.C. kimlik numarası istiyor; uygulama içi (hesaba bağlı) başvuruda veri en aza indirme açısından istememek mümkün mü? Bugünkü öneri SQL'i (`kvkk_request_create`) kimlik numarası almıyor.
-2. **Klinik yönlendirmesi (8. bölüm):** Veri sorumlusu seçimine (gizlilik 4. bölüm A/B) bağlı. A seçilirse, bize gelen başvurunun kliniğe iletilmesi ve 30 günlük sürenin kimde işlediği Veri İşleme Eki'ne yazılmalı.
-3. **Ailede kayıtlı olmayan veli:** Ayrı yaşayan ya da velayeti olmayan ebeveynin başvurusunda ne kadar veri verilir; ailedeki kayıtlı ebeveyne haber verilir mi?
-4. **Kimlik doğrulama süresi:** Kimlik doğrulaması beklenirken 30 günlük süre işlemeye devam eder mi?
-5. **Çocuğun kendi başvurusu:** Ayırt etme gücü olan çocuğun (ör. 15+) kendi başına başvurusu nasıl karşılanır (`hukuk_notlari.md` 5/6).

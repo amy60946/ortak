@@ -43,8 +43,10 @@ revoke execute on function public.legal_documents_guard() from public, anon, aut
 drop trigger if exists legal_documents_guard on public.legal_documents;
 create trigger legal_documents_guard before update on public.legal_documents for each row execute function public.legal_documents_guard();
 
+-- Hesap silinse de onay kaydı kalır (ispat; KVKK md. 5/2-e): user_id rastgele hesap kimliğidir, auth.users'a bağ yok,
+-- e-posta/ad tutulmaz. Saklama süresi sonunda imha işi siler (hukuk/42-saklama-imha-politikasi.md).
 create table if not exists public.legal_acceptances (
-  user_id      uuid not null references auth.users (id) on delete cascade,
+  user_id      uuid not null,
   doc_key      text not null,
   version      text not null,
   app          text not null check (app in ('parent', 'child', 'clinic')),
@@ -144,6 +146,7 @@ create table if not exists public.kvkk_requests (
   received_at  timestamptz not null default now(),
   due_at       timestamptz not null default now() + interval '30 days',
   answered_at  timestamptz,
+  child_id     uuid references public.children (id) on delete set null,   -- veli çocuğu adına başvurduysa
   answer_note  text check (char_length(answer_note) <= 2000),   -- iç not / yanıt özeti (kişiye giden metin e-postada)
   handled_by   uuid references auth.users (id) on delete set null,
   updated_at   timestamptz not null default now()
@@ -154,10 +157,12 @@ alter table public.kvkk_requests enable row level security;
 revoke all on public.kvkk_requests from anon, authenticated;
 drop policy if exists "kvkk: kendi okur" on public.kvkk_requests;
 create policy "kvkk: kendi okur" on public.kvkk_requests for select to authenticated using (user_id = auth.uid());
-grant select (id, app, kind, detail, status, received_at, due_at, answered_at) on public.kvkk_requests to authenticated;
+grant select (id, app, kind, child_id, detail, status, received_at, due_at, answered_at) on public.kvkk_requests to authenticated;
 
 -- Uygulama içi başvuru (hesaba bağlı; kimlik oturumla doğrulanır). En çok 5 açık başvuru.
-create or replace function public.kvkk_request_create(p_app text, p_kind text, p_detail text)
+-- p_child: veli kendi ailesindeki çocuk adına başvurur (yalnız ParentApp ebeveyni)
+drop function if exists public.kvkk_request_create(text, text, text);
+create or replace function public.kvkk_request_create(p_app text, p_kind text, p_detail text, p_child uuid default null)
 returns json language plpgsql security definer set search_path = '' as $$
 declare
   uid uuid := auth.uid();
@@ -170,20 +175,24 @@ begin
   if p_kind in ('correct', 'object', 'damages', 'other') and char_length(btrim(coalesce(p_detail, ''))) < 5 then
     raise exception 'Talebini kısaca yaz';
   end if;
+  if p_child is not null and not exists (select 1 from public.children c join public.profiles p on p.family_id = c.family_id
+                                          where c.id = p_child and p.id = uid) then
+    raise exception 'Çocuk bulunamadı';
+  end if;
   if (select count(*) from public.kvkk_requests where user_id = uid and status in ('received', 'in_progress')) >= 5 then
     raise exception 'Açık başvurun var; yanıtlanınca yenisini gönderebilirsin';
   end if;
-  insert into public.kvkk_requests (user_id, email, app, kind, detail)
-  values (uid, (select u.email::text from auth.users u where u.id = uid), p_app, p_kind, btrim(coalesce(p_detail, '')))
+  insert into public.kvkk_requests (user_id, email, app, kind, detail, child_id)
+  values (uid, (select u.email::text from auth.users u where u.id = uid), p_app, p_kind, btrim(coalesce(p_detail, '')), p_child)
   returning * into r;
   return json_build_object('id', r.id, 'status', r.status, 'received_at', r.received_at, 'due_at', r.due_at);
 end $$;
-revoke execute on function public.kvkk_request_create(text, text, text) from public, anon;
-grant execute on function public.kvkk_request_create(text, text, text) to authenticated;
+revoke execute on function public.kvkk_request_create(text, text, text, uuid) from public, anon;
+grant execute on function public.kvkk_request_create(text, text, text, uuid) to authenticated;
 
 create or replace function public.my_kvkk_requests()
 returns json language sql stable security definer set search_path = '' as $$
-  select coalesce(json_agg(json_build_object('id', r.id, 'app', r.app, 'kind', r.kind, 'status', r.status,
+  select coalesce(json_agg(json_build_object('id', r.id, 'app', r.app, 'kind', r.kind, 'child_id', r.child_id, 'status', r.status,
            'received_at', r.received_at, 'due_at', r.due_at, 'answered_at', r.answered_at) order by r.received_at desc), '[]'::json)
     from public.kvkk_requests r where r.user_id = auth.uid()
 $$;
@@ -245,7 +254,8 @@ begin
   perform public.admin_require(array['support']);
   return coalesce((
     select json_agg(to_json(x) order by x.open desc, case when x.open then x.due_at end, x.received_at desc) from (
-      select r.id, r.user_id, r.email, r.app, r.channel, r.kind, r.detail, r.status, r.received_at, r.due_at, r.answered_at,
+      select r.id, r.user_id, r.email, r.app, r.channel, r.kind, r.detail,
+             (select c.name from public.children c where c.id = r.child_id) as child, r.status, r.received_at, r.due_at, r.answered_at,
              r.answer_note, case when r.user_id is null then null else public.account_kind(r.user_id) end as kind_of_user,
              r.status in ('received', 'in_progress') as open
         from public.kvkk_requests r

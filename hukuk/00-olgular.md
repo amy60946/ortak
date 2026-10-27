@@ -43,7 +43,7 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 | Hesap silme | Kullanıcı talebi | Uygulama içi `delete_account()`; aile/klinik verisi birlikte silinir; tek ebeveyn kalmışsa aile silinir |
 | Yetkili ekip erişimi | Meşru menfaat / sözleşmenin ifası | iki adımlı, gerekçeli, silinemez denetim kaydı; tanışma yanıtları gerekçeyle açılır, sağlık yanıtları varsayılan gizli |
 | Kullanım ölçümü | Meşru menfaat | içerik yok, üçüncü taraf yok |
-| Kullanım Koşulları / Aydınlatma onayı | — | **Eklenecek:** sürümlü onay kaydı (`legal_acceptances`) |
+| Kullanım Koşulları kabulü / Aydınlatmanın gösterilmesi | Sözleşmenin kurulması; ispat (md. 5/2-e) | Öneri `20261027200000_legal.sql`: sürümlü kayıt `legal_acceptances` (kim, hangi metin, sürüm, uygulama, zaman); hesap silinse de rastgele hesap kimliğiyle kalır (e-posta/ad yok), saklama süresi sonunda imha |
 
 ## 4. Sanal değerler
 
@@ -81,6 +81,8 @@ Tüm bağlantılar TLS; veritabanında satır düzeyi güvenlik (herkes yalnız 
 | Denetim kaydı | `[SÜRE]` (öneri: 5 yıl); silinen kullanıcının e-postası yazılmaz |
 | Abonelik/ödeme olayları | `[SÜRE]` (vergi/ticaret mevzuatı; öneri 10 yıl) |
 | Kullanım kayıtları | `[SÜRE]` (öneri: 25 ay, sonra yalnız toplam) |
+| Yasal metin onay kayıtları | Hesap silinse de rastgele kimlikle `[SÜRE]` (öneri: sözleşme bitiminden 10 yıl — genel zamanaşımı) |
+| KVKK başvuruları | Kapanıştan sonra `[SÜRE]` (öneri: 3 yıl); hesap silinince başvuru hesaptan ayrılır, yanıt e-postası kapanana dek kalır |
 
 ## 8. Bilinen açık konular
 

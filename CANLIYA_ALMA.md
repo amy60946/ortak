@@ -38,7 +38,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
 
 ### 1.5 Hukuk metinleri (taslak Claude, onay Hukuk)
-> **HUKUK ARŞİVİ — canlıya almadan önce kullanıcıya hatırlat (kullanıcı isteği 27 Ekim 2026).** Bütün hukuki notlar tek yerde: `sozlesme/hukuk_notlari.md` (taslak maddeler A–I, avukata sorular 5. bölüm). Avukatla bu dosya üzerinden ilerlenir; onaylanan metinler bu listeye işaretlenir.
+> **HUKUK ARŞİVİ — canlıya almadan önce kullanıcıya hatırlat (kullanıcı isteği 27 Ekim 2026).** Bütün hukuki metinler tek yerde: **`hukuk/`** (dizin + fonksiyon→hukuk haritası + bulunan sorunlar: `hukuk/README.md`; 15 taslak metin ve iç belge) ve karar notları `sozlesme/hukuk_notlari.md` (avukata sorular 5. bölüm). Avukatla bu dosya üzerinden ilerlenir; onaylanan metinler bu listeye işaretlenir.
 - [ ] Kullanıcının platforma verdiği aktarım/işleme yetkileri (hizmet sağlayıcılar, yurt dışı, yetkili ekip erişimi, tanışma yanıtları, ölçüm, kanuni zorunluluk, işletme devri, onay kaydı): `hukuk_notlari.md` 3I
 - [ ] KVKK Aydınlatma Metni (ebeveyn / çocuk / uzman; `trial_history`)
 - [ ] Açık Rıza Metni (çocuk verisi, uzman paylaşımı, yurt dışı aktarım, pazarlama ayrı)

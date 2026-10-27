@@ -20,6 +20,7 @@
 | Kayıt sırasında | Kayıt anında oturum henüz açık değil (e-posta doğrulaması). İşaretlenen sürümler kayıt bilgisine eklenir; ilk girişte `legal_accept` ile yazılır ya da ilk girişte `legal_pending` ekranı gösterilir |
 | Pofi Adası sesli okuma | Çocuğa gösterilen her yeni metin için ses üretilir (game-app `CLAUDE.md`, `build_voice.py --missing`) |
 | Değişiklik | Bu belgedeki bir metin değişirse bağlı belgeyle tutarlılığı kontrol edilir; açık rıza metni değişirse rıza sürümü de değişir (`-v2`) |
+| Diğer taslaklar | ClinicApp kısa metinleri `22-uzman-hizmet-sozlesmesi.md` Ek-3'te, çerez bandı `40-cerez-politikasi.md`'de, çocuğa kısa not `11-aydinlatma-cocuk-ve-veli.md` Kısım B'de de yazılı; bu belgedekilerle aynı tutulur |
 
 **Belge anahtarları:**
 
@@ -27,15 +28,16 @@
 |---|---|---|---|
 | `kosullar-parentapp` | ParentApp Kullanım Koşulları (abonelik dahil) | parent | Evet |
 | `kosullar-gameapp` | Pofi Adası Koşulları (veli çocuk adına onaylar) | child (onay ParentApp'te) | Evet |
-| `kosullar-clinicapp` *(öneri; diğer taslaklarla eşlenecek)* | Uzman Hizmet Sözleşmesi | clinic | Evet |
-| `veri-isleme-eki` *(öneri)* | Veri İşleme Eki | clinic | Evet |
-| `aydinlatma-ebeveyn` | Ebeveyn Aydınlatma Metni | parent | Evet ("okudum") |
-| `aydinlatma-uzman` | Uzman Aydınlatma Metni | clinic | Evet ("okudum") |
-| `aydinlatma-cocuk` | Pofi Adası Çocuk ve Veli Aydınlatma Metni | child (ParentApp'te gösterilir) | Evet ("okudum") |
+| `sozlesme-uzman` | ClinicApp Uzman Hizmet Sözleşmesi | clinic | Evet |
+| `veri-isleme-eki` | Veri İşleme Eki (sözleşmenin Ek-1'i) | clinic | Evet |
+| `aydinlatma-ebeveyn` | Ebeveyn Aydınlatma Metni | parent | Gösterildi kaydı (kutu yok) |
+| `aydinlatma-uzman` | Uzman Aydınlatma Metni | clinic | Gösterildi kaydı (kutu yok) |
+| `aydinlatma-cocuk` | Pofi Adası Çocuk ve Veli Aydınlatma Metni | child (ParentApp'te gösterilir) | Gösterildi kaydı (kutu yok) |
 | `gizlilik` | Gizlilik Politikası | hepsi + web | Hayır |
 | `alt-isleyenler` | Hizmet Sağlayıcılar Listesi | hepsi + web | Hayır |
 | `kvkk-basvuru` | KVKK Başvuru Usulü | hepsi + web | Hayır |
-| `cerez` *(öneri)* | Çerez Bilgilendirmesi | web (ClinicApp) | Hayır |
+| `cerez-clinicapp-web` | ClinicApp Web Çerez Politikası | clinic, web | Hayır |
+| `acik-riza-metinleri` | ParentApp açık rıza metinleri (her rıza kendi sürümüyle: `saglik-yanit-v1`, `uzman-paylasim-v1`, `uzman-gecis-v1`) | parent, web | Ayrı rıza kutuları |
 
 ## 1. Kayıt ekranı onay satırları
 
@@ -47,22 +49,22 @@
 
 > ☐ <u>Kullanım Koşulları</u>'nı okudum, kabul ediyorum.
 >
-> ☐ Kişisel verilerimin nasıl işlendiğini anlatan <u>Aydınlatma Metni</u>'ni okudum.
+> Kişisel verilerinin nasıl işlendiğini <u>Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok; düz satır)*
 >
 > <small><u>Gizlilik Politikası</u></small>
 
-- İki kutu da işaretlenmeden "Hesap oluştur" pasif kalır.
+- Koşullar kutusu işaretlenmeden "Hesap oluştur" pasif kalır. Aydınlatma bir onay değil, bilgilendirmedir: kutu konmaz; hesap oluşunca koşulların onayıyla birlikte aydınlatmanın **gösterildiği** de `legal_accept` ile kaydedilir (karar 27 Ekim 2026, avukat teyidi bekler).
 - Bu ekranda **açık rıza kutusu yoktur**. Sağlık soruları ve uzman paylaşımı kendi ekranlarında, isteğe bağlı sorulur. Pazarlama izni bugün istenmez.
 
 ### 1.2 ClinicApp — kayıt
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü | `kosullar-clinicapp`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
+| ClinicApp (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü; ekip koduyla katılım ekranı | `sozlesme-uzman`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
 
 > ☐ <u>Uzman Hizmet Sözleşmesi</u>'ni ve <u>Veri İşleme Eki</u>'ni okudum, kabul ediyorum.
 >
-> ☐ Kişisel verilerimin nasıl işlendiğini anlatan <u>Uzman Aydınlatma Metni</u>'ni okudum.
+> Kişisel verilerinin nasıl işlendiğini <u>Uzman Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok; düz satır — sözleşme Ek-3 ile aynı)*
 >
 > <small><u>Gizlilik Politikası</u></small>
 
@@ -78,7 +80,7 @@
 >
 > ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
-> ☐ <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'ni okudum.
+> Çocuğunun verilerinin nasıl işlendiğini <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
 
 - Kayıt: `legal_accept('child', …)` (çocuk cihazı onay veremez; sunucu reddeder).
 
@@ -103,7 +105,7 @@
 >
 > <u>Tam metni oku</u>
 >
-> ☐ Güncellenen {belge_adı}'nı okudum, kabul ediyorum. *(aydınlatma metninde: "Güncellenen {belge_adı}'ni okudum.")*
+> ☐ Güncellenen {belge_adı}'nı okudum, kabul ediyorum. *(aydınlatma metninde kutu yok: "Aydınlatma metnimizi güncelledik" + [Tamam]; dokunulunca gösterildi kaydı)*
 >
 > [ Devam et ]
 >
@@ -131,7 +133,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 | Pofi Adası Koşulları | Gizlilik Politikası | KVKK Başvuru Usulü |
 | Pofi Adası Çocuk ve Veli Aydınlatma Metni | Hizmet Sağlayıcılar | |
 | Hizmet Sağlayıcılar | KVKK Başvuru Usulü | |
-| KVKK Başvuru Usulü | Çerez Bilgilendirmesi (yalnız web) | |
+| KVKK Başvuru Usulü | Çerez Politikası (yalnız web) | |
 | **Verdiğin izinler** → sağlık yanıtları, uzman paylaşımı, önceki uzman kayıtları: durum + "Geri al" | | |
 
 "Verdiğin izinler" alt başlığı:
@@ -202,7 +204,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > - görevler, onaylar, ödüller, coin ve Güneş Taşı geçmişi,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - zor an kayıtları ve tanışma yanıtları,
-> - uzman paylaşımları (uzmanın erişimi hemen biter),
+> - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
 > - oyun yedekleri.
 >
 > Çocuğunun cihazındaki Pofi Adası'nın aileyle bağlantısı kapanır.
@@ -226,12 +228,12 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ClinicApp (iPad + web) | Profil › Hesabımı sil | `gizlilik`, `kosullar-clinicapp` | `delete_account()` |
+| ClinicApp (iPad + web) | Profil › Hesabımı sil | `gizlilik`, `sozlesme-uzman` | `delete_account()` |
 
 **Klinik sahibinin aktif mağaza üyeliği varsa:** 5.1'deki kutu, metin "Klinik üyeliğin Apple'da devam ediyor…" (web'de: "Üyeliğini iPhone/iPad'deki App Store ayarlarından iptal et.").
 
 **Tek kişilik klinik:**
-> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planları, davetler ve üyelik kaydı. Ailelerin ParentApp'teki kendi verileri silinmez; yalnız seninle paylaşımları biter. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer.
+> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planları, davetler ve üyelik kaydı. Ailelerin ParentApp'teki kendi verileri silinmez; yalnız seninle paylaşımları biter. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Saklaman gereken kayıtları önce yazdır ya da destekten iste.
 
 **Ekipte başka uzman varken klinik sahibi:**
 > Klinik kalır; sahiplik ekibin en eski üyesine ({ad}) geçer. Kliniğe ait kayıtlar klinikte kalır. Yalnız senin hesabın silinir.
@@ -243,7 +245,7 @@ Alt kısım, onay ve düğme 5.1 ile aynı.
 
 ### 5.3 Pofi Adası
 
-Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi ekranında: "Çocuğunun verilerini silmek için ParentApp'te çocuğun profilini sil." (bkz. 10).
+Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi ekranında cihaz bağlantısının kaldırılması ve silme yolu anlatılır (bkz. 10). ParentApp'te tek çocuk profilini silme ekranı bugün yok (`README.md` sorun 5); yapılınca metin "ParentApp › Aile › çocuk › Profili sil" olur.
 
 ## 6. Abonelik ekranı (Apple 3.1.2)
 
@@ -256,7 +258,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 > **[PLAN ADI]**
 > Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, zor an kayıtları.
 >
-> ○ **Aylık** — {fiyat_aylık} / ay
+> ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
 >
 > [ {seçilen_fiyat} ile abone ol ]
@@ -275,7 +277,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp (iPad/iPhone) | Üyelik (yalnız klinik sahibi) | `kosullar-clinicapp`, `gizlilik` |
+| ClinicApp (iPad/iPhone) | Üyelik (yalnız klinik sahibi) | `sozlesme-uzman`, `gizlilik` |
 
 6.1 ile aynı yapı; paketler "Bireysel" ve "Klinik", her biri aylık ve yıllık, içerik listesi `billing_plans`'tan.
 
@@ -333,9 +335,9 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › Zor anlar sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `kosullar-clinicapp` |
+| ClinicApp | Danışan › Zor anlar sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
 
-> ClinicApp acil durum ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen aileyi hemen **112**'ye yönlendir.
+> ClinicApp acil yardım ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen **112**'yi ara ya da aileyi hemen 112'ye yönlendir.
 
 ## 10. Pofi Adası — ebeveyn kapısı › Bilgi ekranı
 
@@ -343,29 +345,32 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 |---|---|---|
 | Pofi Adası | Ebeveyn kapısı geçildikten sonra "Bilgi" | `gizlilik`, `kosullar-gameapp`, `aydinlatma-cocuk`, `kvkk-basvuru` |
 
+> *(En üstte, büyük yazıyla ve sesli okunarak: `aydinlatma-cocuk` Kısım B — çocuğa kısa not.)*
+>
 > **Ebeveynler için bilgi**
 >
 > - Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
 > - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız ParentApp'teki QR kodu okumak için açılır; görüntü kaydedilmez.
 > - Çocuğun yalnız seninle ve ailendeki diğer ebeveynle yazışır.
-> - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili düzenlemek ya da silmek için ParentApp'i kullan.
+> - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
+> - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
 > - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}
 >
-> [ Bu cihazın bağlantısını kaldır ] *(öneri; `CANLIYA_ALMA.md` 2.2 "ebeveyn kapısı: bağlama")*
+> [ Bu cihazın bağlantısını kaldır ] *(öneri: oyunun içinden de; `CANLIYA_ALMA.md` 2.2 "ebeveyn kapısı: bağlama")*
 
 - Bağlantılar tarayıcıda açılır; açılmadan önce: "Bu bağlantı tarayıcıda açılacak."
-- Bu ekran ebeveyne yöneliktir; sesli okuma gerekmez *(Pofi Adası penceresi karar verir)*.
+- Kısım B sesli okunur; ebeveyn bölümü için sesli okuma gerekmez *(Pofi Adası penceresi karar verir)*.
 
 ## 11. ClinicApp web — çerez bandı
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp web | İlk ziyarette alt bant; "Tamam" sonrası bir daha gösterilmez | `cerez`, `gizlilik` |
+| ClinicApp web | İlk ziyarette alt bant, içeriği kapatmaz; "Anladım" sonrası bir daha gösterilmez (`40-cerez-politikasi.md` ile aynı metin) | `cerez-clinicapp-web`, `gizlilik` |
 
-> ClinicApp yalnız oturumunu açık tutmak ve ayarlarını hatırlamak için zorunlu tarayıcı kayıtları kullanır. Reklam ya da izleme çerezi kullanmıyoruz. <u>Çerez Bilgilendirmesi</u> [ Tamam ]
+> ClinicApp web yalnız oturumunu açık tutmak ve seçimlerini hatırlamak için zorunlu tarayıcı depolaması kullanır. Analiz ya da reklam çerezi yok. <u>Çerez Politikası</u> [ Anladım ]
 
 - Yalnız zorunlu kayıtlar varken onay istenmez, bilgilendirme yeterlidir. Analiz aracı eklenirse bant "Kabul et / Reddet" düğmeleri eşit görünürlükte, önceden seçimsiz hâle gelir ve araç onaydan önce yüklenmez.
 
@@ -373,7 +378,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › Notlar, not alanının altı | `kosullar-clinicapp` (A2–A3), `aydinlatma-uzman` |
+| ClinicApp | Danışan › Notlar, not alanının altı | `sozlesme-uzman` (A2–A3), `aydinlatma-uzman` |
 
 > Notlarını aile görmez. Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma.
 
@@ -385,12 +390,24 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Aileyi davet et › "Çocuğun adı" + yaş grubu alanının altı ve "i" | `kosullar-clinicapp` (A9, A13) |
+| ClinicApp | Aileyi davet et › "Çocuğun adı" + yaş grubu alanının altı ve "i" | `sozlesme-uzman` (A9, A13) |
 
 > Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma.
 
 "i" ayrıntısı:
 > Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir.
+
+| Uygulama | Ekran | Bağlı belge |
+|---|---|---|
+| ClinicApp | Aileyi davet et › ebeveynin e-posta alanının altı | `sozlesme-uzman` (A13) |
+
+> Bu adrese senin adına davet e-postası gider; çocuğun adı ve notun e-postada yer almaz. Aile yanıtlarsa yanıt senin e-posta adresine gelir. Daveti yalnız tanıdığın ve hizmet verdiğin aileye gönder.
+
+| Uygulama | Ekran | Bağlı belge |
+|---|---|---|
+| ClinicApp | Belgeni yükle (bayrak `clinician_verification` açıkken) | `aydinlatma-uzman`, `sozlesme-uzman` (A11–A12) |
+
+> Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Ailelere yalnız "Belgesi incelendi: <meslek>" görünür; bu bir yetki onayı değildir. <u>Uzman Aydınlatma Metni</u>
 
 ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) ile önceki uzman kayıtları onay metni (`uzman-gecis-v1`) `hukuk_notlari.md` B ve E'deki metinlerdir; burada tekrar edilmez.
 
@@ -404,7 +421,13 @@ ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) i
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan özeti, hedef grafikleri, yazdırma/PDF çıktısının alt bilgisi | `kosullar-clinicapp` |
+| ClinicApp | Göstergeler ve hedef grafikleri (alt bilgi) | `sozlesme-uzman` |
+
+> Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir.
+
+| Uygulama | Ekran | Bağlı belge |
+|---|---|---|
+| ClinicApp | Yazdırma/PDF çıktısının alt bilgisi | `sozlesme-uzman` |
 
 > Bu çıktı ailenin uygulama kayıtlarından ve uzmanın gözlemlerinden oluşur. Tanı değildir; tek başına klinik karar için kullanılmaz.
 
@@ -427,8 +450,9 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 
 ## Avukata notlar
 
-1. **Kayıt ekranında aydınlatma kutusu:** "Aydınlatma Metni'ni okudum" kutusu onay (rıza) gibi algılanabilir. Kutu yerine yalnız bağlantı + "gösterildi" kaydı mı yeterli, yoksa kutu ispat için mi tutulmalı? (`proposed/20261027200000_legal.sql` testinde aydınlatma `requires_acceptance = true`.)
+1. **Kayıt ekranında aydınlatma (karar önerisi uygulandı 27 Ekim 2026: kutusuz satır + "gösterildi" kaydı; avukat teyit etsin):** "Aydınlatma Metni'ni okudum" kutusu onay (rıza) gibi algılanabilir. Kutu yerine yalnız bağlantı + "gösterildi" kaydı mı yeterli, yoksa kutu ispat için mi tutulmalı? `tools/legal_seed.py` aydınlatmaları "onay ister" (okundu) olarak yüklüyor; `22-uzman-hizmet-sozlesmesi.md` Ek-3 ise ClinicApp'te aydınlatmayı kutusuz bir satır olarak öneriyor. İkisinden biri seçilip iki belge eşitlenmeli.
 2. **Abonelik ekranı (6):** Apple'ın yenileme ve iptal bilgisi kendi cümlelerimizle yazıldı; 6502 s. Kanun ve Abonelik Sözleşmeleri Yönetmeliği açısından ekranda ayrıca bulunması gereken bir bilgi (ör. cayma hakkı istisnası, satıcının Apple olduğu) var mı? Deneme sunucu tarafında, kartsız ve ücretsiz bitiyor; ileride App Store "ücretsiz deneme" teklifine geçilirse 6–7. bölüm metinleri değişmeli.
 3. **Pofi Adası koşulları güncellenince oyun kilitlensin mi (2):** Veli yeni sürümü ParentApp'te onaylayana kadar çocuğun oyunu kilitlenmiyor (öneri: çocuğu cezalandırmamak). Bu, eski sürümle kullanımın sürmesi demek; hukuken kabul edilebilir mi?
 4. **Hesap silmede kalanlar (5):** "Ödeme kayıtları, ekip işlem kaydı ve deneme e-posta özeti kalır" cümlesi `42-saklama-imha-politikasi.md` süreleriyle birlikte onaylanmalı.
-5. **Ürün kararı / teyit gerekenler (yazılım):** ClinicApp deneme süresi `00-olgular.md`'de 14 gün, `akislar.md` 5.8'de 7 gün yazıyor — metinler `{gün}` ile yazıldı, olgu dosyası düzeltilmeli. Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). `kosullar-clinicapp`, `veri-isleme-eki`, `cerez` anahtarları öneridir.
+5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). ParentApp'te tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
+6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Uzmanın kayıt saklama yükümlülüğüyle çatışma kararı (`00-olgular.md` §2) değişirse bu satır da değişir.

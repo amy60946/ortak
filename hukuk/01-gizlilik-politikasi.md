@@ -101,11 +101,11 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 
 **Danışanla ilgili kayıtlar:** Uzmanın girdiği notlar (aile görmez), hedefler ve haftalık değerlendirmeler, görev önerileri, takip planı (uzman gönderince aile görür), etiketler.
 
-**Davet bilgileri:** Uzman bir aileyi davet ederken ebeveynin adını ve e-postasını, çocuğun adını ya da takma adını ve yaş grubunu girer. Bu bilgi yalnız daveti iletmek ve ebeveynin onayına sunmak için tutulur. Kullanılmayan davet 3 günde, bağlanmış ama onaylanmamış davet en geç 30 günde silinir. Ebeveyne tek bir davet e-postası gider (en çok 3 kez yeniden gönderilebilir); bu e-posta reklam içermez.
+**Davet bilgileri:** Uzman bir aileyi davet ederken ebeveynin adını ve e-postasını, çocuğun adını ya da takma adını ve yaş grubunu girer. Bu bilgi yalnız daveti iletmek ve ebeveynin onayına sunmak için tutulur. Kullanılmayan davet 3 günde, bağlanmış ama onaylanmamış davet en geç 30 günde silinir. Davet 3 gün geçerlidir; davet başına ebeveyne en çok 3 e-posta (ilk gönderim ve yeniden gönderimler) gider. Bu e-postalar reklam içermez; çocuğun adı ve sağlık bilgisi e-postaya yazılmaz.
 
 **Abonelik:** Klinik üyeliği App Store üzerinden satılır; kart bilgisi bize gelmez.
 
-**Web:** ClinicApp'in web sürümü yalnız oturumu açık tutmak gibi çalışması için zorunlu tarayıcı kayıtları kullanır. Ayrıntı: Çerez Bilgilendirmesi (`cerez`).
+**Web:** ClinicApp'in web sürümü yalnız oturumu açık tutmak ve seçimlerinizi hatırlamak için zorunlu tarayıcı depolaması kullanır; analiz ya da reklam çerezi yoktur. Ayrıntı: ClinicApp Web Çerez Politikası (`cerez-clinicapp-web`).
 
 **Danışan kayıtlarında rolümüz:**
 [SEÇENEK A — öneri: Uzmanın danışanı hakkında girdiği notlar, hedefler, değerlendirmeler ve takip planı bakımından veri sorumlusu uzman ya da kliniğidir; biz bu kayıtları onun adına ve talimatıyla saklayan **veri işleyeniz**. Bu kayıtlarla ilgili başvurular öncelikle uzmana ya da kliniğe yapılır; biz uzmana teknik olarak yardım ederiz.]
@@ -114,7 +114,7 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 ## 5. Üç uygulamada ortak kayıtlar
 
 - **Kullanım kayıtları:** Uygulamayı açtığınız günler, oturum sayısı, uygulama sürümü, platform ve hangi ekranın ya da özelliğin kullanıldığını gösteren olay adları. Bu kayıtlarda serbest metin, mesaj içeriği ya da sağlık bilgisi yoktur. Kendi sunucumuzda tutulur; üçüncü taraf analiz aracına gitmez. Amaç: hizmetin çalıştığını ölçmek, hataları bulmak, ürünü geliştirmek.
-- **Bildirim kayıtları:** Size giden uygulama içi bildirimler ve okunup okunmadığı.
+- **Bildirim kayıtları:** Size giden uygulama içi bildirimler ve okunup okunmadığı. Anlık bildirimin başlığında ya da metninde çocuğunuzun adı geçebilir (ör. "Efe görevi tamamladı"); bu metin Apple'ın bildirim hizmetiyle (yedek yolda Expo üzerinden) telefona iletilir. Bildirim metnine sağlık bilgisi konmaz.
 - **Giriş kodu deneme kayıtları:** Kod tahminiyle kötüye kullanımı önlemek için hatalı denemeler IP adresiyle birlikte kısa süre (15 dakika ile 1 gün arası) tutulur.
 - **Onay kayıtları:** Hangi metni (Kullanım Koşulları, aydınlatma metni, açık rızalar) hangi sürümüyle ve ne zaman onayladığınız.
 - **Ekip işlemleri kaydı:** Ekibimizin hesabınızda yaptığı her işlem gerekçesiyle, değiştirilemez bir kayda yazılır.
@@ -173,6 +173,7 @@ Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağla
 |---|---|---|
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | [SUPABASE BÖLGESİ] |
 | Apple | App Store satışı ve aboneliği (satıcı Apple'dır), anlık bildirim (APNs) | ABD / AB |
+| Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | ABD |
 | RevenueCat | Abonelik durumunun doğrulanması | ABD |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | ABD / AB |
 | Cloudflare | Ekip yönetim panelinin barındırılması | Küresel ağ |
@@ -202,7 +203,7 @@ Hiçbir sistem kusursuz değildir. Şifrenizi kimseyle paylaşmayın; çocuğunu
 | Veri | Süre |
 |---|---|
 | Hesap, aile ve klinik verisi | Hesap silinene kadar; silince gecikmeden silinir |
-| Uzmanın danışan kayıtları | Klinik ya da (tek kişilik klinikte) uzman hesabı silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter. [Paylaşım bittikten sonraki saklama: [SÜRE]] |
+| Uzmanın danışan kayıtları | Klinik ya da (tek kişilik klinikte) uzman hesabı silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter. Aile ya da çocuk profili silinince o çocuğa ait uzman kayıtları da silinir. [Paylaşım bittikten sonraki saklama: [SÜRE]] |
 | Kullanılmayan davet bilgisi | 3 gün; bağlanmış ama onaylanmamış davet en geç 30 gün |
 | Uzman belge dosyası | Karar verilince silinir |
 | Giriş kodu deneme kayıtları | 15 dakika ile 1 gün arası |
@@ -216,8 +217,8 @@ Silinen veriler yedeklerden de [SÜRE] içinde kendiliğinden çıkar. Süre dol
 
 ## 13. Hesabınızı silmek
 
-- **ParentApp ve ClinicApp:** Ayarlar › Hesabımı sil. Ailede başka ebeveyn yoksa aile, çocuk profilleri ve onlara bağlı her şey (görevler, mesajlar, fotoğraflar, ses kayıtları, coin ve taş hareketleri, oyun yedekleri, uzman paylaşımları) silinir. Başka ebeveyn varsa aile onda kalır, yalnız sizin hesabınız silinir. Tek kişilik klinikte klinik ve kayıtları silinir; ekipte başka uzman varsa klinik kalır.
-- **Pofi Adası:** Çocuğun ayrı hesabı yoktur. Ebeveyn, çocuğun profilini ya da aileyi ParentApp'ten siler; oyunun bağlantısı kapanır.
+- **ParentApp ve ClinicApp:** Ayarlar › Hesabımı sil. Ailede başka ebeveyn yoksa aile, çocuk profilleri ve onlara bağlı her şey (görevler, mesajlar, fotoğraflar, ses kayıtları, coin ve taş hareketleri, oyun yedekleri, uzman paylaşımları ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı) silinir. Başka ebeveyn varsa aile onda kalır, yalnız sizin hesabınız silinir. Tek kişilik klinikte klinik ve kayıtları silinir; ekipte başka uzman varsa klinik kalır.
+- **Pofi Adası:** Çocuğun ayrı hesabı yoktur. Ebeveyn, ParentApp'ten çocuğun cihaz bağlantısını kaldırabilir, çocuğun profilini ya da aileyi silebilir; oyunun bağlantısı kapanır.
 - **Abonelik:** Hesabı silmek App Store aboneliğini durdurmaz. Aboneliği iPhone/iPad Ayarlar › [adınız] › Abonelikler'den ayrıca iptal edin.
 - Kanunen saklamak zorunda olduğumuz kayıtlar (ör. ödeme kayıtları) ve ekip işlemleri kaydı, sizi doğrudan tanıtan bilgi (e-posta) çıkarılarak süresi dolana kadar saklanır.
 
@@ -255,9 +256,11 @@ Kişisel veri konuları: `kvkk@[ALAN ADI]` · Diğer konular: `destek@[ALAN ADI]
 2. **Zor an kayıtları ve görev kayıtları sağlık verisi mi?** `02-ornekler` "zor an kayıtları: açık rıza" diyor, ama `00-olgular` §3'te zor an kaydı için ayrı açık rıza akışı yok (yalnız sağlık yanıtları, uzman paylaşımı, uzman geçişi). Davranış kaydının özel nitelikli sayılıp sayılmadığı ve ayrı onay gerekip gerekmediği karara bağlanmalı. Bugünkü metin zor an kaydını açık rıza tablosuna koymadı.
 3. **Sağlık verisinin yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi seçilince `[SUPABASE BÖLGESİ]` doldurulur.
 4. **Deneme hakkı e-posta özeti:** SHA-256 özeti tahmin edilebilir (e-posta adresleri sınırlı küme) olduğundan takma adlı kişisel veri sayılabilir; hesap silindikten sonra meşru menfaatle saklanması ve süresi ([SÜRE], öneri 2 yıl) onaylanmalı.
-5. **Koddan çıkan, olgu dosyasında olmayan iki konu:** (a) Sunucu, `ExponentPushToken[...]` biçimli bildirim anahtarı gelirse bildirimi **Expo Push API**'ye (exp.host, ABD) gönderiyor ("yedek yol"; `migrations/20261019130000_notifications.sql`). Canlıda kapatılmazsa Expo alt işleyen listesine ve bu metne eklenmeli; bildirim başlığı çocuk adı içerebiliyor. (b) `CANLIYA_ALMA.md` 4. bölümde ParentApp ve ClinicApp için **Sentry + PostHog** planlanmış; eklenirse "üçüncü taraf analiz/izleme yok" cümlesi ve "Bir bakışta" kutusu değişmeli, ClinicApp web'de çerez onayı gerekir.
-6. **Onay kayıtlarının ispatı:** `proposed/20261027200000_legal.sql`'de `legal_acceptances` hesap silinince siliniyor (`on delete cascade`). 6. bölümdeki "onay kayıtlarını hak ve savunmalarımız için saklamak" amacıyla çelişir; hesap silindikten sonra takma adlı saklama gerekip gerekmediği ve süresi.
-7. **Çocuğun kendi görüşü:** Yaş grubu C (13+) var. Ayırt etme gücü olan küçük için (ör. 15+) ayrıca bilgilendirme ya da görüş alınması gerekir mi (`hukuk_notlari.md` 5/6).
-8. **İşletme devri maddesi (10. bölüm):** Şahıs şirketi aşamasında geçerliliği ve bildirim süresi.
-9. **Açık konu:** `CANLIYA_ALMA.md` 2.2'de GameApp için "avatar fotoğrafı" işi var. Olgulara göre çocuktan fotoğraf alınmıyor; bu özellik yapılırsa (kimin çektiği, nerede saklandığı) metin güncellenmeli.
-10. **Yasal metin dili:** Herkese açık metinlerde "siz", uygulama içi kısa metinlerde uygulamanın dili ("sen") kullanıldı; tutarlılık tercihi sizde.
+5. **Bildirim yolu ve planlanan araçlar:** (a) Expo yedek bildirim yolu (`00-olgular.md` §5) bildirim başlığını ve metnini (çocuk adı geçebilir) ABD'ye taşıyor; canlıda kapatılması ya da alt işleyen olarak kalması kararı; bildirim metnini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir. (b) `CANLIYA_ALMA.md` 4. bölümde ParentApp ve ClinicApp için **Sentry + PostHog** planlanmış; eklenirse "üçüncü taraf analiz/izleme yok" cümlesi ve "Bir bakışta" kutusu değişmeli, ClinicApp web'de çerez onayı gerekir.
+6. **Aile ya da çocuk silinince uzman kayıtlarının silinmesi (12–13. bölüm):** Bugünkü sistemde uzmanın o çocuk için tuttuğu notlar, hedefler ve takip planı da siliniyor; metin bunu açıkça yazıyor. Uzmanın mesleki kayıt saklama yükümlülüğüyle çatışabilir (`00-olgular.md` §2, `22-uzman-hizmet-sozlesmesi.md` notu 4).
+7. **Tek çocuk profilini silme:** Veritabanı ebeveynin çocuk satırını silmesine izin veriyor, ama ParentApp'te bunun ekranı yok (`README.md` sorun 5). 13. bölüm ve hak listesi "çocuğun profilini silebilir" diyor; canlıdan önce ekran yapılmalı ya da cümle çıkarılmalı.
+8. **Onay kayıtlarının ispatı:** çözüldü (27 Ekim): `legal_acceptances` artık hesap silinince silinmiyor; rastgele hesap kimliğiyle (e-posta/ad olmadan) saklama süresince kalır. Süre ve dayanak (md. 5/2-e) avukata.
+9. **Çocuğun kendi görüşü:** Yaş grubu C (13+) var. Ayırt etme gücü olan küçük için (ör. 15+) ayrıca bilgilendirme ya da görüş alınması gerekir mi (`hukuk_notlari.md` 5/6).
+10. **İşletme devri maddesi (10. bölüm):** Şahıs şirketi aşamasında geçerliliği ve bildirim süresi.
+11. **Açık konu:** `CANLIYA_ALMA.md` 2.2'de GameApp için "avatar fotoğrafı" işi var. Olgulara göre çocuktan fotoğraf alınmıyor; bu özellik yapılırsa (kimin çektiği, nerede saklandığı) metin güncellenmeli.
+12. **Yasal metin dili:** Herkese açık metinlerde "siz", uygulama içi kısa metinlerde uygulamanın dili ("sen") kullanıldı; tutarlılık tercihi sizde.
