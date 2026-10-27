@@ -244,7 +244,7 @@ ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sab
 - Ebeveynin taşı **ayrı defterdedir** (`parent_stone_ledger`); çocuğun ada ilerlemesine (`sun_stone_balance`) ve ödül bakiyesine (`stone_balance`) karışmaz.
 - Tek harcama: **hediye**. Fiyat = oyundaki coin fiyatı / 10, yukarı yuvarlanır, en az 1 (ör. Yuvarlak gözlük 15 coin → 2 taş, Akvaryum 100 → 10). Dükkânda yalnız kalıcı eşyalar (giyilebilir, ev, süs); yiyecek, temizlik, tohum ve özel setler yok.
 - Gerekçe: günde 1–2 ebeveyn göreviyle 1–2 haftada orta boy bir hediye; coin ekonomisini bozmaz (hediye çocuğun coin'ini artırmaz, eşyayı verir).
-- Hediye seviye kilidini aşar mı: **GameApp kararı** (öneri: hediye edilen eşya envantere girer; giyme/yerleştirme kuralı oyundaki gibi).
+- **Hediye seviye kilidini aşar** (kullanıcı kararı 27 Ekim 2026, GameApp penceresi aracılığıyla; game-app 2bd61af): hediye edilen eşya hemen giyilir ya da yerleştirilir; hediye ev eşyası "Süsle" bölümünü Sv 4'ten önce açar. Dükkânda satın alma kilidi değişmez.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
