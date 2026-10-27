@@ -121,7 +121,7 @@
 | Cloudflare | Yönetim panelinin barındırılması; danışan kayıtlarının içeriği panelde gösterilmez, yalnız sayılar | Küresel |
 | Google (Gmail SMTP) — yalnız test dönemi | Test davet e-postaları; canlı kullanımda kullanılmaz | ABD |
 
-Apple (App Store) ve RevenueCat yalnız üyelik bilgisini işler; danışan kayıtlarına erişmez.
+Apple (App Store) ve iyzico (web ödemesi) yalnız üyelik ve ödeme bilgisini işler; danışan kayıtlarına erişmez.
 
 8.2. **Alt işleyen sözleşmeleri.** Platform her alt işleyenle, bu Ek'tekinden daha az koruyucu olmayan veri koruma yükümlülüklerini içeren yazılı bir sözleşme yapar. Platform, alt işleyenin bu yükümlülüklere aykırılığından Uzmana karşı, yardımcı kişinin fiilinden sorumluluk kuralları (TBK md. 116) çerçevesinde sorumludur.
 

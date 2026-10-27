@@ -29,7 +29,7 @@
 
 ## 2. İşlediğimiz kişisel veriler ve toplama yöntemi
 
-2.1. Aşağıdaki verileri, siz ClinicApp'e (iPad ya da web) girdiğinizde ve uygulamayı kullandıkça otomatik yollarla; üyelik bilgisini ayrıca Apple ve RevenueCat'ten gelen bildirimlerle topluyoruz.
+2.1. Aşağıdaki verileri, siz ClinicApp'e (iPad ya da web) girdiğinizde ve uygulamayı kullandıkça otomatik yollarla; üyelik bilgisini ayrıca Apple'dan (iPad) ve web'de iyzico'dan gelen ödeme bildirimleriyle topluyoruz.
 
 | Kategori | Veriler | Nereden |
 |---|---|---|
@@ -39,7 +39,7 @@
 | Hesap güvenliği | Şifre (yalnız kimlik doğrulama sağlayıcısında, geri çevrilemez biçimde özetlenmiş; biz göremeyiz), oturum bilgileri, kod deneme kayıtları (IP adresi dahil) | Giriş ve kod ekranları |
 | Mesleki belge incelemesi (isteğe bağlı) | Seçtiğiniz meslek; e-Devlet barkodlu Yükseköğretim Mezun Belgesi (belgede ad soyad, T.C. kimlik numarası, üniversite, bölüm, derece, mezuniyet tarihi yer alır); BACB sicil numarası; ön kontrol sonucu; inceleme kararı ve ret nedeni | "Belgeni yükle" sayfası |
 | Karşılama anketi (isteğe bağlı) | Mesleğiniz, ailelerle çalışırken zorlandığınız alanlar, işinize yarayacak özellikler, ClinicApp'e geliş nedeniniz (yalnız klinik sahibine sorulur) ya da anketi geçtiğiniz bilgisi | İlk girişteki anket ekranı |
-| Üyelik | Paket, dönem (aylık / yıllık), dönem sonu, otomatik yenileme durumu, mağaza işlem kimliği, ödeme olayları; RevenueCat'te hesabınıza bağlı rastgele kullanıcı kimliği. **Kart bilginiz bizde değil, Apple'dadır.** | ClinicApp üyelik ekranı, Apple, RevenueCat |
+| Üyelik | Paket, dönem (aylık / yıllık), dönem sonu, otomatik yenileme durumu, mağaza/ödeme işlem kimliği, ödeme olayları. **Web'den ödemede** ödeme için gereken ad, soyad, T.C. kimlik no, cep telefonu ve fatura adresi iyzico'ya iletilir; bunları saklamayız. **Kart bilginiz bizde değil; App Store'da Apple'da, web'de iyzico'dadır.** | ClinicApp üyelik ekranı, Apple, iyzico |
 | Bildirim | Cihazınızın bildirim jetonu, size gönderilen bildirimler ve okunma bilgisi | ClinicApp (iPad) |
 | Kullanım kayıtları | Uygulamayı açtığınız günler, oturum sayısı, uygulama sürümü, platform, kullandığınız ekran ve özelliklerin olay adları (serbest metin ve içerik yazılmaz) | ClinicApp, otomatik |
 | Destek ve denetim | Destek yazışmalarınız; yetkili ekibimizin hesabınızda yaptığı işlemlerin denetim kaydı (kim, ne, ne zaman, hangi gerekçeyle) | Destek kanalları, yönetim paneli |
@@ -78,7 +78,7 @@
 |---|---|---|---|
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | `[SUPABASE BÖLGESİ]` |
 | Apple | App Store (üyelik satışı; satıcı Apple'dır), bildirim gönderimi (APNs) | Üyelik işlemleri, bildirim jetonu ve bildirim metni | ABD / AB |
-| RevenueCat | Üyelik durumunun doğrulanması | Rastgele kullanıcı kimliği, satın alma kayıtları | ABD |
+| iyzico | Web'den üyelik ödemesi (ödeme kuruluşu) | Ad, soyad, e-posta, T.C. kimlik no, cep telefonu, fatura adresi, kart bilgisi (yalnız iyzico'da) | Türkiye |
 | Resend | İşlem e-postaları (e-posta doğrulama, şifre sıfırlama, sizin adınıza aile daveti) | E-posta adresiniz, adınız, unvanınız, klinik adınız, e-posta içeriği | ABD / AB |
 | Cloudflare | Yönetim panelinin barındırılması | Yetkili ekibin ekranına gelen hesap ve üyelik bilgileri | Küresel |
 | Google (Gmail SMTP) — yalnız test dönemi | Test e-postaları | E-posta adresi, e-posta içeriği | ABD |
