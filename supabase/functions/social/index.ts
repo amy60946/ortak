@@ -201,8 +201,14 @@ export function parseApproval(raw: Any, now = new Date()): { approval?: Approval
   return e.length ? { errors: e } : { errors: [], approval: { scheduledFor, platforms, captions, yapay_zeka: raw.yapay_zeka } };
 }
 
+// Servisin kendi yazdığı defter alanları geri gönderilmez (Zernio: "do not set them")
+export function ownMeta(post: Any): Record<string, Any> {
+  const { usageCounted: _u, usageRefunded: _r, hidden: _h, ...rest } = (post?.metadata ?? {}) as Record<string, Any>;
+  return rest;
+}
+
 export function approveBody(post: Any, a: Approval, now = new Date()) {
-  const meta = (post?.metadata ?? {}) as Record<string, Any>;
+  const meta = ownMeta(post);
   const s: Settings = { yapay_zeka: a.yapay_zeka, ticari: meta.ticari === true, youtube_baslik: meta.youtube_baslik ?? undefined,
                         kapak: meta.kapak ?? undefined };
   const accounts: Accounts = {};
@@ -225,7 +231,7 @@ export function approveBody(post: Any, a: Approval, now = new Date()) {
 }
 
 export function changesBody(post: Any, note: string, now = new Date()) {
-  return { metadata: { ...(post?.metadata ?? {}), durum: 'duzeltme', duzeltme_notu: note.trim().slice(0, 1000), duzeltme: now.toISOString() } };
+  return { metadata: { ...ownMeta(post), durum: 'duzeltme', duzeltme_notu: note.trim().slice(0, 1000), duzeltme: now.toISOString() } };
 }
 
 // --- Panel ve Marketing için özet --------------------------------------------------------------
