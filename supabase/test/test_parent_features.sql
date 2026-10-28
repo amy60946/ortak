@@ -80,7 +80,7 @@ select tst.fails($$insert into public.abc_events (family_id, child_id, behavior,
 
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000d1', 'abc_event') = 1, 'iki çocuklu olay uzmana tek bildirim');
-select tst.check((select title from public.notifications where kind = 'abc_event') = 'Yeni zor an kaydı: Efe, Nazlı', 'bildirimde iki ad');
+select tst.check((select title from public.notifications where kind = 'abc_event') = 'Yeni davranış kaydı: Efe, Nazlı', 'bildirimde iki ad');
 select tst.check((select body from public.notifications where kind = 'abc_event') like '%sesli kayıt%', 'bildirimde sesli kayıt notu');
 select tst.check((select count(*) from public.abc_events where group_id = '00000000-0000-0000-0000-00000000aaaa') = 2, 'uzman iki kaydı görür');
 select tst.check((select count(*) from storage.objects where bucket_id = 'abc') = 1, 'bağlı uzman sesi dinleyebilir');

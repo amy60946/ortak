@@ -91,8 +91,8 @@ reset role;
 select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d4') = 0, 'atanmamış üyeye bildirim gitmez');
 select tst.check(not exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d2' and title like '%Nazlı%'),
   'kardeşlerin ortak zor an bildiriminde üye yalnız kendi danışanını görür');
-select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d2' and kind = 'abc_event' and title = 'Yeni zor an kaydı: Efe'), 'üyeye kendi danışanının bildirimi');
-select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d1' and kind = 'abc_event' and title = 'Yeni zor an kaydı: Nazlı'), 'sahibe kendi danışanının bildirimi');
+select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d2' and kind = 'abc_event' and title = 'Yeni davranış kaydı: Efe'), 'üyeye kendi danışanının bildirimi');
+select tst.check(exists (select 1 from public.notifications where user_id = '00000000-0000-0000-0000-0000000000d1' and kind = 'abc_event' and title = 'Yeni davranış kaydı: Nazlı'), 'sahibe kendi danışanının bildirimi');
 
 -- ---------------------------------------------------------------- atama
 set role authenticated;
