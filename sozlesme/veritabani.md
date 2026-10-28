@@ -500,3 +500,18 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (öneri `20261027220000_parent_avatar_game`; hesabı silinmişse null) |
 | `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
 
+## 20. Misafir kartı: bir aileye 30 gün hediye (öneri `proposed/20261028120000_guest_pass.sql`, **uygulanmadı**; akış `akislar.md` 19)
+
+| Tablo / alan | Ne | Alanlar | Kim yazar | Kim okur |
+|---|---|---|---|---|
+| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (30) | `family_access_of` |
+| `guest_passes` | Ailenin hediye ettiği kart | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?` | yalnız `create_guest_pass` / `redeem_guest_pass` (istemci yazamaz) | P (kendi ailesinin kartları; RLS) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `create_guest_pass()` → `{code, expires_at, new}` | P | Ailenin kullanılmamış, süresi dolmamış kartı varsa aynısı (paylaşılan kod değişmesin); yoksa yeni. Aile başına en çok 20 kart (hint `limit`) |
+| `redeem_guest_pass(kod)` → `{ok, trial_ends_at}` ya da `{ok:false, error}` | P | Kod denemesi ortak sınırda (`code_throttled`; hatalı kod `code_attempts`'e yazılır). `error`: `not_found` / `used` / `expired` / `own` (kendi ailesinin kartı) / `already` (aile daha önce kart kullandı) / `premium` (abone) / `not_new` (deneme başlayalı 7 günden fazla) / `too_many_attempts`. Başarıda `trial_days = 30`, deneme başlamadıysa bugün başlar; kartın sahibi ailenin ebeveynlerine `guest_pass_used` bildirimi (kullananın kimliği yok) |
+| `family_access_of(aile)` (değişti) | — | Deneme sonu `trial_started_at + coalesce(trial_days, ayar)`; dönüşe `trial_days` ve `guest_pass` (aile kart kullandı mı) eklendi. Diğer kurallar aynı |
+
+Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`; `akislar.md` 19): yeni tablo yok. Numara Supabase Auth'un kendi akışıyla (`auth.updateUser({phone})` → SMS kodu → `verifyOtp(type: 'phone_change')`) `auth.users.phone`'a yazılır; uzmana ve öteki ebeveyne gösterilmez. SMS sağlayıcısı Supabase → Authentication → Sign In / Providers → Phone'da tanımlanınca çalışır (ücretli).
+

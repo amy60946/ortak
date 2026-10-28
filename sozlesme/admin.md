@@ -57,6 +57,8 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_intake(aile, gerekçe)` | support | ParentApp tanışma soruları (`20261027120000`, uygulandı 27 Ekim 2026): kişi bazlı yanıtlar (kullanıcı kararı 27 Ekim 2026; canlıdan önce avukat onayı); her açılış denetim kaydında (`intake.view`). Sağlık yanıtları (tanı, ilaç) dahil |
 | `admin_intake_summary(gün)` | okur | Soru × seçenek dağılımı, yalnız sayılar; sağlık soruları hariç |
 
+Bayrak `parent_sms_verify` (28 Ekim 2026; tanım gerekmez, yoksa kapalı): ParentApp'te uzman bağlandıktan sonra telefon numarası + SMS kodu adımı. Açmadan önce Supabase'de SMS sağlayıcısı (ücretli) ve aydınlatma metni (`hukuk_notlari.md` J). `admin_set_flag('parent_sms_verify', true, 100, …)`.
+
 Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
 
 ## Uygulamaların okuması: `client_config(app)`

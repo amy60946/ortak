@@ -108,6 +108,11 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 10. **Onay kaydı ve sürüm.** Kullanıcının hangi metni (Kullanım Koşulları, Aydınlatma, açık rızalar) hangi sürümle ve ne zaman onayladığı kaydedilir; metin değişince yeni sürüm yeniden onaylatılır. *(Yazılım: Kullanım Koşulları ve Aydınlatma onayının sürümlü kaydı henüz yok; açık rızalar sürümlü kaydediliyor — DURUM açık iş.)*
 11. **Hesap silindikten sonra.** Hesap silinince kişisel veriler silinir; yalnız kanunen saklanması gereken kayıtlar (ör. ödeme kayıtları) ve değiştirilemez denetim kaydı, kişiyi doğrudan tanımlayan bilgi (e-posta) çıkarılarak saklama süresince tutulur.
 
+### J. Telefon numarası ve hediye kartı (28 Ekim 2026; kullanıcı isteği, `akislar.md` 19)
+
+- **J1 Telefon numarası (ParentApp, bayrak `parent_sms_verify`, şimdilik kapalı):** uzman bağlandıktan sonra isteğe bağlı numara + SMS doğrulama kodu. Ekrandaki metin: "Uzmanının hatırlatmaları ve evde uygulama ipuçları kısa mesajla da gelebilsin. Numaran uzmana gösterilmez." ve "Numaran yalnız doğrulama ve bu kısa mesajlar için kullanılır; reklam gönderilmez." **Açmadan önce:** (a) ebeveyn aydınlatma metnine telefon numarası (kategori: iletişim; amaç: hesap doğrulama ve uzman/hizmet hatırlatmaları; saklama: hesap silinene kadar; alıcı: SMS sağlayıcısı) eklenir; (b) SMS sağlayıcısı (Twilio vb.) yurt dışındaysa aktarım dayanağı (I2 ile birlikte); (c) hatırlatma SMS'leri ticari elektronik ileti değil "hizmet bildirimi" olarak sınıflanıyorsa İYS kaydı gerekmez; bu ayrım avukatla netleşmeli; (d) numarayı kaldırma yolu (Aile › Hesap; şimdilik KVKK başvurusu).
+- **J2 Hediye kartı (misafir kartı):** bir aile başka bir yeni aileye 30 günlük deneme hediye eder; ücret yok, abonelik başlamaz, süre bitince ücretsiz plana döner. Kullanım koşullarına kısa madde: kart bir kez ve yalnız yeni ailede (ilk 7 gün) geçerli, 60 gün içinde kullanılır, satılamaz, nakde çevrilemez; ParentApp kampanyayı değiştirebilir/sonlandırabilir. Kartı veren aileye "kartın kullanıldı" bildirimi gider, kullananın kimliği paylaşılmaz. Paylaşım metni ebeveynin kendi göndereceği kişisel mesajdır (platform alıcıya ileti göndermez).
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
@@ -149,3 +154,5 @@ Yönetim paneli (27 Ekim 2026): aile kartında sağlık yanıtları varsayılan 
 13. Yetkili ekip erişimi (I3, I4): destek amaçlı kişi bazında tanışma yanıtı görüntüleme aydınlatmada açıkça yazılınca yeterli mi; sağlık yanıtları ekipçe hiç görülmemeli mi?
 14. ParentApp tanışma soruları: tanı/ilaç yanıtlarının (özel nitelikli sağlık verisi) kişi bazlı olarak yönetim panelinde görülmesi için açık rıza metni (H) ve aydınlatma yeterli mi; amaç ve saklama süresi nasıl yazılmalı; anonim özetle sınırlamak daha mı uygun?
 15. Veli onayı ekranındaki "dışarıdan izleme aracı yok" ifadesi ile oyunun ilerleme kaydı (aileye ve rızayla uzmana raporlanan) arasındaki ayrım tüketici ve KVKK açısından yeterince açık mı; "izleme" sözcüğü hiç kullanılmamalı mı?
+16. (J1) Uzmanın ya da uygulamanın SMS hatırlatmaları "ticari elektronik ileti" mi, hizmet bildirimi mi (İYS ve onay gereği)? Telefon numarası için aydınlatma metnine eklenecek cümleler ve SMS sağlayıcısına yurt dışı aktarımın dayanağı.
+17. (J2) Hediye kartı için kullanım koşullarına yazılacak kampanya maddesi yeterli mi; tüketici mevzuatı açısından "ücretsiz deneme süresini uzatma" ayrıca bilgilendirme ister mi?

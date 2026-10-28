@@ -506,6 +506,7 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 | 3 | [P] | Satın alma mağazada (App Store); RevenueCat (karar 22 Ekim 2026) olayı sunucuya iletir; sunucu güncel durumu RevenueCat'ten yeniden okur (olay sırası, "geri yükle" ile hesap değişimi). ParentApp RevenueCat'e Supabase kullanıcı kimliğiyle giriş yapar (`app_user_id`). Elle verilen premium (`source` manual/web) mağaza aboneliği bitince ezilmez. | `billing-webhook` → `set_family_subscription` |
 | 4 | [S] | Ücretsiz planda: 3 etkin görev, 1 çocuk; ödül/taş düşme/ebeveyn mesajı/gözlem notu kapalı. Onay, oyun, uzman paylaşımı açık. | tetikleyiciler (`hint = premium_required`) |
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
+| 6 | [P] | **Misafir kartı** (28 Ekim 2026, öneri `20261028120000_guest_pass`): bir aile başka bir yeni aileye 30 günlük deneme hediye eder; kullanan ailenin denemesi 7 yerine 30 gün. Ödeme ya da mağaza aboneliği değildir. Ayrıntı 19. | `families.trial_days`, `guest_passes` |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
 
@@ -519,3 +520,34 @@ Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz;
 | 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |
 | 5 | [P] / [K] | Ayarlar › Yasal metinler: `legal_documents_for(app)` listesi (sürüm, onay tarihi); KVKK başvurusu formu (tür + açıklama) → `kvkk_request_create`; "Başvurularım" `my_kvkk_requests`. | — |
 | 6 | Yönetim paneli | Hukuk › KVKK başvuruları (30 gün), e-postayla gelenleri kayda alma; Hukuk › Yasal metinler › Yayımla (avukat onayından sonra). | `admin_*` |
+
+## 19. ParentApp: Ben ve Uzmanım sekmeleri, uzman bağla, telefon, misafir kartı (kullanıcı isteği 28 Ekim 2026; Joon "Me / Care" örnekleri, kopya değil)
+
+Sekmeler: **Ben** (ana sayfa) · **Uzmanım** · Görevler · Gelişim · Aile. İnceleme ayrı sekme değil, Ben › "Onay bekleyen" kartından açılır (bildirim `task_done` da oraya gider). Veritabanı yalnız misafir kartı için değişir (öneri `20261028120000_guest_pass`); geri kalanı mevcut işlevlerle.
+
+**Ben:** onay bekleyen sayısı → İnceleme · 30 günlük misafir kartı (X ile kapanır, sağ üstte hediye simgesi olarak kalır) · "Senin görevlerin" (uzmanın bekleyen daveti, uzmanın programındaki bugünkü uygulamalar, uzmanın görev önerileri, ebeveynin kendi görevleri, eksik tanışma soruları, uzmanı varsa gözlem notu; her satır ilgili ekranı açar) · "Programına devam et" (takip planındaki etkin uygulamalar, bu hafta kaç gün) · "Bugünün ilerlemesi" (ebeveyn + her çocuk, %; dokununca o kişinin bugünkü görevleri; görevi yoksa "Görev ekle").
+
+**Uzmanım:** bağlı uzmanlar (uzman başına; paylaşılan çocuklar, bekleyen iş sayısı), bekleyen davetler, "Uzman bağla". Uzman sayfası: bugün yapılacaklar (etkin uygulamalar "bugün uyguladım" kutusuyla → `care_module_logs`; gözlem notu), çocuk başına **program** (takip planı: hedefler + aile programı = uzmanın verdiği eğitimler; ilerleme bu hafta uygulanan gün / 7), görev önerileri (kabul/ret, 5.4), paylaşılan çocuklar (geçmiş aktarımı aç/kapat, paylaşılmayan çocuğu ekle). Sağ üst ayar → **Uzmanı yönet**: çocuğu uzmandan ayır (`revoke_clinic_link`) ya da uzmanı kaldır (bütün paylaşımları `revoke_clinic_link`); uzman yeni veriyi göremez, aldığı notlar onda kalır. Yapay zekâ asistanı yok (şimdilik).
+
+**Uzman bağla** (Uzmanım, davet bağlantısı, kurulum):
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] | "Uzmanından davet kodu aldın mı?" **Evet** → kod (6 karakter; bağlantıyla gelindiyse hazır) → aynı ekranda uzman kartı ve **"Bu kimin uzmanı?"**: ailedeki çocuklar + uzmanın önerdiği yeni çocuk (düzeltilebilir). **Hayır** → "Uzmanına anlat" paylaşım metni, "Şimdilik geç". | `claim_clinic_invite` (10 adım 5b) |
+| 2 | [P] | Paylaşılanlar notu, zorunlu uyarı + veli beyanı (önceden işaretli değil), önceki uzman kayıtları (açık rıza, isteğe bağlı) → "Uzmanla bağlan". | `family_accept_invite` (10 adım 6–6d; onay sürümleri değişmedi) |
+| 3 | [P] | Bayrak `parent_sms_verify` açıksa ve hesapta numara yoksa: **telefon numarası** (ülke kodu, varsayılan +90) → SMS ile 6 haneli kod → doğrula. "Şimdilik geç" her adımda. Sağlayıcı yoksa adım kendiliğinden geçilir. | Supabase Auth `updateUser({phone})` + `verifyOtp(phone_change)` → `auth.users.phone` |
+| 4 | [P] | "Hesaplar başarıyla bağlandı" + (kurulum dışında) yeni çocuğun tabletini bağlama. | — |
+
+Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum tanışma sorularıyla değil "Uzman bağla" ile başlar; bağlanınca sorular atlanır ("seni nasıl görsün" → tanıdık mı → cihaz kurulumu). Sorular Ben'de **"Tanışma sorularını tamamla"** satırı olarak kalır (aile + yanıtı olmayan çocuklar; kurulumdaki ekranların aynısı). Davet ekranı kapatılırsa kurulum her zamanki gibi sürer. Telefonla iletişim (uzmanın SMS hatırlatması) henüz yok: numara yalnız doğrulanıp saklanır; SMS gönderimi ayrı karar (DURUM hatırlatması).
+
+**Misafir kartı** (öneri `20261028120000_guest_pass`):
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] | Ben › kart ya da hediye simgesi → "Hediye kartını paylaş": kod açılınca üretilir (kullanılmamış kart varsa aynısı), paylaşım metniyle gönderilir, kopyalanabilir. | `create_guest_pass()` |
+| 2 | Yeni aile | ParentApp'i indirir, hesap açar; kurulumda "Kodum var" ya da Aile › Hesap › Kod gir kutusuna 8 karakterli kodu yazar. | `redeem_guest_pass(kod)` |
+| 3 | [S] | Kart yeni ailede (deneme ≤ 7 gün, daha önce kart yok, abone değil, kendi ailesi değil) bir kez geçerli: deneme 30 gün olur. | `families.trial_days = 30` |
+| 4 | [S → P] | Kartı veren aileye `guest_pass_used` bildirimi (kullananın kimliği yok). | `notify_parents` |
+
+ParentApp olayları (bu bölüm): `invite.code` (`suggested`), `invite.tell`, `invite.accept`, `invite.decline`, `phone.code_sent`, `phone.verified`, `phone.skip`, `care.log` (`from: clinician`), `clinic.unlink` (`all`), `clinic.remove` (`n`), `guest_pass.share`, `intake.later_done` (`n`), `code.redeem` (`kind: guest`).
+
