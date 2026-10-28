@@ -515,3 +515,14 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 
 Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`; `akislar.md` 19): yeni tablo yok. Numara Supabase Auth'un kendi akışıyla (`auth.updateUser({phone})` → SMS kodu → `verifyOtp(type: 'phone_change')`) `auth.users.phone`'a yazılır; uzmana ve öteki ebeveyne gösterilmez. SMS sağlayıcısı Supabase → Authentication → Sign In / Providers → Phone'da tanımlanınca çalışır (ücretli).
 
+## 21. Günlük rutin v2 (öneri, `proposed/20261028200000_routines_v2.sql`, 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
+
+| Tablo / sütun | Ne | Yazar | Okur |
+|---|---|---|---|
+| `clinic_task_suggestions.routine_group` (uuid), `routine_title` (1–60), `routine_icon` (≤ 40), `routine_position` (0–30), `routine_key` (≤ 60) | Aynı rutin paketinin öneri satırları; grupta ad ve sıra zorunlu | K (insert) | K, P |
+| `clinic_task_suggestions.goal_id` | Takip planı hedefi (yalnız aynı paylaşımın hedefi; `cts_goal_guard`); hedef silinince boşalır | K | K, P (ParentApp hedefi `family_care_plan` `goals[].id` ile eşler) |
+| `tasks.routine_id` (uuid), `routine_title` (1–60), `routine_icon` (≤ 40), `routine_position` (0–30) | Görevin bağlı olduğu rutin (paketten kabul ya da ParentApp hazır rutini); `routine_id` varsa ad zorunlu. Ödül, onay ve oyun görev görev çalışır | P | P, K (rızalı), O (ileride `child_tasks` ile) |
+| `clinic_routines` | Uzmanın kendi rutinleri: `clinic_id` + `created_by` (sunucu yazar, değiştirilemez), `title`, `icon`, `repeat` (`weekdays`/`daily`/`weekly`), `ages` (K/A/B/C alt kümesi; boş = hepsi), `items` jsonb (1–12: `key?`, `title`, `emoji`, `skill?`, `category?`, `difficulty`, `coins` 0–50, `time` HH:MM, `days` 1–7; başka alan reddedilir), `shared`, `archived` | K: oluşturan; klinik sahibi düzenler/siler | K: kendi + ekibe açık; sahip hepsi. Aile ve oyun görmez |
+
+RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()` + (oluşturan / `shared` / sahip); ekleme yalnız uzman (klinik ve oluşturan tetikleyiciyle); güncelleme ve silme oluşturan ya da sahip. Öneri ve görev politikaları değişmedi (ebeveyn öneride yine yalnız `status`, `decided_at`, `task_id` yazar). Test: `test_routines_v2.sql`.
+
