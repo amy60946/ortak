@@ -515,7 +515,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 
 Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`; `akislar.md` 19): yeni tablo yok. Numara Supabase Auth'un kendi akışıyla (`auth.updateUser({phone})` → SMS kodu → `verifyOtp(type: 'phone_change')`) `auth.users.phone`'a yazılır; uzmana ve öteki ebeveyne gösterilmez. SMS sağlayıcısı Supabase → Authentication → Sign In / Providers → Phone'da tanımlanınca çalışır (ücretli).
 
-## 21. Günlük rutin v2 (öneri, `proposed/20261028200000_routines_v2.sql`, 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
+## 21. Günlük rutin v2 (`migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|
