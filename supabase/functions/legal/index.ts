@@ -48,7 +48,7 @@ if (typeof Deno !== 'undefined') {
     const env = (k: string) => Deno!.env.get(k) ?? '';
     // Supabase kendi alan adında HTML'i düz metin (text/plain) gönderir; tarayıcıdan gelen istek herkese açık sayfaya yönlendirilir
     // (secret LEGAL_PUBLIC_URL, ör. yönetim panelinin adresi; sayfalar orada /yasal altında). JSON isteği burada yanıtlanır.
-    const pub = env('LEGAL_PUBLIC_URL').replace(/\/+$/, '');
+    const pub = env('LEGAL_PUBLIC_URL').replace(/\/+$/, '').replace(/\/yasal$/, '');   // "…/yasal" ile girilmişse de çalışır
     if (pub && !asJson && (!doc || (KEY.test(doc) && (!ver || VER.test(ver))))) {
       const to = doc ? `${pub}/yasal/${doc}${ver ? `?v=${ver}` : ''}` : `${pub}/yasal`;
       return new Response(null, { status: 302, headers: { ...BASE_HEADERS, Location: to, 'Cache-Control': 'public, max-age=300' } });
