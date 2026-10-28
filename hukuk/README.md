@@ -31,6 +31,7 @@
 | `41-alt-isleyenler.md` | `alt-isleyenler` | herkes | — | taslak |
 | `42-saklama-imha-politikasi.md` | — | iç politika | — | taslak |
 | `43-veri-ihlali-proseduru.md` | — | iç prosedür | — | taslak |
+| `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
 | `44-kvkk-basvuru-usulu.md` | `kvkk-basvuru` | herkes | — | taslak |
 | `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler | — | taslak |
 
