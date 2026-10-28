@@ -203,7 +203,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | `family_subscriptions.source` | `store` (varsayılan) / `web` / `manual` | Ödeme kaynağı. |
 | `completions.decline_reason` | `hard` / `no_time` / `did_not_want` / `other` / null | "Yapamam" nedeni. |
 | `goal_ratings.rating` | −2, −1, 0, +1, +2 | GAS haftalık puanı. |
-| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Gözlem notundaki olayın şiddeti. |
+| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Davranış kaydındaki olayın şiddeti. |
 | Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title`, `practice` (`solo` / `clinic`) | Uzman kaydı (aile oluşturulmaz). `practice` sunucuda kullanılmaz (ikisi de klinik açar); ClinicApp bireyselde ekip bölümünü gizler. |
 
 ### 7.1 Klinikle ilgili tutarsızlıklar
@@ -227,7 +227,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 
 ---
 
-## 9. Kategori, gün bölümü, gözlem notu (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
+## 9. Kategori, gün bölümü, davranış kaydı (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
