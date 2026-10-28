@@ -77,7 +77,7 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 
 **Mesajlar:** Çocuğunuzla aranızdaki yazılar, fotoğraflar, sesli mesajlar, çıkartmalar ve okundu bilgisi. Fotoğraf ve sesler yalnız ailenize açık, özel bir depolama alanında tutulur.
 
-**Zor an kayıtları:** Yaşanan zor bir anın öncesi, davranış ve sonucu; şiddet derecesi; isteğe bağlı ses kaydı.
+**Davranış kayıtları:** Yaşanan zor bir anın öncesi, davranış ve sonucu; şiddet derecesi; isteğe bağlı ses kaydı.
 
 **Tanışma yanıtları:** İlk kurulumda verdiğiniz yanıtlar (hedefler, bizi nereden duyduğunuz, çocuğun düzeni, ilgi alanları, motive edenler gibi). Bunları uygulamayı size göre ayarlamak, size destek vermek ve **kimliksiz toplamlar** hâlinde ürünü geliştirmek için kullanırız.
 
@@ -87,7 +87,7 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 
 **Abonelik:** Aile aboneliği App Store üzerinden satılır; satıcı Apple'dır. Kart bilgileriniz bize gelmez. Biz yalnız aboneliğin durumunu (ürün, dönem sonu, işlem kimliği) görürüz. Ücretsiz deneme hakkının tekrar tekrar kullanılmasını önlemek için e-posta adresinizin geri çevrilemez özetini (SHA-256) saklarız; bu özet hesabınızı silseniz de [SÜRE] boyunca kalır.
 
-**İzinler:** Mikrofon (sesli mesaj ve zor an ses kaydı için, yalnız siz kayda bastığınızda), fotoğraflar (mesaja fotoğraf eklemek için), bildirimler. İzinleri telefonunuzun ayarlarından istediğiniz an kapatabilirsiniz.
+**İzinler:** Mikrofon (sesli mesaj ve davranış kaydındaki ses kaydı için, yalnız siz kayda bastığınızda), fotoğraflar (mesaja fotoğraf eklemek için), bildirimler. İzinleri telefonunuzun ayarlarından istediğiniz an kapatabilirsiniz.
 
 **Kim görür?** Ailenizdeki diğer ebeveyn(ler). Çocuğunuz kendi görevlerini, size ait mesajları ve ödüllerini görür. Uzman yalnız sizin izninizle (7. bölüm).
 
@@ -149,7 +149,7 @@ Her işlemin ayrıntılı dayanağı ilgili aydınlatma metnindedir. Açık rız
 
 - **Uzmanları doğrulamıyoruz.** Uzmanın kimliğini ve meslek yetkisini kontrol etmeyiz. "Belgesi incelendi" bilgisi yalnız belgenin kayıtta göründüğünü anlatır. Paylaşmadan önce uzmanı gerçek hayatta tanıdığınızdan emin olun.
 - **Paylaşımı siz başlatırsınız.** Uzmanın davetini açarsınız, çocuğun bilgisini kontrol edersiniz, "Bu uzmanı tanıyorum ve çocuğun velisiyim" kutusunu işaretler ve açık rıza verirsiniz.
-- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen görevleri, "Yaptım" ve onay kayıtlarını, zor an kayıtlarını ve takip planı uygulama kayıtlarınızı. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
+- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen görevleri, "Yaptım" ve onay kayıtlarını, davranış kayıtlarını ve takip planı uygulama kayıtlarınızı. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
 - **Siz ne görürsünüz?** Uzmanın gönderdiği görev önerilerini ve takip planını. Uzmanın kendi notlarını görmezsiniz.
 - **Uzman değişirse:** İsterseniz, ayrı bir açık rızayla, önceki uzman(lar)ın kayıtları yeni uzmanınıza yalnız okunur olarak açılır. Önceki uzmanın adı ve iletişim bilgileri gösterilmez.
 - **Geri alma:** Paylaşımı ve önceki kayıtların aktarımını Uzmanım bölümünden istediğiniz an durdurursunuz. Uzmanın erişimi hemen sona erer.
@@ -253,7 +253,7 @@ Kişisel veri konuları: `kvkk@[ALAN ADI]` · Diğer konular: `destek@[ALAN ADI]
 ## Avukata notlar
 
 1. **Uzman notlarında veri sorumlusu (4. bölüm, seçenek A/B):** Yayından önce biri seçilmeli; seçim Uzman Hizmet Sözleşmesi ve Veri İşleme Eki, KVKK başvuru usulü (klinik yönlendirmesi) ve ihlal prosedürüyle aynı olmalı (`hukuk_notlari.md` 5/1).
-2. **Zor an kayıtları ve görev kayıtları sağlık verisi mi?** `02-ornekler` "zor an kayıtları: açık rıza" diyor, ama `00-olgular` §3'te zor an kaydı için ayrı açık rıza akışı yok (yalnız sağlık yanıtları, uzman paylaşımı, uzman geçişi). Davranış kaydının özel nitelikli sayılıp sayılmadığı ve ayrı onay gerekip gerekmediği karara bağlanmalı. Bugünkü metin zor an kaydını açık rıza tablosuna koymadı.
+2. **Davranış kayıtları ve görev kayıtları sağlık verisi mi?** `02-ornekler` "davranış kayıtları: açık rıza" diyor, ama `00-olgular` §3'te davranış kaydı için ayrı açık rıza akışı yok (yalnız sağlık yanıtları, uzman paylaşımı, uzman geçişi). Davranış kaydının özel nitelikli sayılıp sayılmadığı ve ayrı onay gerekip gerekmediği karara bağlanmalı. Bugünkü metin davranış kaydını açık rıza tablosuna koymadı.
 3. **Sağlık verisinin yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi seçilince `[SUPABASE BÖLGESİ]` doldurulur.
 4. **Deneme hakkı e-posta özeti:** SHA-256 özeti tahmin edilebilir (e-posta adresleri sınırlı küme) olduğundan takma adlı kişisel veri sayılabilir; hesap silindikten sonra meşru menfaatle saklanması ve süresi ([SÜRE], öneri 2 yıl) onaylanmalı.
 5. **Bildirim yolu ve planlanan araçlar:** (a) Expo yedek bildirim yolu (`00-olgular.md` §5) bildirim başlığını ve metnini (çocuk adı geçebilir) ABD'ye taşıyor; canlıda kapatılması ya da alt işleyen olarak kalması kararı; bildirim metnini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir. (b) `CANLIYA_ALMA.md` 4. bölümde ParentApp ve ClinicApp için **Sentry + PostHog** planlanmış; eklenirse "üçüncü taraf analiz/izleme yok" cümlesi ve "Bir bakışta" kutusu değişmeli, ClinicApp web'de çerez onayı gerekir.

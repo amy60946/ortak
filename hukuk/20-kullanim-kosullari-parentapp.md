@@ -39,11 +39,11 @@
 
 ### 3. Hizmetin ne olduğu, ne olmadığı
 
-3.1. ParentApp ile görev oluşturur, çocuğunuzun "Yaptım"larını onaylar, ödülleri yönetir, çocuğunuzla mesajlaşır, zor anları kaydeder ve isterseniz bir uzmanla paylaşırsınız.
+3.1. ParentApp ile görev oluşturur, çocuğunuzun "Yaptım"larını onaylar, ödülleri yönetir, çocuğunuzla mesajlaşır, davranış kaydı tutar ve isterseniz bir uzmanla paylaşırsınız.
 
 3.2. **ParentApp sağlık hizmeti sunmaz.** Tanı koymaz, tedavi ya da ebeveyn eğitimi vermez. Uzman istihdam etmez; uzman ile aile arasında aracılık ya da yönlendirme yapmaz. Uzmanların kendi programlarını kurması için şablon sunar.
 
-3.3. Uygulamadaki hiçbir sayı, gösterge, sıklık ya da derece **tanı, zekâ ya da dikkat puanı değildir.** Zor an kaydındaki şiddet derecesi ve takip planındaki zorluk bildirimi sizin gözleminizdir.
+3.3. Uygulamadaki hiçbir sayı, gösterge, sıklık ya da derece **tanı, zekâ ya da dikkat puanı değildir.** Davranış kaydındaki şiddet derecesi ve takip planındaki zorluk bildirimi sizin gözleminizdir.
 
 3.4. Uygulamadaki öneriler, hazır görevler ve ipuçları genel bilgidir. Bir uzmanın mesleki değerlendirmesinin yerine geçmez.
 
@@ -73,7 +73,7 @@
 
 5.5. **Diğer veli.** Ailede birden fazla ebeveyn varsa, paylaşımı yapan ebeveyn diğer velinin bilgisi dahilinde hareket ettiğini kabul eder.
 
-5.6. **Başkalarının verisi.** Görev açıklamalarına, notlara, mesajlara ve zor an kayıtlarına çocuğunuz dışındaki kişilerin (öğretmen, akraba, başka çocuk) kişisel bilgilerini gereğinden fazla yazmayın. Ses kaydı alırken başkalarının sesini onların bilgisi olmadan kaydetmeyin.
+5.6. **Başkalarının verisi.** Görev açıklamalarına, notlara, mesajlara ve davranış kayıtlarına çocuğunuz dışındaki kişilerin (öğretmen, akraba, başka çocuk) kişisel bilgilerini gereğinden fazla yazmayın. Ses kaydı alırken başkalarının sesini onların bilgisi olmadan kaydetmeyin.
 
 ### 6. Uzmanla paylaşım
 
@@ -99,7 +99,7 @@
 
 7.1. Aileye ikinci bir ebeveyni, ParentApp'te ürettiğiniz 15 dakikalık tek kullanımlık davet koduyla davet edebilirsiniz. Davet ettiğiniz kişi kendi hesabını kullanır.
 
-7.2. Aileye katılan ebeveyn aile verisini (çocuk profilleri, görevler, ödüller, mesajlar, zor an kayıtları, uzman paylaşımları) sizinle birlikte görür ve yönetir. Yalnız güvendiğiniz ve çocuğunuz üzerinde velayet ya da bakım sorumluluğu olan kişiyi davet edin.
+7.2. Aileye katılan ebeveyn aile verisini (çocuk profilleri, görevler, ödüller, mesajlar, davranış kayıtları, uzman paylaşımları) sizinle birlikte görür ve yönetir. Yalnız güvendiğiniz ve çocuğunuz üzerinde velayet ya da bakım sorumluluğu olan kişiyi davet edin.
 
 7.3. Katılan ebeveynin önceki ailesinde başka ebeveyn yoksa, o eski aile **ve bütün verisi silinir.** Uygulama bunu katılmadan önce uyarır.
 
@@ -111,7 +111,7 @@
 
 8.2. **Deneme.** Kayıt olup e-posta adresinizi doğruladığınızda 7 günlük ücretsiz deneme başlar ve bütün özellikler açılır. Deneme için ödeme bilgisi istenmez; deneme bitince kendiliğinden ücretli aboneliğe dönüşmez. Kalan gün uygulamada görünür. Deneme her e-posta adresi için bir kez verilir.
 
-8.3. **Ücretsiz plan.** Deneme bitince abone olabilir ya da ücretsiz planda devam edebilirsiniz. Ücretsiz planda bazı özellikler sınırlıdır. Bugünkü sınırlar: en çok 1 çocuk ve 3 etkin görev; ödüller, taş düşürme, çocuğa mesaj gönderme ve zor an kaydı kapalı. Görev onayı, Pofi Adası ve uzman paylaşımı açıktır. Var olan kayıtlarınız silinmez; yalnız yeni ekleme sınırlanır. Güncel sınırlar Üyelik ekranında yazılıdır; daraltılırsa önceden duyururuz.
+8.3. **Ücretsiz plan.** Deneme bitince abone olabilir ya da ücretsiz planda devam edebilirsiniz. Ücretsiz planda bazı özellikler sınırlıdır. Bugünkü sınırlar: en çok 1 çocuk ve 3 etkin görev; ödüller, taş düşürme, çocuğa mesaj gönderme ve davranış kaydı kapalı. Görev onayı, Pofi Adası ve uzman paylaşımı açıktır. Var olan kayıtlarınız silinmez; yalnız yeni ekleme sınırlanır. Güncel sınırlar Üyelik ekranında yazılıdır; daraltılırsa önceden duyururuz.
 
 8.4. **Klinik üzerinden tam özellik.** Çocuğunuz, ücretli üyeliği etkin olan bir klinikteki uzmanla paylaşılıyorsa aileniz bu süre boyunca tam özellikleri ücretsiz kullanır. Paylaşım ya da kliniğin üyeliği biterse ve kendi aboneliğiniz yoksa ücretsiz plana dönersiniz. Bu bir kolaylıktır; uzmanla paylaşmanız için bir koşul değildir.
 
@@ -153,7 +153,7 @@ Bu kurallara aykırılıkta 14.2. madde uygulanır.
 
 11.1. **Mesajlaşma aile içidir.** Mesajları yalnız siz, ailedeki diğer ebeveyn ve mesajın gittiği çocuk görür. Uzmanlar ve yabancılar göremez; kardeşler birbirinin sohbetini görmez.
 
-11.2. **İçeriğinizden siz sorumlusunuz.** Gönderdiğiniz yazı, fotoğraf, ses kaydı, görev açıklaması, not ve zor an kaydı çocuğunuza uygun olmalı ve başkalarının haklarını ihlal etmemelidir.
+11.2. **İçeriğinizden siz sorumlusunuz.** Gönderdiğiniz yazı, fotoğraf, ses kaydı, görev açıklaması, not ve davranış kaydı çocuğunuza uygun olmalı ve başkalarının haklarını ihlal etmemelidir.
 
 11.3. **İçeriğin sahibi sizsiniz.** Bize yalnız hizmeti sunmak için (saklamak, ailenize ve izin verdiğiniz uzmana göstermek, yedeklemek) sınırlı, ücretsiz ve devredilemez bir kullanım izni verirsiniz. Bu izin hesabınız silinince biter.
 

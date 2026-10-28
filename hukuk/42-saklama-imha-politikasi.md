@@ -31,7 +31,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | Ortam | Ne var | İmha yöntemi |
 |---|---|---|
 | Supabase veritabanı | Bütün uygulama verisi | Satır silme (bağlı kayıtlar zincirleme silinir); anonimleştirme (toplamlara indirme) |
-| Supabase dosya depolama (özel kovalar) | Mesaj fotoğrafları ve sesli mesajlar (`mail`), zor an ses kayıtları, uzman belgeleri (`verify`) | Dosya silme |
+| Supabase dosya depolama (özel kovalar) | Mesaj fotoğrafları ve sesli mesajlar (`mail`), davranış kayıtlarındaki ses kayıtları, uzman belgeleri (`verify`) | Dosya silme |
 | Supabase yedekleri | Veritabanının günlük yedekleri ve zamana dönük geri yükleme kayıtları | Yedekler [SÜRE] sonunda kendiliğinden döner (öneri: en çok 30 gün) |
 | Hizmet sağlayıcılar (`alt-isleyenler`) | RevenueCat abone kaydı, Resend gönderim kayıtları, Apple bildirim anahtarları, Cloudflare ağ kayıtları | Sağlayıcının silme yolu (API ya da destek talebi) ve sağlayıcının kendi saklama süreleri |
 | Kullanıcı cihazları | Pofi Adası'nın yerel oyun kaydı; ParentApp ve ClinicApp önbelleği | Uygulama tarafında temizlik (bkz. 10. bölüm) |
@@ -49,7 +49,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 1 | Ebeveyn hesabı ve profili (ad, takma ad, simge, e-posta, şifre özeti) | `auth.users`, `profiles` | Hesap silinene kadar | Silme | Kullanıcı (uygulama içi "Hesabımı sil") ya da ekip (`admin_delete_user`), derhal | ✅ |
 | 2 | Aile, çocuk profilleri, görevler, tamamlamalar, ödüller, Güneş Taşı ve coin defterleri, oyun yedekleri | `families` ve bağlı tablolar | Aile silinene kadar; çocuk profili ebeveyn silince | Silme (zincirleme) | Son ebeveyn hesabını silince ya da ebeveyn çocuğu silince, derhal | ⚠️ veritabanı tek çocuğun silinmesine izin veriyor ama ParentApp'te ekranı yok (`README.md` sorun 5) |
 | 3 | Aile içi mesajlar ve mesaj medyası | `messages`, kova `mail` | Aile silinene ya da ebeveyn mesajı silene kadar | Silme | Dosyayı bugün **uygulama** siliyor, sonra hesap silinir | ⚠️ sunucu tarafı yetim dosya temizliği yok |
-| 4 | Zor an kayıtları ve ses kaydı | `abc_events`, kova `abc` | Aile silinene ya da ebeveyn kaydı silene kadar | Silme | Derhal | ⚠️ kayıt silinince ses dosyasının da silindiği teyit edilecek |
+| 4 | Davranış kayıtları ve ses kaydı | `abc_events`, kova `abc` | Aile silinene ya da ebeveyn kaydı silene kadar | Silme | Derhal | ⚠️ kayıt silinince ses dosyasının da silindiği teyit edilecek |
 | 5 | Tanışma yanıtları | `intake_answers` | Hesap silinene ya da ebeveyn silene kadar | Silme | Derhal | ✅ |
 | 6 | Sağlık yanıtları (tanı, ilaç) | `intake_answers` (açık rıza sürümüyle) | Ebeveyn silene, rızasını geri alana ya da hesap silinene kadar | Silme | Derhal | ⚠️ rıza geri alınınca yanıtın da silindiği teyit edilecek |
 | 7 | Uzman paylaşımı ve geçiş onayları | `clinic_links.consent_*`, `clinic_link_history` | Paylaşım sürdükçe; geçiş izni geri alınınca satır silinir | Silme | Derhal | ✅ · paylaşım bittikten sonra ispat için saklama: [SÜRE] |
@@ -131,8 +131,8 @@ Her imha işlemi için kaydedilir: tarih ve saat, veri kategorisi (4. bölümdek
 1. **Zamanlanmış imha işi** (sunucuda, her gece; pg_cron): 4. bölümdeki ❌ satırları uygular — `trial_history` (16), `notifications` (19), kullanım kayıtlarını toplamlara indirip kişi bazlı satırları silme (20), bağlantısı kalmayan anonim çocuk oturumları (21), `admin_audit` (22), `kvkk_requests` (24), ödeme olaylarının takma adlaştırılması (15), paylaşım bittikten sonraki uzman kayıtları (9, süre kararı sonrası). Önce **kuru çalıştırma** (yalnız sayar), sonra gerçek silme.
 2. **İmha kaydı tablosu** (ör. `retention_runs`): RLS açık, yalnız sunucu yazar, panelde salt okunur; 3 yıl.
 3. **Denetim kaydında imha yolu:** `admin_audit` bugün kimsenin silemeyeceği biçimde korunuyor. Yalnız süresi dolan satırları silebilen, kendisi de imha kaydına yazan ayrı bir sunucu işlevi gerekir.
-4. **Yetim dosya temizliği:** Mesaj medyası ve zor an sesleri bugün uygulama tarafından siliniyor; satırı silinmiş ama dosyası kalmış nesneleri sunucu tarafında bulup silen iş.
-5. **Teyitler:** zor an kaydı silinince ses dosyası; sağlık rızası geri alınınca yanıtlar; uzman hesabı silinince belge özeti; `code_attempts` temizliği; `clinic_invites_expire`'ın canlıda zamanlanmış olarak çalıştığı.
+4. **Yetim dosya temizliği:** Mesaj medyası ve davranış kaydı sesleri bugün uygulama tarafından siliniyor; satırı silinmiş ama dosyası kalmış nesneleri sunucu tarafında bulup silen iş.
+5. **Teyitler:** davranış kaydı silinince ses dosyası; sağlık rızası geri alınınca yanıtlar; uzman hesabı silinince belge özeti; `code_attempts` temizliği; `clinic_invites_expire`'ın canlıda zamanlanmış olarak çalıştığı.
 6. **Hesap silme ekleri:** RevenueCat'e abone silme isteği; onay kayıtlarının (`legal_acceptances`) takma adlı arşive taşınması (avukat kararından sonra); silinen hesap kimliğinin "yedekten dönünce yeniden sil" listesine yazılması.
 7. **Pofi Adası:** cihaz bağlantısı kapanınca ya da aile silinince yerel oyun kaydının temizlenmesi (`CANLIYA_ALMA.md` 1.7).
 8. **Yönetim paneli:** CSV indirmeyi denetim kaydına yazma ve indirme sırasında "İşin bitince bu dosyayı sil" uyarısı; panelde imha kaydı ve 6 aylık gözden geçirme hatırlatması.

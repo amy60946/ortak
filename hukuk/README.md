@@ -42,7 +42,7 @@
 | Çocuk profili, oyunu bağlama (ParentApp → GameApp) | Çocuk verisi veli adına; GameApp koşulları veli kabulü | aydinlatma-cocuk, kosullar-gameapp | `legal_accept('child', …)` QR/kod göstermeden önce |
 | Görev, onay, coin, Güneş Taşı, ödüller | Sanal değer para değildir; ödül ebeveyn–çocuk arasında | kosullar-parentapp, kosullar-gameapp | — |
 | Ebeveyn ↔ çocuk mesajları (foto, ses) | Aile içi içerik; saklama; mikrofon/foto izin metni | aydinlatma-ebeveyn, uygulama içi metinler | `mail` kovası |
-| Zor an (ABC) kaydı, ses | Davranış verisi → sağlık verisi olabilir (md. 6) | aydinlatma-ebeveyn, avukat sorusu | `abc` kovası |
+| Davranış kaydı (ABC) kaydı, ses | Davranış verisi → sağlık verisi olabilir (md. 6) | aydinlatma-ebeveyn, avukat sorusu | `abc` kovası |
 | Tanışma soruları (sağlık: tanı, ilaç) | Özel nitelikli veri, açık rıza `saglik-yanit-v1`; ekip erişimi gerekçeli | acik-riza (saglik), aydinlatma-ebeveyn | `intake_answers`, `admin_intake` |
 | Uzman daveti (e-posta, çocuk adı önerisi) | Uzmanın beyanı, ilk iletişimde aydınlatma, ticari ileti değil | sozlesme-uzman, aydinlatma-ebeveyn | `invite-email` |
 | Uzmanla paylaşım | Açık rıza `uzman-paylasim-v1`, "uzmanı tanıyorum, veliyim" | acik-riza (paylaşım), kosullar-parentapp | `clinic_links.consent_version` |

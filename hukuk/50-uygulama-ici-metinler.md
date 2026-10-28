@@ -203,7 +203,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > - hesabın ve çocuk profillerin,
 > - görevler, onaylar, ödüller, coin ve Güneş Taşı geçmişi,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
-> - zor an kayıtları ve tanışma yanıtları,
+> - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
 > - oyun yedekleri.
 >
@@ -256,7 +256,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 | ParentApp | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
 
 > **[PLAN ADI]**
-> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, zor an kayıtları.
+> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
 >
 > ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
@@ -271,7 +271,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 - Fiyatlar mağazanın yerel fiyatından okunur; ekranda sabit fiyat yazılmaz.
 - Plan adı, süre ve fiyat düğmeden önce ve en az düğme kadar görünür olmalı.
-- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve zor an kayıtları kapalıdır."
+- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
 
 ### 6.2 ClinicApp
 
@@ -298,7 +298,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 - Metin: Bittiğinde ücretsiz planla devam edersin; senden kendiliğinden ücret alınmaz. Premium'u sürdürmek istersen üyelik ekranına bak.
 
 **ParentApp — bitince (açılışta, 6.1 ekranının üstünde):**
-> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve zor an kayıtları kapanır. Verilerin silinmez.
+> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
 
 **ClinicApp — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
@@ -329,13 +329,13 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Zor an kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
+| ParentApp | Davranış kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
 
-> ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Zor an kaydın uzmanına anında ulaşmayabilir.
+> ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › Zor anlar sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
+| ClinicApp | Danışan › Davranış kayıtları sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
 
 > ClinicApp acil yardım ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen **112**'yi ara ya da aileyi hemen 112'ye yönlendir.
 
@@ -439,11 +439,11 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 |---|---|---|---|
 | Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
 | Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da görevini onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da zor an ses kaydına ilk basıldığında | Sesli mesaj ve zor an ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
+| ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
 | ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
 | ParentApp | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
 | ParentApp | Bildirim | İlk görev oluşturulunca *(öneri)* | Ön açıklama: "Çocuğun bir görevi yaptığında ya da sana yazdığında haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ClinicApp | Bildirim | İlk aile bağlanınca *(öneri)* | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni zor an kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
+| ClinicApp | Bildirim | İlk aile bağlanınca *(öneri)* | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni davranış kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
 | ClinicApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) — *yalnız belge görsel olarak seçilebiliyorsa* | "Belgeni yükle"de | Mezuniyet belgeni yüklemek için seçtiğin dosyaya erişiriz. Belge incelemeden sonra silinir. |
 
 - İzin reddedilirse özellik kibarca kapanır; uygulamanın geri kalanı çalışır. Ayarlara yönlendiren metin: "İzni iPhone Ayarlar › {uygulama} bölümünden açabilirsin."

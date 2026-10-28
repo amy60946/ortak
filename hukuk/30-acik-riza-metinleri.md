@@ -83,7 +83,7 @@
 > **Uzmanla paylaşım hakkında kısa bilgi**
 > - **Kim işler:** `[ŞİRKET UNVANI]`; paylaşınca çocuğunun kayıtları seçtiğin uzmanın kliniğinde de görünür.
 > - **Neden:** uzmanın çocuğunun takibini yapabilmesi.
-> - **Ne paylaşılır:** çocuğun profil bilgileri; görevleri ve "Yaptım" kayıtları, onay ve ret kararların (geçmiş kayıtlar dahil); zor an kayıtları ve ses kayıtları; takip planı uygulama kayıtların; uzmanın önerilerine kararların.
+> - **Ne paylaşılır:** çocuğun profil bilgileri; görevleri ve "Yaptım" kayıtları, onay ve ret kararların (geçmiş kayıtlar dahil); davranış kayıtları ve ses kayıtları; takip planı uygulama kayıtların; uzmanın önerilerine kararların.
 > - **Ne paylaşılmaz:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı.
 > - **Kim görür:** davet eden uzman, kliniğin sahibi ve sahibin bu paylaşımı atadığı ekip üyeleri. Uzman kayıtları yalnız okur, değiştiremez.
 > - **Ne kadar:** sen durdurana kadar. Durdurunca uzmanın erişimi hemen biter; uzmanın o güne kadar yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır.
@@ -152,7 +152,7 @@ Rıza cümlesi (yeni):
 
 > **Reddetmen uygulamayı kullanmanı engellemez.**
 
-Kutu boş bırakılırsa yeni uzmanla paylaşım yine olur (2. bölüm), ama önceki uzmanın notları, hedefleri, değerlendirmeleri, önerileri ve aile programı yeni uzmana açılmaz. Görevler, "Yaptım" kayıtları ve zor anlar 2. bölümdeki paylaşımla zaten görünür.
+Kutu boş bırakılırsa yeni uzmanla paylaşım yine olur (2. bölüm), ama önceki uzmanın notları, hedefleri, değerlendirmeleri, önerileri ve aile programı yeni uzmana açılmaz. Görevler, "Yaptım" kayıtları ve davranış kayıtları 2. bölümdeki paylaşımla zaten görünür.
 
 ### 3.5 Geri alma
 
@@ -170,7 +170,7 @@ Kutu boş bırakılırsa yeni uzmanla paylaşım yine olur (2. bölüm), ama ön
 2. **Önceden işaretli seçenek:** `akislar.md` 11 #2'ye göre "Önceki uzmanın kayıtlarını da paylaş" seçeneği bugün **varsayılan açık**. Açık rızanın "özgür irade ve açık beyan" şartıyla çelişir; bu taslakta işaretsiz yazıldı (ParentApp'te yazılım değişikliği gerekir).
 3. **Klinik premium teşviki:** çocuğu ücretli bir klinikle paylaşan aile tam özellikleri ücretsiz alıyor (`family_premium`). Bu, sağlık verisini paylaşma rızasının özgürlüğünü zedeler mi?
 4. **Sağlık yanıtlarının amacı belirsiz:** olgularda tanı/ilaç yanıtlarının uygulamada somut olarak neye yaradığı yazmıyor ("kişiselleştirme"). KVKK md. 4 (belirli, açık ve meşru amaç, ölçülülük) için amaç somut yazılmalı; kullanılmıyorsa soru kaldırılmalı. Ayrıca bu yanıtların uzmana hiç görünmediği ParentApp'in tanışma SQL'inde (`20261027120000`, ortakta yok) teyit edilmeli; 1.1'deki "uzmanla paylaşılan kayıtların arasında değildir" cümlesi buna dayanıyor.
-5. **Sağlık sınırı:** "Çocuk bir psikolog, psikiyatrist ya da terapistle çalışıyor mu?" ve davranış sıklığı soruları (öfke nöbeti, endişe, dikkat isteyen işlerden kaçınma) bugün rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit-v2` kapsamına girmeli. Zor an kayıtları için de ayrı rıza gerekip gerekmediği (`10-aydinlatma-ebeveyn.md` not 1).
+5. **Sağlık sınırı:** "Çocuk bir psikolog, psikiyatrist ya da terapistle çalışıyor mu?" ve davranış sıklığı soruları (öfke nöbeti, endişe, dikkat isteyen işlerden kaçınma) bugün rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit-v2` kapsamına girmeli. Davranış kayıtları için de ayrı rıza gerekip gerekmediği (`10-aydinlatma-ebeveyn.md` not 1).
 6. **Yurt dışında saklama:** sağlık verisi yurt dışındaki sunucuda tutulacak; bu taslakta yurt dışı aktarım rızası işleme rızasıyla birleştirilmedi, yalnız bilgi olarak yazıldı. 2024 sonrası md. 9'da standart sözleşme yeterli mi, yoksa sağlık verisi için ayrı açık rıza mı gerekir (`hukuk_notlari.md` I2)?
 7. **`uzman-gecis-v1` (B) metni:** (a) "Önceki uzmanın adı ve bilgileri yeni uzmana gösterilmez" kesin bir ifade; metindeki adların gizlenmesi "en iyi çaba" (yazım hatalı ya da kısaltılmış ad yakalanmayabilir) — ifade yumuşatılmalı mı (sürüm v2 olur)? (b) Ebeveyn, hiç görmediği notların aktarımına rıza veriyor; rıza "bilgilendirmeye dayalı" sayılır mı? (c) Önceki uzmana aktarım anında bildirim gerekir mi (`hukuk_notlari.md` 5. bölüm soru 2)?
 8. **Geri almanın sonucu:** paylaşım durdurulunca uzmanın kendi notları klinikte kalıyor. Rıza geri alınınca bu notların silinmesi ya da anonimleştirilmesi gerekir mi (KVKK md. 7), yoksa uzmanın mesleki kayıt saklama yükümlülüğü mü önce gelir? Veri sorumlusunun kim olduğuna bağlı.

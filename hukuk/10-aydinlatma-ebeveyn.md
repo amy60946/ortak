@@ -46,7 +46,7 @@ ParentApp, Pofi Adası ve ClinicApp aynı veri sorumlusunun ürünleridir ve ayn
 | **Aile ve çocuk profili** | Aile adı; çocuğun adı ya da takma adı, simgesi, yaş grubu; isteğe bağlı cinsiyet ve doğum günü |
 | **Görev ve ödül kayıtları** | Görevler, tekrarlar, hatırlatmalar; çocuğun "Yaptım" ve "Yapamam" işaretleri; onay ya da ret kararınız ve isteğe bağlı notunuz; coin hareketleri; Güneş Taşı hareketleri (taş düşürürken yazdığınız neden dahil); ödülleriniz ve çocuğun ödül istekleri |
 | **Mesajlar** | Siz ve çocuğunuz arasındaki yazılar, fotoğraflar, sesli mesajlar, çıkartmalar; okundu bilgisi |
-| **Zor an kayıtları** | Öncesi, davranış, sonucu, sizin verdiğiniz şiddet derecesi (1–5) ve isteğe bağlı ses kaydı. Şiddet derecesi sizin gözleminizdir; puan ya da tanı değildir. |
+| **Davranış kayıtları** | Öncesi, davranış, sonucu, sizin verdiğiniz şiddet derecesi (1–5) ve isteğe bağlı ses kaydı. Şiddet derecesi sizin gözleminizdir; puan ya da tanı değildir. |
 | **Tanışma yanıtları** | İlk kurulumdaki sorular: hedefleriniz, bizi nereden duyduğunuz, görev ve hatırlatma yüzünden tartışma sıklığı, çocuğun günlük düzeni, geçen hafta bazı davranışların sıklığı, çocuğun bir uzmanla çalışıp çalışmadığı, çocuk için hedefleriniz, ilgi alanları, onu motive eden şeyler |
 | **Sağlık yanıtları** (özel nitelikli, isteğe bağlı) | Çocuk için konmuş ya da düşündüğünüz tanı; düzenli kullandığı ilaç. Yalnız ayrı açık rızanızla (`saglik-yanit-v1`). |
 | **Uzmanla ilgili kayıtlar** | Hangi çocuğu hangi uzmanla paylaştığınız; onaylarınızın metin sürümü ve zamanı; önceki uzman kayıtlarının aktarım izni; uzmanın görev önerilerine verdiğiniz kararlar; takip planında "Bugün uyguladım" kayıtlarınız, bildirdiğiniz zorluk (1–5) ve uygulayamama nedeni. Zorluk bildirimi puan değildir. |
@@ -68,7 +68,7 @@ Her işlemin dayanağı KVKK'daki şu şartlardır: **md. 5/2-c** sözleşmenin 
 | 2 | Aileyi ve çocuk profillerini kurmak; çocuğu 15 dakikalık tek kullanımlık kod ya da QR ile Pofi Adası'na bağlamak | Aile ve çocuk profili | md. 5/2-c (veli olarak sizinle kurulan sözleşme) * |
 | 3 | Görev, onay, coin, Güneş Taşı ve ödülleri çalıştırmak | Görev ve ödül kayıtları | md. 5/2-c |
 | 4 | Siz ve çocuğunuz arasında mesajlaşma | Mesajlar | md. 5/2-c |
-| 5 | Zor anları kaydetmeniz | Zor an kayıtları | md. 5/2-c; sağlık verisi sayılırsa md. 6/2 açık rıza * |
+| 5 | Davranışları kaydetmeniz | Davranış kayıtları | md. 5/2-c; sağlık verisi sayılırsa md. 6/2 açık rıza * |
 | 6 | Uygulamayı ailenize göre düzenlemek, destek vermek | Tanışma yanıtları | md. 5/2-c; destek için md. 5/2-f * |
 | 7 | Ürünü geliştirmek: yanıtların **kimliksiz toplamları**, "bizi nereden duydunuz" | Tanışma yanıtları (sağlık yanıtları hariç) | md. 5/2-f |
 | 8 | Tanı ve ilaç yanıtlarını kaydetmek | Sağlık yanıtları | md. 6/2 açık rıza (`saglik-yanit-v1`) |
@@ -91,13 +91,13 @@ Verilerinizi reklam için kullanmayız, satmayız, profil çıkarmak için kulla
 
 ### 5. Verileriniz kimlerle paylaşılır
 
-**5.1. Ailenizdeki diğer ebeveyn.** Aileye ikinci bir ebeveyn katılırsa aile verisini (çocuk profilleri, görevler, ödüller, mesajlar, zor an kayıtları, uzman paylaşımları) o da görür ve yönetir.
+**5.1. Ailenizdeki diğer ebeveyn.** Aileye ikinci bir ebeveyn katılırsa aile verisini (çocuk profilleri, görevler, ödüller, mesajlar, davranış kayıtları, uzman paylaşımları) o da görür ve yönetir.
 
 **5.2. Çocuğunuzun Pofi Adası cihazı.** Bağlı cihaz yalnız o çocuğun profilini, görevlerini, ona yazdığınız mesajları, ona açık ödülleri ve kendi coin ve Güneş Taşı hareketlerini görür. Kardeşler birbirinin mesajlarını görmez.
 
 **5.3. Uzman — yalnız açık rızanızla.** Bir uzmanın davetini onaylar ve çocuğunuzu seçerseniz:
 - **Kim görür:** davet eden uzman; o kliniğin sahibi; klinik sahibinin bu paylaşımı atadığı ekip üyeleri.
-- **Ne görür:** çocuğun profil bilgileri; görevleri ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; zor an kayıtları ve ses kayıtları; takip planı uygulama kayıtlarınız; görev önerilerine kararlarınız. Bu kayıtların paylaşımdan önceki geçmişi de görünür.
+- **Ne görür:** çocuğun profil bilgileri; görevleri ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; davranış kayıtları ve ses kayıtları; takip planı uygulama kayıtlarınız; görev önerilerine kararlarınız. Bu kayıtların paylaşımdan önceki geçmişi de görünür.
 - **Ne görmez:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı.
 - Uzman bu kayıtları **yalnız okur**, değiştiremez. Size görev önerebilir ve takip planı gönderebilir; kabul edip etmemek size kalmıştır.
 - **Durdurma:** Uzmanım bölümünden "Paylaşımı durdur" dediğiniz an uzmanın erişimi biter. Uzmanın o güne kadar ClinicApp'e yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır; bu kayıtları siz görmezsiniz.
@@ -119,7 +119,7 @@ Uzman e-posta adresinizi de girmiş olabilir. Bu adresi yalnız tek bir davet e-
 
 Abonelik satışını **Apple** yapar. Satın alma sırasında Apple'a verdiğiniz bilgiler (ödeme bilgisi dahil) Apple'ın kendi gizlilik koşullarına tabidir; bunlar bize gelmez. Apple bize yalnız abonelik durumunu ve işlem kimliğini iletir.
 
-**5.6. Yurt dışına aktarım.** Yukarıdaki sağlayıcıların sunucuları Türkiye dışında olabilir. Verilerinizi yurt dışına KVKK md. 9'a uygun olarak aktarırız: Kişisel Verileri Koruma Kurulu'nun ilan ettiği standart sözleşmeyi sağlayıcıyla imzalar, imzadan sonra 5 iş günü içinde Kurul'a bildiririz (ya da varsa yeterlilik kararına dayanırız). Sağlık yanıtları, zor an kayıtları ve uzmanla paylaşılan kayıtlar da bu sunucularda saklanır.
+**5.6. Yurt dışına aktarım.** Yukarıdaki sağlayıcıların sunucuları Türkiye dışında olabilir. Verilerinizi yurt dışına KVKK md. 9'a uygun olarak aktarırız: Kişisel Verileri Koruma Kurulu'nun ilan ettiği standart sözleşmeyi sağlayıcıyla imzalar, imzadan sonra 5 iş günü içinde Kurul'a bildiririz (ya da varsa yeterlilik kararına dayanırız). Sağlık yanıtları, davranış kayıtları ve uzmanla paylaşılan kayıtlar da bu sunucularda saklanır.
 
 **5.7. Yetkili kurumlar.** Mahkeme, savcılık ya da yetkili bir kamu kurumunun usulüne uygun talebi olursa veriler, talebin kapsamıyla sınırlı olarak aktarılabilir. Kanun yasaklamıyorsa sizi bilgilendiririz.
 
@@ -142,7 +142,7 @@ Hukuki sebepler 4. maddededir.
 
 | Veri | Süre |
 |---|---|
-| Hesap, aile ve çocuk verisi (görevler, mesajlar, ödüller, zor anlar, tanışma yanıtları) | Hesap silinene kadar; silmede derhal |
+| Hesap, aile ve çocuk verisi (görevler, mesajlar, ödüller, davranış kayıtları, tanışma yanıtları) | Hesap silinene kadar; silmede derhal |
 | Sağlık yanıtları | Rızanızı geri alana ya da yanıtları silene kadar; en geç hesap silinene kadar |
 | Uzmanla paylaşım | Paylaşımı durdurana kadar. Uzmanın kendi notları: klinik ya da tek kişilik klinikte uzman hesabı silinene kadar |
 | Uzman davetindeki bilgiler (e-posta, çocuk adı) | 3 gün (ailenize bağlanmamış davet) / en geç 30 gün (bağlanmış ama onaylanmamış davet) |
@@ -158,7 +158,7 @@ Süresi dolan veriyi siler, yok eder ya da anonim hâle getiririz. Bunu en geç 
 
 ### 8. Verilerinizi nasıl koruyoruz
 
-Bütün bağlantılar şifrelidir. Veritabanında herkes yalnız kendi ailesini görür; çocuğun cihazı yalnız kendi profilini görür. Mesaj fotoğrafları, ses kayıtları ve zor an sesleri özel alanlarda tutulur ve yalnız kısa süreli, imzalı bağlantıyla açılır. Yönetim paneline iki adımlı doğrulamayla girilir; her işlem gerekçeli ve silinemez biçimde kaydedilir. Bir veri ihlali olursa Kurul'a ve size kanunda öngörülen sürelerde bildiririz.
+Bütün bağlantılar şifrelidir. Veritabanında herkes yalnız kendi ailesini görür; çocuğun cihazı yalnız kendi profilini görür. Mesaj fotoğrafları, ses kayıtları ve davranış kaydı sesleri özel alanlarda tutulur ve yalnız kısa süreli, imzalı bağlantıyla açılır. Yönetim paneline iki adımlı doğrulamayla girilir; her işlem gerekçeli ve silinemez biçimde kaydedilir. Bir veri ihlali olursa Kurul'a ve size kanunda öngörülen sürelerde bildiririz.
 
 ### 9. Haklarınız (KVKK md. 11)
 
@@ -199,7 +199,7 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 
 ## Avukata notlar
 
-1. **Zor an kayıtları ve ses kaydı** (öncesi–davranış–sonucu, şiddet 1–5) sağlık verisi sayılır mı? Bugün bu kayıtlar için ayrı açık rıza alınmıyor (00-olgular §3'te rıza akışı yok); `02-ornekler` "açık rıza" diyor. Gerekiyorsa ilk zor an kaydından önce ayrı rıza ekranı (yazılım işi) ve 4. tablodaki 5. satır düzeltilir. Ses kaydında başka kişilerin (öğretmen, kardeş) sesi de olabilir.
+1. **Davranış kayıtları ve ses kaydı** (öncesi–davranış–sonucu, şiddet 1–5) sağlık verisi sayılır mı? Bugün bu kayıtlar için ayrı açık rıza alınmıyor (00-olgular §3'te rıza akışı yok); `02-ornekler` "açık rıza" diyor. Gerekiyorsa ilk davranış kaydından önce ayrı rıza ekranı (yazılım işi) ve 4. tablodaki 5. satır düzeltilir. Ses kaydında başka kişilerin (öğretmen, kardeş) sesi de olabilir.
 2. **Tanışma yanıtlarında sağlık sınırı:** uygulamada yalnız "tanı" ve "ilaç" soruları sağlık sorusu olarak işaretli. "Çocuk şu uzmanlardan biriyle çalışıyor mu? (davranış terapisti, dil-konuşma terapisti/ergoterapist, psikolog ya da psikiyatrist)" ve "geçen hafta öfke nöbeti / endişe / dikkat isteyen işlerden kaçınma sıklığı" soruları açık rızasız alınıyor (kaynak: `admin-panel/src/data/tanisma_sorulari.json`). Bunlar sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı (sürüm `saglik-yanit-v2`).
 3. **Çocuk verisinin dayanağı:** çocuk ilgili kişidir; dayanak veliyle kurulan sözleşme (md. 5/2-c) olarak yazıldı. Yeterli mi, yoksa veliden çocuk adına açık rıza mı gerekir? 13 yaş ve üstü (yaş grubu C) için çocuğun kendi görüşü?
 4. **Uzman notlarında veri sorumlusu** (klinik mi, platform mu, ikisi mi) belirlenmeden 5.3 ve 7. madde kesinleşemez. Paylaşım durdurulunca uzmanın kendi notlarının klinikte kalması (`akislar.md` 5.3) ve aile hesabı silindiğinde bu notların akıbeti teyit edilmeli; uzmanın ayrıca kendi aydınlatma yükümlülüğü olur mu?
