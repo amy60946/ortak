@@ -105,8 +105,8 @@ test('onay gövdesi: planlı, düzeltilmiş metin, TikTok önizleme + rıza aç�
   assert.equal(approveBody(d2, a3, NOW).platforms[0].accountId, 'a9');
 });
 
-test('düzeltme isteği: not metadata\'ya, durum düzeltme', () => {
-  const b = changesBody({ metadata: { paket: 'x', durum: 'onay_bekliyor' } }, '  kaynak ekle ', NOW);
+test('düzeltme isteği: not metadata\'ya, durum düzeltme; servisin defter alanları geri gönderilmez', () => {
+  const b = changesBody({ metadata: { paket: 'x', durum: 'onay_bekliyor', usageCounted: true, hidden: false } }, '  kaynak ekle ', NOW);
   assert.deepEqual(b.metadata, { paket: 'x', durum: 'duzeltme', duzeltme_notu: 'kaynak ekle', duzeltme: NOW.toISOString() });
 });
 
