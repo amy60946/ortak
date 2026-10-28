@@ -175,6 +175,19 @@ Ebeveynin oyundaki ve ParentApp'teki yüzü, Okti'nin üç anne ve üç baba hâ
 
 Eski değerler: `kadın` → `okti_anne_1`, `erkek` → `okti_baba_1` gibi gösterilir (veri değiştirilmez). Tanınmayan değer ya da `null`: varsayılan Okti yüzü. ClinicApp ebeveyn avatarı göstermiyorsa değişiklik gerekmez.
 
+**Çocuk avatarları (kullanıcı isteği 28 Ekim 2026):** Okti'nin çocuk (yavru) hâli, 6 kız + 6 erkek. Görseller game-app `art/child_avatars/`; ParentApp kopyası `assets/avatars/okti_kiz_*.jpg`, `okti_erkek_*.jpg`. Değer `children.avatar`'a yazılır (ParentApp çocuk ekle, çocuk düzenle, uzman daveti).
+
+| Kimlik | Ad | Kimlik | Ad |
+|---|---|---|---|
+| `okti_kiz_1` | Kurdeleli | `okti_erkek_1` | Kasketli |
+| `okti_kiz_2` | Çiçek tokalı | `okti_erkek_2` | Pervaneli |
+| `okti_kiz_3` | Taçlı | `okti_erkek_3` | Pilot |
+| `okti_kiz_4` | Kalp gözlüklü | `okti_erkek_4` | Güneş gözlüklü |
+| `okti_kiz_5` | Bereli | `okti_erkek_5` | Antenli |
+| `okti_kiz_6` | Kulaklıklı | `okti_erkek_6` | Köpek balığı şapkalı |
+
+Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `martı, kedi, sincap, köpek, kuş, caretta, ayı, kurt, keçi, flamingo, fil, zebra, at` (0'dan); sıra *i* → `okti_<cinsiyet>_<(i mod 6)+1>`; cinsiyet `children.gender`'dan (`kız` → `kiz`, `erkek` → `erkek`), boşsa sırası çift olan kız, tek olan erkek. Örnek: `flamingo` (9) kız → `okti_kiz_4`, `keçi` (8) erkek → `okti_erkek_3`. Oyun şu an çocuğun avatarını göstermez (çocuk her yerde Okti); gösterirse aynı kuralı uygular. ClinicApp çocuk simgesi gösteriyorsa aynı eşlemeyi kullanır.
+
 ## 7. Klinik (ClinicApp) — uygulandı
 
 | Alan | Değerler | Anlamı |
@@ -234,7 +247,7 @@ Eski değerler: `kadın` → `okti_anne_1`, `erkek` → `okti_baba_1` gibi göst
 
 | Alan | Değer | Not |
 |---|---|---|
-| `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
+| `children.avatar` | Okti çocuk kimliği (`okti_kiz_1..6`, `okti_erkek_1..6`, §6a; eski hayvan kimlikleri `flamingo`, `kedi` … geçerli kalır) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
 | `profiles.invited_by` | davet kodunu üreten ebeveyn | Öneri `20261021000000_family_roles.sql`; uygulamada gösterilmez. |
 
