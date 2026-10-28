@@ -31,8 +31,8 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | | |
 |---|---|
 | Rol | Alt işleyen |
-| Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar, zor an ses kayıtları ve uzman belgeleri için özel dosya depolama; bildirim, e-posta ve belge ön kontrolü gibi sunucu işlevleri; zamanlanmış işler |
-| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; görevler, mesajlar, oyun kaydı; zor an kayıtları, tanışma ve isteğe bağlı sağlık yanıtları, uzman notları (özel nitelikli veri dahil); kullanım ve güvenlik kayıtları |
+| Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar, davranış kayıtlarındaki ses kayıtları ve uzman belgeleri için özel dosya depolama; bildirim, e-posta ve belge ön kontrolü gibi sunucu işlevleri; zamanlanmış işler |
+| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; görevler, mesajlar, oyun kaydı; davranış kayıtları, tanışma ve isteğe bağlı sağlık yanıtları, uzman notları (özel nitelikli veri dahil); kullanım ve güvenlik kayıtları |
 | İlgili kişiler | Ebeveynler, çocuklar, uzmanlar, ekip üyeleri |
 | Konum | [SUPABASE BÖLGESİ] |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + imzadan sonra 5 iş günü içinde Kurul'a bildirim |

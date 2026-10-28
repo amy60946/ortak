@@ -23,7 +23,7 @@
 
 1.3. Bu metnin kapsamı dışında kalanlar:
    - a) **Danışan kayıtları** (danışanlarınız için yazdığınız notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planı, danışan etiketleri ve davet formuna girdiğiniz ebeveyn ve çocuk bilgileri): Bu kayıtlarda rollerimiz ve yükümlülüklerimiz **Veri İşleme Eki**'nde (`veri-isleme-eki`) düzenlenir.
-   - b) **Aile verisi** (ebeveynin ParentApp'te oluşturduğu görevler, tamamlamalar, zor an kayıtları gibi veriler): Bunlar ebeveyn aydınlatma metnine tabidir; siz bu verileri yalnız ebeveynin açık rızasıyla ve paylaşım sürdükçe görürsünüz.
+   - b) **Aile verisi** (ebeveynin ParentApp'te oluşturduğu görevler, tamamlamalar, davranış kayıtları gibi veriler): Bunlar ebeveyn aydınlatma metnine tabidir; siz bu verileri yalnız ebeveynin açık rızasıyla ve paylaşım sürdükçe görürsünüz.
 
 1.4. Bu metinde "Uzman" ClinicApp hesabı açan gerçek kişiyi, "Klinik" uzmanın kaydıyla oluşan çalışma alanını (bireysel ya da ekipli), "Klinik sahibi" kliniği kuran ya da sahipliği devralan uzmanı, "Ekip üyesi" klinik sahibinin davetiyle kliniğe katılan uzmanı anlatır.
 

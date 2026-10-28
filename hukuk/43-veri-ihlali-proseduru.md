@@ -28,7 +28,7 @@
 
 | Düzey | Ne zaman |
 |---|---|
-| **Yüksek** | Sağlık verisi (tanı/ilaç yanıtları, zor an kayıtları, uzman notları), çocuk verisi, mesaj içeriği, fotoğraf, ses, uzman belgesindeki kimlik bilgisi; ya da çok sayıda kişi; ya da sızıntı sürüyor |
+| **Yüksek** | Sağlık verisi (tanı/ilaç yanıtları, davranış kayıtları, uzman notları), çocuk verisi, mesaj içeriği, fotoğraf, ses, uzman belgesindeki kimlik bilgisi; ya da çok sayıda kişi; ya da sızıntı sürüyor |
 | **Orta** | Ad ve e-posta gibi iletişim verisi; sınırlı sayıda kişi; veri bilinen ve güvenilir bir alıcıda kaldı |
 | **Düşük** | Yalnız kullanım kayıtları ya da özetlenmiş veri; kimseye ulaşmadığı doğrulandı |
 

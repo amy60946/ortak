@@ -21,7 +21,7 @@
 |---|---|---|
 | Aydınlatma (kim, ne, neden, kime aktarılır, yöntem, hukuki sebep, haklar) | KVKK md. 10; Aydınlatma Yükümlülüğü Tebliği | Ebeveyn, uzman, çocuk/veli aydınlatma metinleri; rıza ekranından **önce** ve ayrı gösterilir |
 | İşleme şartları | KVKK md. 5 (sözleşmenin ifası, kanuni yükümlülük, meşru menfaat, açık rıza) | Her işleme için dayanak tablosu (aydınlatmalarda) |
-| Özel nitelikli veri (sağlık) | KVKK md. 6 (7499 s. Kanun ile 2024 değişikliği) | Tanı/ilaç yanıtları, zor an kayıtları, uzman notları: açık rıza; ayrı ekran, isteğe bağlı, geri alınabilir |
+| Özel nitelikli veri (sağlık) | KVKK md. 6 (7499 s. Kanun ile 2024 değişikliği) | Tanı/ilaç yanıtları, davranış kayıtları, uzman notları: açık rıza; ayrı ekran, isteğe bağlı, geri alınabilir |
 | Açık rıza nitelikleri | KVKK md. 3 (belirli konu, bilgilendirme, özgür irade); Kurul kararları: hizmet şartına bağlanamaz | Rıza kutuları ayrı, önceden işaretli değil, reddedince temel hizmet sürer |
 | Yurt dışına aktarım | KVKK md. 9 (2024): yeterlilik kararı / uygun güvence (standart sözleşme, aktarım sonrası **5 iş günü içinde Kurul'a bildirim**) / arızi hâllerde açık rıza | Alt işleyenlerle standart sözleşme; aydınlatmada yurt dışı aktarım bilgisi |
 | Veri güvenliği | KVKK md. 12; Kurul'un teknik ve idari tedbirler rehberi; ihlalde **72 saat** içinde Kurul'a, makul sürede ilgiliye bildirim | Veri ihlali prosedürü; panelde iki adımlı giriş, denetim kaydı |

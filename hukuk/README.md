@@ -42,7 +42,7 @@
 | Çocuk profili, oyunu bağlama (ParentApp → GameApp) | Çocuk verisi veli adına; GameApp koşulları veli kabulü | aydinlatma-cocuk, kosullar-gameapp | `legal_accept('child', …)` QR/kod göstermeden önce |
 | Görev, onay, coin, Güneş Taşı, ödüller | Sanal değer para değildir; ödül ebeveyn–çocuk arasında | kosullar-parentapp, kosullar-gameapp | — |
 | Ebeveyn ↔ çocuk mesajları (foto, ses) | Aile içi içerik; saklama; mikrofon/foto izin metni | aydinlatma-ebeveyn, uygulama içi metinler | `mail` kovası |
-| Zor an (ABC) kaydı, ses | Davranış verisi → sağlık verisi olabilir (md. 6) | aydinlatma-ebeveyn, avukat sorusu | `abc` kovası |
+| Davranış kaydı (ABC) kaydı, ses | Davranış verisi → sağlık verisi olabilir (md. 6) | aydinlatma-ebeveyn, avukat sorusu | `abc` kovası |
 | Tanışma soruları (sağlık: tanı, ilaç) | Özel nitelikli veri, açık rıza `saglik-yanit-v1`; ekip erişimi gerekçeli | acik-riza (saglik), aydinlatma-ebeveyn | `intake_answers`, `admin_intake` |
 | Uzman daveti (e-posta, çocuk adı önerisi) | Uzmanın beyanı, ilk iletişimde aydınlatma, ticari ileti değil | sozlesme-uzman, aydinlatma-ebeveyn | `invite-email` |
 | Uzmanla paylaşım | Açık rıza `uzman-paylasim-v1`, "uzmanı tanıyorum, veliyim" | acik-riza (paylaşım), kosullar-parentapp | `clinic_links.consent_version` |
@@ -77,6 +77,9 @@
 | 11 | `akislar.md` 1.1 ve 2'de kod süresi "24 saat" yazıyor; sistem 15 dakika. | ortak (belge düzeltmesi) |
 | 12 | ~~ClinicApp ödeme yolları (iyzico)~~ **Geri alındı (27 Ekim 2026, kullanıcı):** Klinik penceresinin "web'de iyzico metinlerde yok" bulgusu hatalıydı. Karar (22 Ekim 2026, `DURUM.md`): ClinicApp üyeliği yalnız iPhone/iPad'den App Store ile, RevenueCat üzerinden alınır; web'de satış yok, iyzico kullanılmaz (`clinic-billing`'deki iyzico kodu ileride kendi sisteme geçiş için durur, yayınlanmaz). Metinler o karara döndürüldü (ortak#78'deki iyzico eklemeleri geri alındı; deneme süresi 7 gün düzeltmesi korundu). | — |
 | 13 | Tanışma sorularında yalnız sağlık sorularında "söylemek istemiyorum" var; Joon'da olduğu gibi **bütün** sorular atlanabilir olmalı (KVKK md. 4 ölçülülük; `03-joon-karsilastirma.md` J2). Yanıtların neyi değiştirdiği aydınlatmada somut yazılmalı (J3). | ParentApp (ürün) |
+| 14 | **SMS doğrulama** (bayrak `parent_sms_verify`, ParentApp, varsayılan kapalı; 28 Ekim 2026): açılırsa ebeveynin **telefon numarası** işlenir ve SMS, Supabase Auth'un SMS sağlayıcısı üzerinden gider. Açmadan önce: aydınlatma (ebeveyn) ve gizlilik politikasına telefon numarası + amaç (hesap güvenliği), alt işleyen listesine SMS sağlayıcısı (ad, konum, yurt dışı aktarım), saklama süresi. SMS ticari ileti değildir (hizmet/doğrulama). | Kullanıcı kararı + hukuk metni güncellemesi |
+| 15 | **Hediye kartı / misafir geçişi** (öneri `guest_pass`, ParentApp, 28 Ekim 2026): bir ailenin oluşturduğu kodla başka bir aile uzatılmış deneme alır. Kullanım koşullarına kısa madde: kart paraya çevrilemez, satılamaz, son kullanma tarihi, kötüye kullanımda iptal; kartı kullanan ailenin kimliği oluşturan aileye gösterilmiyor (bildirimde yalnız "bir aile kullandı"; ParentApp, 28 Ekim) — bu yüzden ek aydınlatma gerekmiyor; gösterilmeye başlanırsa eklenmeli. Deneme süresi ailenin `trial_days`'iyle değişebilir: koşullardaki "7 gün deneme" cümlesi "en az 7 gün" olarak düzeltilmeli. | Hukuk metni (uygulanınca) |
+| 16 | **ClinicApp karşılama anketi zorunlu oldu** (28 Ekim 2026, kullanıcı kararı): uzman aydınlatma metni anketi "isteğe bağlı" ve meşru menfaate dayalı yazıyor. Ya her soruya "söylemek istemiyorum / diğer" seçeneği eklenmeli (öneri), ya da aydınlatma "zorunlu" olarak düzeltilip her sorunun amacı somut yazılmalı (KVKK md. 4 ölçülülük). | Kullanıcı kararı → ClinicApp + hukuk |
 
 ## Canlıdan önce yapılacaklar (hukuk)
 

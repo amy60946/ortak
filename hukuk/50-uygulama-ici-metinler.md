@@ -62,11 +62,13 @@
 |---|---|---|
 | ClinicApp (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü; ekip koduyla katılım ekranı | `sozlesme-uzman`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
 
-> ☐ <u>Uzman Hizmet Sözleşmesi</u>'ni ve <u>Veri İşleme Eki</u>'ni okudum, kabul ediyorum.
->
-> Kişisel verilerinin nasıl işlendiğini <u>Uzman Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok; düz satır — sözleşme Ek-3 ile aynı)*
->
-> <small><u>Gizlilik Politikası</u></small>
+**Güncel (kullanıcı kararı 28 Ekim 2026, ortak#94):** "Hesap oluştur" düğmesinin hemen üstünde tek küçük satır:
+
+> <u>Hizmet Sözleşmesi</u> ve <u>Veri İşleme Eki</u>'ni kabul ediyorum. <u>Aydınlatma</u> · <u>Gizlilik</u>
+
+- Kabul **etkin bir eylemle** olmalı: satırdaki kutu işaretlenmeden ya da düğme "Kabul et ve hesap oluştur" olmadan hesap açılmaz (sessizce "kullanarak kabul" sayılmaz — `03-joon-karsilastirma.md` X4).
+- Aydınlatma bağlantıdır, kutusu yoktur; hesap açılınca gösterildiği kaydedilir.
+- *(Önceki uzun biçim: iki satır — sözleşme kutusu + ayrı aydınlatma satırı. Sözleşme Ek-3 bu kısa biçime göre güncellenecek.)*
 
 ### 1.3 ParentApp — Pofi Adası'nı bağlamadan önce (veli onayı)
 
@@ -114,6 +116,7 @@
 > <small>Kabul etmek istemiyorsan <u>hesabını silebilir</u> ya da `destek@[ALAN ADI]` adresine yazabilirsin.</small>
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
+- **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
 - Kutu işaretlenmeden "Devam et" pasif. Bu ekrandayken bile Ayarlar › Hesabımı sil, Yasal metinler ve KVKK başvurusu açılabilir olmalı.
 - **Pofi Adası koşulları güncellenince:** ParentApp'te ebeveyne "Pofi Adası koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
 - **Onay istemeyen metin güncellenince** (Gizlilik Politikası, Hizmet Sağlayıcılar): kapatılabilir üst bant:
@@ -123,7 +126,7 @@
 
 | Uygulama | Ekran | Kaynak |
 |---|---|---|
-| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında) | `legal_documents_for(app)` |
+| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026) | `legal_documents_for(app)` |
 
 Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}".
 
@@ -145,7 +148,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail)`, `my_kvkk_requests()` |
+| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde) | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
 
 **Üst metin:**
 > Kişisel verilerinle ilgili taleplerini buradan iletebilirsin. En geç 30 gün içinde, ücretsiz yanıt veririz. Yanıt {e-posta} adresine gelir. <u>Başvuru usulü</u>
@@ -205,7 +208,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > - hesabın ve çocuk profillerin,
 > - görevler, onaylar, ödüller, coin ve Güneş Taşı geçmişi,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
-> - zor an kayıtları ve tanışma yanıtları,
+> - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
 > - oyun yedekleri.
 >
@@ -258,7 +261,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 | ParentApp | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
 
 > **[PLAN ADI]**
-> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, zor an kayıtları.
+> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
 >
 > ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
@@ -273,7 +276,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 - Fiyatlar mağazanın yerel fiyatından okunur; ekranda sabit fiyat yazılmaz.
 - Plan adı, süre ve fiyat düğmeden önce ve en az düğme kadar görünür olmalı.
-- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve zor an kayıtları kapalıdır."
+- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
 
 ### 6.2 ClinicApp
 
@@ -300,7 +303,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 - Metin: Bittiğinde ücretsiz planla devam edersin; senden kendiliğinden ücret alınmaz. Premium'u sürdürmek istersen üyelik ekranına bak.
 
 **ParentApp — bitince (açılışta, 6.1 ekranının üstünde):**
-> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve zor an kayıtları kapanır. Verilerin silinmez.
+> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
 
 **ClinicApp — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
@@ -331,13 +334,13 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Zor an kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
+| ParentApp | Davranış kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
 
-> ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Zor an kaydın uzmanına anında ulaşmayabilir.
+> ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › Zor anlar sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
+| ClinicApp | Danışan › Davranış kayıtları sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
 
 > ClinicApp acil yardım ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen **112**'yi ara ya da aileyi hemen 112'ye yönlendir.
 
@@ -441,11 +444,11 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 |---|---|---|---|
 | Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
 | Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da görevini onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da zor an ses kaydına ilk basıldığında | Sesli mesaj ve zor an ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
+| ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
 | ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
 | ParentApp | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
 | ParentApp | Bildirim | İlk görev oluşturulunca *(öneri)* | Ön açıklama: "Çocuğun bir görevi yaptığında ya da sana yazdığında haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ClinicApp | Bildirim | İlk aile bağlanınca *(öneri)* | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni zor an kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
+| ClinicApp | Bildirim | İlk aile bağlanınca *(öneri)* | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni davranış kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
 | ClinicApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) — *yalnız belge görsel olarak seçilebiliyorsa* | "Belgeni yükle"de | Mezuniyet belgeni yüklemek için seçtiğin dosyaya erişiriz. Belge incelemeden sonra silinir. |
 
 - İzin reddedilirse özellik kibarca kapanır; uygulamanın geri kalanı çalışır. Ayarlara yönlendiren metin: "İzni iPhone Ayarlar › {uygulama} bölümünden açabilirsin."
@@ -458,3 +461,4 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 4. **Hesap silmede kalanlar (5):** "Ödeme kayıtları, ekip işlem kaydı ve deneme e-posta özeti kalır" cümlesi `42-saklama-imha-politikasi.md` süreleriyle birlikte onaylanmalı.
 5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). ParentApp'te tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
 6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Uzmanın kayıt saklama yükümlülüğüyle çatışma kararı (`00-olgular.md` §2) değişirse bu satır da değişir.
+4. **Karşılama anketi zorunlu oldu (ClinicApp, 28 Ekim 2026):** "Şimdilik geç" kaldırıldı. Aydınlatma metni ankete "isteğe bağlı" diyor ve dayanağı meşru menfaat (ürün geliştirme). Ürün araştırması için zorunlu veri toplamak ölçülülük ilkesiyle (KVKK md. 4) çelişebilir. Öneri: ekran kalsın ama her soruda "söylemek istemiyorum / diğer" seçeneği olsun (Joon'daki gibi, `03` J2); yoksa aydınlatma "zorunlu" olarak düzeltilip amacı (ör. meslek → şablon önerisi) somut yazılmalı.
