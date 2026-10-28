@@ -12,7 +12,7 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 
 Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`, pazarlama = `ortak` + `marketing`. İlk iş: bu dosya + `DURUM.md`.
 
-**Marketing penceresi için:** ürün bilgisi `hukuk/00-olgular.md` (ne var, ne toplanıyor), `sozlesme/akislar.md` (özellikler), `sozlesme/ekonomi.md` (coin, abonelik), `sozlesme/admin.md` (KPI tanımları), `DURUM.md` (son kararlar), iş modeli kanvası (Referanslar). Pazarlama metni ve kampanya `hukuk/45-pazarlama-kurallari.md`'ye uyar (sağlık iddiası yok, çocuğa doğrudan çağrı yok, izleme yalnız onayla, İYS). Strateji, bütçe ve rakip notları **herkese açık bu depoya değil** `marketing` özel deposuna yazılır. Ortakta değişmesi gereken bir şey görürse ilgili pencereye iletir (kural 6).
+**Marketing penceresi için:** ürün bilgisi `hukuk/00-olgular.md` (ne var, ne toplanıyor), `sozlesme/akislar.md` (özellikler), `sozlesme/ekonomi.md` (coin, abonelik), `sozlesme/admin.md` (KPI tanımları), `DURUM.md` (son kararlar), iş modeli kanvası (Referanslar). Pazarlama metni ve kampanya `hukuk/45-pazarlama-kurallari.md`'ye uyar (sağlık iddiası yok, çocuğa doğrudan çağrı yok, izleme yalnız onayla, İYS). Strateji, bütçe ve rakip notları **herkese açık bu depoya değil** `marketing` özel deposuna yazılır. Sosyal medya paylaşımı `sozlesme/paylasim.md`: Marketing paketi taslak olarak gönderir, yayın yalnız panelde owner onayıyla (§8). Ortakta değişmesi gereken bir şey görürse ilgili pencereye iletir (kural 6).
 
 ## İçerik
 
@@ -26,6 +26,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 | `sozlesme/ekonomi.md` | Coin, XP, seviye, gösterge düşüşü ve fiyatlar. |
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
 | `sozlesme/admin.md` | Admin paneli (roller, işlemler, güvenlik) ve KPI tanımları. |
+| `sozlesme/paylasim.md` | Sosyal medya paylaşımı: Marketing paketi → panelde owner onayı → paylaşım servisi (Zernio). |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
 > Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.

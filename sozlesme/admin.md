@@ -38,6 +38,7 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_set_user_flag(user, key, açık/kapalı/null, bitiş, gerekçe)` | support | Kişiye bayrak istisnası (null = sil) |
 | `admin_signout(user, gerekçe)` | support | Tüm oturumlar kapanır |
 | `admin_log_client('user.password_reset_email', user, gerekçe)` | support | Panelin istemciden gönderdiği şifre sıfırlama e-postasının kaydı |
+| `admin_social_check(action, ref, gerekçe, after, dry)` | `view` okur; `approve` / `request_changes` / `delete` owner | Paylaşım ekranı (`social` işlevi üzerinden; `sozlesme/paylasim.md`, öneri `proposed/20261028300000_admin_social.sql`). İçerik veritabanında tutulmaz; değişiklik servis işlemi başarılı olunca `system` / `social:<id>` olarak denetim kaydına yazılır |
 | `admin_grant_premium(family, bitiş, gerekçe)` / `admin_revoke_premium` | finance | Elle premium (`source=manual`, en çok 2 yıl). Etkin mağaza aboneliği varsa reddedilir |
 | `admin_clinic_grant(clinic, plan_id, bitiş, gerekçe)` / `admin_clinic_revoke` | finance | `billing_apply('manual', …)` |
 | `admin_suspend(user, bitiş?, gerekçe)` / `admin_unsuspend` | owner | `auth.users.banned_until` + oturumlar kapanır |
