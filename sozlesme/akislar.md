@@ -178,7 +178,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 
 Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
 
-**Günlük rutin v2 (kullanıcı kararı 28 Ekim 2026; öneri `proposed/20261028200000_routines_v2.sql`, veritabani.md 19):** aşağıdaki ilk sürümün yerine geçer.
+**Günlük rutin v2 (kullanıcı kararı 28 Ekim 2026; `migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; veritabani.md 19):** aşağıdaki ilk sürümün yerine geçer.
 
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|

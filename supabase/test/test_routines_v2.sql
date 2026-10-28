@@ -1,4 +1,4 @@
--- Günlük rutin v2 (proposed/20261028200000_routines_v2.sql): paket öneri + hedef bağı, görevin rutini, uzmanın kendi rutinleri
+-- Günlük rutin v2 (migrations/20261028200000_routines_v2.sql): paket öneri + hedef bağı, görevin rutini, uzmanın kendi rutinleri
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
