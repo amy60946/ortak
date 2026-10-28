@@ -63,8 +63,24 @@
 7.1. Yeni kampanya, açılış sayfası ya da mağaza metni yayımlanmadan önce bu listeye göre kontrol edilir; şüphede `hukuk/README.md` sorun listesine yazılır ve kullanıcıya sorulur.
 7.2. Ürün hakkında bilgi ortak depodan okunur; ürün kodu, SQL ya da yasal metin pazarlama penceresinden değiştirilmez — gereken değişiklik ilgili pencereye iletilir.
 
+## 8. Otomatik paylaşım (28 Ekim 2026)
+
+Akış ve teknik ayrıntı: `sozlesme/paylasim.md`.
+
+8.1. **İnsan onayı:** her gönderi yayından önce yönetim panelinde owner tarafından izlenir ve onaylanır. Marketing penceresi ve otomasyon yalnız taslak açar; doğrudan yayın yolu yoktur. Onay, düzeltme isteği ve silme gerekçeli olarak denetim kaydına yazılır.
+8.2. **Hesap güvenliği:** sosyal medya hesap şifreleri hiçbir araca, pencereye ya da kişiye verilmez. Hesaplar paylaşım servisine (Zernio) platformun kendi izin ekranıyla bağlanır; izin her an platformdan ya da servisten geri alınabilir. Hesaplarda iki adımlı doğrulama açık olur; hesaplar kişisel değil, pazarlama için açılmış e-postaya bağlanır. Servis anahtarı yalnız sunucu sırrındadır.
+8.3. **Platform kuralları:** yalnız platformların resmî arayüzü (servis üzerinden) kullanılır. Şifreyle giriş yapan bot, sahte etkileşim, toplu takip/beğeni otomasyonu kullanılmaz.
+8.4. **Yapay zekâ etiketi:** gerçek sanılabilecek yapay zekâ görüntüsü, sesi ya da kişisi içeren her gönderide paketteki `yapay_zeka: true` ile platform etiketi açılır (Instagram, TikTok, YouTube). Gerçek bir kişinin (uzman, ebeveyn, ünlü) yapay zekâ ile taklidi kullanılmaz.
+8.5. **Ticari beyan:** ürün ya da marka tanıtımı içeren gönderide `ticari: true` (TikTok "Your brand"); ücretli iş birliği varsa ayrıca platformun "ücretli ortaklık" etiketi ve §5.1.
+8.6. **Müzik ve görsel:** yalnız telifsiz, lisanslı ya da kendimizin ürettiği müzik ve görsel. Platform kütüphanesindeki ticari müzik işletme hesabında kullanılmaz (lisansı yok).
+8.7. **Kontrol listesi:** paket, sağlık iddiası, çocuğa çağrı, gerçek kullanıcı/çocuk verisi ve telif kontrolleri işaretlenmeden kabul edilmez; sunucu ayrıca riskli ifadeleri (tedavi, garanti, tanı, çocuğa çağrı, belgesiz uzman önerisi, kaynaksız araştırma) onaylayanın önüne uyarı olarak koyar. Uyarı yasak değildir; karar insanındır.
+8.8. **Kitle:** YouTube'da içerik "çocuklara yönelik değil" işaretlenir (izleyici ebeveyn); çocuğa yönelik içerik üretilirse önce bu kural ve COPPA/YouTube kuralları yeniden değerlendirilir.
+8.9. **Yorum ve mesajlar:** paylaşımlara gelen yorum ve doğrudan mesajlara verilen yanıtlarda da bu belgenin kuralları geçerlidir; sağlık sorusuna bireysel öneri verilmez, uzmana yönlendirilir. Yorum/mesaj otomasyonu ayrı karar ister.
+
 ## Avukata notlar
 
 1. Çocuklara yönelik reklam, sağlık beyanı ve karşılaştırmalı reklam için güncel yönetmelik maddeleri ve Reklam Kurulu ilke kararları.
 2. Uzman tanıklığı (testimonial) ve meslek örgütlerinin reklam yasakları.
 3. Kampanya ölçümü için mağaza dışı araç kullanılacaksa (ör. reklam pikseli) gereken onay ve aydınlatma metni.
+4. Ürünü anmayan bilgi içeriği (ör. ebeveynlere yönelik rutin, uyku, davranış konuları) şirket hesabından yayımlanınca ticari reklam sayılır mı; "Your brand" / reklam etiketi gerekir mi.
+5. Yapay zekâ ile üretilmiş görsel/ses için Türkiye'de platform etiketine ek bir yükümlülük var mı; yapay zekâ seslendirmede ses sahibinin izni.
