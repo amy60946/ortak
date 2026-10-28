@@ -468,7 +468,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
 | Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`); JSON isteği yönlenmez |
 
-## 19. Günlük rutin v2 (öneri, `proposed/20261028200000_routines_v2.sql`, 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
+## 19. Günlük rutin v2 (`migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|
