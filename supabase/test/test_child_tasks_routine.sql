@@ -1,4 +1,4 @@
--- Oyunda rutin kartı: child_tasks rutin alanları (proposed/20261028210000_child_tasks_routine.sql).
+-- Oyunda rutin kartı: child_tasks rutin alanları (migrations/20261028210000_child_tasks_routine.sql, uygulandı 28 Ekim 2026).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
