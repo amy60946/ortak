@@ -89,7 +89,7 @@ Amacımız verinizi başkasına vermemektir.
 | Uzmanla paylaşımı durdurmak | Başvuru gerekmez: ParentApp › Uzmanım |
 | Uzmanın sizi davet ederken girdiği bilgiler (adınız, e-postanız, çocuğun adı ve yaş grubu) | Davet kaydı kullanılmazsa en geç 3 gün, bağlanıp onaylanmazsa en geç 30 gün içinde kendiliğinden silinir. Daha önce silinmesini isterseniz bize yazın |
 | Uzmanın kendi hesabı ve belge incelemesi (uzmanlar için) | Bize |
-| Ebeveynin girdiği kayıtlar (görevler, zor anlar, takip planı uygulama kayıtları) | Bize |
+| Ebeveynin girdiği kayıtlar (görevler, davranış kayıtları, takip planı uygulama kayıtları) | Bize |
 
 ## 9. Hangi durumlarda talebi yerine getiremeyiz?
 

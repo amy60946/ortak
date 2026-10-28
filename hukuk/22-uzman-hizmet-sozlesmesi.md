@@ -39,7 +39,7 @@
 | Ebeveyn | Çocuğun velisi ya da yasal temsilcisi olduğunu beyan eden ParentApp kullanıcısı |
 | Danışan | Ebeveynin, açık rızasıyla uzmanla paylaştığı çocuk |
 | Paylaşım | Ebeveynin bir çocuğu bir klinikle paylaşması; etkin olduğu sürece uzman o çocuğun aile verisini salt okur |
-| Aile verisi | Ebeveynin ve çocuğun ParentApp ve Pofi Adası'nda oluşturduğu veriler (görevler, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, zor an kayıtları ve ses kayıtları gibi) |
+| Aile verisi | Ebeveynin ve çocuğun ParentApp ve Pofi Adası'nda oluşturduğu veriler (görevler, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, davranış kayıtları ve ses kayıtları gibi) |
 | Danışan kayıtları | Uzmanın ClinicApp'e girdiği notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planı (aile programı), danışan etiketleri ve davet bilgileri |
 | Takip planı | Uzmanın danışan için kurduğu hedefler ve aile programı modülleri |
 | Şablonlar | Platformun sunduğu görev şablonları, hazır rutinler, takip planı şablonları (alanlar, hedefler, modüller, paketler) ve rapor biçimleri |
@@ -116,7 +116,7 @@
 
 7.4. **Paylaşım yalnız ebeveynin onayıyla.** Çocuğun aile verisi uzmana, ancak ebeveyn uzmanın kim olduğunu görüp çocuğu seçerek açık rızasını verdiğinde açılır. Platform uzmanların kimliğini ve mesleki belgelerini doğrulamadığını ebeveyne açıkça bildirir ve ondan uzmanı tanıdığını ve çocuğun velisi olduğunu beyan etmesini ister.
 
-7.5. **Uzmanın gördüğü aile verisi.** Paylaşım etkin olduğu sürece uzman danışanın görevlerini, atamalarını, tamamlamalarını, "Yapamam" nedenlerini, ebeveynin notlarını, zor an kayıtlarını (ses kaydı dahil) ve takip planı uygulama kayıtlarını **salt okur**. Aile içi mesajlar, coin defteri ve oyun kaydı uzmana gösterilmez. Uzman bu verileri yalnız danışana verdiği mesleki hizmet için kullanır; başka amaçla kopyalamaz, üçüncü kişilere vermez.
+7.5. **Uzmanın gördüğü aile verisi.** Paylaşım etkin olduğu sürece uzman danışanın görevlerini, atamalarını, tamamlamalarını, "Yapamam" nedenlerini, ebeveynin notlarını, davranış kayıtlarını (ses kaydı dahil) ve takip planı uygulama kayıtlarını **salt okur**. Aile içi mesajlar, coin defteri ve oyun kaydı uzmana gösterilmez. Uzman bu verileri yalnız danışana verdiği mesleki hizmet için kullanır; başka amaçla kopyalamaz, üçüncü kişilere vermez.
 
 7.6. **Paylaşımın sona ermesi.** Ebeveyn paylaşımı istediği an durdurabilir; uzman da görebildiği danışan için paylaşımı sonlandırabilir. Paylaşım sona erince uzmanın o çocuğun aile verisine erişimi hemen biter. Bugünkü sistemde uzman, üyeliği etkin olduğu sürece sona ermiş paylaşıma ait kendi danışan kayıtlarını okuyabilir ve silebilir; ancak yeni kayıt ekleyemez ve mevcut kayıtları değiştiremez.
 
