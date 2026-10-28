@@ -67,7 +67,7 @@
 | Kod deneme sınırı ve kötüye kullanımı önleme | md. 5/2-ç (KVKK md. 12 güvenlik yükümlülüğü) ve md. 5/2-f |
 | Yetkili kurumların usulüne uygun talepleri | md. 5/2-a ve md. 5/2-ç |
 
-\* Avukatın teyit edeceği dayanak (bkz. Avukata notlar).
+\* Avukatın teyit edeceği dayanak.
 
 Çocuğunuzun verisini reklam, pazarlama ya da profil çıkarma için kullanmayız, satmayız.
 

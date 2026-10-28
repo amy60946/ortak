@@ -310,19 +310,19 @@ Uzman bu sözleşmeden doğan hak ve yükümlülüklerini Platformun yazılı on
 
 Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda dikkate alınır. Uygulama dili "sen" hitabıdır.
 
-| Yer | Metin | Kaynak |
-|---|---|---|
-| Kayıt ekranı (onay kutusu; işaretlenmeden "Hesap oluştur" açılmaz) | ☐ ClinicApp Uzman Hizmet Sözleşmesi'ni ve Veri İşleme Eki'ni okudum, kabul ediyorum. — Altında, kutudan ayrı: "Kişisel verilerinin nasıl işlendiğini Uzman Aydınlatma Metni'nde okuyabilirsin." | öneri |
-| Ekip koduyla katılım | Aynı onay kutusu ve aydınlatma bağlantısı. | öneri |
-| Ana ekran / danışan ayrıntısı (alt bilgi) | "ClinicApp acil yardım hizmeti değildir. Acil durumda 112'yi ara." | öneri (`02` uyarlama kararı 6) |
-| Göstergeler ve rapor (alt bilgi) | "Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir." | öneri (`hukuk_notlari.md` D) |
-| Notlar (not alanının altında) | "Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma." | mevcut taslak (`hukuk_notlari.md` E) |
-| Devralınan kayıtlar | "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma" | mevcut taslak (`hukuk_notlari.md` E) |
-| Davet formu (çocuk önerisi) | Alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir." | mevcut taslak (`hukuk_notlari.md` E) |
-| Davet formu (e-posta) | "Bu adrese senin adına davet e-postası gider; çocuğun adı ve notun e-postada yer almaz. Aile yanıtlarsa yanıt senin e-posta adresine gelir. Daveti yalnız tanıdığın ve hizmet verdiğin aileye gönder." | öneri (A13) |
-| Belgeni yükle | "Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Ailelere yalnız 'Belgesi incelendi: <meslek>' görünür; bu bir yetki onayı değildir. Ayrıntı: Uzman Aydınlatma Metni." | öneri (A11–A12) |
-| Üyelik ekranı (satın alma düğmesinin yakınında) | Paket adı, dönem, KDV dahil fiyat; "Üyelik, dönem bitiminden en az 24 saat önce iptal edilmezse aynı süre için otomatik yenilenir ve ücret Apple hesabına yansıtılır. İptal: Ayarlar › Apple hesabı › Abonelikler." + Uzman Hizmet Sözleşmesi ve Uzman Aydınlatma Metni bağlantıları. | öneri (Apple 3.1.2) |
-| Hesabı sil (onaydan önce) | "Tek kişilik kliniğinde bütün danışan kayıtların kalıcı olarak silinir. Saklaman gereken kayıtları önce yazdır ya da destekten iste. App Store üyeliğini Apple hesabından ayrıca iptal et." | öneri |
+| Yer | Metin |
+|---|---|
+| Kayıt ekranı (onay kutusu; işaretlenmeden "Hesap oluştur" açılmaz) | ☐ ClinicApp Uzman Hizmet Sözleşmesi'ni ve Veri İşleme Eki'ni okudum, kabul ediyorum. — Altında, kutudan ayrı: "Kişisel verilerinin nasıl işlendiğini Uzman Aydınlatma Metni'nde okuyabilirsin." |
+| Ekip koduyla katılım | Aynı onay kutusu ve aydınlatma bağlantısı. |
+| Ana ekran / danışan ayrıntısı (alt bilgi) | "ClinicApp acil yardım hizmeti değildir. Acil durumda 112'yi ara." |
+| Göstergeler ve rapor (alt bilgi) | "Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir." |
+| Notlar (not alanının altında) | "Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma." |
+| Devralınan kayıtlar | "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma" |
+| Davet formu (çocuk önerisi) | Alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir." |
+| Davet formu (e-posta) | "Bu adrese senin adına davet e-postası gider; çocuğun adı ve notun e-postada yer almaz. Aile yanıtlarsa yanıt senin e-posta adresine gelir. Daveti yalnız tanıdığın ve hizmet verdiğin aileye gönder." |
+| Belgeni yükle | "Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Ailelere yalnız 'Belgesi incelendi: <meslek>' görünür; bu bir yetki onayı değildir. Ayrıntı: Uzman Aydınlatma Metni." |
+| Üyelik ekranı (satın alma düğmesinin yakınında) | Paket adı, dönem, KDV dahil fiyat; "Üyelik, dönem bitiminden en az 24 saat önce iptal edilmezse aynı süre için otomatik yenilenir ve ücret Apple hesabına yansıtılır. İptal: Ayarlar › Apple hesabı › Abonelikler." + Uzman Hizmet Sözleşmesi ve Uzman Aydınlatma Metni bağlantıları. |
+| Hesabı sil (onaydan önce) | "Tek kişilik kliniğinde bütün danışan kayıtların kalıcı olarak silinir. Saklaman gereken kayıtları önce yazdır ya da destekten iste. App Store üyeliğini Apple hesabından ayrıca iptal et." |
 
 ---
 
@@ -340,3 +340,4 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 10. **Yetki şartı ve arabuluculuk (19.2):** Uzmanların çoğu serbest meslek erbabı, tacir değil; HMK md. 17 yetki sözleşmesi bu nedenle sınırlı yazıldı. Ticari dava sayılırsa dava şartı arabuluculuk (TTK md. 5/A). Uygun mu?
 11. **Dışa aktarma (14.5):** Yazılımda toplu dışa aktarma yok; yalnız yazdırılabilir "Ev rutini gözlem raporu" var. Destek talebiyle elle dışa aktarma önerildi; canlıdan önce bir araç gerekecek mi? Aile verisinin uzmanın mesleki kaydına geçirilmesi (rapor yazdırma) uzmanı bu veriler için ayrı veri sorumlusu yapar mı?
 12. **Mücbir sebep ve hizmet sağlayıcı kesintisi (15.2-f):** Hizmet sağlayıcının kesintisinin mücbir sebep sayılması TBK açısından ölçülü mü?
+- **Ek-3'ün kaynakları (iç):** acil durum notu `02` uyarlama kararı 6; "tanı değildir" `hukuk_notlari.md` D; not alanı ve devralınan kayıtlar `hukuk_notlari.md` E; diğerleri yeni öneri.
