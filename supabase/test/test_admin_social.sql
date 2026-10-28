@@ -1,4 +1,4 @@
--- Pazarlama paylaşımı yetkisi (proposed/20261028300000_admin_social.sql)
+-- Pazarlama paylaşımı yetkisi (migrations/20261028300000_admin_social.sql, uygulandı 28 Ekim 2026)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$
