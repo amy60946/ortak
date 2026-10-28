@@ -31,7 +31,7 @@
 
 2.2. **Kapsam dışında kalanlar.** Bu Ek aşağıdakileri kapsamaz:
    - a) **Uzmanın kendi hesap verisi** (ad, unvan, e-posta, üyelik, belge incelemesi, anket, kullanım kayıtları): Platform veri sorumlusudur; Uzman Aydınlatma Metni'ne tabidir.
-   - b) **Aile verisi** (ebeveynin ve çocuğun ParentApp ve Pofi Adası'nda oluşturduğu görevler, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, zor an kayıtları ve ses kayıtları, çocuğun profil bilgileri, ebeveyn adları): Platform ParentApp ve Pofi Adası için veri sorumlusudur. Uzman bu verileri ebeveynin açık rızasıyla ve paylaşım sürdükçe görür; gördüğü veriyi kendi mesleki kaydına geçirmesi ya da rapor olarak yazdırması bakımından kendisi ayrı veri sorumlusudur.
+   - b) **Aile verisi** (ebeveynin ve çocuğun ParentApp ve Pofi Adası'nda oluşturduğu görevler, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, davranış kayıtları ve ses kayıtları, çocuğun profil bilgileri, ebeveyn adları): Platform ParentApp ve Pofi Adası için veri sorumlusudur. Uzman bu verileri ebeveynin açık rızasıyla ve paylaşım sürdükçe görür; gördüğü veriyi kendi mesleki kaydına geçirmesi ya da rapor olarak yazdırması bakımından kendisi ayrı veri sorumlusudur.
 
 2.3. **Platformun kendi amaçlarıyla sınırlı işleme.** Platform, danışan kayıtlarının içeriğine bakmadan yalnız sayısal bilgileri (ör. bir klinikte son 30 günde yazılan not, gönderilen öneri sayısı) hizmetin işleyişini ölçmek, destek vermek ve kötüye kullanımı önlemek için kendi meşru menfaatine dayanarak işler; güvenlik ve denetim kayıtlarını ve kanunen tutması gereken kayıtları kendi veri sorumluluğu altında tutar. Bu işleme kimliksizdir ya da danışan kayıtlarının içeriğini kapsamaz.
 
@@ -204,7 +204,7 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 | Girişsiz erişimin engellenmesi | Giriş yapmamış rol hiçbir veritabanı işlevini çağıramaz | var |
 | Çocuk cihazının sınırlanması | Çocuk cihazı yalnız kendi profilini görür; klinik tablolarına erişimi yoktur | var |
 | Devralınan kayıtların korunması | Sonraki uzman tablolara doğrudan erişemez; yalnız kimlik gizleyen ve salt okuyan bir sunucu işlevi kullanılır | var |
-| Özel dosyalar | Mesaj medyası, zor an ses kayıtları ve uzman belgeleri özel kovalarda; yalnız imzalı, kısa süreli bağlantıyla açılır | var |
+| Özel dosyalar | Mesaj medyası, davranış kayıtlarındaki ses kayıtları ve uzman belgeleri özel kovalarda; yalnız imzalı, kısa süreli bağlantıyla açılır | var |
 | Uzman belgesi | Belgeye yalnız sunucu işlevi, denetim kaydı yazarak 2 dakikalık bağlantı verir; karar sonrası dosya silinir | var |
 | Kimlik doğrulama | Şifreler kimlik doğrulama sağlayıcısında geri çevrilemez biçimde özetlenmiş; yönetim panelinde iki adımlı doğrulama zorunlu | var |
 | Kötüye kullanım sınırları | Kod deneme sınırı (IP dahil), davet e-postası gönderim sınırları, olay kaydı sınırları | var |
