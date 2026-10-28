@@ -467,3 +467,15 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `legal_accept(app, [{key, version}])` | authenticated | Yalnız o uygulamanın güncel, onay isteyen sürümleri; `app='child'` yalnız veli (ParentApp) çağırır. Dönüş: kalan bekleyenler |
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
 | Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`); JSON isteği yönlenmez |
+
+## 19. Günlük rutin v2 (öneri, `proposed/20261028200000_routines_v2.sql`, 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
+
+| Tablo / sütun | Ne | Yazar | Okur |
+|---|---|---|---|
+| `clinic_task_suggestions.routine_group` (uuid), `routine_title` (1–60), `routine_icon` (≤ 40), `routine_position` (0–30), `routine_key` (≤ 60) | Aynı rutin paketinin öneri satırları; grupta ad ve sıra zorunlu | K (insert) | K, P |
+| `clinic_task_suggestions.goal_id` | Takip planı hedefi (yalnız aynı paylaşımın hedefi; `cts_goal_guard`); hedef silinince boşalır | K | K, P (ParentApp hedefi `family_care_plan` `goals[].id` ile eşler) |
+| `tasks.routine_id` (uuid), `routine_title` (1–60), `routine_icon` (≤ 40), `routine_position` (0–30) | Görevin bağlı olduğu rutin (paketten kabul ya da ParentApp hazır rutini); `routine_id` varsa ad zorunlu. Ödül, onay ve oyun görev görev çalışır | P | P, K (rızalı), O (ileride `child_tasks` ile) |
+| `clinic_routines` | Uzmanın kendi rutinleri: `clinic_id` + `created_by` (sunucu yazar, değiştirilemez), `title`, `icon`, `repeat` (`weekdays`/`daily`/`weekly`), `ages` (K/A/B/C alt kümesi; boş = hepsi), `items` jsonb (1–12: `key?`, `title`, `emoji`, `skill?`, `category?`, `difficulty`, `coins` 0–50, `time` HH:MM, `days` 1–7; başka alan reddedilir), `shared`, `archived` | K: oluşturan; klinik sahibi düzenler/siler | K: kendi + ekibe açık; sahip hepsi. Aile ve oyun görmez |
+
+RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()` + (oluşturan / `shared` / sahip); ekleme yalnız uzman (klinik ve oluşturan tetikleyiciyle); güncelleme ve silme oluşturan ya da sahip. Öneri ve görev politikaları değişmedi (ebeveyn öneride yine yalnız `status`, `decided_at`, `task_id` yazar). Test: `test_routines_v2.sql`.
+
