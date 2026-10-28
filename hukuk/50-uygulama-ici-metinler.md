@@ -76,7 +76,9 @@
 
 > **Pofi Adası'nı {çocuk_adı}'nın cihazına bağlamadan önce**
 >
-> Pofi Adası'nda reklam, satın alma ve izleme aracı yok. Çocuğun yalnız ailesiyle yazışır; oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+> Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {çocuk_adı}'nın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+>
+> *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
 > ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >

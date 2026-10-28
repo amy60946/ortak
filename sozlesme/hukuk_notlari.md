@@ -90,6 +90,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
   >
   > ☐ Bu uzmanı tanıyorum ve çocuğun velisiyim (yasal temsilcisiyim). — kutu işaretlenmeden "Onayla ve paylaş" açılmaz. Altta: "Bu davet bana ait değil".
 - **ParentApp › onay ekranı:** B'deki metin + düğme.
+- **ParentApp › Pofi Adası'nı bağlamadan önce (veli onayı, 28 Ekim 2026; kullanıcı sorusu "izleme aracı yok neye tekabül ediyor?"):** "izleme aracı" = üçüncü taraf reklam/analiz takibi (SDK). Oyun çocuğun oyundaki ilerlemesini ("Yaptım", seviye, oyun kaydı) kaydeder ve aileye raporlar; bu ayrımı göstermek için metin: "Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {ad}'ın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz." (hukuk/50 §1.3).
 
 ### I. Kullanıcının platforma verdiği aktarım ve işleme yetkileri (taslak, 27 Ekim 2026; kullanıcı isteği)
 
@@ -147,3 +148,4 @@ Yönetim paneli (27 Ekim 2026): aile kartında sağlık yanıtları varsayılan 
 12. Yurt dışı aktarım (I2) için 2024 KVKK değişikliği sonrası standart sözleşme yeterli mi; sağlık verisi için ek şart var mı?
 13. Yetkili ekip erişimi (I3, I4): destek amaçlı kişi bazında tanışma yanıtı görüntüleme aydınlatmada açıkça yazılınca yeterli mi; sağlık yanıtları ekipçe hiç görülmemeli mi?
 14. ParentApp tanışma soruları: tanı/ilaç yanıtlarının (özel nitelikli sağlık verisi) kişi bazlı olarak yönetim panelinde görülmesi için açık rıza metni (H) ve aydınlatma yeterli mi; amaç ve saklama süresi nasıl yazılmalı; anonim özetle sınırlamak daha mı uygun?
+15. Veli onayı ekranındaki "dışarıdan izleme aracı yok" ifadesi ile oyunun ilerleme kaydı (aileye ve rızayla uzmana raporlanan) arasındaki ayrım tüketici ve KVKK açısından yeterince açık mı; "izleme" sözcüğü hiç kullanılmamalı mı?
