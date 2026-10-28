@@ -92,12 +92,12 @@ jobs:
 
 Gönderi grupları (`group`): `onay` (taslak), `duzeltme` (düzeltme istenmiş taslak), `planli`, `yayinda`, `sorun` (başarısız / kısmen başarısız).
 
-Yetki: `admin_social_check(action, ref, reason, after, dry)` (`proposed/20261028300000_admin_social.sql`): `view` her admin; `approve`, `request_changes`, `delete` yalnız owner + iki adımlı doğrulama; değişiklik servis işlemi başarılı olunca `admin_audit`'e (`system`, `social:<id>`) yazılır. Bu veritabanında içerik ya da hesap bilgisi tutulmaz.
+Yetki: `admin_social_check(action, ref, reason, after, dry)` (`migrations/20261028300000_admin_social.sql`, uygulandı 28 Ekim 2026): `view` her admin; `approve`, `request_changes`, `delete` yalnız owner + iki adımlı doğrulama; değişiklik servis işlemi başarılı olunca `admin_audit`'e (`system`, `social:<id>`) yazılır. Bu veritabanında içerik ya da hesap bilgisi tutulmaz.
 
 ## Kurulum (kullanıcı)
 
-1. Pazarlama e-postası; Instagram profesyonel hesap, TikTok işletme hesabı; ikisinde iki adımlı doğrulama.
-2. zernio.com → ücretsiz plan → Accounts → Instagram ve TikTok'u bağla (platformun izin ekranı).
-3. Zernio → API Keys → yeni anahtar → **Supabase → Edge Functions → Secrets → `ZERNIO_API_KEY`** (anahtar sohbete ya da depoya yazılmaz).
-4. SQL: `proposed/20261028300000_admin_social.sql`; işlev: `social` (Verify JWT kapalı).
+1. ✔ Pazarlama e-postası; Instagram profesyonel hesap, TikTok işletme hesabı; ikisinde iki adımlı doğrulama.
+2. ✔ zernio.com → ücretsiz plan → Accounts → Instagram ve TikTok'u bağla (platformun izin ekranı).
+3. ✔ Zernio → API Keys → yeni anahtar → **Supabase → Edge Functions → Secrets → `ZERNIO_API_KEY`** (anahtar sohbete ya da depoya yazılmaz).
+4. SQL: `migrations/20261028300000_admin_social.sql` ✔ uygulandı; işlev `social` ✔ yayında (Verify JWT kapalı) — 28 Ekim 2026.
 5. Marketing penceresi: iş akışını ve ilk paketi ekler; panel › Paylaşım'da onay.
