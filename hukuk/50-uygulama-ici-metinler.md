@@ -62,11 +62,13 @@
 |---|---|---|
 | ClinicApp (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü; ekip koduyla katılım ekranı | `sozlesme-uzman`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
 
-> ☐ <u>Uzman Hizmet Sözleşmesi</u>'ni ve <u>Veri İşleme Eki</u>'ni okudum, kabul ediyorum.
->
-> Kişisel verilerinin nasıl işlendiğini <u>Uzman Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok; düz satır — sözleşme Ek-3 ile aynı)*
->
-> <small><u>Gizlilik Politikası</u></small>
+**Güncel (kullanıcı kararı 28 Ekim 2026, ortak#94):** "Hesap oluştur" düğmesinin hemen üstünde tek küçük satır:
+
+> <u>Hizmet Sözleşmesi</u> ve <u>Veri İşleme Eki</u>'ni kabul ediyorum. <u>Aydınlatma</u> · <u>Gizlilik</u>
+
+- Kabul **etkin bir eylemle** olmalı: satırdaki kutu işaretlenmeden ya da düğme "Kabul et ve hesap oluştur" olmadan hesap açılmaz (sessizce "kullanarak kabul" sayılmaz — `03-joon-karsilastirma.md` X4).
+- Aydınlatma bağlantıdır, kutusu yoktur; hesap açılınca gösterildiği kaydedilir.
+- *(Önceki uzun biçim: iki satır — sözleşme kutusu + ayrı aydınlatma satırı. Sözleşme Ek-3 bu kısa biçime göre güncellenecek.)*
 
 ### 1.3 ParentApp — Pofi Adası'nı bağlamadan önce (veli onayı)
 
@@ -112,6 +114,7 @@
 > <small>Kabul etmek istemiyorsan <u>hesabını silebilir</u> ya da `destek@[ALAN ADI]` adresine yazabilirsin.</small>
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
+- **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
 - Kutu işaretlenmeden "Devam et" pasif. Bu ekrandayken bile Ayarlar › Hesabımı sil, Yasal metinler ve KVKK başvurusu açılabilir olmalı.
 - **Pofi Adası koşulları güncellenince:** ParentApp'te ebeveyne "Pofi Adası koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
 - **Onay istemeyen metin güncellenince** (Gizlilik Politikası, Hizmet Sağlayıcılar): kapatılabilir üst bant:
@@ -121,7 +124,7 @@
 
 | Uygulama | Ekran | Kaynak |
 |---|---|---|
-| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında) | `legal_documents_for(app)` |
+| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026) | `legal_documents_for(app)` |
 
 Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}".
 
@@ -143,7 +146,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail)`, `my_kvkk_requests()` |
+| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde) | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
 
 **Üst metin:**
 > Kişisel verilerinle ilgili taleplerini buradan iletebilirsin. En geç 30 gün içinde, ücretsiz yanıt veririz. Yanıt {e-posta} adresine gelir. <u>Başvuru usulü</u>
@@ -456,3 +459,4 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 4. **Hesap silmede kalanlar (5):** "Ödeme kayıtları, ekip işlem kaydı ve deneme e-posta özeti kalır" cümlesi `42-saklama-imha-politikasi.md` süreleriyle birlikte onaylanmalı.
 5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). ParentApp'te tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
 6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Uzmanın kayıt saklama yükümlülüğüyle çatışma kararı (`00-olgular.md` §2) değişirse bu satır da değişir.
+4. **Karşılama anketi zorunlu oldu (ClinicApp, 28 Ekim 2026):** "Şimdilik geç" kaldırıldı. Aydınlatma metni ankete "isteğe bağlı" diyor ve dayanağı meşru menfaat (ürün geliştirme). Ürün araştırması için zorunlu veri toplamak ölçülülük ilkesiyle (KVKK md. 4) çelişebilir. Öneri: ekran kalsın ama her soruda "söylemek istemiyorum / diğer" seçeneği olsun (Joon'daki gibi, `03` J2); yoksa aydınlatma "zorunlu" olarak düzeltilip amacı (ör. meslek → şablon önerisi) somut yazılmalı.
