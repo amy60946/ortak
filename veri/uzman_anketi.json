@@ -1,25 +1,32 @@
 {
-  "_doc": "Uzman karşılama anketi (kayıttan sonra bir kez; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
+  "_doc": "Uzman karşılama anketi (kayıttan sonra bir kez, atlanamaz — kullanıcı kararı 28 Ekim 2026; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Meslekler 'group' ile 'groups' başlıkları altında listelenir (yalnız görünüm). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
   "version": 1,
   "profession": {
     "title": "Mesleğin ne?",
-    "hint": "Sana uygun şablonları ve örnekleri öne çıkaralım.",
+    "hint": "Unvanına en yakın olanı seç. Sana uygun şablonları ve örnekleri öne çıkaralım.",
+    "groups": [
+      { "key": "mental", "label": "Ruh sağlığı" },
+      { "key": "rehab", "label": "Gelişim ve rehabilitasyon" },
+      { "key": "edu", "label": "Eğitim" },
+      { "key": "expressive", "label": "Oyun ve dışavurumcu terapiler" },
+      { "key": "other", "label": "Diğer" }
+    ],
     "options": [
-      { "key": "psikolog", "label": "Psikolog" },
-      { "key": "klinik_psikolog", "label": "Klinik psikolog" },
-      { "key": "pdr", "label": "Psikolojik danışman (PDR)" },
-      { "key": "ergoterapist", "label": "Ergoterapist" },
-      { "key": "dil_konusma", "label": "Dil ve konuşma terapisti" },
-      { "key": "ozel_egitim", "label": "Özel eğitim öğretmeni" },
-      { "key": "cocuk_gelisimi", "label": "Çocuk gelişimci" },
-      { "key": "bcba", "label": "Davranış analisti (BCBA)" },
-      { "key": "hekim", "label": "Çocuk ve ergen psikiyatristi" },
-      { "key": "oyun_terapisti", "label": "Oyun terapisti", "survey_only": true },
-      { "key": "sanat_terapisti", "label": "Sanat, müzik ya da drama terapisti", "survey_only": true },
-      { "key": "aile_danismani", "label": "Aile danışmanı", "survey_only": true },
-      { "key": "okul_rehber", "label": "Okul rehber öğretmeni", "survey_only": true },
-      { "key": "ogrenci", "label": "Öğrenci ya da stajyer", "survey_only": true },
-      { "key": "diger", "label": "Diğer" }
+      { "key": "psikolog", "group": "mental", "label": "Psikolog" },
+      { "key": "klinik_psikolog", "group": "mental", "label": "Klinik psikolog" },
+      { "key": "pdr", "group": "mental", "label": "Psikolojik danışman (PDR)" },
+      { "key": "ergoterapist", "group": "rehab", "label": "Ergoterapist" },
+      { "key": "dil_konusma", "group": "rehab", "label": "Dil ve konuşma terapisti" },
+      { "key": "ozel_egitim", "group": "edu", "label": "Özel eğitim öğretmeni" },
+      { "key": "cocuk_gelisimi", "group": "rehab", "label": "Çocuk gelişimci" },
+      { "key": "bcba", "group": "rehab", "label": "Davranış analisti (BCBA)" },
+      { "key": "hekim", "group": "mental", "label": "Çocuk ve ergen psikiyatristi" },
+      { "key": "oyun_terapisti", "group": "expressive", "label": "Oyun terapisti", "survey_only": true },
+      { "key": "sanat_terapisti", "group": "expressive", "label": "Sanat, müzik ya da drama terapisti", "survey_only": true },
+      { "key": "aile_danismani", "group": "mental", "label": "Aile danışmanı", "survey_only": true },
+      { "key": "okul_rehber", "group": "edu", "label": "Okul rehber öğretmeni", "survey_only": true },
+      { "key": "ogrenci", "group": "other", "label": "Öğrenci ya da stajyer", "survey_only": true },
+      { "key": "diger", "group": "other", "label": "Diğer" }
     ]
   },
   "challenges": {
@@ -48,7 +55,7 @@
   },
   "intent": {
     "title": "Seni ClinicApp'e ne getirdi?",
-    "hint": "Birini seç.",
+    "hint": "En önemli nedenini seç; ilk adımı buna göre önereceğiz.",
     "options": [
       { "key": "trial", "label": "Birkaç ailede ücretsiz denemek", "icon": "flask-outline" },
       { "key": "family", "label": "Çalıştığım bir aileyi bağlamak", "icon": "link-outline" },
