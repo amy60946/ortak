@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  AUDIENCE, GITHUB_ISSUER, feedbackComment, handle, notifyGithub, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
+  AUDIENCE, GITHUB_ISSUER, entry, feedbackComment, handle, notifyGithub, tiktokPhotoTitle, usageOf, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
 } from './index.ts';
 
 const good = () => ({
@@ -409,4 +409,72 @@ test('GitHub bildirimi: açık geri bildirim PR\'ını bulur, yorum yazar, iş a
   } finally {
     globalThis.fetch = real;
   }
+});
+
+const img = (n: number) => Array.from({ length: n }, (_, i) => `https://media.zernio.com/${String(i + 1).padStart(2, '0')}.jpg`);
+const base = () => { const g = good() as Record<string, unknown>; delete g.video; delete g.youtube_baslik; return g; };
+
+test('kaydırmalı: 2–20 görsel (Facebook varsa 10), yalnız Instagram/TikTok/Facebook, video olmaz', () => {
+  const k = { ...base(), tur: 'kaydirmali', gorseller: img(5), platformlar: ['instagram', 'tiktok'], metin: { instagram: 'IG', tiktok: 'TT' } };
+  assert.deepEqual(parsePaket(k).errors, []);
+  assert.match(parsePaket({ ...k, gorseller: img(1) }).errors.join(), /2–20 görsel \(1\)/);
+  assert.match(parsePaket({ ...k, gorseller: img(21) }).errors.join(), /2–20/);
+  assert.match(parsePaket({ ...k, gorseller: img(11), platformlar: ['facebook'], metin: { facebook: 'x' } }).errors.join(), /2–10/);
+  assert.match(parsePaket({ ...k, platformlar: ['youtube'], metin: { youtube: 'x' }, youtube_baslik: 'y' }).errors.join(), /"youtube" kaydirmali türünde yok/);
+  assert.match(parsePaket({ ...k, video: 'https://v.mp4' }).errors.join(), /kaydırmalıda olmaz/);
+  assert.match(parsePaket({ ...k, tur: 'slayt' }).errors.join(), /tur: video, kaydirmali, hikaye/);
+});
+
+test('kaydırmalı taslak: görseller sırayla; TikTok fotoğraf (başlık 90, tam metin açıklamada, düet/YZ alanı yok)', () => {
+  const long = 'Akşam rutini için beş küçük adım: hepsi birlikte ve sırayla, telaşsız, oyun gibi; sonunda kitap var ve ışıklar kısılır\nİkinci satır';
+  const p = parsePaket({ ...base(), tur: 'kaydirmali', gorseller: img(3), platformlar: ['instagram', 'tiktok'], metin: { instagram: 'IG', tiktok: long } }).paket!;
+  const b = draftBody(p, { instagram: 'a1', tiktok: 'a2' }, 'r', NOW);
+  assert.deepEqual(b.mediaItems, img(3).map((url) => ({ type: 'image', url })));
+  const tt = b.platforms.find((x) => x.platform === 'tiktok')!;
+  assert.equal(tt.customContent!.length, 90);
+  assert.ok(tt.customContent!.endsWith('…'));
+  assert.equal((tt.platformSpecificData as Record<string, unknown>).description, long);
+  assert.equal((tt.platformSpecificData as Record<string, unknown>).mediaType, 'photo');
+  assert.equal('allowDuet' in tt.platformSpecificData, false);
+  assert.equal('videoMadeWithAi' in tt.platformSpecificData, false);
+  const ig = b.platforms.find((x) => x.platform === 'instagram')!;
+  assert.equal('shareToFeed' in ig.platformSpecificData, false);
+  assert.equal(b.metadata.tur, 'kaydirmali');
+  // onay: TikTok rıza alanları açılır, panelde tam metin görünür
+  const draft = { _id: 'k1', status: 'draft', ...b };
+  const sm = summarize(draft);
+  assert.equal(sm.tur, 'kaydirmali');
+  assert.deepEqual(sm.images, img(3));
+  assert.equal(sm.video, null);
+  assert.equal(sm.platforms.find((x) => x.platform === 'tiktok')!.caption, long);
+  const a = parseApproval({ scheduledFor: '2026-10-30T20:00:00+03:00', platforms: ['tiktok'], captions: { tiktok: 'Kısa' }, yapay_zeka: false }, NOW, 'kaydirmali').approval!;
+  const ap = approveBody(draft, a, NOW).platforms[0];
+  assert.equal(ap.customContent, 'Kısa');
+  assert.equal((ap.platformSpecificData as Record<string, unknown>).expressConsentGiven, true);
+  assert.equal((ap.platformSpecificData as Record<string, unknown>).description, 'Kısa');
+  assert.equal(tiktokPhotoTitle('kısa'), 'kısa');
+});
+
+test('hikâye: tek medya, metinsiz, yalnız Instagram/Facebook; onayda metin istenmez', () => {
+  const h = { ...base(), tur: 'hikaye', gorseller: img(1), platformlar: ['instagram'], metin: {} };
+  assert.deepEqual(parsePaket(h).errors, []);
+  assert.match(parsePaket({ ...h, gorseller: img(2) }).errors.join(), /tek video ya da tek görsel/);
+  assert.match(parsePaket({ ...h, gorseller: [] }).errors.join(), /tek video ya da tek görsel/);
+  assert.match(parsePaket({ ...h, platformlar: ['tiktok'] }).errors.join(), /"tiktok" hikaye türünde yok/);
+  const p = parsePaket({ ...h, gorseller: [], video: 'https://media.zernio.com/h.mp4', metin: { instagram: 'yok sayılır' } }).paket!;
+  const b = draftBody(p, { instagram: 'a1' }, 'r', NOW);
+  assert.deepEqual(b.mediaItems, [{ type: 'video', url: 'https://media.zernio.com/h.mp4' }]);
+  assert.equal('content' in b, false);
+  assert.deepEqual(b.platforms[0], { platform: 'instagram', accountId: 'a1', platformSpecificData: { contentType: 'story', isAiGenerated: true } });
+  assert.deepEqual(parseApproval({ scheduledFor: '2026-10-30T20:00:00+03:00', platforms: ['instagram'], captions: {}, yapay_zeka: false }, NOW, 'hikaye').errors, []);
+  assert.match(parseApproval({ scheduledFor: '2026-10-30T20:00:00+03:00', platforms: ['instagram'], captions: {}, yapay_zeka: false }, NOW).errors.join(), /instagram metni boş/);
+  assert.deepEqual(entry('facebook', 'f1', undefined, { yapay_zeka: false, ticari: false, tur: 'hikaye' }, true),
+    { platform: 'facebook', accountId: 'f1', platformSpecificData: { contentType: 'story' } });
+});
+
+test('gönderi hakkı özeti', () => {
+  assert.deepEqual(usageOf({ planName: 'Free', billingAnchorDay: 28, hasAccess: true, limits: { uploads: 20 }, usage: { uploads: 4, lastReset: '2026-10-28T00:00:00Z' } }),
+    { plan: 'Free', used: 4, limit: 20, resetDay: 28, lastReset: '2026-10-28T00:00:00Z', access: true });
+  assert.equal(usageOf({ planName: 'Usage', limits: { uploads: -1 }, usage: {} })!.limit, null);   // sınırsız
+  assert.equal(usageOf(null), null);
 });
