@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  AUDIENCE, GITHUB_ISSUER, handle, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
+  AUDIENCE, GITHUB_ISSUER, feedbackComment, handle, notifyGithub, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
 } from './index.ts';
 
 const good = () => ({
@@ -214,9 +214,10 @@ async function setup(role: string | null = 'owner') {
     repo: 'amy60946/marketing',
     now: () => NOW,
   };
+  const told: { kind: string; text: string }[] = [];
   const gh = async (body: unknown, claims = {}) => handle(`Bearer ${await k.sign(claims)}`, body, deps);
   const admin = (body: unknown) => handle('Bearer supabase-admin-jwt', body, deps);
-  return { k, z, logs, deps, gh, admin };
+  return { k, z, logs, deps, gh, admin, told };
 }
 
 test('oturumsuz istek reddedilir', async () => {
@@ -339,4 +340,71 @@ test('yayımlananlara sonuç sayıları eklenir', async () => {
   s.z.posts.set('pub1', { _id: 'pub1', status: 'published', platforms: [], metadata: { kaynak: 'marketing' } });
   const st = await s.gh({ action: 'status' });
   assert.deepEqual(st.body.posts[0].stats, { views: 120, likes: 9, comments: 0, shares: 0, saves: 0 });
+});
+
+test('geri bildirim yorumu: düzeltme notu alıntılanır, sonraki sürüm söylenir, makine satırı var', () => {
+  const post = { _id: 'p9', title: 'T', metadata: { kaynak: 'marketing', paket: 'deneme-1', surum: 1, usageCounted: true } };
+  const t = feedbackComment('duzeltme', post, { note: 'Açıklamadan YZ satırını çıkar\nkısa olsun' });
+  assert.ok(t.startsWith('✏️ **Düzeltme istendi** · `deneme-1` sürüm 1'));
+  assert.ok(t.includes('> Açıklamadan YZ satırını çıkar\n> kısa olsun'));
+  assert.ok(t.includes('`"surum": 2`'));
+  assert.ok(t.endsWith('<!-- paylasim:{"olay":"duzeltme","id":"p9","paket":"deneme-1","surum":1} -->'));
+  assert.ok(feedbackComment('onay', post, { scheduledFor: '2026-10-29T20:30:00+03:00', platforms: ['instagram', 'tiktok'] })
+    .includes('Yayın: 2026-10-29T20:30:00+03:00 · instagram, tiktok'));
+  assert.ok(feedbackComment('silindi', post, { note: 'vazgeçildi' }).includes('> vazgeçildi'));
+});
+
+test('panel olayı Marketing\'e bildirilir; bildirim hatası işlemi bozmaz; anahtar yoksa bildirim kapalı', async () => {
+  const s = await setup();
+  const paket = { ...good(), platformlar: ['instagram', 'tiktok'], metin: { instagram: 'IG', tiktok: 'TT' } };
+  // anahtar yok → notify null
+  const r0 = await s.gh({ action: 'submit', paket });
+  const n0 = await s.admin({ action: 'request_changes', id: r0.body.id, reason: 'Kaynak ekle' });
+  assert.equal(n0.status, 200);
+  assert.equal(n0.body.notify, null);
+  // anahtar var → yorum
+  s.deps.notify = async (kind, text) => { s.told.push({ kind, text }); };
+  const r1 = await s.gh({ action: 'submit', paket: { ...paket, surum: 2 } });
+  const n1 = await s.admin({ action: 'request_changes', id: r1.body.id, reason: 'İlk cümle uzun' });
+  assert.deepEqual(n1.body.notify, { ok: true });
+  assert.equal(s.told[0].kind, 'duzeltme');
+  assert.ok(s.told[0].text.includes('> İlk cümle uzun'));
+  assert.ok(s.told[0].text.includes('`"surum": 3`'));
+  // onay da bildirilir
+  const r2 = await s.gh({ action: 'submit', paket: { ...paket, surum: 3 } });
+  const ap = await s.admin({ action: 'approve', id: r2.body.id, reason: 'Uygun', scheduledFor: '2026-10-30T20:00:00+03:00',
+    platforms: ['instagram'], captions: { instagram: 'IG' }, yapay_zeka: true });
+  assert.deepEqual(ap.body.notify, { ok: true });
+  assert.equal(s.told[1].kind, 'onay');
+  // GitHub hatası: işlem yine başarılı, panel nedenini görür
+  s.deps.notify = async () => { throw new Error('GitHub 401 (anahtar ya da yetki)'); };
+  s.z.posts.set('dr9', { _id: 'dr9', status: 'draft', platforms: [], metadata: { kaynak: 'marketing', paket: 'x' } });
+  const del = await s.admin({ action: 'delete', id: 'dr9', reason: 'vazgeçildi' });
+  assert.equal(del.status, 200);
+  assert.deepEqual(del.body.notify, { ok: false, error: 'GitHub 401 (anahtar ya da yetki)' });
+  // Zernio'da elle açılmış gönderi Marketing'e bildirilmez
+  s.z.posts.set('dr10', { _id: 'dr10', status: 'draft', platforms: [], metadata: {} });
+  assert.equal((await s.admin({ action: 'delete', id: 'dr10', reason: 'vazgeçildi' })).body.notify, null);
+});
+
+test('GitHub bildirimi: açık geri bildirim PR\'ını bulur, yorum yazar, iş akışını çalıştırır; PR yoksa söyler', async () => {
+  const real = globalThis.fetch;
+  const calls: string[] = [];
+  let prs: unknown[] = [{ number: 7 }];
+  globalThis.fetch = (async (url: string, init?: RequestInit) => {
+    calls.push(`${init?.method ?? 'GET'} ${url} ${(init?.headers as Record<string, string>)?.Authorization ?? ''} ${init?.body ?? ''}`);
+    if (url.includes('/pulls?')) return new Response(JSON.stringify(prs), { status: 200 });
+    if (url.endsWith('/comments')) return new Response('{}', { status: 201 });
+    return new Response(null, { status: 204 });
+  }) as typeof fetch;
+  try {
+    await notifyGithub('tok', 'amy60946/marketing')('duzeltme', 'not');
+    assert.equal(calls[0], 'GET https://api.github.com/repos/amy60946/marketing/pulls?state=open&head=amy60946:paylasim-geri-bildirim Bearer tok ');
+    assert.equal(calls[1], 'POST https://api.github.com/repos/amy60946/marketing/issues/7/comments Bearer tok {"body":"not"}');
+    assert.equal(calls[2], 'POST https://api.github.com/repos/amy60946/marketing/actions/workflows/paylasim.yml/dispatches Bearer tok {"ref":"main"}');
+    prs = [];
+    await assert.rejects(notifyGithub('tok', 'amy60946/marketing')('duzeltme', 'not'), /açık geri bildirim PR'ı yok/);
+  } finally {
+    globalThis.fetch = real;
+  }
 });

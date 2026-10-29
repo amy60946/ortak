@@ -16,7 +16,7 @@
 1. Marketing: `paylasim/hazir/<id>/` klasörüne `paket.json` + `video.mp4` (+ isteğe bağlı `kapak.jpg`) koyar ve ana dala alır.
 2. İş akışı: `upload` → dosya servise yüklenir → `submit` → servis üzerinde **taslak** (`isDraft`). Kurala uymayan paket hata listesiyle geri döner, taslak açılmaz.
 3. Panel › Paylaşım › **Onay bekliyor**: owner videoyu izler; uyarılar (sağlık iddiası, çocuğa çağrı, kaynaksız araştırma) üstte. Onaylayınca taslak **planlı** olur (TikTok'un "içeriği önizledim" ve "yayın için açık rıza" alanları yalnız bu anda işaretlenir).
-4. **Düzeltme iste**: not taslağa yazılır; Marketing `durum` ile okur, aynı `id` ile `surum`u artırıp yeniden gönderir; eski taslak kendiliğinden silinir.
+4. **Düzeltme iste**: not taslağa yazılır ve **hemen** Marketing'e gider (aşağıda "Geri bildirim"); Marketing aynı `id` ile `surum`u artırıp yeniden gönderir, kullanıcıya "panelde yeni sürüm hazır" der; eski taslak kendiliğinden silinir. Onay ya da yeniden düzeltme yine panelde (döngü).
 5. Yayından sonra sonuç sayıları (izlenme, beğeni, yorum, paylaşım, kaydetme) panelde ve `durum` çıktısında görünür. Servis planı analizi kapsamıyorsa boş kalır.
 
 ## Paket (`paket.json`)
@@ -76,6 +76,17 @@ jobs:
           git add paylasim/durum.json; git commit -m "paylaşım durumu" || true; git push || true
 ```
 
+## Geri bildirim (panel → Marketing, 29 Ekim 2026)
+
+Kullanıcı isteği: "Düzeltme istediğimde talebim Marketing'e doğrudan aksın; Marketing düzeltsin, bana tekrar göndersin."
+
+- Panelde **Düzeltme iste**, **Onayla** ya da **Sil** (yalnız Marketing'in gönderdiği gönderiler) başarılı olunca `social` işlevi `amy60946/marketing` deposundaki **açık geri bildirim PR'ına** (dal `paylasim-geri-bildirim`, taslak PR, hiç birleştirilmez) bir yorum yazar ve paylaşım iş akışını çalıştırır (`durum.json` tazelenir).
+- Marketing oturumu bu PR'a abonedir (`subscribe_pr_activity`); yorum gelince uyanır. Yorum: başlık (✏️ Düzeltme istendi / ✅ Onaylandı / 🗑️ Silindi), paket ve sürüm, alıntılanmış not, sonraki sürüm numarası; sonda makine satırı `<!-- paylasim:{"olay","id","paket","surum"} -->`.
+- Düzeltmede Marketing: notu uygular, `surum`+1 paketi kullanıcının onayıyla ana dala alır, kullanıcıya "panelde yeni sürüm hazır" der. Yayın kararı yalnız panelde.
+- Bildirim gidemezse panel işlemi yine geçerlidir; panel "Marketing'e bildirilemedi: <neden>" gösterir, günlük iş akışı yedektir.
+- Anahtar: `MARKETING_GITHUB_TOKEN` (Supabase → Edge Functions → Secrets). GitHub **ince yetkili** anahtar (fine-grained): yalnız `amy60946/marketing`; izinler **Pull requests: Read and write**, **Actions: Read and write** (Metadata: Read kendiliğinden). Süre en çok 1 yıl; bitmeden yenilenir. Anahtar yoksa panel "otomatik bildirim kapalı" der.
+- Yorumlar anahtarın sahibinin (kullanıcının) adıyla görünür; sondaki _Yönetim paneli (otomatik)_ satırı ayırır.
+
 ## `social` işlevi
 
 `POST https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/social` — "Verify JWT" **kapalı**. Secret: `ZERNIO_API_KEY` (Supabase → Edge Functions → Secrets). Kod ve testleri: `supabase/functions/social/index.ts`, `index.test.ts`.
@@ -86,9 +97,11 @@ jobs:
 | Marketing | `submit` | `paket` | `id, warnings` · 400 `errors[]` · 409 sürüm zaten onaylı |
 | Marketing | `status` | — | `posts[]` (özet + `changesNote` + `stats`) |
 | Panel (her admin) | `overview` | — | `role, accounts[], posts[]` |
-| Panel (owner) | `approve` | `id, reason, scheduledFor (≥ 2 dk sonra, ≤ 180 gün), platforms, captions, yapay_zeka` | `post` |
-| Panel (owner) | `request_changes` | `id, reason` (not Marketing'e gider) | `post` |
-| Panel (owner) | `delete` | `id, reason` (yayımlanmış olan silinmez) | `deleted` |
+| Panel (owner) | `approve` | `id, reason, scheduledFor (≥ 2 dk sonra, ≤ 180 gün), platforms, captions, yapay_zeka` | `post, notify` |
+| Panel (owner) | `request_changes` | `id, reason` (not Marketing'e gider) | `post, notify` |
+| Panel (owner) | `delete` | `id, reason` (yayımlanmış olan silinmez) | `deleted, notify` |
+
+`notify`: `null` (anahtar yok ya da Marketing'in gönderisi değil), `{ok: true}` ya da `{ok: false, error}`.
 
 Gönderi grupları (`group`): `onay` (taslak), `duzeltme` (düzeltme istenmiş taslak), `planli`, `yayinda`, `sorun` (başarısız / kısmen başarısız).
 
@@ -100,4 +113,5 @@ Yetki: `admin_social_check(action, ref, reason, after, dry)` (`migrations/202610
 2. ✔ zernio.com → ücretsiz plan → Accounts → Instagram ve TikTok'u bağla (platformun izin ekranı).
 3. ✔ Zernio → API Keys → yeni anahtar → **Supabase → Edge Functions → Secrets → `ZERNIO_API_KEY`** (anahtar sohbete ya da depoya yazılmaz).
 4. SQL: `migrations/20261028300000_admin_social.sql` ✔ uygulandı; işlev `social` ✔ yayında (Verify JWT kapalı) — 28 Ekim 2026.
-5. Marketing penceresi: iş akışını ve ilk paketi ekler; panel › Paylaşım'da onay.
+5. ✔ Marketing penceresi: iş akışı ve ilk paket (29 Ekim 2026, deneme-1 → düzeltme → sürüm 2).
+6. Geri bildirim: Marketing penceresi `paylasim-geri-bildirim` dalından taslak PR açar ve abone olur; kullanıcı ince yetkili GitHub anahtarını `MARKETING_GITHUB_TOKEN` olarak ekler; `social` işlevi yeniden yayımlanır.
