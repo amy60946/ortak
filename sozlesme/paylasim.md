@@ -29,7 +29,7 @@
 | `platformlar` | evet | `instagram`, `tiktok`, `youtube`, `facebook`, `threads`, `linkedin` (servise bağlı hesabı olanlar) |
 | `metin.<platform>` | seçilen her platform | Instagram/TikTok 2200, YouTube açıklaması 5000, Threads 500, LinkedIn 3000 karakter. Etiketler metnin içine yazılır |
 | `youtube_baslik` | YouTube varsa | en çok 100, `<` `>` olmaz |
-| `onerilen_zaman` | hayır | saat dilimli ISO, ör. `2026-11-03T20:30:00+03:00`; panelde değiştirilebilir |
+| `onerilen_zaman` | hayır | saat dilimli ISO, ör. `2026-11-03T20:30:00+03:00`; panelde değiştirilebilir. Servisteki taslağa saat olarak verilmez (saati geçen taslak servis listesinden düşüyor), metadata'da durur; gerçek saat onayda verilir |
 | `yapay_zeka` | evet (true/false) | Gerçekçi yapay zekâ görüntü/ses varsa `true` → Instagram "AI info", TikTok "AI-generated", YouTube "değiştirilmiş/sentetik içerik" etiketi |
 | `ticari` | evet (true/false) | Ürün/marka tanıtımı varsa `true` → TikTok "Your brand" beyanı |
 | `kaynaklar` | bilgi içeriğinde | en çok 10; araştırma/literatür künyesi (`hukuk/45` 1.4) |

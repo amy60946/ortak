@@ -52,7 +52,9 @@ test('taslak: isDraft, hesaplar, YZ etiketleri, TikTok onay alanları kapalı', 
   assert.throws(() => draftBody(p, { instagram: 'a1' }, 'r@s'), /bağlı hesap yok: tiktok, youtube/);
   const b = draftBody(p, { instagram: 'a1', tiktok: 'a2', youtube: 'a3' }, 'amy60946/marketing@abc1234', NOW);
   assert.equal(b.isDraft, true);
-  assert.equal(b.scheduledFor, '2026-11-01T20:30:00+03:00');
+  assert.equal('scheduledFor' in b, false, 'taslağa saat verilmez');
+  assert.equal(b.metadata.onerilen_zaman, '2026-11-01T20:30:00+03:00');
+  assert.equal(summarize({ _id: 'x', status: 'draft', ...b }).scheduledFor, '2026-11-01T20:30:00+03:00', 'panel öneriyi görür');
   assert.equal(b.timezone, 'Europe/Istanbul');
   const by = Object.fromEntries(b.platforms.map((x) => [x.platform, x]));
   assert.equal(by.instagram.accountId, 'a1');
