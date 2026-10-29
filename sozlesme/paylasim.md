@@ -104,7 +104,7 @@ Kullanıcı isteği: "Düzeltme istediğimde talebim Marketing'e doğrudan aksı
 |---|---|---|---|
 | Marketing | `upload` | `filename, contentType (video/mp4, video/quicktime, image/jpeg, image/png), size ≤ 1 GB` | `uploadUrl` (1 saat, PUT), `publicUrl` |
 | Marketing | `submit` | `paket` | `id, warnings` · 400 `errors[]` · 409 sürüm zaten onaylı |
-| Marketing | `status` | — | `posts[]` (özet + `tur` + `images` + `changesNote` + `stats`), `usage` (plan, bu dönem kullanılan / hak, yenilenme günü; servis vermezse `null`) |
+| Marketing | `status` | — | `posts[]` (özet + `tur` + `images` + `changesNote` + `stats`), `usage` (plan, bu dönem kullanılan / hak, yenilenme günü; kullandıkça öde planında bağlı hesap sayısı ve bu dönem harcama; servis vermezse `null`). 29 Ekim 2026: hesap **Usage-Based** (kullandıkça öde) planında → gönderi sınırı yok, ücret bağlı hesap başına |
 | Panel (her admin) | `overview` | — | `role, accounts[], posts[], usage` |
 | Panel (owner) | `approve` | `id, reason, scheduledFor (≥ 2 dk sonra, ≤ 180 gün), platforms, captions, yapay_zeka` | `post, notify` |
 | Panel (owner) | `request_changes` | `id, reason` (not Marketing'e gider) | `post, notify` |

@@ -474,7 +474,10 @@ test('hikâye: tek medya, metinsiz, yalnız Instagram/Facebook; onayda metin ist
 
 test('gönderi hakkı özeti', () => {
   assert.deepEqual(usageOf({ planName: 'Free', billingAnchorDay: 28, hasAccess: true, limits: { uploads: 20 }, usage: { uploads: 4, lastReset: '2026-10-28T00:00:00Z' } }),
-    { plan: 'Free', used: 4, limit: 20, resetDay: 28, lastReset: '2026-10-28T00:00:00Z', access: true });
+    { plan: 'Free', used: 4, limit: 20, resetDay: 28, lastReset: '2026-10-28T00:00:00Z', access: true, accounts: null, spendCents: null, creditCents: null });
+  assert.deepEqual(usageOf({ planName: 'Usage-Based', billingSystem: 'metronome', hasAccess: true, limits: { uploads: -1, profiles: -1 },
+    usage: { connectedAccounts: 2 }, spend: { currentPeriodCents: 0, creditsRemainingCents: 500 } }),
+    { plan: 'Usage-Based', used: null, limit: null, resetDay: null, lastReset: null, access: true, accounts: 2, spendCents: 0, creditCents: 500 });
   assert.equal(usageOf({ planName: 'Usage', limits: { uploads: -1 }, usage: {} })!.limit, null);   // sınırsız
   assert.equal(usageOf(null), null);
 });

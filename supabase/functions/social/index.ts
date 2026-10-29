@@ -483,6 +483,10 @@ export function usageOf(u: Any) {
     resetDay: u.billingAnchorDay ?? null,
     lastReset: u.usage?.lastReset ?? null,
     access: u.hasAccess !== false,
+    // Kullandıkça öde planı (29 Ekim 2026: hesabımız bu planda): gönderi sınırı yok, ücret bağlı hesap başına
+    accounts: typeof u.usage?.connectedAccounts === 'number' ? u.usage.connectedAccounts : null,
+    spendCents: typeof u.spend?.currentPeriodCents === 'number' ? u.spend.currentPeriodCents : null,
+    creditCents: typeof u.spend?.creditsRemainingCents === 'number' ? u.spend.creditsRemainingCents : null,
   };
 }
 async function usage(d: Deps) {
