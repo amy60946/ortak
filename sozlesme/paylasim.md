@@ -13,7 +13,7 @@
 
 ## Akış
 
-1. Marketing: `paylasim/hazir/<id>/` klasörüne `paket.json` + `video.mp4` (+ isteğe bağlı `kapak.jpg`) koyar ve ana dala alır.
+1. Marketing: `paylasim/hazir/<id>/` klasörüne `paket.json` + medyayı koyar ve ana dala alır. Video: `video.mp4` (+ isteğe bağlı `kapak.jpg`); kaydırmalı: `01.jpg`, `02.jpg` … (sırayla); hikâye: `video.mp4` ya da tek `01.jpg`.
 2. İş akışı: `upload` → dosya servise yüklenir → `submit` → servis üzerinde **taslak** (`isDraft`). Kurala uymayan paket hata listesiyle geri döner, taslak açılmaz.
 3. Panel › Paylaşım › **Onay bekliyor**: owner videoyu izler; uyarılar (sağlık iddiası, çocuğa çağrı, kaynaksız araştırma) üstte. Onaylayınca taslak **planlı** olur (TikTok'un "içeriği önizledim" ve "yayın için açık rıza" alanları yalnız bu anda işaretlenir).
 4. **Düzeltme iste**: not taslağa yazılır ve **hemen** Marketing'e gider (aşağıda "Geri bildirim"); Marketing aynı `id` ile `surum`u artırıp yeniden gönderir, kullanıcıya "panelde yeni sürüm hazır" der; eski taslak kendiliğinden silinir. Onay ya da yeniden düzeltme yine panelde (döngü).
@@ -26,8 +26,9 @@
 | `id` | evet | küçük harf, rakam, tire; 3–80 (ör. `2026-11-03-uyku-rutini`) |
 | `surum` | hayır | 1–99, varsayılan 1. Düzeltmede artırılır |
 | `baslik` | evet | 3–120; panelde ve servis kaydında görünen iç başlık |
+| `tur` | hayır | `video` (varsayılan) · `kaydirmali` · `hikaye` (29 Ekim 2026). Aşağıdaki "Türler" tablosu |
 | `platformlar` | evet | `instagram`, `tiktok`, `youtube`, `facebook`, `threads`, `linkedin` (servise bağlı hesabı olanlar) |
-| `metin.<platform>` | seçilen her platform | Instagram/TikTok 2200, YouTube açıklaması 5000, Threads 500, LinkedIn 3000 karakter. Etiketler metnin içine yazılır |
+| `metin.<platform>` | seçilen her platform (hikâyede yok) | Instagram/TikTok 2200, YouTube açıklaması 5000, Threads 500, LinkedIn 3000 karakter. Etiketler metnin içine yazılır |
 | `youtube_baslik` | YouTube varsa | en çok 100, `<` `>` olmaz |
 | `onerilen_zaman` | hayır | saat dilimli ISO, ör. `2026-11-03T20:30:00+03:00`; panelde değiştirilebilir. Servisteki taslağa saat olarak verilmez (saati geçen taslak servis listesinden düşüyor), metadata'da durur; gerçek saat onayda verilir |
 | `yapay_zeka` | evet (true/false) | **Kullanıcı kararı 29 Ekim 2026: `false` gönderilir** (etiket açılmaz, `hukuk/45` 8.4). `true` olursa Instagram "AI info", TikTok "AI-generated", YouTube "değiştirilmiş/sentetik içerik" etiketi açılır. Panelde anahtar yok; değer paketten |
@@ -35,7 +36,15 @@
 | `kaynaklar` | bilgi içeriğinde | en çok 10; araştırma/literatür künyesi (`hukuk/45` 1.4) |
 | `kontrol` | evet, dördü de `true` | `saglik_iddiasi_yok`, `cocuga_cagri_yok`, `gercek_cocuk_verisi_yok`, `muzik_telifsiz` |
 | `not` | hayır | onaylayana not (en çok 1000) |
-| `video`, `kapak` | — | gönderici doldurur (yükleme sonrası adres) |
+| `video`, `gorseller`, `kapak` | — | gönderici doldurur (yükleme sonrası adresler; `gorseller` sırayla) |
+
+### Türler
+
+| `tur` | Medya | Platformlar | Metin | Not |
+|---|---|---|---|---|
+| `video` | tek dikey video (9:16), isteğe bağlı kapak | hepsi (YouTube yalnız burada) | evet | Instagram Reels, TikTok video, YouTube Shorts |
+| `kaydirmali` | 2–20 görsel, JPG önerilir (1080×1350 ya da 1080×1920); Facebook seçiliyse en çok 10 | `instagram`, `tiktok`, `facebook` | evet | TikTok'ta fotoğraf gönderisi: başlık ilk satırdan 90 karakter, tam metin açıklamada; düet/birleştirme yok |
+| `hikaye` | tek görsel ya da en çok 60 sn video | `instagram`, `facebook` | **yok** (platformlar hikâyede yazı almaz) | 24 saat görünür; yazı/etiket görselin içine işlenir |
 
 Sabit platform ayarları (sunucuda): TikTok herkese açık, yorum açık, düet/birleştirme kapalı; YouTube herkese açık, **çocuklara yönelik değil** (`madeForKids: false` — içerik ebeveyne), kategori Eğitim; Instagram Reels akışta da görünür.
 
@@ -95,8 +104,8 @@ Kullanıcı isteği: "Düzeltme istediğimde talebim Marketing'e doğrudan aksı
 |---|---|---|---|
 | Marketing | `upload` | `filename, contentType (video/mp4, video/quicktime, image/jpeg, image/png), size ≤ 1 GB` | `uploadUrl` (1 saat, PUT), `publicUrl` |
 | Marketing | `submit` | `paket` | `id, warnings` · 400 `errors[]` · 409 sürüm zaten onaylı |
-| Marketing | `status` | — | `posts[]` (özet + `changesNote` + `stats`) |
-| Panel (her admin) | `overview` | — | `role, accounts[], posts[]` |
+| Marketing | `status` | — | `posts[]` (özet + `tur` + `images` + `changesNote` + `stats`), `usage` (plan, bu dönem kullanılan / hak, yenilenme günü; servis vermezse `null`) |
+| Panel (her admin) | `overview` | — | `role, accounts[], posts[], usage` |
 | Panel (owner) | `approve` | `id, reason, scheduledFor (≥ 2 dk sonra, ≤ 180 gün), platforms, captions, yapay_zeka` | `post, notify` |
 | Panel (owner) | `request_changes` | `id, reason` (not Marketing'e gider) | `post, notify` |
 | Panel (owner) | `delete` | `id, reason` (yayımlanmış olan silinmez) | `deleted, notify` |

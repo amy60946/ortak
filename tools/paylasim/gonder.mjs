@@ -1,10 +1,12 @@
 // Marketing deposunun GitHub Actions iş akışında çalışır (sözleşme: ortak/sozlesme/paylasim.md). Bağımlılık yok (Node 20+).
-//   node gonder.mjs gonder <klasör>...    her klasör: paket.json + video.mp4 (ya da video.mov) [+ kapak.jpg / kapak.png]
+//   node gonder.mjs gonder <klasör>...    her klasör: paket.json + medya. Video: video.mp4 / video.mov [+ kapak.jpg].
+//                                          Kaydırmalı ("tur": "kaydirmali"): 01.jpg, 02.jpg … (2–20, sırayla). Hikâye ("tur": "hikaye"):
+//                                          video.mp4 ya da tek 01.jpg.
 //   node gonder.mjs durum <çıktı.json>    onay durumu, düzeltme notları ve sonuç sayıları
 // Gizli anahtar YOK: iş akışında "permissions: id-token: write" olmalı; GitHub kısa ömürlü bir kimlik belgesi verir,
 // sunucu (social işlevi) bunun amy60946/marketing ana dalından geldiğini doğrular. Gönderiler yalnız TASLAK olur;
 // yayın, panelde owner onayıyla.
-import { readFile, stat, writeFile } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
@@ -53,13 +55,21 @@ async function gonder(dirs) {
   for (const dir of dirs) {
     try {
       const paket = JSON.parse(await readFile(join(dir, 'paket.json'), 'utf8'));
+      const tur = paket.tur ?? 'video';
       const video = first(dir, ['video.mp4', 'video.mov']);
-      if (!video) throw new Error('video.mp4 ya da video.mov yok');
-      paket.video = await upload(video);
-      const kapak = first(dir, ['kapak.jpg', 'kapak.jpeg', 'kapak.png']);
+      const images = (await readdir(dir)).filter((f) => /^\d{2}\.(jpe?g|png)$/i.test(f)).sort().map((f) => join(dir, f));
+      if (tur === 'video' && !video) throw new Error('video.mp4 ya da video.mov yok');
+      if (tur === 'kaydirmali' && images.length < 2) throw new Error('kaydırmalı için en az 2 görsel (01.jpg, 02.jpg …)');
+      if (tur === 'hikaye' && !video && !images.length) throw new Error('hikâye için video.mp4 ya da 01.jpg');
+      if (video && tur !== 'kaydirmali') paket.video = await upload(video);
+      if (tur === 'kaydirmali' || (tur === 'hikaye' && !video)) {
+        paket.gorseller = [];
+        for (const f of tur === 'hikaye' ? images.slice(0, 1) : images) paket.gorseller.push(await upload(f));
+      }
+      const kapak = tur === 'video' ? first(dir, ['kapak.jpg', 'kapak.jpeg', 'kapak.png']) : null;
       if (kapak) paket.kapak = await upload(kapak);
       const r = await call({ action: 'submit', paket });
-      results.push({ klasor: dir, paket: paket.id, surum: paket.surum ?? 1, id: r.id, uyarilar: r.warnings ?? [], zaten_vardi: !!r.existing });
+      results.push({ klasor: dir, paket: paket.id, surum: paket.surum ?? 1, tur, id: r.id, uyarilar: r.warnings ?? [], zaten_vardi: !!r.existing });
       console.log(`✓ ${paket.id}: onay kuyruğunda (${r.id})${r.warnings?.length ? ' · uyarı: ' + r.warnings.join('; ') : ''}`);
     } catch (e) {
       results.push({ klasor: dir, hata: e.message, ayrinti: e.errors ?? [] });
@@ -76,9 +86,10 @@ if (cmd === 'gonder' && args.length) {
   await writeFile('paylasim-sonuc.json', JSON.stringify(res, null, 2) + '\n');
   if (res.some((r) => r.hata)) process.exit(1);
 } else if (cmd === 'durum' && args.length === 1) {
-  const { posts } = await call({ action: 'status' });
-  await writeFile(args[0], JSON.stringify({ guncellendi: new Date().toISOString(), gonderiler: posts }, null, 2) + '\n');
-  console.log(`${posts.length} gönderi → ${args[0]}`);
+  const { posts, usage } = await call({ action: 'status' });
+  await writeFile(args[0], JSON.stringify({ guncellendi: new Date().toISOString(), hak: usage ?? null, gonderiler: posts }, null, 2) + '\n');
+  const hak = usage?.limit != null ? ` · bu dönem ${usage.used ?? '?'} / ${usage.limit} gönderi hakkı` : '';
+  console.log(`${posts.length} gönderi → ${args[0]}${hak}`);
 } else {
   console.error('Kullanım: node gonder.mjs gonder <klasör>... | node gonder.mjs durum <çıktı.json>');
   process.exit(2);

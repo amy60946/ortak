@@ -11,7 +11,7 @@
 //   Marketing (GitHub Actions kimliği, yalnız amy60946/marketing ana dalı):
 //     { action: 'upload', filename, contentType, size }  →  { uploadUrl, publicUrl }   dosyayı uploadUrl'e PUT et
 //     { action: 'submit', paket }                        →  { id, warnings }           servis üzerinde TASLAK açar
-//     { action: 'status' }                               →  { posts }                  durum, düzeltme notu, sonuç sayıları
+//     { action: 'status' }                               →  { posts, usage }           durum, düzeltme notu, sonuç sayıları, gönderi hakkı
 //   Panel (yöneticinin Supabase oturumu; rol ve iki adımlı doğrulama SQL'de: admin_social_check):
 //     { action: 'overview' }                                              her admin
 //     { action: 'approve', id, reason, scheduledFor, platforms, captions, yapay_zeka }   owner → taslak planlanır
@@ -27,6 +27,14 @@
 export const PLATFORMS = ['instagram', 'tiktok', 'youtube', 'facebook', 'threads', 'linkedin'] as const;
 export type Platform = (typeof PLATFORMS)[number];
 export const TZ = 'Europe/Istanbul';
+// Gönderi türü (29 Ekim 2026): video (Reels / TikTok / Shorts), kaydırmalı (2–20 görsel), hikâye (tek görsel ya da video, metinsiz)
+export const TURLER = ['video', 'kaydirmali', 'hikaye'] as const;
+export type Tur = (typeof TURLER)[number];
+export const TUR_PLATFORMS: Record<Tur, Platform[]> = {
+  video: [...PLATFORMS],
+  kaydirmali: ['instagram', 'tiktok', 'facebook'],
+  hikaye: ['instagram', 'facebook'],
+};
 
 // Platform metin sınırları (karakter); YouTube'da metin = açıklama
 const MAX_TEXT: Record<Platform, number> = {
@@ -44,7 +52,9 @@ export type Paket = {
   id: string;
   surum: number;
   baslik: string;
-  video: string;
+  tur: Tur;
+  video?: string;
+  gorseller: string[];
   kapak?: string;
   platformlar: Platform[];
   metin: Partial<Record<Platform, string>>;
@@ -71,18 +81,36 @@ export function parsePaket(raw: Any): { paket?: Paket; errors: string[] } {
   if (!Number.isInteger(surum) || surum < 1 || surum > 99) e.push('surum: 1–99 tam sayı');
   const baslik = str(raw.baslik);
   if (baslik.length < 3 || baslik.length > 120) e.push('baslik: 3–120 karakter');
-  const video = str(raw.video);
-  if (!https(video)) e.push('video: https bağlantısı (önce "upload" ile yükle)');
-  const kapak = str(raw.kapak) || undefined;
-  if (kapak && !https(kapak)) e.push('kapak: https bağlantısı');
-
+  const tur = (raw.tur === undefined ? 'video' : str(raw.tur)) as Tur;
+  if (!TURLER.includes(tur)) e.push(`tur: ${TURLER.join(', ')}`);
+  const video = str(raw.video) || undefined;
+  const gorseller: string[] = Array.isArray(raw.gorseller) ? raw.gorseller.map(str).filter(Boolean) : [];
+  if (video && !https(video)) e.push('video: https bağlantısı (önce "upload" ile yükle)');
+  if (gorseller.some((g) => !https(g))) e.push('gorseller: her biri https bağlantısı (önce "upload" ile yükle)');
   const list: unknown[] = Array.isArray(raw.platformlar) ? raw.platformlar : [];
   const platformlar = [...new Set(list.map(str))] as Platform[];
-  if (!platformlar.length) e.push('platformlar: en az bir platform');
-  for (const p of platformlar) if (!PLATFORMS.includes(p)) e.push(`platformlar: "${p}" desteklenmiyor (${PLATFORMS.join(', ')})`);
+  if (tur === 'video') {
+    if (!video) e.push('video: video türünde gerekli');
+    if (gorseller.length) e.push('gorseller: video türünde olmaz');
+  } else if (tur === 'kaydirmali') {
+    const max = platformlar.includes('facebook') ? 10 : 20;
+    if (video) e.push('video: kaydırmalıda olmaz (yalnız görsel)');
+    if (gorseller.length < 2 || gorseller.length > max) e.push(`gorseller: kaydırmalıda 2–${max} görsel (${gorseller.length})`);
+  } else if (tur === 'hikaye') {
+    if ((video ? 1 : 0) + gorseller.length !== 1) e.push('hikâye: tek video ya da tek görsel');
+  }
+  const kapak = tur === 'video' ? str(raw.kapak) || undefined : undefined;
+  if (kapak && !https(kapak)) e.push('kapak: https bağlantısı');
 
-  const metin: Partial<Record<Platform, string>> = {};
+  if (!platformlar.length) e.push('platformlar: en az bir platform');
   for (const p of platformlar) {
+    if (!PLATFORMS.includes(p)) e.push(`platformlar: "${p}" desteklenmiyor (${PLATFORMS.join(', ')})`);
+    else if (TURLER.includes(tur) && !TUR_PLATFORMS[tur].includes(p)) e.push(`platformlar: "${p}" ${tur} türünde yok (${TUR_PLATFORMS[tur].join(', ')})`);
+  }
+
+  // Hikâyede metin olmaz (platformlar yazı almaz)
+  const metin: Partial<Record<Platform, string>> = {};
+  for (const p of tur === 'hikaye' ? [] : platformlar) {
     if (!PLATFORMS.includes(p)) continue;
     const t = str(raw.metin?.[p]);
     if (!t) e.push(`metin.${p}: boş olamaz`);
@@ -109,7 +137,7 @@ export function parsePaket(raw: Any): { paket?: Paket; errors: string[] } {
   if (e.length) return { errors: e };
   return {
     errors: [],
-    paket: { id, surum, baslik, video, kapak, platformlar, metin, youtube_baslik, onerilen_zaman,
+    paket: { id, surum, baslik, tur, video, gorseller, kapak, platformlar, metin, youtube_baslik, onerilen_zaman,
              yapay_zeka: raw.yapay_zeka, ticari: raw.ticari, kaynaklar: kaynaklar.slice(0, 10), kontrol, not },
   };
 }
@@ -136,44 +164,69 @@ export function warnings(p: Paket): string[] {
 
 // --- Zernio gövdeleri ------------------------------------------------------------------------
 export type Accounts = Partial<Record<Platform, string>>;
-export type Settings = { yapay_zeka: boolean; ticari: boolean; youtube_baslik?: string; kapak?: string };
+export type Settings = { yapay_zeka: boolean; ticari: boolean; youtube_baslik?: string; kapak?: string; tur: Tur };
 
-// approved: owner videoyu panelde izleyip onayladı (TikTok "önizledim" + "açık rıza" alanları yalnız o zaman true)
+// approved: owner panelde önizleyip onayladı (TikTok "önizledim" + "açık rıza" alanları yalnız o zaman true)
 export function platformData(p: Platform, s: Settings, approved: boolean): Record<string, unknown> {
   switch (p) {
     case 'instagram':
+      if (s.tur === 'hikaye') return { contentType: 'story', isAiGenerated: s.yapay_zeka };
+      if (s.tur === 'kaydirmali') return { isAiGenerated: s.yapay_zeka };
       return { isAiGenerated: s.yapay_zeka, shareToFeed: true, ...(s.kapak ? { instagramThumbnail: s.kapak } : {}) };
-    case 'tiktok':
-      return {
-        privacyLevel: 'PUBLIC_TO_EVERYONE', allowComment: true, allowDuet: false, allowStitch: false,
-        commercialContentType: s.ticari ? 'brand_organic' : 'none', videoMadeWithAi: s.yapay_zeka,
-        contentPreviewConfirmed: approved, expressConsentGiven: approved,
-      };
+    case 'tiktok': {
+      const common = { privacyLevel: 'PUBLIC_TO_EVERYONE', allowComment: true, commercialContentType: s.ticari ? 'brand_organic' : 'none',
+                       contentPreviewConfirmed: approved, expressConsentGiven: approved };
+      // Fotoğraf kaydırmalısı: düet/birleştirme yok; işletme fotoğraf yolunda YZ beyan alanı yok (servis true'yu reddeder)
+      if (s.tur === 'kaydirmali') return { ...common, mediaType: 'photo', photoCoverIndex: 0 };
+      return { ...common, allowDuet: false, allowStitch: false, videoMadeWithAi: s.yapay_zeka };
+    }
     case 'youtube':
       // Ebeveyne yönelik içerik: çocuklara yönelik değil (COPPA); kategori 27 = Eğitim
       return { title: s.youtube_baslik, visibility: 'public', madeForKids: false, containsSyntheticMedia: s.yapay_zeka, categoryId: '27' };
+    case 'facebook':
+      return s.tur === 'hikaye' ? { contentType: 'story' } : {};
     default:
       return {};
   }
 }
 
+// TikTok fotoğraf gönderisinde başlık 90 karakterde kesilir; tam metin açıklamaya (description, en çok 4000)
+export function tiktokPhotoTitle(caption: string): string {
+  const first = caption.split(/\r?\n/)[0].trim();
+  return first.length <= 90 ? first : first.slice(0, 89).trimEnd() + '…';
+}
+
+// Tek platform girdisi (taslak ve onayda aynı)
+export function entry(x: Platform, accountId: string, caption: string | undefined, s: Settings, approved: boolean) {
+  const data = platformData(x, s, approved);
+  if (s.tur === 'hikaye') return { platform: x, accountId, platformSpecificData: data };
+  if (x === 'tiktok' && s.tur === 'kaydirmali') {
+    return { platform: x, accountId, customContent: tiktokPhotoTitle(caption ?? ''), platformSpecificData: { ...data, description: caption } };
+  }
+  return { platform: x, accountId, customContent: caption, platformSpecificData: data };
+}
+
+export function mediaOf(p: Pick<Paket, 'tur' | 'video' | 'gorseller' | 'kapak'>) {
+  if (p.tur === 'kaydirmali') return p.gorseller.map((url) => ({ type: 'image', url }));
+  if (p.tur === 'hikaye') return p.video ? [{ type: 'video', url: p.video }] : [{ type: 'image', url: p.gorseller[0] }];
+  return [{ type: 'video', url: p.video, ...(p.kapak ? { thumbnail: p.kapak } : {}) }];
+}
+
 export function draftBody(p: Paket, accounts: Accounts, source: string, now = new Date()) {
   const missing = p.platformlar.filter((x) => !accounts[x]);
   if (missing.length) throw new Error(`Paylaşım servisinde bağlı hesap yok: ${missing.join(', ')}`);
-  const s: Settings = { yapay_zeka: p.yapay_zeka, ticari: p.ticari, youtube_baslik: p.youtube_baslik, kapak: p.kapak };
+  const s: Settings = { yapay_zeka: p.yapay_zeka, ticari: p.ticari, youtube_baslik: p.youtube_baslik, kapak: p.kapak, tur: p.tur };
   return {
     title: p.baslik,
-    content: p.metin[p.platformlar[0]],
-    mediaItems: [{ type: 'video', url: p.video, ...(p.kapak ? { thumbnail: p.kapak } : {}) }],
-    platforms: p.platformlar.map((x) => ({
-      platform: x, accountId: accounts[x]!, customContent: p.metin[x], platformSpecificData: platformData(x, s, false),
-    })),
+    ...(p.tur === 'hikaye' ? {} : { content: p.metin[p.platformlar[0]] }),
+    mediaItems: mediaOf(p),
+    platforms: p.platformlar.map((x) => entry(x, accounts[x]!, p.metin[x], s, false)),
     isDraft: true,
     // Taslağa saat verilmez: servis saati geçmiş taslağı listeden düşürüyor (29 Ekim denemesi, sürüm 2). Öneri metadata'da;
     // gerçek saat onayda verilir.
     timezone: TZ,
     metadata: {
-      kaynak: 'marketing', paket: p.id, surum: p.surum, durum: 'onay_bekliyor', onerilen_zaman: p.onerilen_zaman ?? null,
+      kaynak: 'marketing', paket: p.id, surum: p.surum, tur: p.tur, durum: 'onay_bekliyor', onerilen_zaman: p.onerilen_zaman ?? null,
       yapay_zeka: p.yapay_zeka, ticari: p.ticari,
       youtube_baslik: p.youtube_baslik ?? null, kapak: p.kapak ?? null, kaynaklar: p.kaynaklar, not: p.not ?? null,
       uyarilar: warnings(p), gonderen: source, gonderim: now.toISOString(),
@@ -183,7 +236,7 @@ export function draftBody(p: Paket, accounts: Accounts, source: string, now = ne
 
 // Panelden onay: taslak → planlı. Metinler ve platform listesi panelde düzeltilebilir; saat gelecekte olmalı.
 export type Approval = { scheduledFor: string; platforms: Platform[]; captions: Partial<Record<Platform, string>>; yapay_zeka: boolean };
-export function parseApproval(raw: Any, now = new Date()): { approval?: Approval; errors: string[] } {
+export function parseApproval(raw: Any, now = new Date(), tur: Tur = 'video'): { approval?: Approval; errors: string[] } {
   const e: string[] = [];
   const scheduledFor = str(raw?.scheduledFor);
   if (!isIsoWithZone(scheduledFor)) e.push('Saat geçersiz');
@@ -193,7 +246,7 @@ export function parseApproval(raw: Any, now = new Date()): { approval?: Approval
   if (!platforms.length) e.push('En az bir platform seç');
   for (const p of platforms) if (!PLATFORMS.includes(p)) e.push(`Bilinmeyen platform: ${p}`);
   const captions: Partial<Record<Platform, string>> = {};
-  for (const p of platforms) {
+  for (const p of tur === 'hikaye' ? [] : platforms) {
     if (!PLATFORMS.includes(p)) continue;
     const t = str(raw?.captions?.[p]);
     if (!t) e.push(`${p} metni boş`);
@@ -212,8 +265,9 @@ export function ownMeta(post: Any): Record<string, Any> {
 
 export function approveBody(post: Any, a: Approval, now = new Date()) {
   const meta = ownMeta(post);
+  const tur: Tur = TURLER.includes(meta.tur) ? meta.tur : 'video';
   const s: Settings = { yapay_zeka: a.yapay_zeka, ticari: meta.ticari === true, youtube_baslik: meta.youtube_baslik ?? undefined,
-                        kapak: meta.kapak ?? undefined };
+                        kapak: meta.kapak ?? undefined, tur };
   const accounts: Accounts = {};
   for (const t of post?.platforms ?? []) {
     const id = typeof t.accountId === 'string' ? t.accountId : t.accountId?._id;
@@ -226,9 +280,7 @@ export function approveBody(post: Any, a: Approval, now = new Date()) {
     isDraft: false,
     scheduledFor: a.scheduledFor,
     timezone: TZ,
-    platforms: a.platforms.map((x) => ({
-      platform: x, accountId: accounts[x]!, customContent: a.captions[x], platformSpecificData: platformData(x, s, true),
-    })),
+    platforms: a.platforms.map((x) => entry(x, accounts[x]!, a.captions[x], s, true)),
     metadata: { ...meta, durum: 'onaylandi', yapay_zeka: a.yapay_zeka, onay: now.toISOString() },
   };
 }
@@ -250,14 +302,19 @@ export function groupOf(post: Any): Group {
 
 export function summarize(post: Any) {
   const meta = (post?.metadata ?? {}) as Record<string, Any>;
-  const media = (post?.mediaItems ?? [])[0] ?? {};
+  const items = (post?.mediaItems ?? []) as Any[];
+  // Türü yazmayan eski kayıt: uzantı görsel değilse video sayılır
+  const isVideo = (m: Any) => m?.type ? m.type === 'video' : !/\.(jpe?g|png|webp|gif)(\?|$)/i.test(String(m?.url ?? ''));
+  const video = items.find(isVideo);
   return {
     id: String(post?._id ?? ''),
     group: groupOf(post),
     status: post?.status ?? null,
     title: post?.title ?? meta.paket ?? '',
-    video: media.url ?? null,
-    cover: meta.kapak ?? media.thumbnail ?? null,
+    tur: (TURLER.includes(meta.tur) ? meta.tur : 'video') as Tur,
+    video: video?.url ?? null,
+    images: items.filter((m) => !isVideo(m) && m?.url).map((m) => String(m.url)),
+    cover: meta.kapak ?? video?.thumbnail ?? null,
     scheduledFor: post?.scheduledFor ?? meta.onerilen_zaman ?? null,
     createdAt: post?.createdAt ?? null,
     fromMarketing: meta.kaynak === 'marketing',
@@ -273,7 +330,7 @@ export function summarize(post: Any) {
     platforms: (post?.platforms ?? []).map((t: Any) => ({
       platform: t.platform,
       status: t.status ?? null,
-      caption: t.customContent ?? post?.content ?? '',
+      caption: t.platformSpecificData?.description ?? t.customContent ?? post?.content ?? '',
       url: t.platformPostUrl ?? null,
       error: t.errorMessage ?? null,
       publishedAt: t.publishedAt ?? null,
@@ -416,6 +473,26 @@ async function z(d: Deps, method: string, path: string, body?: unknown, headers?
 }
 const posts = async (d: Deps) => ((await z(d, 'GET', '/v1/posts?limit=50&sortBy=created-desc')).posts ?? []) as Any[];
 const accounts = async (d: Deps) => ((await z(d, 'GET', '/v1/accounts')).accounts ?? []) as Any[];
+// Plan ve bu dönemin gönderi hakkı (servis vermezse null; panel ve Marketing durumu gösterir)
+export function usageOf(u: Any) {
+  if (!u || typeof u !== 'object') return null;
+  return {
+    plan: u.planName ?? null,
+    used: typeof u.usage?.uploads === 'number' ? u.usage.uploads : null,
+    limit: typeof u.limits?.uploads === 'number' && u.limits.uploads >= 0 ? u.limits.uploads : null,
+    resetDay: u.billingAnchorDay ?? null,
+    lastReset: u.usage?.lastReset ?? null,
+    access: u.hasAccess !== false,
+  };
+}
+async function usage(d: Deps) {
+  try {
+    const r = await d.zernio('GET', '/v1/usage');
+    return r.status < 400 ? usageOf(r.data) : null;
+  } catch {
+    return null;
+  }
+}
 async function getPost(d: Deps, id: string) {
   const post = (await z(d, 'GET', `/v1/posts/${id}`)).post;
   if (!post) throw new Fail(404, 'Gönderi bulunamadı');
@@ -469,7 +546,7 @@ async function marketing(body: Any, d: Deps, source: string): Promise<Out> {
   }
   if (body.action === 'status') {
     const list = (await posts(d)).filter((p) => p?.metadata?.kaynak === 'marketing').map(summarize);
-    return ok({ posts: await withAnalytics(d, list) });
+    return ok({ posts: await withAnalytics(d, list), usage: await usage(d) });
   }
   throw new Fail(400, 'action');
 }
@@ -477,8 +554,8 @@ async function marketing(body: Any, d: Deps, source: string): Promise<Out> {
 async function panel(body: Any, d: Deps): Promise<Out> {
   if (body.action === 'overview') {
     const role = await d.checkAdmin('view');
-    const [acc, list] = await Promise.all([accounts(d), posts(d)]);
-    return ok({ role, accounts: accountRows(acc), posts: await withAnalytics(d, list.map(summarize)) });
+    const [acc, list, use] = await Promise.all([accounts(d), posts(d), usage(d)]);
+    return ok({ role, accounts: accountRows(acc), posts: await withAnalytics(d, list.map(summarize)), usage: use });
   }
   if (!['approve', 'request_changes', 'delete'].includes(body.action)) throw new Fail(400, 'action');
   const id = String(body.id ?? '');
@@ -489,7 +566,7 @@ async function panel(body: Any, d: Deps): Promise<Out> {
 
   if (body.action === 'approve') {
     if (post.status !== 'draft') throw new Fail(409, 'Yalnız onay bekleyen taslak onaylanır');
-    const { approval, errors } = parseApproval(body, d.now());
+    const { approval, errors } = parseApproval(body, d.now(), TURLER.includes(post.metadata?.tur) ? post.metadata.tur : 'video');
     if (!approval) throw new Fail(400, errors.join(' · '), { errors });
     let upd;
     try { upd = approveBody(post, approval, d.now()); } catch (e) { throw new Fail(400, (e as Error).message); }
