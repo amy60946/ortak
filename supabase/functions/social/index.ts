@@ -169,10 +169,12 @@ export function draftBody(p: Paket, accounts: Accounts, source: string, now = ne
       platform: x, accountId: accounts[x]!, customContent: p.metin[x], platformSpecificData: platformData(x, s, false),
     })),
     isDraft: true,
-    ...(p.onerilen_zaman ? { scheduledFor: p.onerilen_zaman } : {}),
+    // Taslağa saat verilmez: servis saati geçmiş taslağı listeden düşürüyor (29 Ekim denemesi, sürüm 2). Öneri metadata'da;
+    // gerçek saat onayda verilir.
     timezone: TZ,
     metadata: {
-      kaynak: 'marketing', paket: p.id, surum: p.surum, durum: 'onay_bekliyor', yapay_zeka: p.yapay_zeka, ticari: p.ticari,
+      kaynak: 'marketing', paket: p.id, surum: p.surum, durum: 'onay_bekliyor', onerilen_zaman: p.onerilen_zaman ?? null,
+      yapay_zeka: p.yapay_zeka, ticari: p.ticari,
       youtube_baslik: p.youtube_baslik ?? null, kapak: p.kapak ?? null, kaynaklar: p.kaynaklar, not: p.not ?? null,
       uyarilar: warnings(p), gonderen: source, gonderim: now.toISOString(),
     },
@@ -256,7 +258,7 @@ export function summarize(post: Any) {
     title: post?.title ?? meta.paket ?? '',
     video: media.url ?? null,
     cover: meta.kapak ?? media.thumbnail ?? null,
-    scheduledFor: post?.scheduledFor ?? null,
+    scheduledFor: post?.scheduledFor ?? meta.onerilen_zaman ?? null,
     createdAt: post?.createdAt ?? null,
     fromMarketing: meta.kaynak === 'marketing',
     paket: meta.paket ?? null,
