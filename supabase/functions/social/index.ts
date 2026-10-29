@@ -1,7 +1,8 @@
 // social: pazarlama paylaşımı köprüsü — Marketing iş akışı ↔ paylaşım servisi (Zernio) ↔ yönetim paneli "Paylaşım" ekranı.
 // Akış ve kurallar: sozlesme/paylasim.md, hukuk/45-pazarlama-kurallari.md §8.
 // Hesap şifresi hiçbir yerde yok: sosyal hesaplar Zernio'ya platformun kendi izin ekranıyla bağlanır; servisin anahtarı yalnız burada.
-// Secret (Supabase → Edge Functions → Secrets): ZERNIO_API_KEY. İsteğe bağlı: SOCIAL_REPO (varsayılan amy60946/marketing).
+// Secret (Supabase → Edge Functions → Secrets): ZERNIO_API_KEY. İsteğe bağlı: MARKETING_GITHUB_TOKEN (panel olayını Marketing'e
+// hemen iletir), SOCIAL_REPO (varsayılan amy60946/marketing).
 // "Verify JWT" KAPALI yayınlanır: Marketing GitHub'ın imzaladığı kimlikle gelir (verifyGithub); panel isteğinde yetkiyi
 // yöneticinin kendi oturumuyla SQL denetler (admin_social_check, migrations/…_admin_social.sql).
 // Testi index.test.ts (node --experimental-strip-types --test supabase/functions/social/*.test.ts); Deno.serve yalnız Deno'da çalışır.
@@ -303,6 +304,30 @@ export async function idempotencyKey(id: string, surum: number): Promise<string>
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-${((parseInt(h[16], 16) & 3) | 8).toString(16)}${h.slice(17, 20)}-${h.slice(20, 32)}`;
 }
 
+// --- Marketing'e geri bildirim --------------------------------------------------------------------
+// Panel olayı (düzeltme / onay / silme) marketing deposundaki açık "geri bildirim" PR'ına yorum olarak düşer; Marketing
+// oturumu o PR'a abone olduğu için hemen uyanır. Sonda makinenin okuyacağı satır var. Yorum yazılamasa da panel işlemi geçerlidir.
+export const FEEDBACK_BRANCH = 'paylasim-geri-bildirim';
+export type FeedbackKind = 'duzeltme' | 'onay' | 'silindi';
+export function feedbackComment(kind: FeedbackKind, post: Any, extra: { note?: string; scheduledFor?: string; platforms?: string[] } = {}): string {
+  const meta = ownMeta(post);
+  const surum = Number(meta.surum) || null;
+  const which = meta.paket ? `\`${meta.paket}\`${surum ? ` sürüm ${surum}` : ''}` : `"${post?.title ?? post?._id ?? ''}"`;
+  const head = { duzeltme: '✏️ **Düzeltme istendi**', onay: '✅ **Onaylandı**', silindi: '🗑️ **Silindi**' }[kind];
+  const lines = [`${head} · ${which}`, ''];
+  const quote = (t?: string) => '> ' + String(t ?? '').trim().replace(/\r?\n/g, '\n> ');
+  if (kind === 'duzeltme') {
+    lines.push(quote(extra.note), '', `Yapılacak: aynı \`id\` ile \`"surum": ${(surum ?? 1) + 1}\` gönder; onay yine panelde (ortak \`sozlesme/paylasim.md\`).`);
+  } else if (kind === 'onay') {
+    lines.push(`Yayın: ${extra.scheduledFor ?? '—'} · ${(extra.platforms ?? []).join(', ')}`);
+  } else {
+    lines.push(`Gerekçe:`, quote(extra.note));
+  }
+  lines.push('', '_Yönetim paneli (otomatik)_',
+    `<!-- paylasim:${JSON.stringify({ olay: kind, id: post?._id ?? null, paket: meta.paket ?? null, surum })} -->`);
+  return lines.join('\n');
+}
+
 // --- GitHub Actions kimliği (Marketing deposu) --------------------------------------------------
 // Marketing'in iş akışı GitHub'ın imzaladığı kısa ömürlü kimlik belgesini (OIDC) gönderir; paylaşılan bir sır yok.
 export const GITHUB_ISSUER = 'https://token.actions.githubusercontent.com';
@@ -351,8 +376,20 @@ export type Deps = {
   githubKeys: () => Promise<Jwk[]>;
   repo: string;
   now: () => Date;
+  // MARKETING_GITHUB_TOKEN tanımlı değilse yok; panel "otomatik bildirim kapalı" der
+  notify?: (kind: FeedbackKind, text: string) => Promise<void>;
 };
 export type Out = { status: number; body: Any };
+type Told = { ok: boolean; error?: string } | null;
+async function tell(d: Deps, kind: FeedbackKind, post: Any, extra: Parameters<typeof feedbackComment>[2]): Promise<Told> {
+  if (!d.notify) return null;
+  try {
+    await d.notify(kind, feedbackComment(kind, post, extra));
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
 
 class Fail extends Error {
   status: number;
@@ -456,19 +493,22 @@ async function panel(body: Any, d: Deps): Promise<Out> {
     try { upd = approveBody(post, approval, d.now()); } catch (e) { throw new Fail(400, (e as Error).message); }
     const r = await z(d, 'PUT', `/v1/posts/${id}`, upd);
     await d.checkAdmin('approve', id, reason, { scheduledFor: approval.scheduledFor, platforms: approval.platforms, yapay_zeka: approval.yapay_zeka }, false);
-    return ok({ post: summarize(r.post ?? { ...post, ...upd, status: 'scheduled' }), warnings: r.warnings ?? [] });
+    const notify = post.metadata?.kaynak === 'marketing' ? await tell(d, 'onay', post, { scheduledFor: approval.scheduledFor, platforms: approval.platforms }) : null;
+    return ok({ post: summarize(r.post ?? { ...post, ...upd, status: 'scheduled' }), warnings: r.warnings ?? [], notify });
   }
   if (body.action === 'request_changes') {
     if (post.status !== 'draft') throw new Fail(409, 'Yalnız taslak için düzeltme istenir');
     const r = await z(d, 'PUT', `/v1/posts/${id}`, changesBody(post, reason, d.now()));
     await d.checkAdmin('request_changes', id, reason, null, false);
-    return ok({ post: summarize(r.post ?? { ...post, metadata: { ...post.metadata, durum: 'duzeltme', duzeltme_notu: reason } }) });
+    const notify = post.metadata?.kaynak === 'marketing' ? await tell(d, 'duzeltme', post, { note: reason }) : null;
+    return ok({ post: summarize(r.post ?? { ...post, metadata: { ...post.metadata, durum: 'duzeltme', duzeltme_notu: reason } }), notify });
   }
   // delete
   if (post.status === 'published' || post.status === 'partial') throw new Fail(409, 'Yayındaki gönderi buradan silinmez; platformun kendisinden kaldır');
   await z(d, 'DELETE', `/v1/posts/${id}`);
   await d.checkAdmin('delete', id, reason, { status: post.status, paket: post.metadata?.paket ?? null }, false);
-  return ok({ deleted: id });
+  const notify = post.metadata?.kaynak === 'marketing' ? await tell(d, 'silindi', post, { note: reason }) : null;
+  return ok({ deleted: id, notify });
 }
 
 export async function handle(auth: string, body: Any, d: Deps): Promise<Out> {
@@ -516,6 +556,24 @@ async function githubKeys(): Promise<Jwk[]> {
   return jwks.keys;
 }
 
+// Geri bildirim PR'ına yorum + paylaşım iş akışını çalıştır (durum.json tazelensin). Anahtar: ince yetkili GitHub anahtarı,
+// yalnız marketing deposu; Pull requests: yazma, Actions: yazma (sozlesme/paylasim.md "Geri bildirim").
+export function notifyGithub(token: string, repo: string) {
+  const h = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'pofi-social' };
+  return async (_kind: FeedbackKind, text: string) => {
+    const owner = repo.split('/')[0];
+    const list = await fetch(`https://api.github.com/repos/${repo}/pulls?state=open&head=${owner}:${FEEDBACK_BRANCH}`, { headers: h });
+    if (!list.ok) throw new Error(`GitHub ${list.status} (anahtar ya da yetki)`);
+    const n = (await list.json())[0]?.number;
+    if (!n) throw new Error(`marketing deposunda açık geri bildirim PR'ı yok (${FEEDBACK_BRANCH})`);
+    const c = await fetch(`https://api.github.com/repos/${repo}/issues/${n}/comments`, { method: 'POST', headers: h, body: JSON.stringify({ body: text }) });
+    if (!c.ok) throw new Error(`Yorum yazılamadı (GitHub ${c.status})`);
+    await fetch(`https://api.github.com/repos/${repo}/actions/workflows/paylasim.yml/dispatches`, {
+      method: 'POST', headers: h, body: JSON.stringify({ ref: 'main' }),
+    }).catch(() => null);
+  };
+}
+
 if (typeof Deno !== 'undefined') {
   Deno.serve(async (req) => {
     if (req.method === 'OPTIONS') return new Response(null, { headers });
@@ -549,6 +607,7 @@ if (typeof Deno !== 'undefined') {
       githubKeys,
       repo: env('SOCIAL_REPO') || 'amy60946/marketing',
       now: () => new Date(),
+      notify: env('MARKETING_GITHUB_TOKEN') ? notifyGithub(env('MARKETING_GITHUB_TOKEN'), env('SOCIAL_REPO') || 'amy60946/marketing') : undefined,
     };
     const out = await handle(auth, body, deps);
     return reply(out.body, out.status);
