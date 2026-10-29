@@ -30,7 +30,7 @@
 | `metin.<platform>` | seçilen her platform | Instagram/TikTok 2200, YouTube açıklaması 5000, Threads 500, LinkedIn 3000 karakter. Etiketler metnin içine yazılır |
 | `youtube_baslik` | YouTube varsa | en çok 100, `<` `>` olmaz |
 | `onerilen_zaman` | hayır | saat dilimli ISO, ör. `2026-11-03T20:30:00+03:00`; panelde değiştirilebilir. Servisteki taslağa saat olarak verilmez (saati geçen taslak servis listesinden düşüyor), metadata'da durur; gerçek saat onayda verilir |
-| `yapay_zeka` | evet (true/false) | Gerçekçi yapay zekâ görüntü/ses varsa `true` → Instagram "AI info", TikTok "AI-generated", YouTube "değiştirilmiş/sentetik içerik" etiketi |
+| `yapay_zeka` | evet (true/false) | **Kullanıcı kararı 29 Ekim 2026: `false` gönderilir** (etiket açılmaz, `hukuk/45` 8.4). `true` olursa Instagram "AI info", TikTok "AI-generated", YouTube "değiştirilmiş/sentetik içerik" etiketi açılır. Panelde anahtar yok; değer paketten |
 | `ticari` | evet (true/false) | Ürün/marka tanıtımı varsa `true` → TikTok "Your brand" beyanı |
 | `kaynaklar` | bilgi içeriğinde | en çok 10; araştırma/literatür künyesi (`hukuk/45` 1.4) |
 | `kontrol` | evet, dördü de `true` | `saglik_iddiasi_yok`, `cocuga_cagri_yok`, `gercek_cocuk_verisi_yok`, `muzik_telifsiz` |

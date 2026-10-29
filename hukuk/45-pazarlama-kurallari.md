@@ -83,4 +83,4 @@ Akış ve teknik ayrıntı: `sozlesme/paylasim.md`.
 2. Uzman tanıklığı (testimonial) ve meslek örgütlerinin reklam yasakları.
 3. Kampanya ölçümü için mağaza dışı araç kullanılacaksa (ör. reklam pikseli) gereken onay ve aydınlatma metni.
 4. Ürünü anmayan bilgi içeriği (ör. ebeveynlere yönelik rutin, uyku, davranış konuları) şirket hesabından yayımlanınca ticari reklam sayılır mı; "Your brand" / reklam etiketi gerekir mi.
-5. Yapay zekâ ile üretilmiş görsel/ses için Türkiye'de platform etiketine ek bir yükümlülük var mı; yapay zekâ seslendirmede ses sahibinin izni.
+5. Yapay zekâ ile üretilmiş görsel/ses için Türkiye'de platform etiketine ek bir yükümlülük var mı; yapay zekâ seslendirmede ses sahibinin izni. (Etiketsiz yayın kararı ve riski: `sozlesme/hukuk_notlari.md` soru 14.)
