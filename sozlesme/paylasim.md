@@ -96,6 +96,14 @@ Kullanıcı isteği: "Düzeltme istediğimde talebim Marketing'e doğrudan aksı
 - Anahtar: `MARKETING_GITHUB_TOKEN` (Supabase → Edge Functions → Secrets). GitHub **ince yetkili** anahtar (fine-grained): yalnız `amy60946/marketing`; izinler **Pull requests: Read and write**, **Actions: Read and write** (Metadata: Read kendiliğinden). Süre en çok 1 yıl; bitmeden yenilenir. Anahtar yoksa panel "otomatik bildirim kapalı" der.
 - Yorumlar anahtarın sahibinin (kullanıcının) adıyla görünür; sondaki _Yönetim paneli (otomatik)_ satırı ayırır.
 
+## Ölçümler (30 Ekim 2026)
+
+Kaynak: Zernio'nun gönderi analizi (`GET /v1/analytics?postId=`); ayrı Instagram/TikTok anahtarı gerekmez. `status` ve panel yayımlanan son 20 gönderi için verir:
+`stats` (toplam) ve `statsByPlatform[]` (`platform`, `sync`, `url` + aynı alanlar), `measuredAt` (ölçüm zamanı). Alanlar: `views` izlenme, `reach` erişim, `impressions` gösterim,
+`likes`, `comments`, `shares` paylaşım/gönderme, `saves` kaydetme, `avgWatchMs` ortalama izlenme süresi (ms), `totalWatchMs` toplam izlenme (ms), `skipRate` ilk 3 sn'de geçme (%, Instagram Reels),
+`completionRate` sonuna kadar izleme (0–1, TikTok işletme), `follows`, `profileViews`. Platform vermezse `null`. Saniye saniye izlenme eğrisi ve yeniden paylaşım yok.
+Gönderici `durum` her çalıştığında `paylasim/olcum/<paket>.jsonl`'a satır ekler: `{t, id, surum, toplam, platformlar}`.
+
 ## `social` işlevi
 
 `POST https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/social` — "Verify JWT" **kapalı**. Secret: `ZERNIO_API_KEY` (Supabase → Edge Functions → Secrets). Kod ve testleri: `supabase/functions/social/index.ts`, `index.test.ts`.
