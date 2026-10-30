@@ -491,3 +491,10 @@ test('ölçümler: eksik alan null, sayılar korunur', () => {
       skipRate: 41.5, completionRate: null, follows: null, profileViews: null });
   assert.equal(metrics(null), null);
 });
+
+test('taslakta saat: servisin yazdığı oluşturulma anı değil, paketin önerisi', () => {
+  const d = { _id: 'd1', status: 'draft', scheduledFor: '2026-10-30T14:20:00.000Z', metadata: { onerilen_zaman: '2026-10-31T21:00:00+03:00' } };
+  assert.equal(summarize(d).scheduledFor, '2026-10-31T21:00:00+03:00');
+  assert.equal(summarize({ ...d, metadata: {} }).scheduledFor, null);
+  assert.equal(summarize({ ...d, status: 'scheduled' }).scheduledFor, '2026-10-30T14:20:00.000Z');
+});

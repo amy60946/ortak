@@ -315,7 +315,8 @@ export function summarize(post: Any) {
     video: video?.url ?? null,
     images: items.filter((m) => !isVideo(m) && m?.url).map((m) => String(m.url)),
     cover: meta.kapak ?? video?.thumbnail ?? null,
-    scheduledFor: post?.scheduledFor ?? meta.onerilen_zaman ?? null,
+    // Taslakta servis saat alanına oluşturulma anını yazıyor (30 Ekim): taslakta yalnız paketin önerisi gösterilir
+    scheduledFor: post?.status === 'draft' ? (meta.onerilen_zaman ?? null) : (post?.scheduledFor ?? meta.onerilen_zaman ?? null),
     createdAt: post?.createdAt ?? null,
     fromMarketing: meta.kaynak === 'marketing',
     paket: meta.paket ?? null,
