@@ -503,15 +503,31 @@ async function getPost(d: Deps, id: string) {
   return post;
 }
 
-// Yayımlanmış olanların sonuç sayıları (en çok 10; servis planı analizi kapsamıyorsa boş kalır)
+// Yayımlanmış olanların ölçümleri (servisin analizi; en çok 20 gönderi): toplam + platform başına, ölçüm zamanıyla
+export function metrics(a: Any) {
+  if (!a || typeof a !== 'object') return null;
+  const n = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+  return {
+    views: n(a.views) ?? 0, reach: n(a.reach), impressions: n(a.impressions),
+    likes: n(a.likes) ?? 0, comments: n(a.comments) ?? 0, shares: n(a.shares) ?? 0, saves: n(a.saves) ?? 0,
+    avgWatchMs: n(a.igReelsAvgWatchTime), totalWatchMs: n(a.igReelsVideoViewTotalTime),
+    skipRate: n(a.reelsSkipRate), completionRate: n(a.completionRate), follows: n(a.follows), profileViews: n(a.profileViews),
+  };
+}
 async function withAnalytics(d: Deps, list: ReturnType<typeof summarize>[]) {
-  const live = list.filter((p) => p.group === 'yayinda').slice(0, 10);
+  const live = list.filter((p) => p.group === 'yayinda').slice(0, 20);
+  const at = d.now().toISOString();
   await Promise.all(live.map(async (p) => {
     try {
       const r = await d.zernio('GET', `/v1/analytics?postId=${p.id}`);
-      const a = r.status < 400 ? r.data?.analytics : null;
-      if (a) (p as Any).stats = { views: a.views ?? 0, likes: a.likes ?? 0, comments: a.comments ?? 0, shares: a.shares ?? 0, saves: a.saves ?? 0 };
-    } catch { /* sayılar isteğe bağlı */ }
+      if (r.status >= 400) return;
+      const total = metrics(r.data?.analytics);
+      if (total) (p as Any).stats = total;
+      (p as Any).statsByPlatform = ((r.data?.platformAnalytics ?? []) as Any[]).map((x) => ({
+        platform: x.platform ?? null, sync: x.syncStatus ?? null, url: x.platformPostUrl ?? null, ...(metrics(x.analytics) ?? {}),
+      }));
+      (p as Any).measuredAt = at;
+    } catch { /* ölçüm isteğe bağlı */ }
   }));
   return list;
 }

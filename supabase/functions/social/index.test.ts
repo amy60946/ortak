@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  AUDIENCE, GITHUB_ISSUER, entry, feedbackComment, handle, notifyGithub, tiktokPhotoTitle, usageOf, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
+  AUDIENCE, GITHUB_ISSUER, entry, feedbackComment, handle, metrics, notifyGithub, tiktokPhotoTitle, usageOf, type Deps, type Jwk, approveBody, changesBody, draftBody, groupOf, idempotencyKey, parseApproval, parsePaket, pickAccounts, summarize, warnings,
 } from './index.ts';
 
 const good = () => ({
@@ -341,7 +341,10 @@ test('yayımlananlara sonuç sayıları eklenir', async () => {
   const s = await setup();
   s.z.posts.set('pub1', { _id: 'pub1', status: 'published', platforms: [], metadata: { kaynak: 'marketing' } });
   const st = await s.gh({ action: 'status' });
-  assert.deepEqual(st.body.posts[0].stats, { views: 120, likes: 9, comments: 0, shares: 0, saves: 0 });
+  assert.equal(st.body.posts[0].stats.views, 120);
+  assert.equal(st.body.posts[0].stats.likes, 9);
+  assert.equal(st.body.posts[0].measuredAt, NOW.toISOString());
+  assert.deepEqual(st.body.posts[0].statsByPlatform, []);
 });
 
 test('geri bildirim yorumu: düzeltme notu alıntılanır, sonraki sürüm söylenir, makine satırı var', () => {
@@ -480,4 +483,11 @@ test('gönderi hakkı özeti', () => {
     { plan: 'Usage-Based', used: null, limit: null, resetDay: null, lastReset: null, access: true, accounts: 2, spendCents: 0, creditCents: 500 });
   assert.equal(usageOf({ planName: 'Usage', limits: { uploads: -1 }, usage: {} })!.limit, null);   // sınırsız
   assert.equal(usageOf(null), null);
+});
+
+test('ölçümler: eksik alan null, sayılar korunur', () => {
+  assert.deepEqual(metrics({ views: 241, likes: 2, shares: 1, saves: 1, reach: 180, igReelsAvgWatchTime: 4300, reelsSkipRate: 41.5 }),
+    { views: 241, reach: 180, impressions: null, likes: 2, comments: 0, shares: 1, saves: 1, avgWatchMs: 4300, totalWatchMs: null,
+      skipRate: 41.5, completionRate: null, follows: null, profileViews: null });
+  assert.equal(metrics(null), null);
 });
