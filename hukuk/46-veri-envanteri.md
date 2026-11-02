@@ -4,7 +4,7 @@
 
 ## Kısaca
 
-- Sistemde kişisel veri tutan **her tablo** aşağıdaki kategorilerden birine bağlıdır (Ek A). Yeni tablo eklenince bu dosyaya satır eklenmezse `supabase/test/run.sh` hata verir (`tools/veri_envanteri_kontrol.py`).
+- Sistemde kişisel veri tutan **her tablo** aşağıdaki kategorilerden (K1–K15) birine bağlıdır (Ek A). Yeni tablo eklenince bu dosyaya satır eklenmezse `supabase/test/run.sh` hata verir (`tools/veri_envanteri_kontrol.py`).
 - Saklama süreleri ve imha yöntemi ayrı belgede: `42-saklama-imha-politikasi.md` (§4 satır numaraları). Alıcıların ayrıntısı: `41-alt-isleyenler.md`. Olgular: `00-olgular.md`.
 - Köşeli parantezli alanlar avukat ve kullanıcı kararıyla dolar (`[SUPABASE BÖLGESİ]`, hukuki sebep "avukat" yazan satırlar).
 - Hazırlanış: 2 Kasım 2026, şemadan (göçler + öneriler) üretildi; olgu değişirse önce `00-olgular.md`, sonra burası.
@@ -31,6 +31,7 @@ Yurt dışı: Supabase `[SUPABASE BÖLGESİ]`; A, X, R, M ABD (ve/veya AB); C k�
 | K12 | Kullanım, cihaz ve bildirim | E, Ç, U | uygulama açma günleri, oturum sayısı, sürüm, platform, ekran/olay adları (içerik yok), bildirim jetonu, uygulama içi bildirimler | Hizmetin işletilmesi, ürün ölçümü, bildirim gönderimi | md. 5/2-f meşru menfaat (üçüncü taraf analiz yok); bildirim md. 5/2-c | A, X (bildirim metni) | 18, 19, 20 |
 | K13 | Güvenlik ve ekip işlemleri | E, Ç, U, T | kod denemeleri, ekip rolü, ekip işlemleri denetim kaydı (gerekçe, önce/sonra), kişiye özel ayar istisnaları | Kötüye kullanımı önleme, hesap verebilirlik | md. 5/2-f; md. 12 (güvenlik) | C | 17, 22 |
 | K14 | Hukuki işlemler | E, U, (Ç veli eliyle) | yasal metin onay kaydı (rastgele kimlikle), KVKK başvuruları (yanıt e-postası dahil) | İspat, başvuruların yanıtlanması | md. 5/2-ç hukuki yükümlülük; md. 5/2-e hakkın tesisi | C | 23, 24 |
+| K15 | Destek talepleri | E, U (yetişkin beyanıyla) | e-posta, isteğe bağlı ad, uygulama, konu, mesaj, ekibin iç notu | Talebin yanıtlanması | md. 5/2-c (kullanıcıysa) / md. 5/2-f; KVKK başvurusu niteliğindeyse md. 5/2-ç | C (form sayfası) | 25 |
 | — | Kişisel veri içermeyenler | — | katalog ve ayarlar, anonim günlük kullanım toplamları, imha kaydı (yalnız sayı) | İşletme | — | — | 27 |
 
 ## 2. Teknik ve idari tedbirler (md. 12)
@@ -99,6 +100,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `user_flags` | K13 | |
 | `legal_acceptances` | K14 | rastgele kimlik, e-posta/ad yok |
 | `kvkk_requests` | K14 | |
+| `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi) |
 | `usage_daily_totals` | — | anonim günlük toplamlar |
 | `retention_runs` | — | imha kaydı, yalnız sayı |
 | `storage_trash` | — | silinecek dosya yolları (geçici; yol aile kimliği içerir) |

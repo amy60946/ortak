@@ -21,7 +21,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | 3 | Expo | Alt işleyen | Yedek bildirim yolu | ParentApp, ClinicApp (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
 | 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
 | 5 | Resend | Alt işleyen | İşlem e-postaları | ParentApp, ClinicApp | ABD / AB | Alan adı alınınca |
-| 6 | Cloudflare | Alt işleyen | Ekip yönetim panelinin barındırılması | Ekip paneli | Küresel ağ | Kullanımda |
+| 6 | Cloudflare | Alt işleyen | Ekip yönetim panelinin ve herkese açık yasal metin / destek sayfalarının barındırılması (destek formunun içeriği Cloudflare üzerinden geçer, orada saklanmaz) | Ekip paneli, /yasal, /destek | Küresel ağ | Kullanımda |
 | 7 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | ClinicApp (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
 
 ## 3. Ayrıntılar

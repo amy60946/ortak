@@ -509,3 +509,16 @@ RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildi�
 | Edge Function `health` | herkes (Verify JWT **kapalı**) | `GET` → 200 `{status}` / 503 `{status:"fail"}`; başlık `x-health-key: <HEALTH_KEY>` (secret, isteğe bağlı) ile denetim adları + düzeyleri. Sayı/ayrıntı dönmez |
 
 **Uygulamaların yapacağı (SQL uygulanınca):** ParentApp ve ClinicApp › Ayarlar › Gizlilik › **"Verimi indir"**: yeniden giriş (şifre) iste → `my_data_export()` → JSON dosyası paylaşım sayfasıyla kaydedilir; `dosyalar` için istenirse kısa süreli imzalı bağlantılar (`mail`/`abc` kovası, kullanıcının zaten okuyabildiği dosyalar). GameApp: 30 gün girişsiz ve çocuğa bağlanmamış anonim oturum sunucuda silinebilir; oyun oturum yenileme hatasında yeniden anonim oturum açıp kod ekranına dönmeli (bağlı cihazlar silinmez).
+
+## 22. Destek talepleri (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; panel `admin.md` "Destek")
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `support_requests` | `ref` (`D-` + 6 karakter, kişiye gösterilir), uygulama (parent/child/clinic/other), konu (account/subscription/bug/privacy/clinic/other), e-posta (küçük harf), ad (isteğe bağlı), mesaj (10–3000), durum (new/in_progress/answered/closed/spam), iç not, ilgilenen, yanıt zamanı | Tablo kapalı; yazma yalnız `support_request_create` (sunucu), okuma panel |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `support_request_create(app, konu, e-posta, ad, mesaj)` | yalnız sunucu (Edge Function `support`) | `{ref}` ya da `{error: invalid / too_many / busy}`; e-posta başına 24 saatte 3, saatte toplam 60 |
+| Edge Function `support` | herkes (Verify JWT **kapalı**) | `GET` → 302 `<LEGAL_PUBLIC_URL kökü>/destek`; `POST {app, topic, email, name, message, adult, website, elapsed_ms}` → `{ok, ref}`; tuzak alanı dolu ya da 3 saniyeden kısa → sessizce `{ok}` (kayıt yok); `adult` değilse 400 |
+
+**Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.

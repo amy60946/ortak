@@ -34,7 +34,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 1.4 Destek
 - [ ] (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
-- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında)
+- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - [ ] (Claude) SSS
 - [ ] (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
 
