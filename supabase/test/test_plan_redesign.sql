@@ -1,4 +1,4 @@
--- Takip planı yeniden tasarımı (proposed/20261102100000_plan_redesign.sql): program ↔ hedef, Şablonlarım,
+-- Takip planı yeniden tasarımı (migrations/20261102100000_plan_redesign.sql): program ↔ hedef, Şablonlarım,
 -- öneri taslağı + tek gönderim, değişiklik önerisi, hedefe göre gruplu aile planı
 \set ON_ERROR_STOP on
 

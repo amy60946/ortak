@@ -351,7 +351,7 @@ Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon 
 
 Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) yalnız klinikte. Planlandı durumundaki modül aileye görünmez. Ebeveynin zorluk bildirimi bir puan değildir, ekranda ölçek gibi gösterilmez. Hiçbir hedef tanı değildir; paket adları ihtiyaç alanıyla yazılır, tanı etiketi zorunlu değildir.
 
-### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026; öneri `proposed/20261102100000_plan_redesign.sql`, veritabani.md 20)
+### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql` uygulandı 2 Kasım 2026, veritabani.md 20)
 
 Kararlar: ClinicApp'te **C · hedef hatları** (her hedef bir satır: hedef · aile programı · rutin/görev; ileride salt bakış "Harita"); bir program **birden çok hedefi** destekler; Şablonlarım paylaşımını **uzman seçer**; **tek "Aileye gönder"**; ailede ekli rutin/görev **değişiklik önerisiyle** düzenlenir; uzmanın kendi programı **yok** (sistem içerikleri kalır); iPad'de uzman **iPad görünümü / web görünümü** arasında seçer (sağ üstte düğme; yalnız uygulama ayarı). Taslaklar: https://claude.ai/artifact/MxXWHaP3MPLHp5o2GHj6VG, yan yana hikâye https://claude.ai/artifact/R3jRURSfeHDMyPcwLzYZNY.
 
