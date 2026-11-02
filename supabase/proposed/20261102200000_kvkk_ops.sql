@@ -24,8 +24,12 @@ insert into public.app_config (key, value) values ('retention', jsonb_build_obje
   'audit_days', 1825,             -- 22 ekip işlemleri denetim kaydı: 5 yıl
   'kvkk_closed_days', 1095,       -- 24 kapanmış KVKK başvurusu: 3 yıl
   'invite_pii_days', 30,          -- 10 biten davetteki ebeveyn adı/e-postası: 30 gün sonra boşaltılır
-  'runs_days', 1095               -- 27 imha kayıtları: en az 3 yıl (Yönetmelik)
+  'runs_days', 1095,              -- 27 imha kayıtları: en az 3 yıl (Yönetmelik)
+  'support_days', 730             -- 25 kapanan destek talepleri: 2 yıl (spam 30 gün)
 )) on conflict (key) do nothing;
+-- sonradan eklenen anahtar (önceki sürüm uygulanmışsa): eksikse eklenir, var olana dokunulmaz
+update public.app_config set value = jsonb_build_object('support_days', 730) || value
+ where key = 'retention' and not value ? 'support_days';
 
 -- İmha kaydı: yalnız sayılar ve adım adları (kişisel veri yok). Yalnız sunucu yazar; panel admin_retention_status ile okur.
 create table if not exists public.retention_runs (
@@ -213,6 +217,18 @@ begin
   exception when others then errs := errs || jsonb_build_array(jsonb_build_object('step', step, 'error', sqlstate || ' ' || left(sqlerrm, 200)));
   end;
 
+  -- 25 destek talepleri (20261102210000_support.sql uygulanmışsa): kapanan/yanıtlanan süre sonunda, spam 30 günde
+  if to_regclass('public.support_requests') is not null then
+    step := '25_support_requests';
+    begin
+      d := public.retention_cfg_int(cfg, 'support_days', 730, 30);
+      res := res || jsonb_build_object(step, public.retention_step(dry, 'public.support_requests',
+               format('(status in (''answered'', ''closed'') and updated_at < now() - interval %L)
+                       or (status = ''spam'' and updated_at < now() - interval ''30 days'')', d || ' days')));
+    exception when others then errs := errs || jsonb_build_array(jsonb_build_object('step', step, 'error', sqlstate || ' ' || left(sqlerrm, 200)));
+    end;
+  end if;
+
   -- 27 imha kayıtları (en az 3 yıl; bu çalışmanın satırı hiç silinmez)
   step := '27_retention_runs';
   begin
@@ -281,7 +297,8 @@ declare
   me uuid := public.admin_require(array['owner']);
   old jsonb := coalesce((select value from public.app_config where key = 'retention'), '{}'::jsonb);
   mins constant jsonb := '{"trial_history_days":30,"code_attempts_hours":1,"notifications_days":30,"usage_days":400,
-                           "anon_orphan_days":7,"audit_days":365,"kvkk_closed_days":365,"invite_pii_days":3,"runs_days":1095}';
+                           "anon_orphan_days":7,"audit_days":365,"kvkk_closed_days":365,"invite_pii_days":3,"runs_days":1095,
+                           "support_days":30}';
   k text; v jsonb; nv jsonb;
 begin
   if p_value is null or jsonb_typeof(p_value) <> 'object' then raise exception 'Ayar bir nesne olmalı'; end if;
@@ -580,6 +597,16 @@ begin
         'detail', case when n > 0 then n || ' / ' || m || ' çağrı hata verdi (son 6 saat)' else m || ' çağrı, hata yok (son 6 saat)' end));
     exception when others then null;
     end;
+  end if;
+
+  -- destek talepleri (20261102210000_support.sql uygulanmışsa): 2 günden uzun yanıtsız
+  if to_regclass('public.support_requests') is not null then
+    execute $q$select count(*) filter (where status = 'new' and created_at < now() - interval '2 days'),
+                      count(*) filter (where status in ('new', 'in_progress'))
+                 from public.support_requests$q$ into n, m;
+    checks := checks || jsonb_build_array(jsonb_build_object('key', 'support', 'label', 'Destek talepleri',
+      'level', case when n > 0 then 'warn' else 'ok' end,
+      'detail', case when n > 0 then n || ' talep 2 günden uzun süredir yanıtsız' else m || ' açık talep' end));
   end if;
 
   -- silinmeyi bekleyen dosyalar

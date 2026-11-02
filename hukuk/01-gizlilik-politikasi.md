@@ -118,7 +118,7 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 - **Giriş kodu deneme kayıtları:** Kod tahminiyle kötüye kullanımı önlemek için hatalı denemeler IP adresiyle birlikte kısa süre (15 dakika ile 1 gün arası) tutulur.
 - **Onay kayıtları:** Hangi metni (Kullanım Koşulları, aydınlatma metni, açık rızalar) hangi sürümüyle ve ne zaman onayladığınız.
 - **Ekip işlemleri kaydı:** Ekibimizin hesabınızda yaptığı her işlem gerekçesiyle, değiştirilemez bir kayda yazılır.
-- **Destek ve başvurular:** Bize yazdığınızda e-posta adresiniz ve yazışmanız; KVKK başvurularınızın kaydı.
+- **Destek ve başvurular:** Destek formundan ya da e-postayla yazdığınızda e-posta adresiniz, (yazdıysanız) adınız, seçtiğiniz uygulama ve konu, mesajınız ve yazışmamız; KVKK başvurularınızın kaydı. Destek formu yetişkinler içindir.
 
 ## 6. Hangi amaçla ve hangi hukuki sebeple?
 

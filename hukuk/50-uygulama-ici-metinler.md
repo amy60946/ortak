@@ -358,6 +358,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 > - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
 > - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
 > - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
+> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}

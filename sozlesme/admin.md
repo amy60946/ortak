@@ -71,6 +71,15 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 | `admin_log_export(ne, satır, gerekçe)` | okur | Panelden toplu indirmenin kaydı (`export.csv`, hedef `system`/`customers.<app>`, satır sayısı). Müşteriler › CSV indir gerekçe ister ve "işin bitince dosyayı sil (en geç 30 gün)" uyarısı gösterir |
 | `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 21). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
 
+### Destek (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; kullanıcı kararı: sayfada form)
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_support_requests(durum='open', limit)` | support | Destek kuyruğu: `open` (yeni + işlemde, en eski önce), `answered`, `closed`, `spam`, `all`. E-posta ve mesaj içerir (kişinin ekibe yazdığı metin; aile mesajı değildir) → yalnız destek rolü ve sahip |
+| `admin_support_update(id, durum, iç not, gerekçe)` | support | Durum (new/in_progress/answered/closed/spam) ve iç not; denetim kaydına `support.update`, hedef `system`/`support:<D-no>` (e-posta ve mesaj yazılmaz) |
+
+Akış: herkese açık **`/destek`** (panelin Worker'ı; JavaScript'siz form: uygulama, konu, e-posta, isteğe bağlı ad, mesaj, "18 yaşından büyüğüm", gizli tuzak alanı, doldurma süresi) → Edge Function **`support`** (POST; e-posta başına 24 saatte 3, saatte toplam 60) → `support_requests` → panel **Destek** ekranı → "Yanıtla" ekibin e-posta uygulamasında taslak açar → durum "Yanıtlandı". Sabit adres `…/functions/v1/support` (GET) `LEGAL_PUBLIC_URL` köküne `/destek` olarak yönlenir: App Store **Support URL** ve uygulamalardaki "Yardım ve iletişim" bunu kullanır (alan adı gelince uygulama sürümü gerekmez). Sistem sağlığı: 2 günden uzun yanıtsız talep sarı. Saklama: kapanan 2 yıl, istenmeyen 30 gün (gece imha işi, `support_days`). Spam artarsa: Cloudflare Turnstile (ücretsiz; secret Supabase'e). Benchmark: Zammad web formu ve tuzak alanı, osTicket konu seçimi, Chatwoot yanıt süresi notu, laravel-honeypot doldurma süresi, Apple 1.3/1.5 ve App Store Connect Support URL açıklaması.
+
 ### İzleme ve alarm
 
 Benchmark (2 Kasım 2026; kaynaklar DURUM satırında): Supabase Free'de log 1 gün ve uyarı kuralı yok, Log Drains yalnız Pro+ ve ücretli → **dışarıdan yoklama** + **içeride denetim işlevi** seçildi (Sentry/Healthchecks deseni).

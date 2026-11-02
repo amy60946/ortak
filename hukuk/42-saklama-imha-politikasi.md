@@ -71,7 +71,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 22 | Ekip işlemleri denetim kaydı | `admin_audit` | [SÜRE] (öneri: 5 yıl); silinen kullanıcının e-postası yazılmaz | Silme | Gece imha işi (yalnız bu işle ve en az 1 yıl eski kesimle silinebilir) | ⚙️ |
 | 23 | Yasal metin onay kayıtları | `legal_acceptances` (öneri `20261027200000`) | Hesap silinse de rastgele kimlikle kalır (öneri SQL'i güncellendi 27 Ekim: auth.users'a bağ yok) → [SÜRE] | Silme / takma ad | ❌ karar bekliyor | ❌ |
 | 24 | KVKK başvuruları | `kvkk_requests` (öneri `20261027200000`) | Başvuru kapandıktan sonra [SÜRE] (öneri: 3 yıl) | Silme | Gece imha işi | ⚙️ |
-| 25 | Destek yazışmaları | `destek@` posta kutusu | Son yazışmadan [SÜRE] (öneri: 2 yıl) | Silme | Elle, periyodik imhada | ❌ |
+| 25 | Destek talepleri ve yazışmaları | `support_requests` (/destek formu); ekibin e-posta kutusundaki yanıtlar | Kapanıştan [SÜRE] (öneri: 2 yıl); istenmeyen (spam) 30 gün | Silme | Tablo: gece imha işi (`support_days`); e-posta kutusu: elle, periyodik imhada | ⚙️ |
 | 26 | Veri ihlali envanteri | iç belge (`43-veri-ihlali-proseduru.md`) | [SÜRE] (öneri: 5 yıl) | Silme | Elle | — |
 | 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Gece imha işi (en az 3 yıl, alt sınır sunucuda) | ⚙️ |
 | 28 | Panelden indirilen dosyalar (CSV) | ekip bilgisayarı | İş bitince, en geç [SÜRE] (öneri: 30 gün) | Silme + çöp kutusunu boşaltma | Elle | — |
