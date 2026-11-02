@@ -523,3 +523,11 @@ RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildi�
 | Edge Function `support` | herkes (Verify JWT **kapalı**) | `GET` → 302 `<LEGAL_PUBLIC_URL kökü>/destek`; `POST {app, topic, email, name, message, adult, website, elapsed_ms}` → `{ok, ref}`; tuzak alanı dolu ya da 3 saniyeden kısa → sessizce `{ok}` (kayıt yok); `adult` değilse 400 |
 
 **Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.
+
+## 23. Tüm danışanlar dikkat panosu (öneri `proposed/20261102600000_clinic_attention_summary.sql`, 2 Kasım 2026; kullanıcı kararı "liste + neden")
+
+Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan başına tek satır, yalnız olgu söyleyen nedenler (puan, renkli risk, sıralama yok).
+
+| İşlev | Ne | Çağıran |
+|---|---|---|
+| `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
