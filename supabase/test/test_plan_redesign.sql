@@ -20,6 +20,9 @@ end $$;
 -- bildirim sayısı (RLS'siz, test için)
 create or replace function tst.nc(u uuid, k text) returns integer language sql security definer as $$
   select count(*)::integer from public.notifications where user_id = u and kind = k $$;
+-- rutin önerilerinin kimlikleri (RLS'siz; başka kliniğin denemesi için)
+create or replace function tst.sids() returns uuid[] language sql security definer as $$
+  select array_agg(id) from public.clinic_task_suggestions where routine_group = '00000000-0000-0000-0000-0000000077a1' and kind = 'new' $$;
 grant usage on schema tst to authenticated;
 grant execute on all functions in schema tst to authenticated;
 
@@ -125,6 +128,16 @@ select tst.check((public.family_care_plan('00000000-0000-0000-0000-0000000011a1'
   and json_array_length(public.family_care_plan('00000000-0000-0000-0000-0000000011a1') -> 'routines' -> 0 -> 'task_ids') = 2
   and (public.family_care_plan('00000000-0000-0000-0000-0000000011a1') -> 'routines' -> 0 ->> 'title') = 'Güne hazır sabah',
   'aile planı: kabul edilen rutin hedefiyle ve görevleriyle');
+-- hedef bağı sonradan: uzman ailede ekli rutini başka hedefe bağlar (aynı paylaşım), başka klinik ve başka çocuğun hedefi olmaz
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check(public.clinic_set_suggestion_goal(tst.sids(), '00000000-0000-0000-0000-0000000060a2') = 2, 'uzman ailedeki rutini başka hedefe bağlar');
+select tst.fails($$select public.clinic_set_suggestion_goal(tst.sids(), '00000000-0000-0000-0000-0000000060e1')$$, 'rutin başka çocuğun hedefine bağlanamaz');
+select tst.check(public.clinic_set_suggestion_goal(tst.sids(), null) = 2, 'uzman rutinin hedef bağını kaldırır');
+select tst.check(public.clinic_set_suggestion_goal(tst.sids(), '00000000-0000-0000-0000-0000000060a1') = 2, 'rutin yeniden hedefine bağlanır');
+select tst.as_user('00000000-0000-0000-0000-0000000000d9');
+select tst.fails($$select public.clinic_set_suggestion_goal(tst.sids(), null)$$, 'başka klinik rutinin hedefini değiştiremez');
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.fails($$select public.clinic_set_suggestion_goal(tst.sids(), null)$$, 'ebeveyn rutinin hedefini değiştiremez');
 
 -- ------------------------------------------------ 4. değişiklik önerisi
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');

@@ -7,6 +7,8 @@
 --   4) Ailede ekli görev için değişiklik önerisi (kind = 'change', target_task_id): uzman doğrudan değiştirmez,
 --      ebeveyn "Uygula" derse ParentApp görevi günceller (görev çıkarma = bitiş tarihi). Geçmiş onaylar ve coin korunur.
 --   5) family_care_plan: programların hedefleri (goal_ids) ve kabul edilen rutinlerin hedefi (routines).
+--   6) clinic_set_suggestion_goal: uzman kendi önerisini (ailede ekli olsa da) başka bir hedefe bağlar ya da bağı kaldırır
+--      (aynı paylaşımın hedefi; cts_goal_guard). Önceden gönderilmiş rutinler de takip planında bir hedefin altına alınabilir.
 -- Uzmanın kendi programı (serbest içerik) bu sürümde YOK (kullanıcı kararı 2 Kasım 2026: sistem içerikleri kalsın).
 -- Tekrar çalıştırılabilir.
 
@@ -390,3 +392,27 @@ returns json language sql stable security definer set search_path = '' as $$
 $$;
 revoke execute on function public.family_care_plan(uuid) from public, anon;
 grant execute on function public.family_care_plan(uuid) to authenticated;
+
+-- =====================================================================
+-- 6. Rutin ↔ hedef bağını sonradan değiştirmek (ailede ekli rutin dahil)
+-- =====================================================================
+-- clinic_update_suggestion yalnız taslak/bekleyen öneriyi değiştirir; hedef bağı ise klinik içi bir düzen bilgisidir:
+-- uzman eski (kabul edilmiş) rutinleri de bir hedefin altına alabilmeli. Yalnız goal_id değişir; hedef aynı paylaşımın
+-- hedefi olmalı (cts_goal_guard). Aile, hedef aileye gönderilmişse ParentApp'te rutini o hedefin altında görür.
+create or replace function public.clinic_set_suggestion_goal(p_ids uuid[], p_goal_id uuid)
+returns integer language plpgsql security definer set search_path = '' as $$
+declare
+  n integer;
+begin
+  if coalesce(cardinality(p_ids), 0) = 0 then return 0; end if;
+  if exists (select 1 from unnest(p_ids) x(id)
+              where not exists (select 1 from public.clinic_task_suggestions s where s.id = x.id
+                                  and s.clinic_id = public.my_clinic_id() and public.clinic_link_mine(s.link_id))) then
+    raise exception 'Öneri bulunamadı';
+  end if;
+  update public.clinic_task_suggestions set goal_id = p_goal_id where id = any(p_ids) and goal_id is distinct from p_goal_id;
+  get diagnostics n = row_count;
+  return n;
+end $$;
+revoke execute on function public.clinic_set_suggestion_goal(uuid[], uuid) from public, anon;
+grant execute on function public.clinic_set_suggestion_goal(uuid[], uuid) to authenticated;
