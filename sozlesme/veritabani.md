@@ -526,7 +526,7 @@ Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`
 
 RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()` + (oluşturan / `shared` / sahip); ekleme yalnız uzman (klinik ve oluşturan tetikleyiciyle); güncelleme ve silme oluşturan ya da sahip. Öneri ve görev politikaları değişmedi (ebeveyn öneride yine yalnız `status`, `decided_at`, `task_id` yazar). Test: `test_routines_v2.sql`.
 
-## 22. Takip planı yeniden tasarımı (öneri, `proposed/20261102100000_plan_redesign.sql`, 2 Kasım 2026; akış `akislar.md` 12.1)
+## 22. Takip planı yeniden tasarımı (uygulandı 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql`, 2 Kasım 2026; akış `akislar.md` 12.1)
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|
