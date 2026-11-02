@@ -104,6 +104,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ## 2. Uygulamalar
 
 ### 2.1 Hepsi
+- [x] Yayın biçimi: **elle** (kullanıcı, 2 Kasım 2026): App Store Connect → sürüm → "Manually release this version". Apple onaylar, kullanıcı onay verince yayına alınır (üç ürün)
 - [ ] (Siz) iOS imza / sertifika sınırı (ParentApp + GameApp)
 - [ ] (Claude) `PrivacyInfo.xcprivacy`
 - [ ] (Siz + Claude) App Privacy etiketi

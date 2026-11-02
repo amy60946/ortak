@@ -40,6 +40,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 4. **Test:** SQL değişikliğinden sonra `bash supabase/test/run.sh` (yerel psql) geçmeli. Her yeni tabloda satır düzeyi güvenlik (RLS) zorunlu ve testli. Her yeni fonksiyonda `revoke execute … from public, anon` (+ gerekiyorsa `grant … to authenticated`); `test_security.sql` anon'un çağırabildiği fonksiyon kalmadığını denetler.
 5. **Günlük:** Her oturum sonunda `DURUM.md`'ye bir satır: tarih · ürün · ne değişti · diğer ürünleri etkiliyor mu · kim ne yapmalı.
 6. **Başka ürünün koduna** yalnız okumak için bakılır. Yazmak gerekiyorsa o ürünün penceresi yapar; kullanıcıya söylenir.
+7. **Benchmark alışkanlığı (kullanıcı isteği 2 Kasım 2026, bütün pencereler):** her yeni özellik, özellik çıkarma ve iyileştirmede (akış/senaryo, tasarım, metin, arayüz, iş kuralı) önce aynı işi yapan, başarılı olmuş global uygulama ve platformlar araştırılır. En iyi örnekler artı ve eksileriyle değerlendirilir, ürünün amacına (çocuk / ebeveyn / uzman, Türkiye) uyanlar seçilir, kullanıcıya seçenek ve öneri olarak sunulur. Kaynaklar yazılır, başka ürünün içeriği, karakteri, metni kopyalanmaz (yalnız işleyiş referansı).
 
 ## Kullanıcı ve güvenlik
 
@@ -48,6 +49,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
 - Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.
+- **Canlıya alma: elle yayın (kullanıcı kararı 2 Kasım 2026, üç ürün):** App Store Connect'te "Manually release this version" seçilir; Apple onayından sonra sürüm kullanıcı onayıyla yayına alınır, otomatik yayın yok. Adımlar `CANLIYA_ALMA.md`.
 - **Hukuk arşivi (kullanıcı isteği 27 Ekim 2026):** hukuki her karar/madde `sozlesme/hukuk_notlari.md`'ye yazılır (avukata sorular dahil). Canlıya alma süreci yeniden başlarken ve herhangi bir ürün canlıya alınmadan önce kullanıcıya bu arşivi hatırlat (`CANLIYA_ALMA.md` 1.5).
 - Klinik sınır: hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir; uzman verisi yalnız ebeveyn rızasıyla ve geri alınabilir şekilde paylaşılır.
 
