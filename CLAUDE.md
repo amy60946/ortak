@@ -42,6 +42,13 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 6. **Başka ürünün koduna** yalnız okumak için bakılır. Yazmak gerekiyorsa o ürünün penceresi yapar; kullanıcıya söylenir.
 7. **Benchmark alışkanlığı (kullanıcı isteği 2 Kasım 2026, bütün pencereler):** her yeni özellik, özellik çıkarma ve iyileştirmede (akış/senaryo, tasarım, metin, arayüz, iş kuralı) önce aynı işi yapan, başarılı olmuş global uygulama ve platformlar araştırılır. En iyi örnekler artı ve eksileriyle değerlendirilir, ürünün amacına (çocuk / ebeveyn / uzman, Türkiye) uyanlar seçilir, kullanıcıya seçenek ve öneri olarak sunulur. Kaynaklar yazılır, başka ürünün içeriği, karakteri, metni kopyalanmaz (yalnız işleyiş referansı).
 
+8. **Kota tasarrufu (kullanıcı isteği 2 Kasım 2026, bütün pencereler).** Ölçüm (2 Kasım): uzun pencerelerde her adımda 600–700 bin token'lık geçmiş yeniden okunuyor (GameApp, Marketing, yönetim paneli); kotayı yiyen budur, araç ya da arama değil.
+   - **Konu bitince yeni pencere:** bir iş paketi bitince (ya da geçmiş çok uzayınca) yeni pencere açılır. Süreklilik `CLAUDE.md` + `DURUM.md` + depolardan gelir; eski pencere kapanmadan önce `DURUM.md`'ye satırını yazar ve yeni pencerenin ilk mesajını (bekleyen işler, abonelikler) kullanıcıya hazırlar.
+   - **Pencereler arası mesaj az:** yalnız karşı tarafın şimdi bir şey yapması gerekiyorsa gönderilir, tek mesajda toplanır; bilgi notu `DURUM.md`'ye yazılır (her mesaj karşı pencerenin bütün geçmişini yeniden okutur).
+   - **Görsel/video kare incelemesi alt ajanda:** ekran görüntüsü ve video kareleri ana pencereye değil, alt ajana baktırılır, yalnız sonucu döner (görseller geçmişte kalıcı yer kaplar).
+   - **Uzun çıktı yok:** günlük, JSON, dosya dökümleri `head`/`grep` ile kısaltılır; tekrar tekrar yoklama (polling) yapılmaz, olay ya da bildirim beklenir.
+   - **Biten abonelik ve zamanlayıcılar kapatılır** (birleşen PR, biten derleme denemesi).
+
 ## Kullanıcı ve güvenlik
 
 - Kullanıcı yazılımcı değil: Türkçe, sade, adım adım; nereye tıklayacağını söyle. Belirsiz kararda kısa soru sor; kapsam dışına çıkma.

@@ -58,6 +58,8 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 
 Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
 
+Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapalı**): Takip planında ailede ekli rutin/göreve "Değişiklik öner" düğmesini gösterir (`akislar.md` 12.1 adım 6–7). ParentApp "Uzmanın değişiklik önerisi" kartını yayınlamadan açılmaz: eski ParentApp değişiklik önerisini yeni görev gibi ekler (çift görev). Açmak: `admin_set_flag('plan_change_suggestions', true, 100, …)`.
+
 ## Uygulamaların okuması: `client_config(app)`
 
 Her uygulama açılışta (ve ön plana gelince) çağırır: `{"app": {"min_version", "maintenance", "banner"}, "flags": {"<key>": true|false}}`.
