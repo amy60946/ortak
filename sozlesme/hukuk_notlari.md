@@ -90,6 +90,9 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
   >
   > ☐ Bu uzmanı tanıyorum ve çocuğun velisiyim (yasal temsilcisiyim). — kutu işaretlenmeden "Onayla ve paylaş" açılmaz. Altta: "Bu davet bana ait değil".
 - **ParentApp › onay ekranı:** B'deki metin + düğme.
+- **ParentApp › Pofi Adası'nı bağlamadan önce (veli onayı, 28 Ekim 2026; kullanıcı sorusu "izleme aracı yok neye tekabül ediyor?"):** "izleme aracı" = üçüncü taraf reklam/analiz takibi (SDK). Oyun çocuğun oyundaki ilerlemesini ("Yaptım", seviye, oyun kaydı) kaydeder ve aileye raporlar; bu ayrımı göstermek için metin: "Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {ad}'ın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz." (hukuk/50 §1.3).
+
+- **E (28 Ekim 2026, kullanıcı isteği):** ParentApp onay ekranları kısaldı (`hukuk/50` §1.1, §1.3, §2): kayıtta tek satır tek kutu; veli onayı kartında "Oyun ondan e-posta, konum, fotoğraf ya da ses almaz" cümlesi karttan çıktı (aydınlatmada duruyor); yeniden onayda koşullar ve veli onayı iki ayrı kutu, aydınlatmalar kutusuz bağlantı. Avukata: kısa biçim aydınlatma yükümlülüğü ve veli onayının "bilerek ve isteyerek" verilmesi açısından yeterli mi?
 
 ### I. Kullanıcının platforma verdiği aktarım ve işleme yetkileri (taslak, 27 Ekim 2026; kullanıcı isteği)
 
@@ -107,6 +110,11 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 10. **Onay kaydı ve sürüm.** Kullanıcının hangi metni (Kullanım Koşulları, Aydınlatma, açık rızalar) hangi sürümle ve ne zaman onayladığı kaydedilir; metin değişince yeni sürüm yeniden onaylatılır. *(Yazılım: Kullanım Koşulları ve Aydınlatma onayının sürümlü kaydı henüz yok; açık rızalar sürümlü kaydediliyor — DURUM açık iş.)*
 11. **Hesap silindikten sonra.** Hesap silinince kişisel veriler silinir; yalnız kanunen saklanması gereken kayıtlar (ör. ödeme kayıtları) ve değiştirilemez denetim kaydı, kişiyi doğrudan tanımlayan bilgi (e-posta) çıkarılarak saklama süresince tutulur.
 
+### J. Telefon numarası ve hediye kartı (28 Ekim 2026; kullanıcı isteği, `akislar.md` 19)
+
+- **J1 Telefon numarası (ParentApp, bayrak `parent_sms_verify`, şimdilik kapalı):** uzman bağlandıktan sonra isteğe bağlı numara + SMS doğrulama kodu. Ekrandaki metin: "Uzmanının hatırlatmaları ve evde uygulama ipuçları kısa mesajla da gelebilsin. Numaran uzmana gösterilmez." ve "Numaran yalnız doğrulama ve bu kısa mesajlar için kullanılır; reklam gönderilmez." **Açmadan önce:** (a) ebeveyn aydınlatma metnine telefon numarası (kategori: iletişim; amaç: hesap doğrulama ve uzman/hizmet hatırlatmaları; saklama: hesap silinene kadar; alıcı: SMS sağlayıcısı) eklenir; (b) SMS sağlayıcısı (Twilio vb.) yurt dışındaysa aktarım dayanağı (I2 ile birlikte); (c) hatırlatma SMS'leri ticari elektronik ileti değil "hizmet bildirimi" olarak sınıflanıyorsa İYS kaydı gerekmez; bu ayrım avukatla netleşmeli; (d) numarayı kaldırma yolu (Aile › Hesap; şimdilik KVKK başvurusu).
+- **J2 Hediye kartı (misafir kartı):** bir aile başka bir yeni aileye 30 günlük deneme hediye eder; ücret yok, abonelik başlamaz, süre bitince ücretsiz plana döner. Kullanım koşullarına kısa madde: kart bir kez ve yalnız yeni ailede (ilk 7 gün) geçerli, 60 gün içinde kullanılır, satılamaz, nakde çevrilemez; ParentApp kampanyayı değiştirebilir/sonlandırabilir. Kartı veren aileye "kartın kullanıldı" bildirimi gider, kullananın kimliği paylaşılmaz. Paylaşım metni ebeveynin kendi göndereceği kişisel mesajdır (platform alıcıya ileti göndermez).
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
@@ -123,6 +131,14 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 | Yanlış aileye giden davet | `family_decline_invite` → davet kapanır, öneri silinir, uzmana `invite_declined` |
 | Test | `test/test_family_invite_links.sql` 5. ve 6. bölüm |
 
+### H. ParentApp tanışma soruları — sağlık yanıtları (sürüm `saglik-yanit-v1`, öneri 27 Ekim 2026)
+
+> Çocuğumun tanısı ve ilaç kullanımı hakkındaki yanıtlarımın, uygulamanın bana ve çocuğuma uygun öneriler sunması amacıyla saklanmasına ve hizmetin yürütülmesi için yetkili ekip tarafından görülebilmesine açık rıza veriyorum. Bu soruları yanıtlamak zorunda değilim; yanıtlarımı istediğim an silebilirim.
+
+Ekranda kısa satır + i (tam metin i'de). "Belirtmek istemiyorum" seçilirse rıza istenmez. Yönetim panelinde kişi bazlı görünürlük kullanıcı kararıdır (27 Ekim 2026); aydınlatma metnine eklenmeli.
+
+Yönetim paneli (27 Ekim 2026): aile kartında sağlık yanıtları varsayılan gizli, "göster" ile açılır; her açılış gerekçeli ve denetim kayıtlı (`admin_intake`). Özet işlevi `admin_intake_summary` sağlık sorularını (`child_diagnosis`, `child_medication`) **hiç döndürmez** (I4 "toplam raporlarda gösterilmez" ile uyumlu; veri en aza indirme).
+
 ## 5. Avukata sorular
 
 1. Notlar için veri sorumlusu kim: klinik mi, platform mu, ikisi mi?
@@ -138,4 +154,8 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 11. Bölüm I'deki her maddenin dayanağı (sözleşmenin ifası, meşru menfaat, kanuni yükümlülük, açık rıza) hangisi; hangileri ayrı onay kutusu ister?
 12. Yurt dışı aktarım (I2) için 2024 KVKK değişikliği sonrası standart sözleşme yeterli mi; sağlık verisi için ek şart var mı?
 13. Yetkili ekip erişimi (I3, I4): destek amaçlı kişi bazında tanışma yanıtı görüntüleme aydınlatmada açıkça yazılınca yeterli mi; sağlık yanıtları ekipçe hiç görülmemeli mi?
-14. **Sosyal medyada yapay zekâ etiketi (kullanıcı kararı 29 Ekim 2026: etiket açılmaz, `hukuk/45` 8.4).** Pazarlama videoları animasyon + gerçekçi sentetik anlatıcı sesi; platformlar (Meta, TikTok, YouTube) gerçekçi YZ ses/görüntüde etiket istiyor. Bu biçimde Meta/TikTok etiketi zorunlu mu, etiketsiz paylaşımın riski ne (platform yaptırımı, hesap)? Türkiye'de reklam/tüketici mevzuatı ya da Reklam Kurulu açısından etiketsiz yayının riski ne; "yanıltıcı reklam" sayılabilir mi; şirket hesabının platform kuralını ihlali sözleşmesel risk mi? Avukat görüşüne göre karar yeniden değerlendirilir.
+14. ParentApp tanışma soruları: tanı/ilaç yanıtlarının (özel nitelikli sağlık verisi) kişi bazlı olarak yönetim panelinde görülmesi için açık rıza metni (H) ve aydınlatma yeterli mi; amaç ve saklama süresi nasıl yazılmalı; anonim özetle sınırlamak daha mı uygun?
+15. Veli onayı ekranındaki "dışarıdan izleme aracı yok" ifadesi ile oyunun ilerleme kaydı (aileye ve rızayla uzmana raporlanan) arasındaki ayrım tüketici ve KVKK açısından yeterince açık mı; "izleme" sözcüğü hiç kullanılmamalı mı?
+16. (J1) Uzmanın ya da uygulamanın SMS hatırlatmaları "ticari elektronik ileti" mi, hizmet bildirimi mi (İYS ve onay gereği)? Telefon numarası için aydınlatma metnine eklenecek cümleler ve SMS sağlayıcısına yurt dışı aktarımın dayanağı.
+17. (J2) Hediye kartı için kullanım koşullarına yazılacak kampanya maddesi yeterli mi; tüketici mevzuatı açısından "ücretsiz deneme süresini uzatma" ayrıca bilgilendirme ister mi?
+18. **Sosyal medyada yapay zekâ etiketi (kullanıcı kararı 29 Ekim 2026: etiket açılmaz, `hukuk/45` 8.4).** Pazarlama videoları animasyon + gerçekçi sentetik anlatıcı sesi; platformlar (Meta, TikTok, YouTube) gerçekçi YZ ses/görüntüde etiket istiyor. Bu biçimde Meta/TikTok etiketi zorunlu mu, etiketsiz paylaşımın riski ne (platform yaptırımı, hesap)? Türkiye'de reklam/tüketici mevzuatı ya da Reklam Kurulu açısından etiketsiz yayının riski ne; "yanıltıcı reklam" sayılabilir mi; şirket hesabının platform kuralını ihlali sözleşmesel risk mi? Avukat görüşüne göre karar yeniden değerlendirilir.
