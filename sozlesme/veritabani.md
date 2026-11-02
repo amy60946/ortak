@@ -488,6 +488,7 @@ RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()`
 | `clinic_task_suggestions.status` | `draft` eklendi: aile görmez, karar veremez, bildirim yok; `care_plan_publish` hepsini `pending` yapar | K | K; P yalnız `draft` olmayanı |
 | `clinic_task_suggestions.kind` (`new` / `change`), `target_task_id`, `change_remove` | `change`: ailede ekli göreve değişiklik önerisi; hedef görev bu ailenin ve bu çocuğa atanmış olmalı (`cts_change_guard`); görev başına tek açık öneri (`cts_one_open_change`). Yeni değerler öneri sütunlarında (`reminder`, `repeat_kind`, `repeat_days`, `recurring`, `end_date`); `change_remove` = görevi bitir | K | K, P (ParentApp "Uygula" ile görevi günceller) |
 | `care_plan_publish(link)` | Plan anlık görüntüsü + taslak öneriler `pending`; plan ve öneriler için **tek** bildirim (`care_plan_shared`; yalnız öneri varsa `clinic_suggestion`). Gönderilecek hiçbir şey yoksa hata | K | — |
+| `care_plan_publish_selected(link, hold[])` (`20261102500000_plan_publish_selected`, uygulandı 2 Kasım 2026) | Aynı gönderim, `hold` içindeki hedef / program / öneri kimlikleri bekler (hedef ve program ailede eski `pub`'ında, taslak taslak kalır). Plan değişmediyse ve öneri yoksa bildirim yok, hata yok. Programın `pub.goal_ids`'i yalnız `pub`'ı dolu hedefler (iç işlev `care_plan_snapshot_hold`, yalnız sunucu; `care_plan_snapshot(link)` ona yönlenir) | K | — |
 | `family_care_plan(link)` | `modules[].goal_ids` ve `routines[]` {id (rutin grubu ya da tek öneri), title, icon, single, goal_id (yalnız aileye gönderilmiş hedef), task_ids} eklendi | — | P |
 | `clinic_set_suggestion_goal(ids uuid[], goal uuid)` | Uzman kendi önerilerinin (ailede ekli rutin dahil) hedef bağını değiştirir ya da kaldırır (`null`); yalnız `goal_id` değişir, hedef aynı paylaşımın olmalı (`cts_goal_guard`). Dönüş: değişen satır sayısı | K | — |
 
@@ -522,3 +523,11 @@ RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildi�
 | Edge Function `support` | herkes (Verify JWT **kapalı**) | `GET` → 302 `<LEGAL_PUBLIC_URL kökü>/destek`; `POST {app, topic, email, name, message, adult, website, elapsed_ms}` → `{ok, ref}`; tuzak alanı dolu ya da 3 saniyeden kısa → sessizce `{ok}` (kayıt yok); `adult` değilse 400 |
 
 **Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.
+
+## 23. Tüm danışanlar dikkat panosu (`migrations/20261102600000_clinic_attention_summary.sql`, uygulandı 2 Kasım 2026; kullanıcı kararı "liste + neden")
+
+Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan başına tek satır, yalnız olgu söyleyen nedenler (puan, renkli risk, sıralama yok).
+
+| İşlev | Ne | Çağıran |
+|---|---|---|
+| `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
