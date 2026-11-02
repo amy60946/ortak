@@ -198,17 +198,21 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 |---|---|---|---|---|
 | `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at` | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
 | `push_tokens` | Cihaz push anahtarı | `token` (PK), `user_id`, `app`, `platform`, `updated_at` | Yalnız RPC | Kendi satırları |
+| `child_push_settings` (**öneri** `proposed/20261102200000_child_push.sql`, K7 B) | Çocuğa anlık bildirim ayarı (çocuk başına; satır yoksa kapalı) | `child_id` (PK), `family_id`, `enabled` (varsayılan false), `quiet_from` (20:30), `quiet_to` (08:00), `school_quiet` (true: hafta içi 08:00–15:30), `last_sent_at`, `updated_by`, `updated_at` | Yalnız RPC | Ailenin ebeveynleri (RLS); çocuk yalnız `child_push_settings_me()` |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
 | `register_push_token(p_token, p_app, p_platform)` | O, P, K | Anahtarı bu kullanıcıya bağlar (cihaz hesap değiştirdiyse taşınır) |
 | `unregister_push_token(p_token)` | O, P, K | Çıkışta / bildirim kapatılınca |
 | `mark_notifications_read(p_ids bigint[] default null)` | O, P, K | Verilenleri ya da hepsini okundu yapar; sayı döndürür |
+| `parent_set_child_push(p_child, p_enabled, p_quiet_from '20:30', p_quiet_to '08:00', p_school_quiet true)` (öneri) | P | Çocuğa bildirimi açar/kapatır, sessiz saatleri yazar; kapatınca çocuğun cihaz anahtarları silinir; güncel ayarı döndürür |
+| `child_push_settings_me()` (öneri) | O | `{enabled, quiet_from, quiet_to, school_quiet}`; oyun izin akışını yalnız `enabled` ise gösterir |
+| İç: `child_push_claim(p_user, p_now)` (öneri; yalnız service_role), `child_push_quiet(…)` | sunucu | `push-apns` çocuk bildiriminden önce sorar: açık mı, sessiz saat dışı mı (Türkiye saati), bugün gönderilmedi mi; izin verirse günü işaretler |
 | `redeem_clinic_invite_children(p_code, p_child_ids uuid[])` | P | Tek kodla birden çok çocuk; `{link_ids, clinic_id}` |
 | `clinic_share_child(p_clinic_id, p_child_id)` | P | O klinikle etkin paylaşım varsa kodsuz çocuk ekler |
 | `family_clinic_links()` | P | Dönüşe `clinic_id` eklendi |
 | İç: `notify`, `notify_parents`, `notify_child`, `notify_clinic`, `child_name`, olay tetikleyicileri, `notifications_push` (pg_net → Edge Function `push-apns` / Expo) | — | İstemci çağıramaz |
-| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar |
+| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar. Çocuğa (`app='child'`): yalnız `child_push_claim` izin verirse, genel metinle ("Pofi Adası · Adada yeni bir haber var!"; görev başlığı/ad/not yok), `data` yalnız `kind` + `notification_id` (2 Kasım 2026) |
 
 ## 6. Klinik ekibi ve kullanıcı takibi (21 Ekim 2026'da uygulandı, `migrations/20261021100000_clinic_team_tracking.sql`)
 

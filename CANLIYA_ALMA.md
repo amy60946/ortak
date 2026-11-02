@@ -112,7 +112,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) Yaş derecelendirme anketi
 - [ ] (Claude) Ekran görüntüleri, açıklama, anahtar kelimeler
 - [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not
-- [ ] (Claude) Bildirim izni ilk gereken anda
+- [ ] (Claude) Bildirim izni ilk gereken anda — oyun için K7 B: yalnız ebeveyn açarsa, ilk onaylı görevden sonra (öneri `proposed/20261102200000_child_push.sql`)
 - [ ] (Claude) Yeni simge biçimi (Icon Composer)
 - [ ] (Siz) TestFlight dış deneme (5–10 aile, en az 1 uzman)
 
@@ -128,7 +128,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) Ebeveyn kapısı: ayarlar, dış bağlantı, destek, yasal, bağlama
 - [ ] (Claude) Ödül dükkânı birleştirme, mesaj kutusu, bildirim + push anahtarı, yaş bandı C, avatar fotoğrafı
 - [x] (Claude) `track_events('child')` (üçüncü taraf yok) — 2 Kasım 2026, olay listesi `akislar.md` §9
-- [ ] (Claude) Açılışta doğrudan oyun; ipuçları atlanabilir + "Nasıl oynanır"
+- [ ] (Claude) Açılışta doğrudan oyun; ipuçları atlanabilir + "Nasıl oynanır" — **ipuçları + Nasıl oynanır yapıldı** (K6 A, 2 Kasım 2026, game-app a4d5779)
 - [ ] (Claude) Paket boyutu ve eski cihaz performansı ölçümü
 - [ ] (Siz) "Quests", "Güneş Taşı" adları; yükleme ekranı görseli
 
