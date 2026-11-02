@@ -198,6 +198,8 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
 | `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder, klinik adını değiştirir, bütün danışanları görür ve danışanları üyelere atar (`20261022100000`, uygulandı). Üye yalnız sorumlusu olduğu ve kendisine atanan danışanları görür. |
 | `clinic_task_suggestions.status` | `pending` (varsayılan) / `accepted` / `declined` | Ebeveyn kararı. `accepted` olunca görevi **ParentApp kendisi** oluşturur (sunucu otomatik görev açmaz). |
+| `clinic_task_suggestions.status` (öneri `20261102100000_plan_redesign`) | `draft` eklendi | Uzmanın gönderilmemiş taslağı; aile görmez. "Aileye gönder" (`care_plan_publish`) `pending` yapar. |
+| `clinic_task_suggestions.kind` | `new` (varsayılan) / `change` | `change`: ailede ekli göreve (`target_task_id`) değişiklik önerisi; kabulde ParentApp görevi günceller, `change_remove` ise bitiş tarihi koyar. |
 | `clinic_task_suggestions.difficulty` | `easy` / `medium` / `hard` (varsayılan `easy`) | Görevdeki ile aynı. |
 | `family_subscriptions.plan` | `free` (varsayılan) / `premium` | Aile aboneliği. Etkin kliniğe bağlı çocuğu olan aile de premium sayılır (`family_premium`). |
 | `family_subscriptions.source` | `store` (varsayılan) / `web` / `manual` | Ödeme kaynağı. |

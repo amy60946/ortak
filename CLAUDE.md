@@ -8,11 +8,11 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
 | ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
 | Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | "GameApp2" (ortak + admin-panel; yönetim paneli işlerinin hepsi bu pencerede, kullanıcı kararı 26 Ekim 2026) |
-| Pazarlama | Ekip | `amy60946/marketing` (özel depo: strateji, kampanya, içerik) | "Marketing" (ortak + marketing; ürünleri ortaktan **okur**, ürün kodu/SQL/yasal metin yazmaz; kurallar `hukuk/45-pazarlama-kurallari.md`; kullanıcı isteği 28 Ekim 2026) |
+| Pazarlama | Ekip | `amy60946/marketing` (özel depo: strateji, kampanya, içerik) | "Marketing" (ortak + marketing; ürünleri ortaktan **okur**, ürün kodu/SQL/yasal metin yazmaz; kurallar `hukuk/45-pazarlama-kurallari.md`; kullanıcı isteği 28 Ekim 2026; **spiker sesi üretimi de bu pencerede**, 29 Ekim 2026) |
 
 Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`, pazarlama = `ortak` + `marketing`. İlk iş: bu dosya + `DURUM.md`.
 
-**Marketing penceresi için:** ürün bilgisi `hukuk/00-olgular.md` (ne var, ne toplanıyor), `sozlesme/akislar.md` (özellikler), `sozlesme/ekonomi.md` (coin, abonelik), `sozlesme/admin.md` (KPI tanımları), `DURUM.md` (son kararlar), iş modeli kanvası (Referanslar). Pazarlama metni ve kampanya `hukuk/45-pazarlama-kurallari.md`'ye uyar (sağlık iddiası yok, çocuğa doğrudan çağrı yok, izleme yalnız onayla, İYS). Strateji, bütçe ve rakip notları **herkese açık bu depoya değil** `marketing` özel deposuna yazılır. Ortakta değişmesi gereken bir şey görürse ilgili pencereye iletir (kural 6).
+**Marketing penceresi için:** ürün bilgisi `hukuk/00-olgular.md` (ne var, ne toplanıyor), `sozlesme/akislar.md` (özellikler), `sozlesme/ekonomi.md` (coin, abonelik), `sozlesme/admin.md` (KPI tanımları), `DURUM.md` (son kararlar), iş modeli kanvası (Referanslar). Pazarlama metni ve kampanya `hukuk/45-pazarlama-kurallari.md`'ye uyar (sağlık iddiası yok, çocuğa doğrudan çağrı yok, izleme yalnız onayla, İYS). Strateji, bütçe ve rakip notları **herkese açık bu depoya değil** `marketing` özel deposuna yazılır. Sosyal medya paylaşımı `sozlesme/paylasim.md`: Marketing paketi taslak olarak gönderir, yayın yalnız panelde owner onayıyla (§8). Ortakta değişmesi gereken bir şey görürse ilgili pencereye iletir (kural 6).
 
 ## İçerik
 
@@ -26,6 +26,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 | `sozlesme/ekonomi.md` | Coin, XP, seviye, gösterge düşüşü ve fiyatlar. |
 | `sozlesme/akislar.md` | Uygulamalar arası akışlar (bağlama kodu, görev → onay → coin, posta, uzman rızası). |
 | `sozlesme/admin.md` | Admin paneli (roller, işlemler, güvenlik) ve KPI tanımları. |
+| `sozlesme/paylasim.md` | Sosyal medya paylaşımı: Marketing paketi → panelde owner onayı → paylaşım servisi (Zernio). |
 | `DURUM.md` | Ortak karar ve değişiklik günlüğü (en yeni üstte). |
 
 > Sözleşme dosyalarındaki "Kaynak:" satırları özgün kod yollarını gösterir (`parent-app/...`, `game-app/...`); SQL artık bu depodaki `supabase/` altındadır.
@@ -39,6 +40,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 4. **Test:** SQL değişikliğinden sonra `bash supabase/test/run.sh` (yerel psql) geçmeli. Her yeni tabloda satır düzeyi güvenlik (RLS) zorunlu ve testli. Her yeni fonksiyonda `revoke execute … from public, anon` (+ gerekiyorsa `grant … to authenticated`); `test_security.sql` anon'un çağırabildiği fonksiyon kalmadığını denetler.
 5. **Günlük:** Her oturum sonunda `DURUM.md`'ye bir satır: tarih · ürün · ne değişti · diğer ürünleri etkiliyor mu · kim ne yapmalı.
 6. **Başka ürünün koduna** yalnız okumak için bakılır. Yazmak gerekiyorsa o ürünün penceresi yapar; kullanıcıya söylenir.
+7. **Benchmark alışkanlığı (kullanıcı isteği 2 Kasım 2026, bütün pencereler):** her yeni özellik, özellik çıkarma ve iyileştirmede (akış/senaryo, tasarım, metin, arayüz, iş kuralı) önce aynı işi yapan, başarılı olmuş global uygulama ve platformlar araştırılır. En iyi örnekler artı ve eksileriyle değerlendirilir, ürünün amacına (çocuk / ebeveyn / uzman, Türkiye) uyanlar seçilir, kullanıcıya seçenek ve öneri olarak sunulur. Kaynaklar yazılır, başka ürünün içeriği, karakteri, metni kopyalanmaz (yalnız işleyiş referansı).
 
 ## Kullanıcı ve güvenlik
 
@@ -47,6 +49,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
 - Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.
+- **Canlıya alma: elle yayın (kullanıcı kararı 2 Kasım 2026, üç ürün):** App Store Connect'te "Manually release this version" seçilir; Apple onayından sonra sürüm kullanıcı onayıyla yayına alınır, otomatik yayın yok. Adımlar `CANLIYA_ALMA.md`.
 - **Hukuk arşivi (kullanıcı isteği 27 Ekim 2026):** hukuki her karar/madde `sozlesme/hukuk_notlari.md`'ye yazılır (avukata sorular dahil). Canlıya alma süreci yeniden başlarken ve herhangi bir ürün canlıya alınmadan önce kullanıcıya bu arşivi hatırlat (`CANLIYA_ALMA.md` 1.5).
 - Klinik sınır: hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir; uzman verisi yalnız ebeveyn rızasıyla ve geri alınabilir şekilde paylaşılır.
 

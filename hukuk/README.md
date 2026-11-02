@@ -60,6 +60,7 @@
 | Veri ihlali | md. 12/5, 72 saat | ihlal prosedürü (iç) | panel acil işlemleri |
 | Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç) | **yapılacak:** zamanlanmış imha işi |
 | ClinicApp web | Çerez/yerel depolama | cerez-clinicapp-web | — |
+| Sosyal medya paylaşımı (Marketing → panel onayı → Zernio) | Reklam/sağlık iddiası, YZ etiketi, telif, hesap güvenliği, insan onayı | 45-pazarlama-kurallari §8 | `social`, `admin_social_check` |
 
 ## Yazım sırasında bulunan sorunlar (27 Ekim 2026; ürün ya da avukat kararı bekler)
 
