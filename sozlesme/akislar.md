@@ -72,7 +72,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] | Aile › çocuk › "Cihaz bağlantısını kaldır". | `unlink_child_device(child_id)` → `children.user_id = null` |
-| 2 | [O] | Sonraki denetimde kendi `children` satırını göremez → "Bağlantın kapatıldı, yeni kod iste". Yerel oyun kaydı **silinmez**. | `GET children?user_id=eq.<uid>` boş → `Revoked`; `child_me` → `42501` |
+| 2 | [O] | Sonraki denetimde kendi `children` satırını göremez → "Bağlantın kapatıldı, yeni kod iste". Bu cihazdaki oyun kaydı ve oturum **silinir** (2 Kasım 2026, `hukuk/42` satır 30); sunucudaki yedek kalır, yeni kodla bağlanınca geri gelir (`SaveRestore`). | `GET children?user_id=eq.<uid>` boş → `Revoked`; `child_me` → `42501` |
 | 3 | [P] + [O] | Yeniden bağlanmak için 2. bölümdeki akış yeni kodla tekrarlanır. | |
 
 ---
@@ -129,7 +129,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 |---|---|---|---|
 | 1 | [P] | Ebeveyn çocuğa yazı, fotoğraf ya da sesli mesaj gönderir. Fotoğraf/ses önce Storage'a yüklenir, sonra mesaj kaydı eklenir (kayıt başarısızsa dosya silinir). | Storage `mail/<family_id>/<id>.<uzantı>`; `messages` insert (`sender='parent'`, `kind` `text`/`image`/`audio`) |
 | 2 | [P] | Diğer ebeveyn Realtime ile anında görür. | `messages` (Realtime) |
-| 3 | [O] | **Henüz yok.** Oyun kodunda `messages` kullanımı bulunamadı. RLS çocuğun kendi mesajlarını okumasına ve `sender='child'` ile göndermesine, Storage'a aile klasörüne yüklemesine izin verir. | — |
+| 3 | [O] | Posta kutusu (23 Ekim 2026'dan beri): `child_messages` okunur, açılınca `mark_messages_read()`, B/C grubu `child_send_message` (yazı/çıkartma) yazar; fotoğraf/ses `mail` kovasından imzalı bağlantıyla. Realtime yok: oyun her eşitlemede (20 sn, öne gelişte de) yeniler. | `child_messages`, `child_send_message` |
 | 4 | [K] | Erişim **yok** (klinik önerisinde de Posta uzmanla paylaşılmaz). | — |
 
 ---
@@ -232,7 +232,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 |---|---|---|---|
 | 1 | [P] | Ebeveyn Storage dosyalarını siler, sonra hesabı siler. | Storage `mail`; `delete_account()` |
 | 2 | [S] | Ailede başka ebeveyn yoksa aile ve bağlı her şey (çocuklar, görevler, tamamlamalar, mesajlar, coin defteri, oyun yedekleri) silinir. | `families` → cascade |
-| 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür; yerel kayıt kalır. | `Revoked` |
+| 3 | [O] | Çocuk satırı silindiği için oyun sonraki denetimde bağlantıyı kapalı görür ve **bu cihazdaki çocuk verisini siler** (oyun kaydı, oturum belirteci; 2 Kasım 2026, `hukuk/42` satır 30). Yalnız cihaz bağlantısı kaldırıldıysa sunucudaki yedek kalır, yeniden bağlanınca geri gelir. | `Revoked` |
 | 4 | [K] (uygulandı, bölüm 9 veritabani.md) | Uzman "Hesabı sil": tek kişilik klinik (paylaşımlar, notlar, hedefler, davetler, üyelik kayıtları) silinir; ekipte başkası varsa klinik kalır, sahiplik en eski üyeye geçer. App Store aboneliği Apple'dan ayrıca kapatılır. | `delete_account()` |
 
 ---
@@ -288,6 +288,8 @@ Teslim yolları:
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
 
 ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.share` (`channel`), `invite.email` (`sent`, `reason`; sistem e-postası, 26 Ekim 2026), `survey.done` (`intent`, `profession`) / `survey.skip` (`step`) (karşılama anketi, 27 Ekim 2026), `plan.goal` (`edit`), `plan.module` (`edit`), `plan.package`, `plan.publish`, `verification.submit` (`profession`, `check`) (26 Ekim 2026); `sample.open`, `sample.tour` (`step`, kapatıldığı adım), `sample.hide` (listeden kaldırıldı), `start.hide` (örnek aile ve "Başlarken"), `export.abc` / `export.routine` (`rows`; CSV, dosya cihazda oluşur), `report.note_copy` (ilerleme notu), `settings.profile`, `settings.clinic`, `client.label` (28 Ekim 2026, Joon referanslı yeniden düzen). Takip planı yeniden tasarımı (2 Kasım 2026): `plan.routine_goal` (`link`), `plan.template_save` (`shared`, `modules`), `plan.template_apply` (`modules`, `routines`), `suggestion.change` (`n`, `remove`); `plan.publish`'e `drafts`, `plan`; `suggestion.routine` / `suggestion.send`'e `draft`, `from`. `screen.client`'te örnek ailede `sample: true`.
+
+GameApp olayları (`track_events('child', …)`, 2 Kasım 2026; çocuk oyunu, anonim çocuk oturumu; **görev başlığı, ebeveyn notu, mesaj, ad gibi serbest metin gönderilmez** — istemci süzgeci `Logic/Analytics/Telemetry`: özellik değeri yalnız sayı, doğru/yanlış ya da `^[a-z0-9_.:-]{1,40}$` kimlik; aynı olay aynı oturumda tek satırda `n` ile sayılır; çağrı ≤ 50, istemci günlük üst sınırı 500; oturum `track_session('child', ios|web, sürüm)` açılışta ve 5 dk'dan uzun aradan sonra öne gelişte): `app.open` (`first_screen_ms`, `signed_in`; ilk ekrana kadar süre), `app.first_touch` (`ms`), `screen.<ad>` (`login`, `petselect`, `map`, `home`, `tasks`, `shop`, `wardrobe`, `minigame`, `garden`, `album`, `settings`, `decorate`, `festival`, `lighthouse`, `mail` …), `act.<sayaç>` (`n`; oyun içi eylem sayaçlarıyla aynı adlar: `pet_fed`, `pet_washed`, `home_entered`, `item_bought`, `minigames_played`, `runner_played`, `runner_finished`, `reward_requested`, `mail_sent`, `stone_placed`, `hut_built`, `gift_opened`, `tasks_approved` …), `guide.step` (`step`: rehber adımı kimliği, ör. `feed`), `level.up` (`level`), `task.done` / `task.cant` (`routine`: rutin adımı mı). Sahte arka uçta (deneme kodları) hiçbir şey gönderilmez.
 
 ## 10. Uzman başlatır: aile davet bağlantısı (`migrations/20261026100000_family_invite_links.sql`, uygulandı 26 Ekim 2026)
 

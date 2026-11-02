@@ -65,7 +65,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 1.7 Hesap silme
 - [x] Sunucu: `delete_account()` (ebeveyn, uzman)
 - [ ] (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası
-- [ ] (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği
+- [x] (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği (2 Kasım 2026, `GameBootstrap.ForgetDevice`)
 - [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı
 
 ### 1.8 Ödeme
@@ -107,7 +107,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 2.1 Hepsi
 - [x] Yayın biçimi: **elle** (kullanıcı, 2 Kasım 2026): App Store Connect → sürüm → "Manually release this version". Apple onaylar, kullanıcı onay verince yayına alınır (üç ürün)
 - [ ] (Siz) iOS imza / sertifika sınırı (ParentApp + GameApp)
-- [ ] (Claude) `PrivacyInfo.xcprivacy`
+- [ ] (Claude) `PrivacyInfo.xcprivacy` — **GameApp yapıldı** (2 Kasım 2026, `IosPostBuild.AddPrivacyManifest`: izleme yok; anonim kimlik, oyun kaydı, mesaj, kullanım olayları, açılış süresi; UserDefaults CA92.1). ParentApp, ClinicApp kalan
 - [ ] (Siz + Claude) App Privacy etiketi
 - [ ] (Siz) Yaş derecelendirme anketi
 - [ ] (Claude) Ekran görüntüleri, açıklama, anahtar kelimeler
@@ -119,7 +119,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 2.2 GameApp
 - [x] Kids Kategorisi: **hayır, normal oyun** (22 Ekim). Yine de Apple 5.1.4: üçüncü taraf analitik yok, dış bağlantılar ebeveyn kapısı arkasında; mağaza metninde "çocuklar için" yok
 - [x] Kodsuz başlangıç: **hayır** (kullanıcı, 22 Ekim) — oyun bugünkü gibi kodla açılır; App Review için kalıcı deneme kodu (2.1)
-- [ ] (Claude) İlk dokunuşa kadar süre ölçümü (hedef iPhone 11'de < 10 sn); pet adı ekranı atlanabilir
+- [ ] (Claude) İlk dokunuşa kadar süre ölçümü (hedef iPhone 11'de < 10 sn); pet adı ekranı atlanabilir — ölçüm **eklendi** (`app.open first_screen_ms`, `app.first_touch ms`; sonuç TestFlight denemesinden sonra SQL Editor `analytics.events_daily`), ad ekranı zaten yok
 - [ ] (Claude) Çekirdek döngüler `docs/PLAN.md`'de iki cümle
 - [ ] (ortak) Aile aboneliği bitince çocuk cezalandırılmaz kuralı (oyun ve birikimler kalır)
 - [ ] (Claude) İlk 3 ay için 2–3 mevsimlik etkinlik planı (In-App Events)
@@ -127,7 +127,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Karar) En düşük iOS 15.0 → 17 önerisi
 - [ ] (Claude) Ebeveyn kapısı: ayarlar, dış bağlantı, destek, yasal, bağlama
 - [ ] (Claude) Ödül dükkânı birleştirme, mesaj kutusu, bildirim + push anahtarı, yaş bandı C, avatar fotoğrafı
-- [ ] (Claude) `track_events('child')` (üçüncü taraf yok)
+- [x] (Claude) `track_events('child')` (üçüncü taraf yok) — 2 Kasım 2026, olay listesi `akislar.md` §9
 - [ ] (Claude) Açılışta doğrudan oyun; ipuçları atlanabilir + "Nasıl oynanır"
 - [ ] (Claude) Paket boyutu ve eski cihaz performansı ölçümü
 - [ ] (Siz) "Quests", "Güneş Taşı" adları; yükleme ekranı görseli
@@ -165,6 +165,6 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ## 4. Analitik ve hata izleme
 - [ ] (Siz) Sentry + PostHog (AB) hesapları (oyun için hesap yok)
 - [ ] (ortak) ParentApp ve GameApp olay listeleri `sozlesme/akislar.md` §9
-- [ ] (Claude) GameApp: Supabase'e olay servisi + Xcode Organizer/MetricKit
+- [ ] (Claude) GameApp: Supabase'e olay servisi (**yapıldı** 2 Kasım 2026, `Logic/Analytics/Telemetry`) + Xcode Organizer/MetricKit (Organizer kendiliğinden; MetricKit kalan)
 - [ ] (Claude) ParentApp + ClinicApp: Sentry + PostHog; replay ParentApp maskeli, ClinicApp kapalı
 - [ ] (Claude) Admin Raporlar: kayıt, günlük aktif, G1/G7/G30, üç huni
