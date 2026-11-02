@@ -1,4 +1,4 @@
--- "Aileye gönder" seçerek gönderim (proposed/20261102500000_plan_publish_selected.sql): bekletilen hedef/program/öneri
+-- "Aileye gönder" seçerek gönderim (migrations/20261102500000_plan_publish_selected.sql, uygulandı 2 Kasım 2026): bekletilen hedef/program/öneri
 -- ailede eski hâlinde kalır, gerisi tek bildirimle gider; değişiklik yoksa bildirim gitmez; yetki.
 \set ON_ERROR_STOP on
 

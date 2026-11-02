@@ -12,7 +12,7 @@
 --   care_plan_snapshot(p_link_id) ve care_plan_publish(p_link_id) aynı kalır (eski ClinicApp sürümleri ve davet akışı bunları çağırır);
 --     snapshot artık bekletmesiz care_plan_snapshot_hold'a yönlenir.
 --
--- Veritabanı tablosu değişmez. Tekrar çalıştırılabilir. Uygulayınca: dosya migrations/'a taşınır, DURUM.md'ye "uygulandı".
+-- Veritabanı tablosu değişmez. Tekrar çalıştırılabilir. Supabase'e uygulandı (2 Kasım 2026, kullanıcı).
 -- =====================================================================
 
 create or replace function public.care_plan_snapshot_hold(p_link_id uuid, p_hold uuid[])
