@@ -11,7 +11,7 @@
 --   "Değerlendirme zamanı" ClinicApp planCore.reviewDue ile aynı kural: süren hedefte son değerlendirmeden (yoksa eklenişten)
 --     28 gün, ya da süre doldu ve son haftasında değerlendirilmedi.
 --
--- Veritabanı tablosu değişmez. Tekrar çalıştırılabilir. Uygulayınca: dosya migrations/'a taşınır, DURUM.md'ye "uygulandı".
+-- Veritabanı tablosu değişmez. Tekrar çalıştırılabilir. Supabase'e uygulandı (2 Kasım 2026, kullanıcı).
 -- =====================================================================
 
 create or replace function public.clinic_attention_summary()

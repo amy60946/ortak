@@ -524,7 +524,7 @@ RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildi�
 
 **Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.
 
-## 23. Tüm danışanlar dikkat panosu (öneri `proposed/20261102600000_clinic_attention_summary.sql`, 2 Kasım 2026; kullanıcı kararı "liste + neden")
+## 23. Tüm danışanlar dikkat panosu (`migrations/20261102600000_clinic_attention_summary.sql`, uygulandı 2 Kasım 2026; kullanıcı kararı "liste + neden")
 
 Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan başına tek satır, yalnız olgu söyleyen nedenler (puan, renkli risk, sıralama yok).
 

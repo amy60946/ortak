@@ -1,4 +1,4 @@
--- Dikkat panosu özeti (proposed/20261102600000_clinic_attention_summary.sql): sayılar, son olay, gönderilmemiş plan,
+-- Dikkat panosu özeti (migrations/20261102600000_clinic_attention_summary.sql, uygulandı 2 Kasım 2026): sayılar, son olay, gönderilmemiş plan,
 -- değerlendirme zamanı; yalnız görebildiği paylaşım (ekip üyesi, başka klinik, ebeveyn görmez).
 \set ON_ERROR_STOP on
 
