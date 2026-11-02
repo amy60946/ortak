@@ -6,9 +6,9 @@
 // Gizli anahtar YOK: iş akışında "permissions: id-token: write" olmalı; GitHub kısa ömürlü bir kimlik belgesi verir,
 // sunucu (social işlevi) bunun amy60946/marketing ana dalından geldiğini doğrular. Gönderiler yalnız TASLAK olur;
 // yayın, panelde owner onayıyla.
-import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { appendFile, mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 
 const FN = process.env.SOCIAL_URL || 'https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/social';
 const TYPES = { '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
@@ -88,6 +88,13 @@ if (cmd === 'gonder' && args.length) {
 } else if (cmd === 'durum' && args.length === 1) {
   const { posts, usage } = await call({ action: 'status' });
   await writeFile(args[0], JSON.stringify({ guncellendi: new Date().toISOString(), hak: usage ?? null, gonderiler: posts }, null, 2) + '\n');
+  // Ölçüm geçmişi: yayımlanan her gönderi için paylasim/olcum/<paket>.jsonl'a zaman damgalı bir satır (karşılaştırma için)
+  const dir = join(dirname(args[0]), 'olcum');
+  for (const p of posts.filter((x) => x.measuredAt && x.paket)) {
+    await mkdir(dir, { recursive: true });
+    await appendFile(join(dir, `${p.paket}.jsonl`),
+      JSON.stringify({ t: p.measuredAt, id: p.id, surum: p.surum, toplam: p.stats ?? null, platformlar: p.statsByPlatform ?? [] }) + '\n');
+  }
   const hak = usage?.limit != null ? ` · bu dönem ${usage.used ?? '?'} / ${usage.limit} gönderi hakkı` : '';
   console.log(`${posts.length} gönderi → ${args[0]}${hak}`);
 } else {
