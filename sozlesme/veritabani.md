@@ -479,3 +479,15 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 
 RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()` + (oluşturan / `shared` / sahip); ekleme yalnız uzman (klinik ve oluşturan tetikleyiciyle); güncelleme ve silme oluşturan ya da sahip. Öneri ve görev politikaları değişmedi (ebeveyn öneride yine yalnız `status`, `decided_at`, `task_id` yazar). Test: `test_routines_v2.sql`.
 
+## 20. Takip planı yeniden tasarımı (öneri, `proposed/20261102100000_plan_redesign.sql`, 2 Kasım 2026; akış `akislar.md` 12.1)
+
+| Tablo / sütun | Ne | Yazar | Okur |
+|---|---|---|---|
+| `care_module_goals` (`module_id`, `goal_id`, `clinic_id`) | Aile programı ↔ hedef, çoklu (bir program birden çok hedefi destekler). Program ve hedef aynı planda olmalı (`care_module_goals_guard`); klinik programdan yazılır | K | K. Aile tabloyu okumaz; gönderilen sürümde `care_modules.pub.goal_ids` (yalnız aileye açık hedefler) |
+| `clinic_plan_templates` | Şablonlarım: `title` (1–80), `shared` (false: yalnız ben · true: ekibim), `content` jsonb (`goal` {title 1–120, template_key, domain, measure, target, weeks 1–52, home_support, description} · `modules` ≤ 12 {template_key, title, aim, practice, checklist ≤ 8, weeks} · `routines` ≤ 6 {key, title, icon}; en çok 20 KB), `archived`. Çocuğa ait kayıt (onay, GAS, not) girmez | K: oluşturan (klinik ve yazar sunucuda); oluşturan ya da sahip düzenler/siler | K: kendi + ekibe açık; sahip hepsi. Aile görmez |
+| `clinic_task_suggestions.status` | `draft` eklendi: aile görmez, karar veremez, bildirim yok; `care_plan_publish` hepsini `pending` yapar | K | K; P yalnız `draft` olmayanı |
+| `clinic_task_suggestions.kind` (`new` / `change`), `target_task_id`, `change_remove` | `change`: ailede ekli göreve değişiklik önerisi; hedef görev bu ailenin ve bu çocuğa atanmış olmalı (`cts_change_guard`); görev başına tek açık öneri (`cts_one_open_change`). Yeni değerler öneri sütunlarında (`reminder`, `repeat_kind`, `repeat_days`, `recurring`, `end_date`); `change_remove` = görevi bitir | K | K, P (ParentApp "Uygula" ile görevi günceller) |
+| `care_plan_publish(link)` | Plan anlık görüntüsü + taslak öneriler `pending`; plan ve öneriler için **tek** bildirim (`care_plan_shared`; yalnız öneri varsa `clinic_suggestion`). Gönderilecek hiçbir şey yoksa hata | K | — |
+| `family_care_plan(link)` | `modules[].goal_ids` ve `routines[]` {id (rutin grubu ya da tek öneri), title, icon, single, goal_id (yalnız aileye gönderilmiş hedef), task_ids} eklendi | — | P |
+
+RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildiği kadar (`care_modules` "modül: klinik" ile aynı). `clinic_plan_templates` `clinic_routines` ile aynı kalıp. Öneri ekleme `status in ('draft','pending')`; geri çekme taslak ya da bekleyen; aile okuma ve karar `status <> 'draft'`. `clinic_update_suggestion` taslak ya da bekleyeni günceller (+ `goal_id`, `change_remove`). Paylaşım bitince taslaklar silinir (`clinic_links_drop_drafts`). Eski ClinicApp doğrudan `pending` ekler ve eskisi gibi tek tek bildirir. Test: `test_plan_redesign.sql`.

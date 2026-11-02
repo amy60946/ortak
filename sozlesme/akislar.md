@@ -351,6 +351,23 @@ Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon 
 
 Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) yalnız klinikte. Planlandı durumundaki modül aileye görünmez. Ebeveynin zorluk bildirimi bir puan değildir, ekranda ölçek gibi gösterilmez. Hiçbir hedef tanı değildir; paket adları ihtiyaç alanıyla yazılır, tanı etiketi zorunlu değildir.
 
+### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026; öneri `proposed/20261102100000_plan_redesign.sql`, veritabani.md 20)
+
+Kararlar: ClinicApp'te **C · hedef hatları** (her hedef bir satır: hedef · aile programı · rutin/görev; ileride salt bakış "Harita"); bir program **birden çok hedefi** destekler; Şablonlarım paylaşımını **uzman seçer**; **tek "Aileye gönder"**; ailede ekli rutin/görev **değişiklik önerisiyle** düzenlenir; uzmanın kendi programı **yok** (sistem içerikleri kalır); iPad'de uzman **iPad görünümü / web görünümü** arasında seçer (sağ üstte düğme; yalnız uygulama ayarı). Taslaklar: https://claude.ai/artifact/MxXWHaP3MPLHp5o2GHj6VG, yan yana hikâye https://claude.ai/artifact/R3jRURSfeHDMyPcwLzYZNY.
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Hedef satırında programı hedefe bağlar (sürükle ya da Ekle); bir program birden çok hedefe bağlanabilir. | `care_module_goals` |
+| 2 | [K] | Şablon uygular (hedef + programlar + rutin taslakları; rutin çocuğun yaşına uygun sürümle) ya da hedef satırını "Şablon olarak kaydet" (ad + yalnız ben / ekibim). | `clinic_plan_templates` |
+| 3 | [K] | Rutin ve görev önerileri **taslak** yazılır; aile görmez, bildirim yok. Taslak ve bekleyen öneri doğrudan düzenlenir ya da geri çekilir. | `clinic_task_suggestions.status = 'draft'`, `clinic_update_suggestion` |
+| 4 | [K] | **Aileye gönder**: plan anlık görüntüsü + bütün taslaklar `pending`; aileye **tek** bildirim. | `care_plan_publish(link)` |
+| 5 | [P] | Uzmanım: plan hedefe göre gruplu (hedef → bu haftaki program → çocuğun rutini) ve rutin paketi (5.4). | `family_care_plan(link)`: `modules[].goal_ids`, `routines[]` |
+| 6 | [K] | Ailede ekli rutin/görevi düzenlemek: **değişiklik önerisi** (saat, gün, tekrar; görev çıkarmak = `change_remove`; rutine görev eklemek = aynı `routine_group` ile yeni öneri). Rutin değişikliği her görev için ayrı satır, aynı `routine_group`. | `clinic_task_suggestions.kind = 'change'`, `target_task_id` |
+| 7 | [P] | "Uzmanın değişiklik önerisi" kartı: **Uygula** → ParentApp aynı görevi günceller (`reminder`, `repeat_kind`, `repeat_days`, `recurring`, `end_date`); `change_remove` → görevin `end_date`'i bugün (başlangıcı ileride olan görev silinir); sonra öneri `accepted`. **Şimdilik değil** → `declined`. Yapılan adımlar, onaylar ve coin değişmez. | `tasks` update; öneri `status` |
+| 8 | [S] | Karar uzmana bildirilir: "Değişiklik uygulandı / şimdilik uygulanmadı". | `suggestions_notify` |
+
+Kurallar: Aile `draft` öneriyi görmez ve karar veremez. Paylaşım bitince taslaklar silinir. Eski ClinicApp sürümü öneriyi doğrudan `pending` ekler ve eskisi gibi tek tek bildirir. GameApp etkilenmez (rutin kartı görev alanlarından; saat değişince kendiliğinden güncel).
+
 ## 13a. Aileye "Çocuk ekle" kalsın mı? (değerlendirme, 26 Ekim 2026)
 
 Öneri: **kalsın**, ama uzman davetiyle gelen ailede ayrı bir adım olmasın (yukarıda 6). Gerekçe: (1) ParentApp aile aboneliğiyle uzmansız da satılıyor; GameApp'ten gelen aile çocuğunu kendisi ekler; (2) kardeşler ve uzmana gitmeyen çocuklar; (3) uzman çocuk önerisini boş bırakabilir; (4) Joon da uzman daveti olsa bile ebeveynin "Manage Family" ile çocuk ekleyip silmesine izin veriyor. Uzman davetinde çocuk hazır gelir, ebeveyn yalnız kontrol edip onaylar; elle eklemede aynı ad uyarısı (6c).
