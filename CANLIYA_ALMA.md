@@ -1,6 +1,7 @@
 # Canlıya alma listesi (üç uygulama)
 
 Ayrıntılı plan, gerekçeler ve öneriler: **Canlıya Alma Planı** belgesi https://claude.ai/artifact/7DAFNbjtvLMLTwKiG7DRv7
+Adım adım yol haritası (7 aşama, 4 kapı), pencere başına iş listesi, Apple'ın istediği alanlar ve App Store pazarlaması 0→100: **Canlıya Alma: Adım Adım ve Pencere İşleri** https://claude.ai/artifact/LdikjQHgM6Wgmv3QE7A8qd (2 Kasım 2026, kullanıcı isteği GB20-19; her pencere kendi başlığındaki kutuları alır)
 Bu dosya pencerelerin ortak takip listesidir; bir madde bitince `[x]` yapılır ve `DURUM.md`'ye satır yazılır.
 Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/metin · **Hukuk/MM** = avukat / mali müşavir.
 
