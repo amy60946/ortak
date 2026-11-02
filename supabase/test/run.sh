@@ -16,4 +16,5 @@ for t in "$here"/test_*.sql; do
   run "$t"
   echo "geçti: $(basename "$t")"
 done
+python3 "$here/../../tools/veri_envanteri_kontrol.py"   # her tablo kişisel veri envanterinde (hukuk/46)
 echo "TAMAM: tüm testler geçti"

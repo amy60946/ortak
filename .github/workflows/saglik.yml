@@ -1,0 +1,27 @@
+name: Sistem sağlığı
+# Saatte bir `health` işlevini yoklar (sozlesme/admin.md "İzleme ve alarm"). Sonuç "fail" (HTTP 503) ya da yanıt yoksa
+# iş kırmızı biter ve GitHub e-posta gönderir. Ayrıntı panelde: Yönetim → Sistem sağlığı.
+# İşlev henüz yayında değilse (404) iş uyarıyla yeşil biter: SQL + işlev yayınlanana dek alarm yağmuru olmaz.
+# Bildirim, bu dosyadaki zamanlamayı en son değiştiren GitHub hesabına gider (GitHub kuralı).
+on:
+  schedule:
+    - cron: '41 * * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  yokla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: health
+        env:
+          URL: https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/health
+        run: |
+          code=$(curl -s -o body.json -w '%{http_code}' --max-time 30 --retry 2 --retry-delay 20 "$URL" || true)
+          echo "HTTP $code $(head -c 200 body.json 2>/dev/null)"
+          case "$code" in
+            200) echo "Sistem sağlığı: $(grep -o '"status":"[a-z]*"' body.json)";;
+            404) echo "::notice::health işlevi henüz yayında değil";;
+            503) echo "::error::Sistem sağlığı KIRMIZI. Panel → Sistem sağlığı ekranına bak."; exit 1;;
+            *)   echo "::error::health yanıt vermedi (HTTP $code)"; exit 1;;
+          esac
