@@ -222,7 +222,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana); öneri `20261028120000_guest_pass` (**uygulanmadı**): `guest_pass_used` (kartı veren ailenin ebeveynlerine: hediye kartın kullanıldı; `data.code`, kullananın kimliği yok) (anlamları: `akislar.md` 7, 10, 12, 14, 19) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana); öneri `20261028120000_guest_pass` (**uygulanmadı**): `guest_pass_used` (kodu veren ailenin ebeveynlerine: davetin kullanıldı; `data.code`, kullananın kimliği yok), `referral_reward` (davet edene: davet ettiğin aile abone oldu, 1 ay; `data.status` `applied` / `code_pending`) (anlamları: `akislar.md` 7, 10, 12, 14, 19) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
@@ -377,12 +377,13 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | `kvkk_requests.channel` | `app`, `email`, `written`, `kep` | uygulama · e-posta · yazılı · KEP |
 | bildirim `kind` | `kvkk_answered` | başvuru kapandı (yanıt e-postada) |
 
-## Misafir kartı ve telefon doğrulaması (28 Ekim 2026; `akislar.md` 19)
+## Aile davet et (önce misafir kartı) ve telefon doğrulaması (28 Ekim, 3 Kasım 2026; `akislar.md` 19)
 
 | Ad | Değerler | Not |
 |---|---|---|
-| Misafir kartı kodu | 8 karakter, `A–Z` ve `2–9` (`^[A-Z2-9]{8}$`); ekranda `ABCD EFGH` | Uzman/eş kodu 6 karakter: "Kod gir" kutusu uzunluktan ayırt eder |
-| Kart süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **30 gün** (`families.trial_days = 30`) | Varsayılan deneme 7 gün (`app_config.billing.trial_days`) |
+| Aile davet kodu | 8 karakter, `A–Z` ve `2–9` (`^[A-Z2-9]{8}$`); ekranda `ABCD EFGH` | Uzman/eş kodu 6 karakter: "Kod gir" kutusu uzunluktan ayırt eder |
+| Kod süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **14 gün** (7 + 7; `families.trial_days = 14`; 3 Kasım 2026, önce 30) | Varsayılan deneme 7 gün (`app_config.billing.trial_days`) |
+| Davet ödülü | davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince davet edene **30 gün**; son 365 günde en çok **12** | `referral_rewards.status`: `applied` (süre uzadı, `families.bonus_until`) · `code_pending` (davet eden App Store'dan ödüyor; Apple teklif kodu bekliyor) · `code_sent` (kod gönderildi) · `capped` (yıllık sınır) |
 | `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme > 7 gün), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
 | Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
 

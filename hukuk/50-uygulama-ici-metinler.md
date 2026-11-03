@@ -333,7 +333,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Ödüller › "i" düğmesi; ilk kullanım ipucu | `kosullar-parentapp` |
+| ParentApp | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
 > **Coin ve Güneş Taşı nedir?**
 > **Coin**, çocuğunun senin onayladığın görevlerle kazandığı oyun parasıdır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.

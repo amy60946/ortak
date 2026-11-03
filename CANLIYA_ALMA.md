@@ -86,6 +86,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
 - [ ] (Siz) Gerçek fiyatlar
 - [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
+- [ ] (Siz) **Aile davet et ödülü için Apple teklif kodu** (3 Kasım 2026): App Store Connect › ParentApp › Abonelikler › aylık ürün › Offer Codes › "1 ay ücretsiz" (mevcut aboneler), tek kullanımlık kodlar. App Store'dan ödeyen davet edene bu kodlardan biri gönderilir (`referral_rewards` `code_pending` → `code_sent`); kodları gönderecek yönetim paneli ekranı GameApp2 penceresinde yapılacak
 
 ### 1.9 Fatura
 - [ ] (MM) App Store gelirinin faturalanması (Apple'a)
@@ -133,6 +134,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) "Quests", "Güneş Taşı" adları; yükleme ekranı görseli
 
 ### 2.3 ParentApp
+- [ ] (Siz) **iPad ekran görüntüleri** (3 Kasım 2026: ParentApp artık iPad'i destekliyor, `supportsTablet: true`, iPad'de dikey + yatay): App Store Connect 13 inç iPad görüntüsü ister. Not: iPad desteği yayından sonra geri alınamaz
 - [x] (Claude) Kayıt onayı + şifremi unuttum ekranları (var: `AuthScreens.tsx`, bağlantılar `parentapp://auth`)
 - [x] (Claude) Abonelik ekranı 3.1.2 uyumu (fiyat, süre, yenileme, bağlantılar, geri yükle); ilk değerden sonra göster · 2 Kasım: fiyat mağazadan; deneme bitince açılır
 - [x] (Claude) "Aboneliği yönet" (2 Kasım: uygulama içi Apple sayfası `showManageSubscriptions`)

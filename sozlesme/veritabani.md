@@ -500,18 +500,24 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (öneri `20261027220000_parent_avatar_game`; hesabı silinmişse null) |
 | `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
 
-## 20. Misafir kartı: bir aileye 30 gün hediye (öneri `proposed/20261028120000_guest_pass.sql`, **uygulanmadı**; akış `akislar.md` 19)
+## 20. Aile davet et (önce "misafir kartı"; öneri `proposed/20261028120000_guest_pass.sql`, **uygulanmadı**; akış `akislar.md` 19)
+
+3 Kasım 2026 (kullanıcı kararı): davet edilen aile 7 + 7 = **14 gün** dener; davet edilen aile ilk kez mağazadan ücretli aboneliğe geçince davet eden aile **1 ay** kazanır (son 365 günde en çok 12). Öneri henüz uygulanmadığı için dosyanın kendisi güncellendi.
 
 | Tablo / alan | Ne | Alanlar | Kim yazar | Kim okur |
 |---|---|---|---|---|
-| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (30) | `family_access_of` |
-| `guest_passes` | Ailenin hediye ettiği kart | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?` | yalnız `create_guest_pass` / `redeem_guest_pass` (istemci yazamaz) | P (kendi ailesinin kartları; RLS) |
+| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (14) | `family_access_of` |
+| `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
+| `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
+| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodunu yönetim paneli yazacak) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
 | `create_guest_pass()` → `{code, expires_at, new}` | P | Ailenin kullanılmamış, süresi dolmamış kartı varsa aynısı (paylaşılan kod değişmesin); yoksa yeni. Aile başına en çok 20 kart (hint `limit`) |
 | `redeem_guest_pass(kod)` → `{ok, trial_ends_at}` ya da `{ok:false, error}` | P | Kod denemesi ortak sınırda (`code_throttled`; hatalı kod `code_attempts`'e yazılır). `error`: `not_found` / `used` / `expired` / `own` (kendi ailesinin kartı) / `already` (aile daha önce kart kullandı) / `premium` (abone) / `not_new` (deneme başlayalı 7 günden fazla) / `too_many_attempts`. Başarıda `trial_days = 30`, deneme başlamadıysa bugün başlar; kartın sahibi ailenin ebeveynlerine `guest_pass_used` bildirimi (kullananın kimliği yok) |
-| `family_access_of(aile)` (değişti) | — | Deneme sonu `trial_started_at + coalesce(trial_days, ayar)`; dönüşe `trial_days` ve `guest_pass` (aile kart kullandı mı) eklendi. Diğer kurallar aynı |
+| `family_access_of(aile)` (değişti) | — | Deneme sonu `trial_started_at + coalesce(trial_days, ayar)`, `bonus_until` daha geçse o; dönüşe `trial_days`, `guest_pass` (aile kod kullandı mı) ve `bonus_until` eklendi. Diğer kurallar aynı |
+| `referral_on_paid()` (tetikleyici, `family_subscriptions` insert/update of plan, status) | sunucu | Aile mağazadan (`source = 'store'`) ilk kez `premium` + `active`/`grace` olunca, kullandığı davet kodu ödüllenmediyse: kodu `rewarded_at` işaretler; davet eden ailede son 365 günde 12 ödül varsa `capped`; davet eden mağazadan ödüyorsa `code_pending` (Apple teklif kodu gerekir, sunucu Apple aboneliğini uzatamaz); değilse `bonus_until = max(şimdi, bonus_until, deneme sonu) + 30 gün` ve `applied`. `applied` ve `code_pending`'de davet edene `referral_reward` bildirimi (davet edilenin kimliği yok). İade edilen abonelikte ödül geri alınmaz. Ürünlerde App Store ücretsiz denemesi (intro offer) yok; eklenirse webhook dönem türünü geçirmeli |
+| `my_referrals()` → `{joined, paid, months, year_left, pending_codes, codes[{code, sent_at}], bonus_until}` | P | Ailenin davet özeti; kimlik yok |
 
 Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`; `akislar.md` 19): yeni tablo yok. Numara Supabase Auth'un kendi akışıyla (`auth.updateUser({phone})` → SMS kodu → `verifyOtp(type: 'phone_change')`) `auth.users.phone`'a yazılır; uzmana ve öteki ebeveyne gösterilmez. SMS sağlayıcısı Supabase → Authentication → Sign In / Providers → Phone'da tanımlanınca çalışır (ücretli).
 
@@ -578,3 +584,12 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 | İşlev | Ne | Çağıran |
 |---|---|---|
 | `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
+
+## 26. Davranış kaydı ↔ uzmanın hedefi (öneri `proposed/20261103120000_abc_goal.sql`, **uygulanmadı**; kullanıcı kararı 3 Kasım 2026)
+
+| Tablo / sütun | Ne | Yazar | Okur |
+|---|---|---|---|
+| `abc_events.goal_id` | İsteğe bağlı: kaydın ilgili olduğu uzman hedefi (`clinic_goals.id`); hedef silinince boşalır | P (kayıt eklerken ya da düzenlerken; "Hangi hedefle ilgili?") | P, K (rızalı paylaşım; mevcut kural) |
+| `abc_events_goal_guard` (tetikleyici, insert / update of goal_id, child_id) | Hedef aynı çocuğun **etkin** paylaşımına ait ve aileye **gönderilmiş** (`pub` dolu) olmalı; değilse hata `goal_mismatch` (23514). Paylaşım sonradan bitse de eski kayıtların bağı kalır | sunucu | — |
+
+ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `status = 'active'`) ile gösterir; seçilmezse "Diğer / emin değilim" (boş). ClinicApp kayıtları hedefe göre süzer ve hedef sayfasında listeler (Klinik penceresi). Test: `test_abc_goal.sql`.
