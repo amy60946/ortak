@@ -315,7 +315,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
-| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` + `from_avatar` (ebeveyn satırında gönderenin `profiles.avatar`'ı; öneri `20261027220000_parent_avatar_game`) |
+| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` + `from_avatar` (ebeveyn satırında gönderenin `profiles.avatar`'ı; `migrations/20261027220000_parent_avatar_game.sql`, uygulandı 3 Kasım 2026) |
 | `sun_stones_spendable(p_child_id)` | P (aile), O (yalnız kendisi) | Harcanabilir bakiye (`child_me.sun_stones_spendable` da). `child_me.sun_stones` = kazanılan (ada), değişmedi |
 | `give_reward(p_child_id, p_reward_id, p_quantity default 1)` | P | `{request_id, balance}` |
 | `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
@@ -497,10 +497,10 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 |---|---|---|
 | `parent_task_done(görev, gün, yapıldı=true)` → yeni bakiye | P | Kendi atamasını işaretler / geri alır; gün bugün − 7 … + 1 (hint `date_range`), görev o gün olmalı (`not_on_date`), atanmış olmalı (`not_assigned`) |
 | `send_gift(çocuk, eşya, not)` → `{ok, balance, gift_id, error}` | P | `error`: `unknown_item` / `not_enough_stones`; başarıda taş düşer, çocuğa `gift` bildirimi |
-| `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (öneri `20261027220000_parent_avatar_game`; hesabı silinmişse null) |
+| `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (`migrations/20261027220000_parent_avatar_game.sql`, uygulandı 3 Kasım 2026; hesabı silinmişse null) |
 | `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
 
-## 20. Aile davet et (önce "misafir kartı"; öneri `proposed/20261028120000_guest_pass.sql`, **uygulanmadı**; akış `akislar.md` 19)
+## 20. Aile davet et (önce "misafir kartı"; `migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026; akış `akislar.md` 19)
 
 3 Kasım 2026 (kullanıcı kararı): davet edilen aile 7 + 7 = **14 gün** dener; davet edilen aile ilk kez mağazadan ücretli aboneliğe geçince davet eden aile **1 ay** kazanır (son 365 günde en çok 12). Öneri henüz uygulanmadığı için dosyanın kendisi güncellendi.
 
@@ -585,7 +585,7 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 |---|---|---|
 | `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
 
-## 26. Davranış kaydı ↔ uzmanın hedefi (öneri `proposed/20261103120000_abc_goal.sql`, **uygulanmadı**; kullanıcı kararı 3 Kasım 2026)
+## 26. Davranış kaydı ↔ uzmanın hedefi (`migrations/20261103120000_abc_goal.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı 3 Kasım 2026)
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|

@@ -1,4 +1,4 @@
--- Ebeveynin oyundaki yüzü: child_messages / child_gifts_pending from_avatar (proposed/20261027220000_parent_avatar_game.sql).
+-- Ebeveynin oyundaki yüzü: child_messages / child_gifts_pending from_avatar (migrations/20261027220000_parent_avatar_game.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

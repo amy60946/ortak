@@ -1,4 +1,4 @@
--- Davranış kaydı ↔ uzmanın hedefi (proposed/20261103120000_abc_goal.sql): yalnız aynı çocuğun, aileye gönderilmiş hedefi;
+-- Davranış kaydı ↔ uzmanın hedefi (migrations/20261103120000_abc_goal.sql): yalnız aynı çocuğun, aileye gönderilmiş hedefi;
 -- başka çocuğun / gönderilmemiş hedef reddedilir; hedef silinince bağ boşalır; uzman bağı okur.
 \set ON_ERROR_STOP on
 create schema if not exists tst;

@@ -1,4 +1,4 @@
--- Aile davet et: davet kodu (+7 gün) ve ödemeye bağlı davet ödülü (proposed/20261028120000_guest_pass.sql)
+-- Aile davet et: davet kodu (+7 gün) ve ödemeye bağlı davet ödülü (migrations/20261028120000_guest_pass.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

@@ -1,4 +1,4 @@
--- Storage onarımı (proposed/20261028090000_storage_repair.sql): kovalar var, politikalar tek kopya, aile kuralı aynı.
+-- Storage onarımı (migrations/20261028090000_storage_repair.sql): kovalar var, politikalar tek kopya, aile kuralı aynı.
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
