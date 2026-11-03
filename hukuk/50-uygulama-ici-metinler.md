@@ -204,7 +204,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - görevler, onaylar, ödüller, coin ve Güneş Taşı geçmişi,
+> - görevler, onaylar, ödüller, boncuk ve Güneş Taşı geçmişi,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
@@ -310,21 +310,21 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 **ClinicApp — bitince:**
 > **Deneme süren bitti.** Üyelik alana kadar danışanlar, notlar, hedefler, öneriler ve davetler kapalı. Verilerin silinmedi; üyelik alınca kaldığın yerden devam edersin.
 
-## 8. Coin ve Güneş Taşı bilgi notu
+## 8. Boncuk ve Güneş Taşı bilgi notu (görünen ad Boncuk: K3, 3 Kasım 2026; teknik ad coin)
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | ParentApp | Ödüller › "i" düğmesi; ilk kullanım ipucu | `kosullar-parentapp` |
 
-> **Coin ve Güneş Taşı nedir?**
-> **Coin**, çocuğunun senin onayladığın görevlerle kazandığı oyun parasıdır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
+> **Boncuk ve Güneş Taşı nedir?**
+> **Boncuk**, çocuğunun senin onayladığın görevlerle kazandığı oyun içi puandır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
 > **Güneş Taşı**, çocuğuna verdiğin ödüllerin sayacıdır. Ödülleri ve değiş tokuş oranlarını (ör. "1 taş = 10 dk ekran") sen belirlersin. Taşın parasal değeri yoktur; ödülün sözünü sen verirsin, biz bu ödüllerin tarafı değiliz.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | Pofi Adası | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
 
-> Coin'ler adanın parasıdır. Görevlerini yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
+> Boncuklar adanın hazinesidir. Görevlerini yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
 >
 > Güneş Taşları ailenin ödülleri içindir. Taşın yetince ödül isteyebilirsin. Kararı ailen verir.
 

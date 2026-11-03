@@ -141,6 +141,7 @@ Kod biçimi:
 |---|---|---|
 | Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
 | Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
+| Gerçek görevden gelen oyun parası (teknik ad `coins`) | **Boncuk** (görünen ad; kullanıcı kararı K3, 3 Kasım 2026) | Çoğul: boncuklar; sayıyla "15 boncuk" (cümle başında "Boncuk"). Simge turkuaz delikli boncuk. **Yalnız ekranda, seste ve pazarlama metninde** değişir: veritabanı, RPC, alan ve defter adları (`coins`, `coin_ledger`, `spend_coins`, `claim_welcome_coins`, olay adları) **aynen kalır**. "Altın", "jeton", "coin" çocuk ekranında kullanılmaz. Ayrıntı `ekonomi.md` §0. |
 
 ## 6. Diğer sabit değerler (uygulanmış)
 

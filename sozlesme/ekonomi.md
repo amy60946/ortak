@@ -12,7 +12,20 @@ Kaynak:
 - `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
 - `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
-Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
+Son güncelleme: 2026-11-03 (görünen ad Boncuk, §0); 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
+
+---
+
+## 0. Görünen ad: **Boncuk** (kullanıcı kararı K3, 3 Kasım 2026)
+
+Çocuğun ve ebeveynin gördüğü her yerde (oyun, ParentApp, ClinicApp raporu, ses, mağaza/pazarlama metni) gerçek görevden gelen oyun parasının adı **Boncuk**'tur. Bu belgede ve kodda teknik ad **coin** kalır: `coins`, `coin_ledger`, `spend_coins`, `claim_welcome_coins`, `task_assignments.coins`, olay adları değişmez (göç yok).
+
+| Kural | Ayrıntı |
+|---|---|
+| Yazım | "Boncuk" (büyük harf yalnız cümle başında ya da düğme/başlıkta), sayıyla "15 boncuk", çoğul "boncuklar", ek "boncuğun, boncukla". "Coin'ler", "jeton", "altın", "para" yazılmaz; bilgi notunda "oyun parası değil, gerçek para değil" anlatımı korunur. |
+| Simge | Turkuaz, ortası delikli, yuvarlak boncuk (sarı Güneş Taşı'ndan ve XP yıldızından ayrılır). |
+| Neden | GB20 benchmark (https://claude.ai/artifact/1GSLbzCEZoZfaTnC8EGbTm, K3): her çocuk bilir, değersiz ve sevimli, gerçek parayla karışmaz; "altın" (gerçek birikim aracı), "jeton" (kumar çağrışımı), "coin" (İngilizce, kripto çağrışımı) elendi. İsteğe bağlı: canlıdan önce her yaş grubundan 5–6 çocukla 5 dk kart testi ("Bu ne? Nasıl kazanılır? Gerçek para mı?"). |
+| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "Boncuk (oyun içi puan)" diye yazılır (`hukuk_notlari.md` 17). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
 
 ---
 
