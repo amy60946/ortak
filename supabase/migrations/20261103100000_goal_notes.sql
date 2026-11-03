@@ -1,7 +1,7 @@
 -- Uzman notu bir hedefe bağlanabilir (ClinicApp "N3", kullanıcı kararı 3 Kasım 2026): Takip Planı'nda hedefin bej
 -- "YALNIZ SEN GÖRÜRSÜN" kutusundaki not simgesi; not danışan › Notlar'da da hedefin adıyla görünür. Aile görmez
 -- (clinic_notes zaten yalnız klinik okur; RLS değişmez). Değerlendirme notu ayrıca goal_ratings.note'ta (sütun 19 Ekim'den beri var).
--- Tekrar çalıştırılabilir.
+-- Tekrar çalıştırılabilir. Uygulandı: 3 Kasım 2026 (kullanıcı, SQL Editor).
 
 alter table public.clinic_notes add column if not exists goal_id uuid references public.clinic_goals (id) on delete set null;
 create index if not exists clinic_notes_goal_idx on public.clinic_notes (goal_id) where goal_id is not null;

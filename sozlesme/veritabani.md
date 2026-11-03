@@ -150,7 +150,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `clinicians` | Uzman (auth.users ile bire bir) | `id`, `clinic_id`, `name` (≤ 80), `title` (≤ 80), `role` (`owner`/`member`) | Sunucu (kayıtta); K yalnız kendi `name`, `title` | K (aynı klinik) |
 | `clinic_invites` | Klinik davet kodları | `code`, `clinic_id`, `clinician_id`, `kind` (`family`/`clinician`), `label` (≤ 60), `expires_at` (varsayılan **+7 gün**), `used_at`, `used_by` | Sunucu (`clinic_create_invite`) | K (kendi kliniği) |
 | `clinic_links` | **Rıza bağlantısı** klinik ↔ çocuk | `clinic_id`, `clinician_id`, `family_id`, `child_id`, `label`, `status` (`active`/`revoked`), `consent_by`, `consent_at`, `revoked_at`, `revoked_by`; bir klinik–çocuk çifti için tek `active` satır | Sunucu (`redeem_clinic_invite`, `revoke_clinic_link`); K yalnız `label`, `clinician_id` | K (kendi kliniği), P (kendi ailesi) |
-| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000), `goal_id` (isteğe bağlı, §24) | K | K |
+| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000), `goal_id` (isteğe bağlı, §27) | K | K |
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
 | `abc_events` | Zor an kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
@@ -532,7 +532,7 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 |---|---|---|
 | `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
 
-## 24. Hedefe bağlı uzman notu (öneri `proposed/20261103100000_goal_notes.sql`, 3 Kasım 2026; ClinicApp kullanıcı kararı "N3")
+## 27. Hedefe bağlı uzman notu (`migrations/20261103100000_goal_notes.sql`, uygulandı 3 Kasım 2026; ClinicApp kullanıcı kararı "N3")
 
 - `clinic_notes.goal_id uuid null → clinic_goals(id) on delete set null`: not bir hedefe bağlanabilir; hedef silinirse not kalır, bağ boşalır. Tetikleyici `clinic_notes_goal_check`: hedef, notun bağlantısının (`link_id`) hedefi olmalı (`goal_link_mismatch`, 23514). `goal_id` sonradan değiştirilemez (güncelleme izni yok).
 - RLS değişmez: not yalnız klinikte (yetkili ekip), aile görmez. Değerlendirme notu ayrıca `goal_ratings.note` (≤ 300, 19 Ekim'den beri; ClinicApp "Değerlendir" penceresinde isteğe bağlı). Önceki uzmanın kayıtlarına (`clinic_inherited_records`) değerlendirme notu girmez.
