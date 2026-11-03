@@ -1,4 +1,4 @@
--- Davet ödülü kod havuzu (proposed/20261103200000_referral_codes.sql) + sağlık denetimi (20261102200000_kvkk_ops.sql)
+-- Davet ödülü kod havuzu (migrations/20261103200000_referral_codes.sql) + sağlık denetimi (20261102200000_kvkk_ops.sql)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$

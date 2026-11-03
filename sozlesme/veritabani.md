@@ -600,7 +600,7 @@ ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `sta
 - RLS değişmez: not yalnız klinikte (yetkili ekip), aile görmez. Değerlendirme notu ayrıca `goal_ratings.note` (≤ 300, 19 Ekim'den beri; ClinicApp "Değerlendir" penceresinde isteğe bağlı). Önceki uzmanın kayıtlarına (`clinic_inherited_records`) değerlendirme notu girmez.
 - ClinicApp: Takip Planı'nda hedefin bej kutusunda not simgesi (sayıyla) + son not; danışan › Notlar'da hedefin adıyla. Sütun yoksa simge görünmez (yalnız değerlendirme notu). Test `test/test_goal_notes.sql`.
 
-## 28. Davet ödülü kod havuzu (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
+## 28. Davet ödülü kod havuzu (`migrations/20261103200000_referral_codes.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
 
 App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebilir (§20). Ekip App Store Connect'te **tek kullanımlık** kod üretir (aylık ve yıllık ürün için ayrı, "1 ay ücretsiz", en çok 6 ay geçerli) ve dosyayı panele yükler; ödül yazılınca kod kendiliğinden atanır. Benchmark (3 Kasım 2026): Apple tek kullanımlık kod her biri bir kez, en çok 6 ay; özel kod çok kişiye açık (ödülde yayılır, seçilmedi); RevenueCat: uygulama içi kod penceresi güvenilmez, App Store kod sayfası sorunsuz (ParentApp öyle yapar), mevcut abonede ücretsiz ay sonraki yenilemede başlar, kodlar sandbox'ta denenemez.
 

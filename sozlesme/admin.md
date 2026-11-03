@@ -84,7 +84,7 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 
 Akış: herkese açık **`/destek`** (panelin Worker'ı; JavaScript'siz form: uygulama, konu, e-posta, isteğe bağlı ad, mesaj, "18 yaşından büyüğüm", gizli tuzak alanı, doldurma süresi) → Edge Function **`support`** (POST; e-posta başına 24 saatte 3, saatte toplam 60) → `support_requests` → panel **Destek** ekranı → "Yanıtla" ekibin e-posta uygulamasında taslak açar → durum "Yanıtlandı". Sabit adres `…/functions/v1/support` (GET) `LEGAL_PUBLIC_URL` köküne `/destek` olarak yönlenir: App Store **Support URL** ve uygulamalardaki "Yardım ve iletişim" bunu kullanır (alan adı gelince uygulama sürümü gerekmez). Sistem sağlığı: 2 günden uzun yanıtsız talep sarı. Saklama: kapanan 2 yıl, istenmeyen 30 gün (gece imha işi, `support_days`). Spam artarsa: Cloudflare Turnstile (ücretsiz; secret Supabase'e). Benchmark: Zammad web formu ve tuzak alanı, osTicket konu seçimi, Chatwoot yanıt süresi notu, laravel-honeypot doldurma süresi, Apple 1.3/1.5 ve App Store Connect Support URL açıklaması.
 
-### Davet ödülleri (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: kod havuzu, elle giriş yedek)
+### Davet ödülleri (`migrations/20261103200000_referral_codes.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı: kod havuzu, elle giriş yedek)
 
 | Fonksiyon | Rol | Ne yapar |
 |---|---|---|

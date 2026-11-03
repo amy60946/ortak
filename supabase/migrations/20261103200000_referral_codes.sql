@@ -1,4 +1,4 @@
--- Davet ödülü Apple teklif kodu havuzu (kullanıcı kararı 3 Kasım 2026: seçenek B "kod havuzu", elle giriş yedek).
+-- Davet ödülü Apple teklif kodu havuzu (uygulandı 3 Kasım 2026; kullanıcı kararı 3 Kasım 2026: seçenek B "kod havuzu", elle giriş yedek).
 -- Önce: migrations/20261028120000_guest_pass.sql (referral_rewards). Sözleşme: sozlesme/admin.md "Davet ödülleri",
 -- sozlesme/veritabani.md "Davet ödülü kod havuzu", akislar.md 19 adım 7, hukuk/46 Ek A.
 --
