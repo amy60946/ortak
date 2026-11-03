@@ -82,6 +82,7 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 
 ### E. Uygulama içi kısa metinler
 
+- **ClinicApp ekranlarında sınır uyarısı yok (kullanıcı kararı 3 Kasım 2026):** acil durum notu (112, "kriz izleme hizmeti değildir"), "gözlem toplar, tanı koymaz", göstergeler alt bilgisi ve "puan değil" ekleri uzman arayüzünden kaldırıldı. Gerekçe (kullanıcı): uzman profesyonel kullanıcı, platformun yalnız bir takip aracı olduğu sözleşmede yazılı. Karşılığı Uzman Hizmet Sözleşmesi 3.1–3.4 ve yeni 3.4-a (sınırlar ekranda tekrarlanmaz, kabul ile bilinir). Yazdırılan rapor ve ilerleme notunun alt bilgisi kalır (sözleşmeyi onaylamamış kişilerce okunur). ParentApp'teki acil durum notu değişmedi. **Avukata soru:** B2B uzman aracında acil durum sınırının yalnız sözleşmede (ekran uyarısı olmadan) yer alması yeterli mi?
 - **ClinicApp › Notlar** (not alanının altında): "Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma."
 - **ClinicApp › devralınan kayıtlar:** "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma".
 - **ClinicApp › davet formu (çocuk önerisi):** alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir."

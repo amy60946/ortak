@@ -152,7 +152,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `clinicians` | Uzman (auth.users ile bire bir) | `id`, `clinic_id`, `name` (≤ 80), `title` (≤ 80), `role` (`owner`/`member`) | Sunucu (kayıtta); K yalnız kendi `name`, `title` | K (aynı klinik) |
 | `clinic_invites` | Klinik davet kodları | `code`, `clinic_id`, `clinician_id`, `kind` (`family`/`clinician`), `label` (≤ 60), `expires_at` (varsayılan **+7 gün**), `used_at`, `used_by` | Sunucu (`clinic_create_invite`) | K (kendi kliniği) |
 | `clinic_links` | **Rıza bağlantısı** klinik ↔ çocuk | `clinic_id`, `clinician_id`, `family_id`, `child_id`, `label`, `status` (`active`/`revoked`), `consent_by`, `consent_at`, `revoked_at`, `revoked_by`; bir klinik–çocuk çifti için tek `active` satır | Sunucu (`redeem_clinic_invite`, `revoke_clinic_link`); K yalnız `label`, `clinician_id` | K (kendi kliniği), P (kendi ailesi) |
-| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000) | K | K |
+| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000), `goal_id` (isteğe bağlı, §27) | K | K |
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
 | `abc_events` | Davranış kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
@@ -509,7 +509,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (14) | `family_access_of` |
 | `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
 | `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
-| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §27) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
+| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §28) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
@@ -594,7 +594,13 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 
 ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `status = 'active'`) ile gösterir; seçilmezse "Diğer / emin değilim" (boş). ClinicApp kayıtları hedefe göre süzer ve hedef sayfasında listeler (Klinik penceresi). Test: `test_abc_goal.sql`.
 
-## 27. Davet ödülü kod havuzu (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
+## 27. Hedefe bağlı uzman notu (`migrations/20261103100000_goal_notes.sql`, uygulandı 3 Kasım 2026; ClinicApp kullanıcı kararı "N3")
+
+- `clinic_notes.goal_id uuid null → clinic_goals(id) on delete set null`: not bir hedefe bağlanabilir; hedef silinirse not kalır, bağ boşalır. Tetikleyici `clinic_notes_goal_check`: hedef, notun bağlantısının (`link_id`) hedefi olmalı (`goal_link_mismatch`, 23514). `goal_id` sonradan değiştirilemez (güncelleme izni yok).
+- RLS değişmez: not yalnız klinikte (yetkili ekip), aile görmez. Değerlendirme notu ayrıca `goal_ratings.note` (≤ 300, 19 Ekim'den beri; ClinicApp "Değerlendir" penceresinde isteğe bağlı). Önceki uzmanın kayıtlarına (`clinic_inherited_records`) değerlendirme notu girmez.
+- ClinicApp: Takip Planı'nda hedefin bej kutusunda not simgesi (sayıyla) + son not; danışan › Notlar'da hedefin adıyla. Sütun yoksa simge görünmez (yalnız değerlendirme notu). Test `test/test_goal_notes.sql`.
+
+## 28. Davet ödülü kod havuzu (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
 
 App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebilir (§20). Ekip App Store Connect'te **tek kullanımlık** kod üretir (aylık ve yıllık ürün için ayrı, "1 ay ücretsiz", en çok 6 ay geçerli) ve dosyayı panele yükler; ödül yazılınca kod kendiliğinden atanır. Benchmark (3 Kasım 2026): Apple tek kullanımlık kod her biri bir kez, en çok 6 ay; özel kod çok kişiye açık (ödülde yayılır, seçilmedi); RevenueCat: uygulama içi kod penceresi güvenilmez, App Store kod sayfası sorunsuz (ParentApp öyle yapar), mevcut abonede ücretsiz ay sonraki yenilemede başlar, kodlar sandbox'ta denenemez.
 

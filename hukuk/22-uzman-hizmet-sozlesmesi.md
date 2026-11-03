@@ -4,8 +4,8 @@
 
 ## Kısaca
 
-- **ClinicApp bir araçtır:** Ebeveynin izniyle paylaştığı çocuğun ev rutinini izlemenize, not, hedef, görev önerisi ve takip planı hazırlamanıza yarar. Platform sağlık hizmeti vermez, tanı koymaz, uzman istihdam etmez, aile ile uzman arasında aracılık ya da yönlendirme yapmaz.
-- **Acil durum hizmeti değildir:** Risk gördüğünüzde 112'yi aramak ve danışanı uygun yere yönlendirmek sizin mesleki sorumluluğunuzdadır.
+- **ClinicApp yalnız bir takip aracıdır:** Ebeveynin izniyle paylaştığı çocuğun ev rutinini izlemenize, not, hedef, görev önerisi ve takip planı hazırlamanıza yarar. Platform sağlık hizmeti vermez, tanı koymaz, uzman istihdam etmez, aile ile uzman arasında aracılık ya da yönlendirme yapmaz.
+- **Acil durum ve kriz izleme hizmeti değildir:** Ailenin kayıtları size gecikmeyle ulaşabilir. Risk gördüğünüzde 112'yi aramak ve danışanı uygun yere yönlendirmek sizin mesleki sorumluluğunuzdadır. Bu sınırlar uygulama ekranlarında ayrıca uyarı olarak tekrarlanmaz.
 - **Mesleki sorumluluk sizdedir:** unvanınızın ve yetkinizin doğruluğu, meslek etiği, danışanın (velinin) bilgilendirilmesi ve onayı, meslek sırrı ve kayıt saklama yükümlülüğü.
 - **Davet:** yalnız tanıdığınız ve hizmet verdiğiniz ailelere; çocuk için yalnız ad ya da takma ad ve yaş grubu; sağlık bilgisi yazılmaz. Paylaşım yalnız ebeveynin onayıyla açılır, ebeveyn istediği an durdurur.
 - **Kayıtlarınız:** Ebeveyn izin verirse sonraki uzmana adınız gizlenerek salt okunur açılabilir; buna şimdiden izin veriyorsunuz.
@@ -60,7 +60,9 @@
 
 3.3. **Göstergeler tanı değildir.** ClinicApp'teki oranlar, grafikler, hedef değerlendirmeleri ve raporlar ev rutinine ilişkin gözlem özetleridir; hiçbiri tanı, zekâ ya da dikkat puanı değildir ve mesleki değerlendirmenin yerini tutmaz. Şablonlar uzmanın kendi programını hızlı kurması için sunulan iskeletlerdir; bir şablonun danışana uygun olup olmadığına uzman karar verir.
 
-3.4. **Acil durum hizmeti değildir.** ClinicApp'teki kayıtlar Platform tarafından anlık izlenmez. Uzman; danışanın ya da başkasının hayatı, sağlığı veya güvenliği için risk gördüğünde 112'yi aramaktan, danışanı uygun sağlık kuruluşuna yönlendirmekten ve mevzuattan doğan bildirim yükümlülüklerini yerine getirmekten kendisi sorumludur.
+3.4. **Acil durum ve kriz izleme hizmeti değildir.** ClinicApp kriz izleme ya da acil uyarı aracı değildir. Ailenin kayıtları Uzmana gecikmeyle ulaşabilir ve Platform tarafından anlık izlenmez. Uzman; danışanın ya da başkasının hayatı, sağlığı veya güvenliği için risk gördüğünde 112'yi aramaktan, danışanı uygun sağlık kuruluşuna yönlendirmekten ve mevzuattan doğan bildirim yükümlülüklerini yerine getirmekten kendisi sorumludur.
+
+3.4-a. **Sınırların bildirimi.** 3.2–3.4'teki sınırlar ClinicApp ekranlarında ayrıca uyarı olarak tekrarlanmaz; Uzman bu sözleşmeyi kabul ederek bunları bildiğini kabul eder. Uzmanın yazdırdığı ya da kopyaladığı çıktılarda (rapor, ilerleme notu) sınırlar alt bilgi olarak yer alır (Ek-3).
 
 3.5. **Uzaktan sağlık hizmeti aracı değildir.** ClinicApp'te uzman ile aile arasında görüntülü ya da sesli görüşme ve serbest mesajlaşma özelliği yoktur; uzman aileye yalnız görev önerisi (kısa not dahil) ve takip planı gönderebilir.
 
@@ -314,8 +316,7 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 |---|---|
 | Kayıt ekranı (onay kutusu; işaretlenmeden "Hesap oluştur" açılmaz) | ☐ ClinicApp Uzman Hizmet Sözleşmesi'ni ve Veri İşleme Eki'ni okudum, kabul ediyorum. — Altında, kutudan ayrı: "Kişisel verilerinin nasıl işlendiğini Uzman Aydınlatma Metni'nde okuyabilirsin." |
 | Ekip koduyla katılım | Aynı onay kutusu ve aydınlatma bağlantısı. |
-| Ana ekran / danışan ayrıntısı (alt bilgi) | "ClinicApp acil yardım hizmeti değildir. Acil durumda 112'yi ara." |
-| Göstergeler ve rapor (alt bilgi) | "Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir." |
+| Yazdırılan rapor ve ilerleme notu (alt bilgi) | "Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir." ve "Tanı değildir; tek başına klinik karar için kullanılmaz." (Ekranlarda sınır uyarısı gösterilmez; 3.4-a.) |
 | Notlar (not alanının altında) | "Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma." |
 | Devralınan kayıtlar | "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma" |
 | Davet formu (çocuk önerisi) | Alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir." |
@@ -340,4 +341,4 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 10. **Yetki şartı ve arabuluculuk (19.2):** Uzmanların çoğu serbest meslek erbabı, tacir değil; HMK md. 17 yetki sözleşmesi bu nedenle sınırlı yazıldı. Ticari dava sayılırsa dava şartı arabuluculuk (TTK md. 5/A). Uygun mu?
 11. **Dışa aktarma (14.5):** Yazılımda toplu dışa aktarma yok; yalnız yazdırılabilir "Ev rutini gözlem raporu" var. Destek talebiyle elle dışa aktarma önerildi; canlıdan önce bir araç gerekecek mi? Aile verisinin uzmanın mesleki kaydına geçirilmesi (rapor yazdırma) uzmanı bu veriler için ayrı veri sorumlusu yapar mı?
 12. **Mücbir sebep ve hizmet sağlayıcı kesintisi (15.2-f):** Hizmet sağlayıcının kesintisinin mücbir sebep sayılması TBK açısından ölçülü mü?
-- **Ek-3'ün kaynakları (iç):** acil durum notu `02` uyarlama kararı 6; "tanı değildir" `hukuk_notlari.md` D; not alanı ve devralınan kayıtlar `hukuk_notlari.md` E; diğerleri yeni öneri.
+- **Ek-3'ün kaynakları (iç):** acil durum notu `02` uyarlama kararı 6 (ClinicApp ekranlarından 3 Kasım 2026'da kaldırıldı, kullanıcı kararı; sınır 3.4 ve 3.4-a'da; avukat: uzmana yönelik B2B araçta sözleşmedeki madde yeterli mi?); "tanı değildir" `hukuk_notlari.md` D; not alanı ve devralınan kayıtlar `hukuk_notlari.md` E; diğerleri yeni öneri.
