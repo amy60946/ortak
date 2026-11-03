@@ -56,6 +56,12 @@
 - Koşullar kutusu işaretlenmeden "Hesap oluştur" pasif kalır. Aydınlatma bir onay değil, bilgilendirmedir: kutu konmaz; hesap oluşunca koşulların onayıyla birlikte aydınlatmanın **gösterildiği** de `legal_accept` ile kaydedilir (karar 27 Ekim 2026, avukat teyidi bekler).
 - Bu ekranda **açık rıza kutusu yoktur**. Sağlık soruları ve uzman paylaşımı kendi ekranlarında, isteğe bağlı sorulur. Pazarlama izni bugün istenmez.
 
+**Güncel (kullanıcı kararı 28 Ekim 2026, parent-app):** "Kayıt ol" düğmesinin üstünde tek küçük satır, tek kutu:
+
+> ☐ <u>Kullanım Koşulları</u>'nı kabul ediyorum. <u>Aydınlatma</u> · <u>Gizlilik</u>
+
+- Kutu işaretlenmeden "Kayıt ol" pasif (etkin eylem). Aydınlatma ve gizlilik yalnız bağlantı; aydınlatmanın gösterildiği hesap açılınca kaydedilir.
+
 ### 1.2 ClinicApp — kayıt
 
 | Uygulama | Ekran | Bağlı belge |
@@ -78,13 +84,25 @@
 
 > **Pofi Adası'nı {çocuk_adı}'nın cihazına bağlamadan önce**
 >
-> Pofi Adası'nda reklam, satın alma ve izleme aracı yok. Çocuğun yalnız ailesiyle yazışır; oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+> Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {çocuk_adı}'nın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+>
+> *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
 > ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
 > Çocuğunun verilerinin nasıl işlendiğini <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
 
 - Kayıt: `legal_accept('child', …)` (çocuk cihazı onay veremez; sunucu reddeder).
+
+**Güncel (kullanıcı kararı 28 Ekim 2026: kısa, ayrıntı bağlantıda):** küçük kart; veli onayı ayrı kalır.
+
+> **Pofi Adası'nı bağlamadan önce**
+>
+> Oyunda reklam, satın alma ve dışarıdan izleme aracı yok. {çocuk_adı}'nın ilerlemesini yalnız ailesi, izin verirsen uzmanı görür.
+>
+> ☐ Velisi olarak <u>Pofi Adası Koşulları</u>'nı {çocuk_adı} adına kabul ediyorum. <u>Aydınlatma</u>
+
+- "Oyun ondan e-posta, konum, fotoğraf ya da ses almaz" cümlesi karttan çıktı; aydınlatma metninde duruyor.
 
 ### 1.4 ParentApp — çocuk ekleme
 
@@ -115,6 +133,7 @@
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
 - **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
+- **ParentApp (28 Ekim 2026):** aynı küçük kart. ParentApp koşulları için bir kutu ("<u>ParentApp Kullanım Koşulları</u> metnini kabul ediyorum."); Pofi Adası metinleri güncellendiyse **ayrı** veli kutusu ("Velisi olarak <u>Pofi Adası Koşulları</u> metnini {çocuklar} adına kabul ediyorum."); aydınlatmalar kutusuz bağlantı satırı ("Verilerinin nasıl işlendiği: …"); altta "hesabını silebilir ya da KVKK başvurusu gönderebilirsin".
 - Kutu işaretlenmeden "Devam et" pasif. Bu ekrandayken bile Ayarlar › Hesabımı sil, Yasal metinler ve KVKK başvurusu açılabilir olmalı.
 - **Pofi Adası koşulları güncellenince:** ParentApp'te ebeveyne "Pofi Adası koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
 - **Onay istemeyen metin güncellenince** (Gizlilik Politikası, Hizmet Sağlayıcılar): kapatılabilir üst bant:
@@ -124,7 +143,7 @@
 
 | Uygulama | Ekran | Kaynak |
 |---|---|---|
-| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026) | `legal_documents_for(app)` |
+| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026). **ParentApp:** Aile › Hesap › **"Yasal ve gizlilik"** tek satırı (eski "Yasal metinler" ve "KVKK başvurusu" satırları birleşti): metinler, Verdiğin izinler, "KVKK başvurusu ve başvurularım" (28 Ekim 2026) | `legal_documents_for(app)` |
 
 Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}".
 
@@ -146,7 +165,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde) | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
+| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde; ParentApp'te Aile › Hesap › Yasal ve gizlilik › "KVKK başvurusu ve başvurularım") | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
 
 **Üst metin:**
 > Kişisel verilerinle ilgili taleplerini buradan iletebilirsin. En geç 30 gün içinde, ücretsiz yanıt veririz. Yanıt {e-posta} adresine gelir. <u>Başvuru usulü</u>
@@ -314,7 +333,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Ödüller › "i" düğmesi; ilk kullanım ipucu | `kosullar-parentapp` |
+| ParentApp | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
 > **Coin ve Güneş Taşı nedir?**
 > **Coin**, çocuğunun senin onayladığın görevlerle kazandığı oyun parasıdır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.

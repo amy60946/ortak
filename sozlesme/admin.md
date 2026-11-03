@@ -55,6 +55,10 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_verification_open(id)` | support | Belge yolunu döner ve görüntülemeyi denetim kaydına yazar. Panel bunu doğrudan değil, Edge Function **`verify-doc`** (`{action:'open', id}`) üzerinden çağırır; işlev 2 dk imzalı bağlantı döner. `20261026400000` (uygulandı 26 Ekim) ile `verify` kovası yöneticiye doğrudan kapalı (panel dışından açılıp kayıtsız kalamaz). Karar sonrası dosyaları `verify-doc` `{action:'purge'}` siler (`storage_trash`, `admin_can_review`) |
 | `admin_verification_decide(id, onay, ret_nedeni, açıklama, barkod, özet, gerekçe)` | support | Onay → rozet (`clinicians.verified_profession/verified_at`) + bildirim; ret → neden kodu + uzmana açıklama. Özet yalnız `{university, program, degree, graduation_year}`. Dönen belge yolunu panel kovadan **siler** |
 | `admin_verification_suspend(uzman, açıklama, gerekçe)` | support | Rozeti askıya alır (şikâyet, BCBA süresi) |
+| `admin_intake(aile, gerekçe)` | support | ParentApp tanışma soruları (`20261027120000`, uygulandı 27 Ekim 2026): kişi bazlı yanıtlar (kullanıcı kararı 27 Ekim 2026; canlıdan önce avukat onayı); her açılış denetim kaydında (`intake.view`). Sağlık yanıtları (tanı, ilaç) dahil |
+| `admin_intake_summary(gün)` | okur | Soru × seçenek dağılımı, yalnız sayılar; sağlık soruları hariç |
+
+Bayrak `parent_sms_verify` (28 Ekim 2026; tanım gerekmez, yoksa kapalı): ParentApp'te uzman bağlandıktan sonra telefon numarası + SMS kodu adımı. Açmadan önce Supabase'de SMS sağlayıcısı (ücretli) ve aydınlatma metni (`hukuk_notlari.md` J). `admin_set_flag('parent_sms_verify', true, 100, …)`.
 
 Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
 
@@ -69,7 +73,7 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 | `admin_set_retention_config(jsonb, gerekçe)` | owner | Süreler ve `live`. Bilinmeyen anahtar, tam sayı olmayan ve alt sınırın altı reddedilir (imha kaydı ≥ 1095 gün, denetim kaydı ≥ 365, kullanım ≥ 400 …). `live` yalnız avukat süreleri onaylayınca açılır (`hukuk/42`) |
 | `admin_user_export(kullanıcı, gerekçe)` | support | KVKK erişim başvurusu için "Verimi indir" ile aynı JSON; denetim kaydına `user.data_export`. Panel: kullanıcı kartı › Verilerini indir (KVKK). Dosya başvurana güvenli yoldan iletilir, sonra silinir |
 | `admin_log_export(ne, satır, gerekçe)` | okur | Panelden toplu indirmenin kaydı (`export.csv`, hedef `system`/`customers.<app>`, satır sayısı). Müşteriler › CSV indir gerekçe ister ve "işin bitince dosyayı sil (en geç 30 gün)" uyarısı gösterir |
-| `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 21). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
+| `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 23). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
 
 ### Destek (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; kullanıcı kararı: sayfada form)
 
