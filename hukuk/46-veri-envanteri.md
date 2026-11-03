@@ -111,6 +111,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi) |
 | `usage_daily_totals` | — | anonim günlük toplamlar |
 | `retention_runs` | — | imha kaydı, yalnız sayı |
+| `offer_code_pool` | — | davet ödülü Apple teklif kodu havuzu: kod, ürün, son tarih, atanma zamanı (aileye bağ yok; atanan kod `referral_rewards`te) |
 | `storage_trash` | — | silinecek dosya yolları (geçici; yol aile kimliği içerir) |
 | `app_config` | — | ayarlar |
 | `feature_flags` | — | |

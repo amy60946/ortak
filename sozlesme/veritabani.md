@@ -509,7 +509,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (14) | `family_access_of` |
 | `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
 | `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
-| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodunu yönetim paneli yazacak) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
+| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §27) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
@@ -593,3 +593,23 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 | `abc_events_goal_guard` (tetikleyici, insert / update of goal_id, child_id) | Hedef aynı çocuğun **etkin** paylaşımına ait ve aileye **gönderilmiş** (`pub` dolu) olmalı; değilse hata `goal_mismatch` (23514). Paylaşım sonradan bitse de eski kayıtların bağı kalır | sunucu | — |
 
 ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `status = 'active'`) ile gösterir; seçilmezse "Diğer / emin değilim" (boş). ClinicApp kayıtları hedefe göre süzer ve hedef sayfasında listeler (Klinik penceresi). Test: `test_abc_goal.sql`.
+
+## 27. Davet ödülü kod havuzu (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
+
+App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebilir (§20). Ekip App Store Connect'te **tek kullanımlık** kod üretir (aylık ve yıllık ürün için ayrı, "1 ay ücretsiz", en çok 6 ay geçerli) ve dosyayı panele yükler; ödül yazılınca kod kendiliğinden atanır. Benchmark (3 Kasım 2026): Apple tek kullanımlık kod her biri bir kez, en çok 6 ay; özel kod çok kişiye açık (ödülde yayılır, seçilmedi); RevenueCat: uygulama içi kod penceresi güvenilmez, App Store kod sayfası sorunsuz (ParentApp öyle yapar), mevcut abonede ücretsiz ay sonraki yenilemede başlar, kodlar sandbox'ta denenemez.
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `offer_code_pool` | Atanmamış ve atanmış Apple kodları (kişisel veri yok; aileye bağ `referral_rewards.offer_code`) | `code` pk (`^[A-Z0-9]{6,64}$`), `billing` (`monthly` / `yearly`), `batch` (parti adı), `expires_at` (App Store Connect'teki son tarihin başlangıcı, İstanbul), `added_at`, `added_by?`, `assigned_at?` | yalnız `admin_offer_codes_add` / `admin_offer_codes_remove` / `referral_assign` | yalnız sunucu (RLS açık, istemciye kapalı) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `referral_assign(ödül, kod?, bildir)` → kod ya da null | iç | Ödül `code_pending` değilse null. Kod boşsa havuzdan: ailenin `family_subscriptions.billing`'ine (yoksa aylık) uyan, **en az 14 gün** kalan, en erken bitecek kod (`for update skip locked`). Kod doluysa elle (harf/rakam 4–64; başka aileye gitmiş ya da havuzda atanmış kod olmaz). `status = 'code_sent'`, `offer_code`, `code_sent_at`; bildir: `referral_reward` "Hediye kodun hazır" |
+| `referral_assign_pending()` → sayı | iç | Bekleyen ödüllere sırayla havuzdan kod |
+| `referral_on_paid()` (değişti) | tetik | §20 ile aynı; `code_pending` yazınca hemen `referral_assign` dener: kod atanırsa **tek** bildirim "1 ay hediye kazandın … kodun hazır", atanmazsa eski "birkaç gün içinde" bildirimi |
+| `admin_referral_overview()` | her admin | `invites` (oluşturulan / kullanılan / abone olan, toplam ve son 30 gün), `rewards` (durum sayıları, son 30 günde verilen ay), `pending[]` (aile, tarih, ürün), `sent[]` (son 20, kodun yalnız son 4 karakteri), `pool` (kullanılabilir aylık/yıllık, 30 günde bitecek, süresi geçmiş, atanmış), `batches[]`. Atanmamış kod dönmez |
+| `admin_offer_codes_add(kodlar[], ürün, son_tarih, parti?, gerekçe)` | finance | 1–25000 kod; son tarih bugün+15 gün ile 6 ay arası; boşluklar silinir, büyük harfe çevrilir; geçersiz ve tekrar eden atlanır; ardından bekleyenlere atanır. Döner `{batch, added, invalid, duplicate, assigned}`. Denetim `referral.codes_add` (`system`/`offer_codes:<parti>`, yalnız sayılar) |
+| `admin_offer_codes_remove(parti?, gerekçe)` | finance | Partideki **atanmamış** kodları siler (yanlış dosya); parti boşsa süresi geçmiş atanmamış kodlar. Denetim `referral.codes_remove` |
+| `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle kod: boşsa havuzdan, doluysa elle (yedek yol). Denetim `referral.send_code` (`family`, yalnız son 4 karakter) |
+
+Sağlık (`ops_health`, `kvkk_ops` önerisine eklendi): anahtar `referral` — kod bekleyen ödül ya da aylık kod 5'ten az → sarı; havuz boş ya da kodların bir kısmının süresi 30 gün içinde bitiyor → bilgi.

@@ -383,7 +383,7 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 |---|---|---|
 | Aile davet kodu | 8 karakter, `A–Z` ve `2–9` (`^[A-Z2-9]{8}$`); ekranda `ABCD EFGH` | Uzman/eş kodu 6 karakter: "Kod gir" kutusu uzunluktan ayırt eder |
 | Kod süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **14 gün** (7 + 7; `families.trial_days = 14`; 3 Kasım 2026, önce 30) | Varsayılan deneme 7 gün (`app_config.billing.trial_days`) |
-| Davet ödülü | davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince davet edene **30 gün**; son 365 günde en çok **12** | `referral_rewards.status`: `applied` (süre uzadı, `families.bonus_until`) · `code_pending` (davet eden App Store'dan ödüyor; Apple teklif kodu bekliyor) · `code_sent` (kod gönderildi) · `capped` (yıllık sınır) |
+| Davet ödülü | davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince davet edene **30 gün**; son 365 günde en çok **12** | `referral_rewards.status`: `applied` (süre uzadı, `families.bonus_until`) · `code_pending` (davet eden App Store'dan ödüyor; Apple teklif kodu bekliyor) · `code_sent` (kod gönderildi; havuzdan kendiliğinden ya da panelden elle, `offer_code_pool` ürün `monthly` / `yearly`, en az 14 gün kalan kod) · `capped` (yıllık sınır) |
 | `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme > 7 gün), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
 | Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
 
