@@ -24,7 +24,7 @@ Son güncelleme: 2026-11-03 (görünen ad İnci, §0); 2026-10-24 (hoş geldin c
 |---|---|
 | Yazım | "İnci" (büyük harf cümle başında ya da düğme/başlıkta), çoğul "inciler", ek "incin, incilerinle". Sayıdan sonra cümlede **"tane"**: "20 tane inci" ("20 inci" sıra sayısı gibi okunabilir); sayaç ve fiyatta yalnız sayı + simge. "Coin", "boncuk", "jeton", "altın", "para" yazılmaz; bilgi notunda "gerçek para değil" anlatımı korunur. |
 | Hikâye | İnci istiridyeden çıkar (ada yaşamı) — ama **yalnız onaylı gerçek görevden** gelir (§1): adada istiridye toplanıp inci bulunmaz. Önerilen gösteri (karar bekliyor): ebeveyn onayında istiridye açılır, inci çıkar. |
-| Simge | Açık renkli, parlak, yuvarlak inci (B7 ailesi; renk seçimi kullanıcıda). Sarı/altın tonu kullanılmaz (Güneş Taşı), XP yıldızından ayrı. |
+| Simge | **S (sedef)**: açık krem-beyaz, yanardöner parlak yuvarlak inci (kullanıcı seçimi 3 Kasım 2026; oyunda `Icons/ui_coin.png`, kaynak `game-app/art/icons/inci/`). ParentApp/ClinicApp inci gösterirse aynı görünümü kullanır. Sarı/altın tonu kullanılmaz (Güneş Taşı), XP yıldızından ayrı. |
 | Neden | Kullanıcı: "İnci daha mantıklı, istiridyeden çıkıyor, ada yaşamına uygun". GB20 değerlendirmesindeki eksiler (mücevher çağrışımı, "5 inci" okunuşu, kız adı) renk ve "tane" kuralıyla karşılanır. |
 | Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 17). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
 
