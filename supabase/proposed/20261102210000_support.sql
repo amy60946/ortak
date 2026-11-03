@@ -3,7 +3,7 @@
 -- App Store "Support URL" ve uygulamalardaki "Yardım ve iletişim" bu sayfadır (alan adı gelene dek workers.dev; sabit adres
 -- …/functions/v1/support oraya yönlendirir). Ekip panelde "Destek" kuyruğundan okur, yanıtı kendi e-postasından verir.
 -- Saklama: kapanan talep 2 yıl, istenmeyen (spam) 30 gün (hukuk/42 satır 25; gece imha işi, 20261102200000_kvkk_ops.sql).
--- Sözleşme: sozlesme/admin.md "Destek", sozlesme/veritabani.md §22, hukuk/46 K15.
+-- Sözleşme: sozlesme/admin.md "Destek", sozlesme/veritabani.md §24, hukuk/46 K15.
 
 create table if not exists public.support_requests (
   id          uuid primary key default gen_random_uuid(),

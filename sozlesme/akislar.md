@@ -29,7 +29,7 @@ Son güncelleme: 2026-10-24 (3.1a hoş geldin coini, P11 ilk ödül talebi)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] (ebeveyn 1) | Aile › + › Ebeveyn › "Davet kodu üret". | `create_invite_code('parent')` → 6 karakter, **24 saat** |
-| 2 | [P] (ebeveyn 2) | Kendi hesabıyla Aile › Hesap › "Aileye katıl" bölümüne kodu yazar. | `join_family(code)` |
+| 2 | [P] (ebeveyn 2) | Kayıttan hemen sonra açılan "Kodun var mı?" ekranına ya da Aile › Hesap › "Kod gir" bölümüne kodu yazar (tek kutu: önce uzman daveti `claim_clinic_invite`, değilse `join_family`; 26 Ekim 2026). | `join_family(code)` |
 | 3 | [S] | Profil yeni aileye taşınır, kod tüketilir. Ebeveyn 2'nin eski ailesinde başka ebeveyn yoksa eski aile **ve tüm verisi silinir** (uygulama önce uyarır). | `profiles.family_id`, `invite_codes.used_at` |
 
 ---
@@ -82,6 +82,7 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] | Ebeveyn görev oluşturur (hazır şablondan ya da özel): başlık, emoji, açıklama, başlangıç, tekrar (`daily`/`weekly`/`monthly` + günler), bitiş, hatırlatma, **inceleme gereksin mi** (varsayılan evet). | `tasks` insert |
+| 1a | [P] | **Hazır rutin** (27 Ekim 2026, yalnız ParentApp; veritabanı değişmez): Görev Oluştur'un üstündeki "Hazır rutinler" kartları (Güne hazır sabah, Okul dönüşü, Sakin akşam, Haftalık ev işleri, Ailece bir hafta, Hafta sonu keyfi; Görevler boşken "Bir rutinle başla"). Katalogdaki 4–6 görev tek seferde, **her biri ayrı tekrarlayan görev** olarak eklenir: kimin için, hafta içi / hafta sonu / her gün (gün gün seçim yok, eklendikten sonra görev düzenlemesinden; haftalıklarda her görevin kendi günü), saat = `reminder` (isteğe bağlı) ve gün bölümü, zorluk/coin katalogdan, inceleme açık. Eklemeden önce görev çıkarılır, adı ya da saati değiştirilir. Olay `routine.add` (`id`, `n`, `kids`, `timed`). Liste: `veri/hazir_rutinler.json` (tek kaynak; ParentApp kopyası `src/data/routines.json`, `bash tools/sync_routines.sh <ortak>/veri/hazir_rutinler.json`). | `tasks` + `task_assignments` insert (adım 1–2 ile aynı) |
 | 2 | [P] | Görevi bir ya da daha çok çocuğa atar; her atamada zorluk ve coin (varsayılan Kolay 5 / Orta 10 / Zor 20, elle değişir). | `task_assignments` insert |
 | 3 | [O] | Senkronda (zamanlaması Unity katmanında; doğrulanmalı) dünden 7 gün sonrasına kadar görev örneklerini çeker. Tekrarlar sunucuda açılır. Kaydı olmayan örnek `assigned`. | `child_tasks(from, to)` |
 | 4 | [O] | Yeni görev için oyunda rozet + pet'ten bildirim. | `TaskEvent.NewTask` |
@@ -91,6 +92,8 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 | 8 | [P] | Realtime ile değişiklik gelir; **İnceleme** ekranında `pending` olanlar listelenir; Görevler'de durum etiketi (Onay bekliyor / Tamamlandı / Yapamadı / Reddedildi). | `completions` (Realtime) |
 | 9a | [P] | **Onay:** kayıt `approved` yapılır. | `review_completion(..., 'approved')` (19 Ekim kararı; önceden doğrudan `completions` update) |
 | 9b | [P] | **Ret:** ebeveyn isterse not yazar ("Yatak dağınık kalmış"); kayıt silinmez. | `review_completion(task, child, date, 'rejected', note)` |
+| 9c | [P] | **İnceleme ayrıntısı** (`20261027130000_review_detail`, uygulandı, 27 Ekim 2026): satıra dokununca alt sayfa — "Motive etmek ne kadar zordu?" (1–5, isteğe bağlı, uzmana akar), Güneş Taşı − / + (0–6, varsayılan zorluğa göre), not (≤ 140, oyunda görünür), **Reddet / Tekrar dene / Onayla**. Satırdaki ✓ hızlı onay olarak kalır. | `review_completion(task, child, date, status, note, motivation, stones)` |
+| 9d | [P → O] | **Tekrar dene:** kayıt `retry` olur, çocuğa `task_retry` bildirimi (not gövdede). Oyunda Atandı + tekrar bayrağı: "Yaptım" yeniden açık, kartta "Bir daha dener misin? Ailenden not: …" (not yoksa "Ailen bir daha denemeni istiyor"), Mavi haber verir; onay notu da kutlamada ve onaylı kartta (game-app 2bd61af; eski sürüm: Atandı, not görünmez). Çocuk yeniden "Yaptım" der → adım 6. Yalnız bugünün görevi. | `review_completion(..., 'retry', note)` → `child_set_status` |
 | 10 | [S] | `approved`'a geçişte coin deftere eklenir (atamadaki `coins`). Onay geri alınırsa (başka duruma geçiş ya da silme) verilen tutar düşülür; görev/atama silinirse kazanılan coin kalır. | tetikleyici `completions_coin` → `coin_ledger` (`task` / `task_undo`) |
 | 10a | [S] | Aynı geçişte **Güneş Taşı** yazılır: kolay 1 / orta 2 / zor 3 (`20261019030000_sun_stones`, uygulandı 19 Ekim). Geri almada o tamamlamanın taşı düşer. | tetikleyici `completions_sun_stone` → `sun_stone_ledger` |
 | 11 | [O] | Sonraki senkronda görev durumu `approved`/`rejected` gelir (nihai; kuyruktaki çocuk niyeti düşer). Onayda kutlama sahnesi; retde ebeveynin notu gösterilir. | `child_tasks` (`status`, `parent_note`); `TaskEvent.Approved/Rejected` |
@@ -176,9 +179,9 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 | 3b | [P] | **Ret:** `declined`. | update `status='declined'` |
 | 4 | [O] | Kabul edilen görev oyuna sıradan bir görev olarak gelir (3. bölüm akışı). | `child_tasks` |
 
-Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'in bu adımı eklemesi gerekir).
+Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hangi göreve dönüştüğünü buradan izler (ParentApp'te 22 Ekim 2026'dan beri).
 
-**Günlük rutin v2 (kullanıcı kararı 28 Ekim 2026; `migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; veritabani.md 19):** aşağıdaki ilk sürümün yerine geçer.
+**Günlük rutin v2 (kullanıcı kararı 28 Ekim 2026; `migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; veritabani.md 21):** aşağıdaki ilk sürümün yerine geçer.
 
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
@@ -193,11 +196,12 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 
 **Günlük rutin önerisi — ilk sürüm (kullanıcı isteği 27 Ekim 2026; veritabanı değişmedi; tarihçe):** Uzman Öneriler sekmesinde hazır bir rutini (ör. "Güne hazır sabah", 6 görev) tek seferde önerir. Katalog `veri/hazir_rutinler.json` (ParentApp'in hazır rutinleriyle aynı; görevler `gorev_sablonlari.json` anahtarlarıyla). Uzman görevleri seçip çıkarabilir (çocukta aynı adlı görev ya da bekleyen öneri varsa baştan seçili gelmez); her görev **ayrı bir öneri** satırı olur (`clinic_task_suggestions`; hatırlatma saati rutinden, tekrar: hafta içi = haftalık Pzt–Cum, her gün = günlük, haftalık = görevin günleri), `note` = "<Rutin adı> rutini" (+ uzmanın notu). Ebeveyn ParentApp'te her öneriyi ayrı kabul/ret eder (bugünkü akış). Alternatifler (tek öneri olarak paket, uzmanın kendi rutini, takip planına bağlama, yaşa göre seçim) karar bekliyor (DURUM HATIRLATMA).
 
-### 5.5 Zor an (ABC) kaydı
+### 5.5 Davranış kaydı (ABC kaydı; eski adları "Zor an", "Gözlem notu"; ad kararı kullanıcı 28 Ekim 2026: iki uygulamada da "Davranış kaydı")
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
 | 1 | [P] | Ebeveyn zor bir anı kaydeder: Öncesi, Davranış (zorunlu), Sonucu, şiddet 1–5. | `abc_events` insert |
-| 2 | [K] | Rızalı bağlantısı olan uzman okur. | `abc_events` (RLS `clinic_sees_child`) |
+| 1a | [P] | Uzmanı hedef paylaştıysa (isteğe bağlı, 3 Kasım 2026 kullanıcı kararı): **"Hangi hedefle ilgili?"** uzmanın o çocuk için aileye gönderdiği etkin hedefler + "Diğer / emin değilim" (varsayılan). Seçilen hedefin açıklaması ipucu olarak görünür. Birden çok çocuk seçildiyse her çocuğun hedefi ayrı. Listede kaydın hedefi küçük etiketle görünür. Sunucu güncellemesi yoksa ya da hedef bu arada paylaşımdan çıktıysa kayıt hedefsiz kaydedilir (kayıt kaybolmaz). | `abc_events.goal_id` (`migrations/20261103120000_abc_goal.sql`, uygulandı 3 Kasım 2026; `abc_events_goal_guard`) |
+| 2 | [K] | Rızalı bağlantısı olan uzman okur; hedefe bağlı kayıtları hedefe göre süzer (ClinicApp, Klinik penceresi). | `abc_events` (RLS `clinic_sees_child`) |
 
 ### 5.6 Uzmanın kendi çalışma alanı (aile görmez)
 | # | Uygulama | Adım | Veritabanı |
@@ -246,7 +250,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 |---|---|---|---|
 | Çocuk "Yaptım" (inceleme bekliyor ya da incelemesiz onay) | Oyun → ailenin bütün ebeveynleri | `task_done` | parent |
 | Çocuk "Yapamam" | Oyun → ebeveynler | `task_declined` | parent |
-| Ebeveyn onayladı / reddetti | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` | child |
+| Ebeveyn onayladı / reddetti / tekrar dene dedi | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` ("… onaylanmadı") / `task_retry` ("…: bir daha dener misin?", 27 Ekim 2026) | child |
 | Yeni görev atandı (yalnız yeni atama; düzenleme bildirim üretmez) | ParentApp → çocuk | `task_assigned` | child |
 | Posta | çocuk → ebeveynler / ebeveyn → çocuk | `message` | parent / child |
 | Çocuğun cihazı koda bağlandı | Oyun → ebeveynler | `device_linked` | parent |
@@ -255,7 +259,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 | Paylaşım durduruldu | aile durdurduysa → uzman; uzman durdurduysa → ebeveynler | `clinic_revoked` | clinic / parent |
 | Uzman görev önerdi | ClinicApp → ebeveynler | `clinic_suggestion` | parent |
 | Ebeveyn öneriye karar verdi | ParentApp → öneriyi yapan uzman | `suggestion_decided` | clinic |
-| Zor an kaydı | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
+| Davranış kaydı | ParentApp → rızalı bağlantının uzmanı | `abc_event` | clinic |
 | Ekibe yeni uzman katıldı | ClinicApp → klinik sahipleri | `team_joined` | clinic |
 | Çocuk ödül istedi (ilkinde `data.first = true`, başlık "İlk ödül talebi: …"; P11 3c) | Oyun → ebeveynler | `reward_request` | parent |
 
@@ -286,6 +290,8 @@ Teslim yolları:
 | 1 | O, P, K | Açılışta ve öne gelişte oturum bildirilir (dakikada en çok bir oturum sayılır; gün değişince aktif gün +1). | `track_session(app, platform, sürüm)` → `user_activity` |
 | 2 | O, P, K | Olaylar biriktirilir, toplu gönderilir (≤ 50/çağrı, kullanıcı başına ≤ 2000/gün). Ad biçimi `alan.eylem` (küçük harf, rakam, `_`, `.`). | `track_events(app, olaylar, platform, sürüm)` → `app_events` |
 | 3 | — | İstemci bu tabloları **okuyamaz**. İş özetleri yalnız SQL Editor'den: `analytics.accounts`, `signups_daily`, `daily_active`, `events_daily`, `clinics_overview`, `families_overview`. | şema `analytics` (API'ye kapalı) |
+
+ParentApp olayları (22 Ekim 2026): `app.open`, `screen.<tasks|review|progress|family|create_task|task_details|chat|notifications|observation|rewards|paywall>`, `task.create` (`n`), `task.delete`, `task.review` (`approve`, 27 Ekim 2026: + `decision` approved/rejected/retry, `motivation` 1–5), `template.custom`, `child.add`, `invite.create` (`kind`), `family.join`, `message.send` (`kind`), `notification.open` (`kind`), `observation.create`, `reward.create`/`reward.update` (`kind`), `reward.delete`, `reward.give` (`n`), `reward.decide` (`approve`), `stones.deduct` (`n`, `reason`: doğru/yanlış; metin gönderilmez), `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026; 3 Kasım 2026: + `mode` short/full/rewards; rewards = Ödüller ekranının 3 kartlık turu), `onboarding.start` (`mode`), `onboarding.later` ("Şimdi değil"), `first_steps.open` (`item`: child/link/task/approve/reward/clinic), `first_steps.collapse` / `first_steps.expand` (`n` tamamlanan; 3 Kasım 2026'ya kadar `first_steps.hide`), `first_steps.complete`, `observation.goal` (`n`: hedef seçilen çocuk sayısı) / `observation.goal_skip` (hedef sorulduğu hâlde seçilmedi; 3 Kasım 2026), `referral.redeem` (Apple hediye kodunu kullan), `code.redeem` (`kind`: invite/family/accepted), `code.skip`, `invite.accept` (`n`, `new`, `history`), `invite.decline`, `care.log` (`practiced`) (uzman daveti ve takip planı, 26 Ekim 2026). 27 Ekim 2026: `push.ask` (`yes`; bildirim ön sorusu).
 
 ClinicApp olayları (ilk sürüm): `app.open`, `screen.home`, `screen.client` (`tab`), `screen.notifications`, `notification.open` (`kind`), `suggestion.send` (`n`), `suggestion.update`, `report.print`, `invite.family`, `invite.team`, `team.join`, `abc.play`, `onboarding.done` / `onboarding.skip` (`step`; ilk kullanım rehberi, 26 Ekim 2026), `invite.share` (`channel`), `invite.email` (`sent`, `reason`; sistem e-postası, 26 Ekim 2026), `survey.done` (`intent`, `profession`) / `survey.skip` (`step`) (karşılama anketi, 27 Ekim 2026), `plan.goal` (`edit`), `plan.module` (`edit`), `plan.package`, `plan.publish`, `verification.submit` (`profession`, `check`) (26 Ekim 2026); `sample.open`, `sample.tour` (`step`, kapatıldığı adım), `sample.hide` (listeden kaldırıldı), `start.hide` (örnek aile ve "Başlarken"), `export.abc` / `export.routine` (`rows`; CSV, dosya cihazda oluşur), `report.note_copy` (ilerleme notu), `settings.profile`, `settings.clinic`, `client.label` (28 Ekim 2026, Joon referanslı yeniden düzen). Takip planı yeniden tasarımı (2 Kasım 2026): `plan.routine_goal` (`link`), `plan.template_save` (`shared`, `modules`), `plan.template_apply` (`modules`, `routines`), `suggestion.change` (`n`, `remove`); `plan.publish`'e `drafts`, `plan`; `suggestion.routine` / `suggestion.send`'e `draft`, `from`. `screen.client`'te örnek ailede `sample: true`.
 
@@ -351,7 +357,7 @@ Biz tedavi yapmıyoruz; uzmanın kendi planını hızlı kurması için şablon 
 
 Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) yalnız klinikte. Planlandı durumundaki modül aileye görünmez. Ebeveynin zorluk bildirimi bir puan değildir, ekranda ölçek gibi gösterilmez. Hiçbir hedef tanı değildir; paket adları ihtiyaç alanıyla yazılır, tanı etiketi zorunlu değildir.
 
-### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql` uygulandı 2 Kasım 2026, veritabani.md 20)
+### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql` uygulandı 2 Kasım 2026, veritabani.md 22)
 
 Kararlar: ClinicApp'te **C · hedef hatları** (her hedef bir satır: hedef · aile programı · rutin/görev; ileride salt bakış "Harita"); bir program **birden çok hedefi** destekler; Şablonlarım paylaşımını **uzman seçer**; **tek "Aileye gönder"**; ailede ekli rutin/görev **değişiklik önerisiyle** düzenlenir; uzmanın kendi programı **yok** (sistem içerikleri kalır); iPad'de uzman **iPad görünümü / web görünümü** arasında seçer (sağ üstte düğme; yalnız uygulama ayarı). Taslaklar: https://claude.ai/artifact/MxXWHaP3MPLHp5o2GHj6VG, yan yana hikâye https://claude.ai/artifact/R3jRURSfeHDMyPcwLzYZNY.
 
@@ -436,7 +442,7 @@ Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp 
 
 | Kim | Kimi / neyi | Nasıl | Geçerlilik | Durum |
 |---|---|---|---|---|
-| Ebeveyn | İkinci ebeveyn | ParentApp Aile › + › Ebeveyn › davet kodu; diğeri Aile › Hesap › "Aileye katıl" | 6 karakter, 15 dk | uygulandı |
+| Ebeveyn | İkinci ebeveyn | ParentApp Aile › + › Ebeveyn › davet kodu; diğeri "Kodun var mı?" ekranı ya da Aile › Hesap › "Kod gir" | 6 karakter, 15 dk | uygulandı |
 | Ebeveyn | Çocuğun cihazı | Aile › çocuk › "Giriş kodu üret"; GameApp'te yazılır | çocuk başına, 15 dk, tek kullanım | uygulandı |
 | Uzman | Aile | ClinicApp "Aileyi davet et" → **sistem e-postası** (kod + adımlar) + bağlantı (alan adı gelince). Kullanıcı kararı 28 Ekim 2026: süreç sistem üzerinden — davet metnini kopyalama / e-posta uygulamasında açma yok; kod yalnız e-posta gönderilemezse yedek olarak görünür. Davet penceresindeki taslak takip planı **gizli** (sunucu `invite_code` taslağını destekler; DURUM HATIRLATMA) | **3 gün** (bağlanınca 30 gün içinde çocuk paylaşımı) | e-posta: uygulandı `20261027000000` (bölüm 10) |
 | Ebeveyn | Uzman → çocuk | Kayıtta bağlantı/e-posta ile ya da sonradan kod/bağlantıyla uzman tanımlanır; uzmanın önerdiği çocuğu kontrol edip düzeltir, uyarıyı okuyup "Onayla ve paylaş" (çocuk o an oluşur); istemezse reddeder | — | uygulandı (bölüm 10) |
@@ -450,6 +456,45 @@ Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp 
 ---
 
 > **ParentApp penceresinin önerileri (22 Ekim 2026, uygulanmadı).** Bölüm numaraları `P` ile başlar.
+
+## 16. ParentApp ilk kurulum ve tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
+
+Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
+
+| # | Ekran | Ne olur | Veritabanı |
+|---|---|---|---|
+| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. | — |
+| 2 | Davet kodu? | "Davet kodun var mı?" (3 Kasım 2026'dan beri: uzmandan ya da seni davet eden bir aileden) Hayır → kayıt · Evet → "Davet kodunu yaz" → kayıt · "Hesabım var" → giriş. Kodun türü kendiliğinden anlaşılır: 6 karakter uzman daveti, 8 karakter aile davet kodu (19 "Aile davet et"; kurulumun başında kullanılır, sonuç pencereyle söylenir). Davet bağlantısıyla gelen bu soruyu görmez. | kayıt meta `clinic_invite` (kod ya da bağlantı anahtarı); aile kodu `redeem_guest_pass` |
+| 3 | Kayıt | Ad, e-posta, şifre (bugünkü ekran). | `handle_new_user` (davet aileye bağlanır) |
+| 4 | Aile soruları | Giriş ekranı ("Seni ve aileni tanıyalım", ne kadar sürer, ne işe yarar), ana hedef, diğer hedefler (ana hedef burada tekrar edilmez), bizi nereden duydun, kısa giriş, üç sıklık sorusu (araya bir "yalnız değilsin" ekranı). Her yanıt hemen kaydedilir. | `intake_answers` (`child_id` boş) |
+| 5 | Sıradaki | "Çocuğunu ekle" · "Kodla aileye katıl". | — |
+| 6a | Çocuk ekle | Uzman daveti bekliyorsa davet ekranı (öneri dolu, uyarı + veli beyanı, `family_accept_invite`); yoksa ad, cinsiyet, doğum günü, simge ya da ebeveynin fotoğraflarından fotoğraf (`photo:<yol>`, durumlar.md). | `children` (+ Storage `mail/<aile>/avatars/`) |
+| 7a | Çocuk soruları | Çocuğu ekleyen ebeveyn yanıtlar (düzen, tanı*, ilaç*, uzmanlar, geçen hafta 6 sıklık sorusu, hedefler, ilgi alanları, motive edenler). *İsteğe bağlı, rıza satırı. | `intake_answers` (`child_id`) |
+| 8a | Çocukların | Adlar (düzenlenebilir), "Sonra başka çocuk da ekleyebilirsin", Devam · Başka çocuk ekle (6a'ya döner). | `children.name` |
+| 9 | Hazırlanıyor | ~1,5 sn "Her çocuk için odak alanlarını belirliyoruz". | — |
+| 6b | Kodla katıl | Tek kutu (`CodeEntry`: önce uzman daveti, değilse `join_family`); uzman koduysa 6a'nın davet ekranına geçer. Aileye katılan 7a–8a'yı görmez. | `join_family` |
+| 10 | Seni nasıl görsün? | Takma ad + ebeveyn avatarı (oyunda çocuğun gördüğü). | `profiles.nickname/avatar` |
+| 11 | Tanıdık mı? ×3 | Üç cümle + sade çizim, Evet/Hayır. | `intake_answers` (`relate_*`) |
+| 12 | Bitti | `parent_setup_complete()`; uygulamaya girilir. Sonra (planlandı): ekranın altında tek seferlik tanıtım teklifi. | `profiles.setup_completed_at` |
+| 13 | Çocuğun cihazını kur | Uygulamada ilk iş: çocuk seç → "Başka cihaz" (Pofi Adası indirme bağlantısı paylaş + giriş kodu QR/yazılı) · "Bu cihaz" (App Store) · "Kurdum" / "Sonra yaparım". | `create_invite_code('child')` |
+| 14 | Rehber ve İlk adımlar (3 Kasım 2026, kullanıcı kararı; benchmark: kısa ve kullanıcının açtığı turlar daha çok bitiriliyor) | Önce sorulur: "ParentApp nasıl çalışır?" → **Göster** / **Şimdi değil**. Göster → kısa tur (3 kart: görev ver → çocuk oyunda "Yaptım" der, ebeveyne bildirim → onayla, coin + Güneş Taşı). Aile › Hesap › "Nasıl kullanılır?" tam turu açar (+ ödüller, mesajlar, gelişim, sen de katıl, uzmanım). Ben'de **İlk adımlar** kartı (hesabın ilk 30 günü): çocuğunu ekle · oyuna bağla · ilk görevi ver · ilk onayı yap · bir ödül belirle; uzmanını bağla isteğe bağlı. Satır ilgili ekranı açar, yapılınca kendiliğinden işaretlenir; beşi bitince kaybolur. Başlıktaki ok kartı daraltır/açar (3 Kasım 2026, kullanıcı isteği: çarpı yok, kalan adımlar hep görülebilsin). Rehber kartlarında ilk kart dışında geri tuşu. | — (yalnız istemci; ödül sayısı `rewards`) |
+
+Kurallar: Yanıt satırı kişi + çocuk + soru başına tek (`unique nulls not distinct`); her ebeveyn kendi yanıtını yazar, aile üyeleri okur, başka aile göremez. Uzman bu sürümde yanıtları görmez (ileride ebeveyn izniyle; paylaşım onay metni sürümü değişir). Yönetim paneli: `admin_intake(aile, gerekçe)` kişi bazlı (support/owner, denetim kaydı), `admin_intake_summary(gün)` yalnız sayılar. Bu göçten önceki ebeveynler kurulumu yapmış sayılır (`setup_completed_at` dolu).
+
+## 18. Ebeveyn görevleri, ebeveynin Güneş Taşı, hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; kullanıcı isteği 27 Ekim 2026)
+
+Amaç: ailece ya da yalnız ebeveynin yapacağı görevler; ebeveyn de taş kazanır ve taşla çocuğuna oyunda hediye gönderir (Joon "parent quests + gift shop" örneği, kopya değil).
+
+| # | Uygulama | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Görev ayrıntılarında çocukların altında **Ebeveynler (isteğe bağlı)**: kendini ya da ailedeki diğer ebeveyni seç, zorluk (Kolay/Orta/Zor = 1/2/3 taş). Çocukla birlikte seçilirse ailece görevdir; yalnız ebeveyn de olabilir (çocuk ataması yok). | `parent_assignments` (aile yazar; yalnız ailedeki ebeveyne) |
+| 2 | [P] | Görevler'de ebeveyn avatarları görevde görünür; bana atanan görevde yuvarlak **Yaptım** düğmesi (bugün − 7 … bugün + 1). Yapan ebeveynin avatarında ✓. Süzgeçte **Ben** (bana atananlar). Ebeveyn görevi incelenmez. | `parent_task_done(görev, gün, yapıldı)` → `parent_completions` + `parent_stone_ledger` (`task` / `task_undo`) |
+| 3 | [O] | Oyun değişmez: çocuğun görevi yine `child_tasks`'tan (ailece görevde yalnız çocuk satırı). | — |
+| 4 | [P] | Aile › Ben › Genel: **Güneş Taşım** (kullanılabilir, bu hafta kazanılan / hediye) → **Geçmiş** (Güneş Taşı hesabı: bu hafta / bu ay / tümü, tarih, açıklama, taş, kalan) ve **Hediye dükkânı**. Aile › çocuk › Genel: **Güneş Taşı · N › Hesap** (çocuğun defteri: görev onayı, ödül, düşülen, hedef). Gelişim ayrıntıları Gelişim sekmesinde kalır. | `parent_stone_ledger`, `sun_stone_ledger` (aile okur) |
+| 5 | [P] | Hediye dükkânı: çocuk seçilir, eşya (Giyecek / Ev / Süs), isteğe bağlı not (≤ 140) → **Hediye gönder**. Taş yetmezse düğme "Taş yetmiyor · N eksik". | `gift_items` (fiyat), `send_gift(çocuk, eşya, not)` → `child_gifts` + `parent_stone_ledger` (`gift`) + çocuğa `gift` bildirimi |
+| 6 | [O] | Oyun her eşitlemede bekleyen hediyeleri alır; posta kutusunda paket kartı (kimden, eşya, not). Çocuk "Aç"a basınca eşya envantere ve kayda yazılır, sonra kapatılır; kapatma gitmezse sonraki eşitlemede yeniden denenir, eşya iki kez eklenmez. Tanınmayan `item_id` kapatılmaz ve gösterilmez. Hediye seviye kilidini aşar (`ekonomi.md` 5C). Oyun `gift` bildirim satırını okumaz; haber `child_gifts_pending`'den. Eski sürüm hediyeyi görmez; kayıt bekler. (game-app 2bd61af) | `child_gifts_pending()`, `claim_child_gift(id)` |
+
+Olaylar (ParentApp): `task.parent_done` (`on`), `gift.send` (`item`, `stones`).
 
 ## P9. Kod süresi ve "yeni kod" (öneri, 21 Ekim 2026)
 
@@ -492,9 +537,10 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 |---|---|---|---|
 | 1 | [P] | Kayıt + e-posta doğrulama → 7 günlük deneme başlar. Görevler ekranında "Deneme: N gün kaldı". | `families.trial_started_at`, `family_access()` |
 | 2 | [P] | Deneme bitince uygulama açılışta üyelik ekranını gösterir (Aylık / Yıllık). "Şimdilik ücretsiz devam et" seçilebilir. | uygulama |
-| 3 | [P] | Satın alma mağazada (App Store); RevenueCat (karar 22 Ekim 2026) olayı sunucuya iletir; sunucu güncel durumu RevenueCat'ten yeniden okur (olay sırası, "geri yükle" ile hesap değişimi). ParentApp RevenueCat'e Supabase kullanıcı kimliğiyle giriş yapar (`app_user_id`). Elle verilen premium (`source` manual/web) mağaza aboneliği bitince ezilmez. | `billing-webhook` → `set_family_subscription` |
-| 4 | [S] | Ücretsiz planda: 3 etkin görev, 1 çocuk; ödül/taş düşme/ebeveyn mesajı/zor an kapalı. Onay, oyun, uzman paylaşımı açık. | tetikleyiciler (`hint = premium_required`) |
+| 3 | [P] | Satın alma mağazada (App Store); RevenueCat (karar 22 Ekim 2026) olayı sunucuya iletir; sunucu güncel durumu RevenueCat'ten yeniden okur (olay sırası, "geri yükle" ile hesap değişimi). ParentApp RevenueCat'e Supabase kullanıcı kimliğiyle giriş yapar (`app_user_id`). Elle verilen premium (`source` manual/web) mağaza aboneliği bitince ezilmez. ParentApp (2 Kasım 2026, `react-native-purchases` 10.16.x): ilk oturumda `configure(appUserID)`, kullanıcı değişince `logIn`, çıkışta `logOut`; entitlement `premium`, offering `default`; fiyat mağazadan. Satın alma / geri yüklemeden sonra `family_access()` birkaç saniye içinde yeniden okunur; webhook gelene kadar mağazadaki etkin üyelik kısıt göstermez (sunucu kısıtları webhook'la açılır). | `billing-webhook` → `set_family_subscription` |
+| 4 | [S] | Ücretsiz planda: 3 etkin görev, 1 çocuk; ödül/taş düşme/ebeveyn mesajı/davranış kaydı kapalı. Onay, oyun, uzman paylaşımı açık. | tetikleyiciler (`hint = premium_required`) |
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
+| 6 | [P] | **Aile davet et** (önce misafir kartı, 28 Ekim 2026; 3 Kasım 2026 güncellendi, `migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026): davet edilen yeni ailenin denemesi 7 yerine 14 gün; o aile mağazadan abone olunca davet eden 1 ay kazanır (yılda en çok 12). Ayrıntı 19. | `families.trial_days`, `guest_passes` |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
 
@@ -504,7 +550,41 @@ Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz;
 |---|---|---|---|
 | 1 | [P] / [K] | Kayıt ekranında koşullar için onay kutusu ("Kullanım Koşulları'nı okudum, kabul ediyorum"; işaretlenmeden hesap açılmaz) ve altında **kutusuz** aydınlatma satırı ("Kişisel verilerinin nasıl işlendiğini Aydınlatma Metni'nde anlatıyoruz"); bağlantılar `legal` adresine. Aydınlatma onay değil bilgilendirmedir; gösterildiği kaydedilir. Açık rızalar bu ekrana konmaz. Metinler `hukuk/50-uygulama-ici-metinler.md`. | kayıttan hemen sonra `legal_accept(app, legal_pending(app))`. E-posta doğrulaması yüzünden oturum kayıtta açılmıyorsa (ClinicApp): işaretlenen sürümler kayıt bilgisine `legal: {anahtar: sürüm}` yazılır (sürümler oturumsuz `legal?format=json` listesinden), ilk girişte `legal_pending` içinden sürümü eşleşenler `legal_accept` ile sessizce kaydedilir; eşleşmeyen kalırsa adım 2 ekranı |
 | 2 | [P] / [K] | Her açılışta (ve ön plana gelince) `legal_pending(app)`; boş değilse "Koşullarımız güncellendi" ekranı (`summary` + bağlantı) → kabul etmeden devam edilmez; "Hesabımı sil" seçeneği görünür. **Kısa biçim (kullanıcı kararı 28 Ekim 2026):** büyük sayfa ve metin başına kart yok — küçük kart, tek satır (metin adları bağlantı), sözleşmeler için tek kutu, aydınlatma kutusuz; `summary` yalnız "Kısaca neler değişti?" açılır kutusunda. Kayıt ekranında da tek küçük satır ("Hizmet Sözleşmesi ve Veri İşleme Eki'ni kabul ediyorum. Aydınlatma · Gizlilik"). | `legal_accept` |
-| 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. | `legal_accept('child', …)` |
+| 3 | [P] | Çocuğu oyuna bağlamadan önce (kod/QR göstermeden) `legal_pending('child')` boş değilse veli GameApp koşullarını ve çocuk aydınlatmasını çocuk adına onaylar. Kısa kart (28 Ekim 2026): iki cümle + tek kutu + aydınlatma bağlantısı; veli onayı ParentApp'in yeniden onay kartında da ayrı kutudur. ParentApp'te "Yasal ve gizlilik" Aile › Hesap'ta tek satır. | `legal_accept('child', …)` |
 | 4 | [O] | Oyun ebeveyn kapısında "Bilgi": çocuk dilinde kısa not (`aydinlatma-cocuk` içindeki çocuk bölümü) + gizlilik bağlantısı. Çocuk onay vermez. | — |
 | 5 | [P] / [K] | **Tek başlık (kullanıcı kararı 28 Ekim 2026):** Ayarlar › **Yasal ve gizlilik** — tek sayfada `legal_documents_for(app)` listesi (sürüm, onay tarihi) ve aynı sayfadan KVKK başvurusu formu (tür + açıklama) → `kvkk_request_create`; "Başvurularım" `my_kvkk_requests`. Ana ekranda ayrı ayrı yasal bağlantı yok; yeniden onay ve üyelik duvarı ekranlarının altında tek "Yasal ve gizlilik" bağlantısı. Abonelik satın alma ekranındaki sözleşme + gizlilik bağlantıları (App Store kuralı) kalır. | — |
 | 6 | Yönetim paneli | Hukuk › KVKK başvuruları (30 gün), e-postayla gelenleri kayda alma; Hukuk › Yasal metinler › Yayımla (avukat onayından sonra). | `admin_*` |
+
+## 19. ParentApp: Ben ve Uzmanım sekmeleri, uzman bağla, telefon, aile davet et (kullanıcı isteği 28 Ekim 2026; Joon "Me / Care" örnekleri, kopya değil)
+
+Sekmeler: **Bugün** (ana sayfa, ev simgesi; rota adı `Ben`; kullanıcı kararı 3 Kasım 2026, benchmark Headspace/Cozi "Today", Apple/Google: simgeler ya hep yazılı ya hep yazısız) · **Uzmanım** (simge: artısız çanta) · Görevler · Gelişim · Aile. İnceleme ayrı sekme değil, Ben › "Onay bekleyen" kartından açılır (bildirim `task_done` da oraya gider). Veritabanı yalnız aile daveti için değişir (`migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026); geri kalanı mevcut işlevlerle.
+
+**Ben:** onay bekleyen sayısı → İnceleme (bekleyen yoksa kart beyaz/gri, varsa yeşil; 3 Kasım 2026) · "Aile davet et" kartı (X ile kapanır, sağ üstte hediye simgesi olarak kalır) · "Seni bekleyenler" (3 Kasım 2026'ya kadar "Senin görevlerin"; uzmanın bekleyen daveti, uzmanın programındaki bugünkü uygulamalar, uzmanın görev önerileri, eksik tanışma soruları; her satır ilgili ekranı açar; boşsa bölüm görünmez; ebeveynin kendi görevleri Bugünün ilerlemesi › Ben satırında) · "Programına devam et" (yalnız takip planında etkin uygulama varsa; bu hafta kaç gün) · "Bugünün ilerlemesi" (ebeveyn **Ben** + her çocuk, %; dokununca o kişinin bugünkü görevleri; görevi yoksa "Görev ekle"; Ben yanında ⓘ: birlikte yapılan görevlere kendini de ekle, Güneş Taşı kazan › taşlarla çocuğuna oyunda hediye gönder) · hızlı düğmeler Görev ver / Ödül / Davranış kaydı (defter simgesi) · en altta "ParentApp'i tanı" (rehber). Ödül ekranı ilk açılışta (ve ⓘ ile) 3 kartlık "kullanıyormuş gibi" tur: Güneş Taşı görevden gelir → ödül ekle → ödülü ver (son kartta coin/taş yasal notu, hukuk/50 §8). Geniş ekranda (yatay iPad) iki sütun.
+
+**Uzmanım:** uzman bağlıysa sekme **doğrudan uzmanın sayfasıyla** açılır (3 Kasım 2026, kullanıcı isteği): geri düğmesi yok, sağ üstte **"Uzman bağla"**; birden çok uzmanda üstte uzman seçici (bekleyen iş sayısıyla); bekleyen davetler sayfanın başında; altta acil durum notu. Ana sayfadaki uzman satırları sekmeyi o uzmanla açar. Uzman yoksa: bekleyen davetler, "Uzman bağla", "Uzmanına anlat". Uzman sayfası: bugün yapılacaklar (etkin uygulamalar "bugün uyguladım" kutusuyla → `care_module_logs`; davranış kaydı), çocuk başına **program** (takip planı: hedefler + aile programı = uzmanın verdiği eğitimler; ilerleme bu hafta uygulanan gün / 7), görev önerileri (kabul/ret, 5.4), paylaşılan çocuklar (geçmiş aktarımı aç/kapat, paylaşılmayan çocuğu ekle). Sağ üst ayar → **Uzmanı yönet**: çocuğu uzmandan ayır (`revoke_clinic_link`) ya da uzmanı kaldır (bütün paylaşımları `revoke_clinic_link`); uzman yeni veriyi göremez, aldığı notlar onda kalır. Yapay zekâ asistanı yok (şimdilik).
+
+**Uzman bağla** (Uzmanım, davet bağlantısı, kurulum):
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] | "Uzmanından davet kodu aldın mı?" **Evet** → kod (6 karakter; bağlantıyla gelindiyse hazır) → aynı ekranda uzman kartı ve **"Bu kimin uzmanı?"**: ailedeki çocuklar + uzmanın önerdiği yeni çocuk (düzeltilebilir). **Hayır** → "Uzmanına anlat" paylaşım metni, "Şimdilik geç". | `claim_clinic_invite` (10 adım 5b) |
+| 2 | [P] | Paylaşılanlar notu, zorunlu uyarı + veli beyanı (önceden işaretli değil), önceki uzman kayıtları (açık rıza, isteğe bağlı) → "Uzmanla bağlan". | `family_accept_invite` (10 adım 6–6d; onay sürümleri değişmedi) |
+| 3 | [P] | Bayrak `parent_sms_verify` açıksa ve hesapta numara yoksa: **telefon numarası** (ülke kodu, varsayılan +90) → SMS ile 6 haneli kod → doğrula. "Şimdilik geç" her adımda. Sağlayıcı yoksa adım kendiliğinden geçilir. | Supabase Auth `updateUser({phone})` + `verifyOtp(phone_change)` → `auth.users.phone` |
+| 4 | [P] | "Hesaplar başarıyla bağlandı" + (kurulum dışında) yeni çocuğun tabletini bağlama. | — |
+
+Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum tanışma sorularıyla değil "Uzman bağla" ile başlar. Bağlanınca (kullanıcı kararı 3 Kasım 2026; benchmark NN/g: kısa, atlanabilir, nedeni söylenen sorular) **"Aileni tanıyalım"** (yaklaşık 3 dakika) → **Başlayalım**: aile soruları → her çocuğun soruları → "seni nasıl görsün" → tanıdık mı → cihaz kurulumu; **Sonra**: doğrudan "seni nasıl görsün". Böylece sorular uygulama rehberinden önce biter. Yanıtlanmayanlar Ben'de **"Tanışma sorularını tamamla"** satırı olarak kalır (aile + yanıtı olmayan çocuklar; kurulumdaki ekranların aynısı). Olay `intake.invited` (`start`). Davet ekranı kapatılırsa kurulum her zamanki gibi sürer. Telefonla iletişim (uzmanın SMS hatırlatması) henüz yok: numara yalnız doğrulanıp saklanır; SMS gönderimi ayrı karar (DURUM hatırlatması).
+
+**Aile davet et** (`migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026; önce "30 günlük misafir kartı", 3 Kasım 2026 kullanıcı kararıyla ödemeye bağlı davet ödülü; benchmark: YNAB ve Babbel'de iki taraf da 1 ay, yalnız davet edilen ödeyince; YouTube Premium / Cineworld 12 sınırı; Headspace / Calm tek taraflı misafir geçişi. Apple: davet ödülüne izin var (3.2.2(x)), sahte davet yasak (5.6.3), ödeme yapan aboneye süre yalnız Apple teklif koduyla verilebilir):
+
+| Adım | Kim | Ne | Sunucu |
+|---|---|---|---|
+| 1 | [P] | Ana sayfa › "Aile davet et" kartı ya da hediye simgesi → "Davet kodunu paylaş": kod açılınca üretilir (kullanılmamış kod varsa aynısı), paylaşım metniyle gönderilir, kopyalanabilir. Ekranda iki taraf: **Onlar** 7 yerine 14 gün · **Sen** aile abone olursa 1 ay (yılda en çok 12). Altta özet: kaç aile başladı, kaçı abone oldu, kaç ay kazanıldı (kimlik yok). | `create_guest_pass()`, `my_referrals()` |
+| 2 | Yeni aile | ParentApp'i indirir; açılışta "Davet kodun var mı?" sorusunda (kayıttan önce; kurulumun başında kullanılır), kurulumda "Kodum var"da ya da Aile › Hesap › Kod gir kutusunda 8 karakterli kodu yazar. Tek kod kutusu türü kendiliğinden anlar (6: uzman ya da eşin kodu, 8: aile davet kodu). | `redeem_guest_pass(kod)` |
+| 3 | [S] | Kod yeni ailede (deneme ≤ 7 gün, daha önce kod yok, abone değil, kendi ailesi değil) bir kez geçerli: deneme **14 gün** olur. | `families.trial_days = 14` |
+| 4 | [S → P] | Kodu veren aileye `guest_pass_used` bildirimi ("Davetin kullanıldı", kullananın kimliği yok). | `notify_parents` |
+| 5 | [S] | Davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince (webhook → `family_subscriptions`): davet edene 1 ay. Davet eden abone değilse ücretsiz süresi hemen uzar (`bonus_until`); App Store'dan ödüyorsa ödül "kod bekliyor" olur. Son 365 günde 12 ödülden sonrası uygulanmaz. Bir aile için bir kez; iade edilen abonelikte geri alınmaz. | `referral_on_paid` → `referral_rewards`, `families.bonus_until` |
+| 6 | [S → P] | Davet edene `referral_reward` bildirimi ("1 ay hediye kazandın"); bildirime dokununca davet sayfası. | `notify_parents` |
+| 7 | [A → P] | App Store'dan ödeyen davet edene ekip **Apple teklif kodu** (1 ay ücretsiz, App Store Connect › abonelik › Offer Codes) gönderir; ParentApp davet sayfasında kod + **"Kodu kullan"** (kod panoya kopyalanır, Apple'ın kod sayfası açılır; ücretsiz ay bir sonraki yenilemede başlar). Kod **havuzdan kendiliğinden** atanır (ekip App Store Connect'ten indirdiği kod dosyasını yönetim paneli › Davetler'e yükler; ailenin aylık/yıllık ürününe uygun, en az 14 gün kalan kod); havuz boşsa ödül "kod bekliyor" kalır, kod yüklenince ya da panelden elle gönderilir. Kod hemen atanırsa 6. adımdaki bildirim tek bildirimdir ("kodun hazır"). | `referral_rewards.offer_code`, `status = 'code_sent'`; `offer_code_pool`, `referral_assign` (`veritabani.md` 28) |
+
+ParentApp olayları (bu bölüm): `invite.code` (`suggested`), `invite.tell`, `invite.accept`, `invite.decline`, `phone.code_sent`, `phone.verified`, `phone.skip`, `care.log` (`from: clinician`), `clinic.unlink` (`all`), `clinic.remove` (`n`), `guest_pass.share`, `referral.redeem`, `intake.later_done` (`n`), `code.redeem` (`kind: guest`).
+

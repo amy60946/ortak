@@ -55,6 +55,10 @@ Panel: ayrı depo **`amy60946/admin-panel`** (web). Üç uygulamanın kullanıc�
 | `admin_verification_open(id)` | support | Belge yolunu döner ve görüntülemeyi denetim kaydına yazar. Panel bunu doğrudan değil, Edge Function **`verify-doc`** (`{action:'open', id}`) üzerinden çağırır; işlev 2 dk imzalı bağlantı döner. `20261026400000` (uygulandı 26 Ekim) ile `verify` kovası yöneticiye doğrudan kapalı (panel dışından açılıp kayıtsız kalamaz). Karar sonrası dosyaları `verify-doc` `{action:'purge'}` siler (`storage_trash`, `admin_can_review`) |
 | `admin_verification_decide(id, onay, ret_nedeni, açıklama, barkod, özet, gerekçe)` | support | Onay → rozet (`clinicians.verified_profession/verified_at`) + bildirim; ret → neden kodu + uzmana açıklama. Özet yalnız `{university, program, degree, graduation_year}`. Dönen belge yolunu panel kovadan **siler** |
 | `admin_verification_suspend(uzman, açıklama, gerekçe)` | support | Rozeti askıya alır (şikâyet, BCBA süresi) |
+| `admin_intake(aile, gerekçe)` | support | ParentApp tanışma soruları (`20261027120000`, uygulandı 27 Ekim 2026): kişi bazlı yanıtlar (kullanıcı kararı 27 Ekim 2026; canlıdan önce avukat onayı); her açılış denetim kaydında (`intake.view`). Sağlık yanıtları (tanı, ilaç) dahil |
+| `admin_intake_summary(gün)` | okur | Soru × seçenek dağılımı, yalnız sayılar; sağlık soruları hariç |
+
+Bayrak `parent_sms_verify` (28 Ekim 2026; tanım gerekmez, yoksa kapalı): ParentApp'te uzman bağlandıktan sonra telefon numarası + SMS kodu adımı. Açmadan önce Supabase'de SMS sağlayıcısı (ücretli) ve aydınlatma metni (`hukuk_notlari.md` J). `admin_set_flag('parent_sms_verify', true, 100, …)`.
 
 Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kapalı**): belge incelemesini uygulamalarda görünür yapar. `admin_set_flag('clinician_verification', true, 100, …)` ile herkese, `admin_set_user_flag(uzman, 'clinician_verification', true, …)` ile önce tek uzmana açılır.
 
@@ -69,7 +73,7 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 | `admin_set_retention_config(jsonb, gerekçe)` | owner | Süreler ve `live`. Bilinmeyen anahtar, tam sayı olmayan ve alt sınırın altı reddedilir (imha kaydı ≥ 1095 gün, denetim kaydı ≥ 365, kullanım ≥ 400 …). `live` yalnız avukat süreleri onaylayınca açılır (`hukuk/42`) |
 | `admin_user_export(kullanıcı, gerekçe)` | support | KVKK erişim başvurusu için "Verimi indir" ile aynı JSON; denetim kaydına `user.data_export`. Panel: kullanıcı kartı › Verilerini indir (KVKK). Dosya başvurana güvenli yoldan iletilir, sonra silinir |
 | `admin_log_export(ne, satır, gerekçe)` | okur | Panelden toplu indirmenin kaydı (`export.csv`, hedef `system`/`customers.<app>`, satır sayısı). Müşteriler › CSV indir gerekçe ister ve "işin bitince dosyayı sil (en geç 30 gün)" uyarısı gösterir |
-| `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 21). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
+| `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 23). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
 
 ### Destek (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; kullanıcı kararı: sayfada form)
 
@@ -79,6 +83,17 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 | `admin_support_update(id, durum, iç not, gerekçe)` | support | Durum (new/in_progress/answered/closed/spam) ve iç not; denetim kaydına `support.update`, hedef `system`/`support:<D-no>` (e-posta ve mesaj yazılmaz) |
 
 Akış: herkese açık **`/destek`** (panelin Worker'ı; JavaScript'siz form: uygulama, konu, e-posta, isteğe bağlı ad, mesaj, "18 yaşından büyüğüm", gizli tuzak alanı, doldurma süresi) → Edge Function **`support`** (POST; e-posta başına 24 saatte 3, saatte toplam 60) → `support_requests` → panel **Destek** ekranı → "Yanıtla" ekibin e-posta uygulamasında taslak açar → durum "Yanıtlandı". Sabit adres `…/functions/v1/support` (GET) `LEGAL_PUBLIC_URL` köküne `/destek` olarak yönlenir: App Store **Support URL** ve uygulamalardaki "Yardım ve iletişim" bunu kullanır (alan adı gelince uygulama sürümü gerekmez). Sistem sağlığı: 2 günden uzun yanıtsız talep sarı. Saklama: kapanan 2 yıl, istenmeyen 30 gün (gece imha işi, `support_days`). Spam artarsa: Cloudflare Turnstile (ücretsiz; secret Supabase'e). Benchmark: Zammad web formu ve tuzak alanı, osTicket konu seçimi, Chatwoot yanıt süresi notu, laravel-honeypot doldurma süresi, Apple 1.3/1.5 ve App Store Connect Support URL açıklaması.
+
+### Davet ödülleri (öneri `proposed/20261103200000_referral_codes.sql`, 3 Kasım 2026; kullanıcı kararı: kod havuzu, elle giriş yedek)
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_referral_overview()` | herkes | Davet KPI'ları (kod oluşturulan / kullanılan / abone olan, verilen ödül ayı), kod bekleyen ödüller (aile, tarih, aylık/yıllık), son gönderilenler (kodun son 4 karakteri), havuz ve partiler |
+| `admin_offer_codes_add(kodlar, ürün, son tarih, parti, gerekçe)` | finance | App Store Connect'ten indirilen tek kullanımlık kod dosyası; bekleyenlere hemen atanır |
+| `admin_offer_codes_remove(parti, gerekçe)` | finance | Yanlış yüklenen partinin atanmamış kodlarını ya da süresi geçmiş kodları siler |
+| `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle havuzdan ya da elle kod (yedek) |
+
+Panel ekranı **Davetler** (`#/davet`). Kodun tamamı panelde ve denetim kaydında görünmez (kodu yalnız aile ParentApp davet sayfasında görür). Sistem sağlığı "Davet ödülü kodları" satırı havuz azalınca uyarır. Ekip işi: App Store Connect › ParentApp › aylık ve yıllık ürün › Offer Codes › "1 ay ücretsiz" (mevcut aboneler) › tek kullanımlık kodlar → dosyayı indir → panelde Davetler › "Kod dosyası yükle" (ürün ve son tarih seçilir). Kodlar en çok 6 ay geçerli; havuz 14 günden az kalan kodu atamaz.
 
 ### İzleme ve alarm
 

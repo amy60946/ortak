@@ -17,7 +17,7 @@ Son güncelleme: 2026-10-19
 
 ## 1. Görev tamamlama durumu (`completions.status`)
 
-SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`.
+SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rejected')`; `20261027130000_review_detail`, uygulandı ile + `'retry'`.
 
 | Sunucu değeri | Anlamı | Kim yazar | Oyun (C# `ChildTaskStatus`) | ParentApp (TS `CompletionStatus`, etiket) | Coin |
 |---|---|---|---|---|---|
@@ -26,15 +26,18 @@ SQL kısıtı (M4 sonrası): `status in ('pending', 'approved', 'declined', 'rej
 | `approved` | Ebeveyn onayladı (ya da inceleme gerektirmeyen görevde çocuk "Yaptım" dedi) | ParentApp; inceleme yoksa sunucu `pending`→`approved` çevirir | `Approved` | `approved` — "Tamamlandı" | **+coins** (tetikleyici) |
 | `declined` | Çocuk "Yapamam" dedi | Oyun (`child_set_status`) | `DeclinedByChild` | `declined` — "Yapamadı" | — |
 | `rejected` | Ebeveyn not yazarak reddetti | ParentApp (`review_completion`) | `RejectedByParent` | `rejected` — "Reddedildi" | — (önce `approved` idiyse **−coins**) |
+| `retry` (uygulandı 27 Ekim 2026) | Ebeveyn "Tekrar dene" dedi: görev çocuğa geri döner, notu oyunda görünür | ParentApp (`review_completion(..., 'retry', not)`) | eski oyun: bilinmeyen → `Assigned` (yapılacaklara döner); GameApp önerisi: `RetryByParent` (Atandı gibi işaretlenebilir + not) | `retry` — "Tekrar denesin" | — (önce `approved` idiyse **−coins**, −taş) |
 
 Ek kurallar:
 - `approved` ve `rejected` **nihai** durumdur: çocuk değiştiremez (`child_set_status` "Ebeveyn karar verdi" hatası; C# `ChildTask.IsFinal`).
+- `retry` nihai **değildir**: çocuk yeniden `pending` (Yaptım) ya da `declined` diyebilir. Ebeveyn yalnız bugünün (± 1 gün) görevi için `retry` verebilir (hint `retry_past`); geçmiş gün oyunda "kaçırıldı"dır.
+- İnceleme ayrıntısı (aynı öneri): `completions.motivation` 1 (çok kolay) … 5 (çok zor) = "motive etmek ne kadar zordu?" (ebeveyn gözlemi, isteğe bağlı; puan ya da tanı değildir; paylaşım açıksa uzman okur). `completions.stones` 0–6 = onayda verilen taş (boş = zorluğa göre, `ekonomi.md` 5A).
 - Çocuğun geçişleri (C# `TaskRules.CanChange` ve SQL `child_set_status` ile aynı): `Assigned → pending | declined`; `pending | declined → assigned` (geri al = kaydı sil).
 - `child_set_status` girdisi yalnız `pending` / `declined` / `assigned` kabul eder. C# `StatusText`: `ChildDone→"pending"`, `DeclinedByChild→"declined"`, `Assigned→"assigned"`, onay/ret için `null` (gönderilmez).
 - C# `ParseStatus`: bilinmeyen her değer `Assigned` sayılır.
 - **"Kaçırıldı" (missed)** yalnız oyunda hesaplanır, sunucuda yoktur: durum `Assigned` ve yerel saat görev gününün sonunu (23:59:59.9999999) geçtiyse. Ceza yok; oyun o görevin işaretlenmesine izin vermez.
 - ParentApp görev listesinde birden fazla çocuğa atanmış görev için tek etiket seçer: herhangi biri `pending` → `pending`; hepsi `approved` → `approved`; biri `rejected` → `rejected`; biri `declined` → `declined`.
-- ParentApp **İnceleme** ekranı yalnız `pending` olanları listeler.
+- ParentApp **İnceleme** ekranı yalnız `pending` olanları listeler. Birden çok çocuklu görev etiketinde `retry`, `pending`'den sonra gelir.
 
 ### 1.1 Tutarsızlıklar / dikkat edilecekler
 | # | Konu | Ayrıntı |
@@ -147,7 +150,7 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `children.gender` | `kız` / `erkek` / null (Türkçe, `ı` harfiyle) |
-| `profiles.avatar` varsayılanı | `erkek` |
+| `profiles.avatar` varsayılanı | `erkek` (eski kimlik; Okti karşılığı `okti_baba_1`, aşağıda §6a) |
 | `messages.sender` | `parent` / `child` |
 | `messages.kind` | `text` (body zorunlu) / `image` / `audio` (media_path zorunlu) |
 | Storage kovası | `mail`, yol `<family_id>/<dosya>` |
@@ -155,6 +158,35 @@ Kod biçimi:
 | Oyun giriş hataları (`AuthErrorKind`, yalnız oyun içi) | `None`, `InvalidCode`, `Revoked`, `Network`, `Throttled`, `Unknown` |
 
 ---
+
+
+## 6a. Ebeveyn avatarları: Okti (kullanıcı seçimi 27 Ekim 2026)
+
+Ebeveynin oyundaki ve ParentApp'teki yüzü, Okti'nin üç anne ve üç baba hâli. Görseller game-app `art/parent_avatars/` (oyundaki yetişkin Okti modeli + oyun eşyaları); ParentApp kopyası `assets/avatars/okti_*.jpg`. Değer `profiles.avatar`'a yazılır; çocuk oyunda `child_messages` / `child_gifts_pending` yanıtındaki `from_avatar` ile görür (`migrations/20261027220000_parent_avatar_game.sql`, uygulandı 3 Kasım 2026).
+
+| Kimlik | Ad | Ayrım |
+|---|---|---|
+| `okti_anne_1` | Çiçekli | kirpik, yanak pembesi, başta mercan çiçek, mercan tişört |
+| `okti_anne_2` | Hasır şapkalı | kirpik, yanak pembesi, hasır şapka, nane yeşili tişört |
+| `okti_anne_3` | Fiyonklu | kirpik, yanak pembesi, pembe fiyonk + yuvarlak gözlük |
+| `okti_baba_1` | Bıyıklı | bıyık, kahverengi yuvarlak gözlük, koyu mavi tişört |
+| `okti_baba_2` | Kaptan | kaş, kaptan şapkası, beyaz tişört |
+| `okti_baba_3` | Kasketli | kaş, kırmızı kasket, turuncu tişört |
+
+Eski değerler: `kadın` → `okti_anne_1`, `erkek` → `okti_baba_1` gibi gösterilir (veri değiştirilmez). Tanınmayan değer ya da `null`: varsayılan Okti yüzü. ClinicApp ebeveyn avatarı göstermiyorsa değişiklik gerekmez.
+
+**Çocuk avatarları (kullanıcı isteği 28 Ekim 2026):** Okti'nin çocuk (yavru) hâli, 6 kız + 6 erkek. Görseller game-app `art/child_avatars/`; ParentApp kopyası `assets/avatars/okti_kiz_*.jpg`, `okti_erkek_*.jpg`. Değer `children.avatar`'a yazılır (ParentApp çocuk ekle, çocuk düzenle, uzman daveti).
+
+| Kimlik | Ad | Kimlik | Ad |
+|---|---|---|---|
+| `okti_kiz_1` | Kurdeleli | `okti_erkek_1` | Kasketli |
+| `okti_kiz_2` | Çiçek tokalı | `okti_erkek_2` | Pervaneli |
+| `okti_kiz_3` | Taçlı | `okti_erkek_3` | Pilot |
+| `okti_kiz_4` | Kalp gözlüklü | `okti_erkek_4` | Güneş gözlüklü |
+| `okti_kiz_5` | Bereli | `okti_erkek_5` | Antenli |
+| `okti_kiz_6` | Kulaklıklı | `okti_erkek_6` | Köpek balığı şapkalı |
+
+Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `martı, kedi, sincap, köpek, kuş, caretta, ayı, kurt, keçi, flamingo, fil, zebra, at` (0'dan); sıra *i* → `okti_<cinsiyet>_<(i mod 6)+1>`; cinsiyet `children.gender`'dan (`kız` → `kiz`, `erkek` → `erkek`), boşsa sırası çift olan kız, tek olan erkek. Örnek: `flamingo` (9) kız → `okti_kiz_4`, `keçi` (8) erkek → `okti_erkek_3`. Oyun şu an çocuğun avatarını göstermez (çocuk her yerde Okti); gösterirse aynı kuralı uygular. ClinicApp çocuk simgesi gösteriyorsa aynı eşlemeyi kullanır.
 
 ## 7. Klinik (ClinicApp) — uygulandı
 
@@ -173,7 +205,7 @@ Kod biçimi:
 | `family_subscriptions.source` | `store` (varsayılan) / `web` / `manual` | Ödeme kaynağı. |
 | `completions.decline_reason` | `hard` / `no_time` / `did_not_want` / `other` / null | "Yapamam" nedeni. |
 | `goal_ratings.rating` | −2, −1, 0, +1, +2 | GAS haftalık puanı. |
-| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Zor anın şiddeti. |
+| `abc_events.intensity` | 1 … 5 (varsayılan 3) | Davranış kaydındaki olayın şiddeti. |
 | Kayıt meta verisi | `raw_user_meta_data.account = 'clinician'`, `team_code`, `clinic_name`, `name`, `title`, `practice` (`solo` / `clinic`) | Uzman kaydı (aile oluşturulmaz). `practice` sunucuda kullanılmaz (ikisi de klinik açar); ClinicApp bireyselde ekip bölümünü gizler. |
 
 ### 7.1 Klinikle ilgili tutarsızlıklar
@@ -190,14 +222,14 @@ Kod biçimi:
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana) (anlamları: `akislar.md` 7, 10, 12, 14) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana); `migrations/20261028120000_guest_pass.sql` (uygulandı 3 Kasım 2026): `guest_pass_used` (kodu veren ailenin ebeveynlerine: davetin kullanıldı; `data.code`, kullananın kimliği yok), `referral_reward` (davet edene: davet ettiğin aile abone oldu, 1 ay; `data.status` `applied` / `code_pending`) (anlamları: `akislar.md` 7, 10, 12, 14, 19) |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
 | `push_tokens.platform` | `ios` / `android` / `web` |
 | Push gönderilen anahtar biçimi | Apple cihaz anahtarı (onaltılık, `platform='ios'`) → `push-apns`; `ExponentPushToken[...]` → Expo |
 
 ---
 
-## 9. Kategori, gün bölümü, zor an (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
+## 9. Kategori, gün bölümü, davranış kaydı (uygulandı — `migrations/20261019140000_parent_features.sql`; 21 Ekim 2026 doğrulandı)
 
 | Alan | Değerler | Etiket (ParentApp) |
 |---|---|---|
@@ -217,7 +249,7 @@ Kod biçimi:
 
 | Alan | Değer | Not |
 |---|---|---|
-| `children.avatar` | hazır avatar kimliği (`flamingo`, `kedi` …) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
+| `children.avatar` | Okti çocuk kimliği (`okti_kiz_1..6`, `okti_erkek_1..6`, §6a; eski hayvan kimlikleri `flamingo`, `kedi` … geçerli kalır) **ya da** `photo:<storage yolu>` | Fotoğraf: kova `mail`, yol `<family_id>/avatars/<dosya>.jpg`. Aile (ebeveyn + çocuk cihazı) okuyabilir; **uzman okuyamaz**. Oyun ve ClinicApp `photo:` ile başlayan değeri tanımazsa varsayılan avatar göstermeli. |
 | `families.created_by` | aileyi kuran ebeveyn | Aileden çıkarılamaz; başka ebeveynin profilini / aile sahibini değiştiren yetki yok. |
 | `profiles.invited_by` | davet kodunu üreten ebeveyn | Öneri `20261021000000_family_roles.sql`; uygulamada gösterilmez. |
 
@@ -308,6 +340,30 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `care_module_logs.difficulty` | 1–5 (boş olabilir) | ebeveynin "ne kadar zorlandım" öz bildirimi; puan değildir |
 | hedef alanı (`clinic_goals.domain`, katalog) | `routine`, `attention`, `rules`, `emotion`, `social`, `sleep`, `school` | `veri/takip_sablonlari.json` `domains` (ekranda Türkçe adı) |
 
+## P16. Tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
+
+Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `veri/tanisma_sorulari.json` (ParentApp `src/data/intake.ts`'ten `tools/intake_json.sh` ile üretilir; yönetim paneli bunu kullanır).
+
+`intake_answers.question_key` ve seçenek anahtarları (`answer` = seçenek anahtarları dizisi; tek seçimde tek eleman). Soru metinleri ParentApp'te (`parent-app/src/data/intake.ts`), sürüm `v1`.
+
+| Anahtar | Kime | Tür | Seçenekler |
+|---|---|---|---|
+| `main_goal` | ebeveyn | tek | `motivation`, `structure`, `behavior`, `executive`, `relationship`, `my_stress` |
+| `other_goals` | ebeveyn | çoklu | aynı + `other`; `main_goal`'da seçilen seçenek burada gösterilmez (yanıtlar ayrık: ana hedef + diğerleri) |
+| `heard_from` | ebeveyn | tek | `expert`, `friend_family`, `social_ad`, `google`, `app_store`, `tiktok`, `other` |
+| `task_conflict_freq`, `reminder_freq`, `prompt_conflict_freq` | ebeveyn | tek | `every_day`, `most_days`, `some_days`, `never` |
+| `relate_reminding`, `relate_rewards_fade`, `relate_no_energy` | ebeveyn | tek | `yes`, `no` |
+| `child_routine` | çocuk | tek | `yes`, `struggle`, `not_really` |
+| `child_diagnosis` (sağlık, isteğe bağlı) | çocuk | çoklu | `adhd`, `autism`, `odd`, `anxiety_depression`, `other`, `none`, `prefer_not` |
+| `child_medication` (sağlık, isteğe bağlı) | çocuk | tek | `yes`, `no`, `not_diagnosed`, `prefer_not` |
+| `child_therapists` | çocuk | çoklu | `behavior`, `speech_ot`, `psych`, `other`, `none` |
+| `child_organizing`, `child_effort_avoid`, `child_rules_argue`, `child_tantrums`, `child_feelings`, `child_worry` | çocuk | tek | `every_day`, `most_days`, `some_days`, `never` (geçen hafta) |
+| `child_goals` | çocuk | çoklu | `chores`, `focus`, `impulses`, `bedtime`, `siblings`, `emotions`, `other` |
+| `child_interests` | çocuk | çoklu | `sports`, `books`, `games_tech`, `arts`, `music_dance`, `animals_nature`, `other` |
+| `child_motivators` | çocuk | çoklu | `screen_time`, `allowance`, `family_activity`, `friends_time`, `treats`, `other` |
+
+Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (`saglik-yanit-v1`). Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.
+
 ## P17. Yasal metinler ve KVKK başvuruları (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026)
 
 | Alan | Değerler | Anlam |
@@ -320,3 +376,14 @@ Görselleri her uygulama kendi çizer (anahtar ortak). `read_at`: karşı taraf 
 | `kvkk_requests.status` | `received`, `in_progress`, `answered`, `rejected` | alındı · işlemde · yanıtlandı · reddedildi |
 | `kvkk_requests.channel` | `app`, `email`, `written`, `kep` | uygulama · e-posta · yazılı · KEP |
 | bildirim `kind` | `kvkk_answered` | başvuru kapandı (yanıt e-postada) |
+
+## Aile davet et (önce misafir kartı) ve telefon doğrulaması (28 Ekim, 3 Kasım 2026; `akislar.md` 19)
+
+| Ad | Değerler | Not |
+|---|---|---|
+| Aile davet kodu | 8 karakter, `A–Z` ve `2–9` (`^[A-Z2-9]{8}$`); ekranda `ABCD EFGH` | Uzman/eş kodu 6 karakter: "Kod gir" kutusu uzunluktan ayırt eder |
+| Kod süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **14 gün** (7 + 7; `families.trial_days = 14`; 3 Kasım 2026, önce 30) | Varsayılan deneme 7 gün (`app_config.billing.trial_days`) |
+| Davet ödülü | davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince davet edene **30 gün**; son 365 günde en çok **12** | `referral_rewards.status`: `applied` (süre uzadı, `families.bonus_until`) · `code_pending` (davet eden App Store'dan ödüyor; Apple teklif kodu bekliyor) · `code_sent` (kod gönderildi; havuzdan kendiliğinden ya da panelden elle, `offer_code_pool` ürün `monthly` / `yearly`, en az 14 gün kalan kod) · `capped` (yıllık sınır) |
+| `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme > 7 gün), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
+| Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
+
