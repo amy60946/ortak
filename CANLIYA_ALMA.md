@@ -64,9 +64,9 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 1.7 Hesap silme
 - [x] Sunucu: `delete_account()` (ebeveyn, uzman)
-- [ ] (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası
+- [ ] (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası · ParentApp yapıldı (2 Kasım: Aile › Hesap'ta Çıkış Yap'ın altında ayrı satır)
 - [ ] (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği
-- [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı
+- [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı · ParentApp yapıldı (2 Kasım: sunucu + RevenueCat durumu, uygulama içi abonelik yönetimi; silme serbest)
 
 ### 1.8 Ödeme
 - [ ] (Siz) ASC ürünleri (ParentApp 2, ClinicApp 4) + TR fiyatları
@@ -76,8 +76,8 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) RevenueCat: entitlement `premium`, offering `default` (`parentapp.premium.monthly`, `parentapp.premium.yearly`)
 - [ ] (Siz) Supabase Secrets: `BILLING_WEBHOOK_SECRET` (≥ 24 karakter), `REVENUECAT_API_KEY` (sk_…); denemede `BILLING_ALLOW_SANDBOX=1`
 - [ ] (Claude) `billing-webhook` dağıtımı (Verify JWT kapalı) + RevenueCat Webhook adresi ve Authorization başlığı
-- [ ] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets
-- [ ] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir
+- [x] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets · **Yapıldı (2 Kasım 2026):** 10.16.x, `parent-app/src/lib/purchases.ts`; fiyat mağazadan (yerel para birimi), gelmezse `plans.ts` yer tutucusu; secret adı `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (parent-app GitHub Secrets; yoksa ödeme "bağlı değil", CI `sk_`'yi reddeder). Açılması için yukarıdaki (Siz) maddeleri gerekir.
+- [x] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir (var: `hukuk/10-aydinlatma-ebeveyn.md` alıcılar tablosu, `hukuk/41-alt-isleyenler.md` 3.4; 2 Kasım'da denetlendi)
 - [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
 - [x] `20261022200000_clinic_billing.sql` uygulandı (23 Ekim)
@@ -86,6 +86,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
 - [ ] (Siz) Gerçek fiyatlar
 - [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
+- [ ] (Siz) **Aile davet et ödülü için Apple teklif kodu** (3 Kasım 2026): App Store Connect › ParentApp › Abonelikler › aylık ürün › Offer Codes › "1 ay ücretsiz" (mevcut aboneler), tek kullanımlık kodlar. App Store'dan ödeyen davet edene bu kodlardan biri gönderilir (`referral_rewards` `code_pending` → `code_sent`); kodları gönderecek yönetim paneli ekranı GameApp2 penceresinde yapılacak
 
 ### 1.9 Fatura
 - [ ] (MM) App Store gelirinin faturalanması (Apple'a)
@@ -107,11 +108,11 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 2.1 Hepsi
 - [x] Yayın biçimi: **elle** (kullanıcı, 2 Kasım 2026): App Store Connect → sürüm → "Manually release this version". Apple onaylar, kullanıcı onay verince yayına alınır (üç ürün)
 - [ ] (Siz) iOS imza / sertifika sınırı (ParentApp + GameApp)
-- [ ] (Claude) `PrivacyInfo.xcprivacy`
-- [ ] (Siz + Claude) App Privacy etiketi
+- [ ] (Claude) `PrivacyInfo.xcprivacy` · ParentApp yapıldı (2 Kasım: `app.json` → `ios.privacyManifests`; izleme yok, 14 veri türü, gerekçe kodları)
+- [ ] (Siz + Claude) App Privacy etiketi · ParentApp taslağı: "ParentApp mağaza paketi" https://claude.ai/artifact/JNi1LAZC4A2cZFSm42Njym
 - [ ] (Siz) Yaş derecelendirme anketi
 - [ ] (Claude) Ekran görüntüleri, açıklama, anahtar kelimeler
-- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not
+- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not · ParentApp notu ve hesap planı taslak (aynı belge)
 - [ ] (Claude) Bildirim izni ilk gereken anda
 - [ ] (Claude) Yeni simge biçimi (Icon Composer)
 - [ ] (Siz) TestFlight dış deneme (5–10 aile, en az 1 uzman)
@@ -133,9 +134,10 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) "Quests", "Güneş Taşı" adları; yükleme ekranı görseli
 
 ### 2.3 ParentApp
-- [ ] (Claude) Kayıt onayı + şifremi unuttum ekranları
-- [ ] (Claude) Abonelik ekranı 3.1.2 uyumu (fiyat, süre, yenileme, bağlantılar, geri yükle); ilk değerden sonra göster
-- [ ] (Claude) "Aboneliği yönet"
+- [ ] (Siz) **iPad ekran görüntüleri** (3 Kasım 2026: ParentApp artık iPad'i destekliyor, `supportsTablet: true`, iPad'de dikey + yatay): App Store Connect 13 inç iPad görüntüsü ister. Not: iPad desteği yayından sonra geri alınamaz
+- [x] (Claude) Kayıt onayı + şifremi unuttum ekranları (var: `AuthScreens.tsx`, bağlantılar `parentapp://auth`)
+- [x] (Claude) Abonelik ekranı 3.1.2 uyumu (fiyat, süre, yenileme, bağlantılar, geri yükle); ilk değerden sonra göster · 2 Kasım: fiyat mağazadan; deneme bitince açılır
+- [x] (Claude) "Aboneliği yönet" (2 Kasım: uygulama içi Apple sayfası `showManageSubscriptions`)
 - [ ] (Claude) `track_session` / `track_events('parent')`
 - [ ] (Claude) Mesajlar + Ödüller uçtan uca deneme
 - [ ] (Claude) Uzman önerisi alanlarının göreve taşınması

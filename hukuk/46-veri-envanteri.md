@@ -67,7 +67,15 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `saved_templates` | K3 | ailenin kaydettiği görev şablonları |
 | `game_saves` | K4 | |
 | `messages` | K5 | medya `mail` kovasında |
-| `abc_events` | K6 | ses `abc` kovasında |
+| `abc_events` | K6 | ses `abc` kovasında; isteğe bağlı uzman hedefi (`goal_id`, 3 Kasım 2026) |
+| `intake_answers` | K2, K6 | tanışma yanıtları (aile ve çocuk); tanı/ilaç yanıtları isteğe bağlı, açık rıza `saglik-yanit-v1` (sağlık verisi) |
+| `parent_assignments` | K3 | ebeveynin kendi görevleri (kime, zorluk) |
+| `parent_completions` | K3 | ebeveynin "Yaptım" işaretleri |
+| `parent_stone_ledger` | K3 | ebeveynin Güneş Taşı defteri (görev, hediye) |
+| `child_gifts` | K3 | ebeveynin çocuğa hediyesi (eşya, kısa not, gönderenin adı) |
+| `gift_items` | — | hediye kataloğu (fiyat, sıra) |
+| `guest_passes` | K11 | aile davet kodu (önce hediye kartı): kod, davet eden ve kullanan aile, tarihler, ödül işareti |
+| `referral_rewards` | K11 | davet ödülü: davet eden aile, kod, durum, ücretsiz süre sonu, Apple teklif kodu (davet edilenin kimliği yok) |
 | `clinic_links` | K7 | rıza sürümü ve zamanı |
 | `clinic_link_access` | K7 | |
 | `clinic_link_history` | K7 | |
