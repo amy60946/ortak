@@ -108,9 +108,11 @@
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Çocuk ekle / davetten çocuk onayı, "Kaydet" düğmesinin altı | `kosullar-parentapp` (veli beyanı maddesi) |
+| ParentApp | ~~Çocuk ekle, "Kaydet" düğmesinin altı~~ **3 Kasım 2026'dan beri ekranda yok** (kullanıcı kararı: beyan Kullanım Koşulları'nda) | `kosullar-parentapp` (veli beyanı maddesi) |
 
-> Çocuğu ekleyerek velisi ya da yasal temsilcisi olduğunu beyan edersin. Doğum günü ve cinsiyet isteğe bağlıdır.
+> ~~Çocuğu ekleyerek velisi ya da yasal temsilcisi olduğunu beyan edersin. Doğum günü ve cinsiyet isteğe bağlıdır.~~
+
+Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlamadan önce veli onayı (§1.3), uzman davetinde veli beyanı kutusu (`uzman-paylasim-v1`). Avukata soru: `hukuk_notlari.md` soru 21.
 
 ## 2. Yeniden onay ekranı
 
@@ -351,7 +353,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Davranış kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
+| ParentApp | Davranış kaydı ekranının altı (sabit); ~~Uzmanım ekranının altı~~ (3 Kasım 2026 kullanıcı kararıyla kaldırıldı); Yardım ve iletişim | `kosullar-parentapp` |
 
 > ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 

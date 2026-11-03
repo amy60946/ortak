@@ -339,5 +339,5 @@ Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki
 
 - Ebeveyn ödül listesini ve fiyatları belirler; çocuk taşı yetince listeden **ister**, ebeveyn **onaylar** (karma model). Aynı anda tek bekleyen istek önerilir (GameApp).
 - Ödül, çocuğun zorlandığı işlere bağlanır; zaten severek yaptığı işlere bağlanmaz.
-- Taş düşürme yalnız önceden konuşulmuş kurallar için ve seyrek: ParentApp, bir çocuk için son 7 günde düşürülen taş (yeni düşürme dahil) × 4 > kazanılan görev taşı olursa taş düşürme sayfasında uyarı gösterir (engellemez).
+- Taş düşürme yalnız önceden konuşulmuş kurallar için ve seyrek: ParentApp, bir çocuk için son 7 günde düşürülen taş (yeni düşürme dahil) × 4 > kazanılan görev taşı olursa taş düşürme sayfasında uyarı gösterir (engellemez). Düşürme Ödüller ekranının üstünde değildir (kullanıcı kararı 3 Kasım 2026; benchmark Greenlight / ClassDojo): çocuğun bakiyesine dokununca o çocuğun Güneş Taşı hesabı açılır (hareketler), altta küçük "Güneş Taşı düşür" bağlantısı. Ebeveyn ekranlarında "taş" yerine **"Güneş Taşı"** yazılır (yalnız dar rozet ve tablo başlıklarında kısa "taş").
 - İlk kullanımda kısa ipuçları (ödül oluşturma, ödül verme, taş düşürme, istek kararı) bir kez gösterilir; metinler `parent-app/src/data/rewardTips.ts`.
