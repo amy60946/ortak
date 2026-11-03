@@ -34,7 +34,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 1.4 Destek
 - [ ] (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
-- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında)
+- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - [ ] (Claude) SSS
 - [ ] (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
 
@@ -56,9 +56,9 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 1.6 KVKK işlemleri
 - [ ] (Hukuk) VERBİS gerekliliği
 - [ ] (Hukuk) Yurt dışı aktarım: standart sözleşme + Kurul'a bildirim
-- [ ] (Claude) Kişisel veri envanteri
-- [ ] (Claude) Saklama ve imha işi (zamanlanmış)
-- [ ] (Claude) Verimi indir (aile verisi dışa aktarma)
+- [x] (Claude) Kişisel veri envanteri: `hukuk/46-veri-envanteri.md` (VERBİS biçimi, 14 kategori; taslak, avukat onayı bekler) + her yeni tabloyu denetleyen `tools/veri_envanteri_kontrol.py` (2 Kasım 2026)
+- [ ] (Claude) Saklama ve imha işi (zamanlanmış) — **yazıldı ve testli** (`proposed/20261102200000_kvkk_ops.sql`, gece 03.17, kuru çalıştırmayla başlar); kalan: (Siz) SQL'i uygula, (Hukuk) süreler → panelden gerçek silme
+- [ ] (Claude) Verimi indir (aile verisi dışa aktarma) — **sunucu yazıldı** (`my_data_export`, panelde `admin_user_export`); kalan: (Siz) SQL, (ParentApp/ClinicApp penceresi) Ayarlar › Gizlilik › Verimi indir
 - [ ] (Claude) Ebeveyn onayının sürümlü kaydı (çocuk bağlanmadan önce)
 - [ ] (Siz + Hukuk) Veri ihlali prosedürü (72 saat)
 
@@ -97,7 +97,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [x] RLS + sızma testleri, anon kapalı, hız sınırları
 - [ ] (Siz + Claude) Staging Supabase projesi
 - [ ] (Siz) Günlük yedek + PITR + bir geri yükleme denemesi
-- [ ] (Claude) İzleme ve alarm (sunucu, Edge Function, webhook)
+- [ ] (Claude) İzleme ve alarm (sunucu, Edge Function, webhook) — **yazıldı**: `ops_health` + Edge Function `health` + panel Sistem sağlığı + saatlik GitHub yoklaması (`.github/workflows/saglik.yml`); kalan: (Siz) SQL + `health` yayını, isteğe bağlı Sentry Uptime
 - [ ] (Siz) `PUSH_SECRET`
 - [ ] (Claude) Push anahtarı taşıma riski kapatılsın
 - [ ] (Siz) Geliştirme anahtarlarının yenilenmesi

@@ -535,7 +535,46 @@ RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()`
 | `clinic_task_suggestions.status` | `draft` eklendi: aile görmez, karar veremez, bildirim yok; `care_plan_publish` hepsini `pending` yapar | K | K; P yalnız `draft` olmayanı |
 | `clinic_task_suggestions.kind` (`new` / `change`), `target_task_id`, `change_remove` | `change`: ailede ekli göreve değişiklik önerisi; hedef görev bu ailenin ve bu çocuğa atanmış olmalı (`cts_change_guard`); görev başına tek açık öneri (`cts_one_open_change`). Yeni değerler öneri sütunlarında (`reminder`, `repeat_kind`, `repeat_days`, `recurring`, `end_date`); `change_remove` = görevi bitir | K | K, P (ParentApp "Uygula" ile görevi günceller) |
 | `care_plan_publish(link)` | Plan anlık görüntüsü + taslak öneriler `pending`; plan ve öneriler için **tek** bildirim (`care_plan_shared`; yalnız öneri varsa `clinic_suggestion`). Gönderilecek hiçbir şey yoksa hata | K | — |
+| `care_plan_publish_selected(link, hold[])` (`20261102500000_plan_publish_selected`, uygulandı 2 Kasım 2026) | Aynı gönderim, `hold` içindeki hedef / program / öneri kimlikleri bekler (hedef ve program ailede eski `pub`'ında, taslak taslak kalır). Plan değişmediyse ve öneri yoksa bildirim yok, hata yok. Programın `pub.goal_ids`'i yalnız `pub`'ı dolu hedefler (iç işlev `care_plan_snapshot_hold`, yalnız sunucu; `care_plan_snapshot(link)` ona yönlenir) | K | — |
 | `family_care_plan(link)` | `modules[].goal_ids` ve `routines[]` {id (rutin grubu ya da tek öneri), title, icon, single, goal_id (yalnız aileye gönderilmiş hedef), task_ids} eklendi | — | P |
 | `clinic_set_suggestion_goal(ids uuid[], goal uuid)` | Uzman kendi önerilerinin (ailede ekli rutin dahil) hedef bağını değiştirir ya da kaldırır (`null`); yalnız `goal_id` değişir, hedef aynı paylaşımın olmalı (`cts_goal_guard`). Dönüş: değişen satır sayısı | K | — |
 
 RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildiği kadar (`care_modules` "modül: klinik" ile aynı). `clinic_plan_templates` `clinic_routines` ile aynı kalıp. Öneri ekleme `status in ('draft','pending')`; geri çekme taslak ya da bekleyen; aile okuma ve karar `status <> 'draft'`. `clinic_update_suggestion` taslak ya da bekleyeni günceller (+ `goal_id`, `change_remove`). Paylaşım bitince taslaklar silinir (`clinic_links_drop_drafts`). Eski ClinicApp doğrudan `pending` ekler ve eskisi gibi tek tek bildirir. Test: `test_plan_redesign.sql`.
+
+## 23. KVKK işletme ve izleme (öneri `proposed/20261102200000_kvkk_ops.sql`, 2 Kasım 2026; panel `admin.md` "KVKK işletme", envanter `hukuk/46-veri-envanteri.md`)
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `retention_runs` | İmha kaydı: başlangıç/bitiş, tetik (`cron`/`admin`), kuru mu, adım başına sayı (`results`), hata (`errors`), `ok`. Kişisel veri yok; en az 3 yıl | Tablo kapalı (RLS, izin yok); panel `admin_retention_status` |
+| `usage_daily_totals` | Süresi dolan kullanım kayıtlarının anonim günlük toplamı: gün, uygulama, `metric` (`active` ya da `event:<olay>`), kişi ve olay sayısı | Tablo kapalı |
+| `app_config` `retention` | Süreler (gün; kod denemesi saat) ve `live` (varsayılan **false** = kuru çalıştırma, yalnız sayar) | yalnız panel |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `retention_run(tetik, kuru?)` | yalnız sunucu (pg_cron `retention-nightly`, 00:17 UTC = 03:17 TR) | `hukuk/42` §4 satır 10, 16, 17, 19, 20, 21, 22, 24, 27 + `cron.job_run_details` (7 gün). Her adım ayrı (biri hata verirse diğerleri sürer). 21: hiçbir çocuğa bağlı olmayan ve 30 gün girişsiz **anonim oyun oturumu** silinir (bağlı tablolar zincirleme). 22: denetim kaydı yalnız bu işle ve en az 1 yıl eski kesimle silinir (`admin_audit_immutable` istisnası) |
+| `my_data_export()` | authenticated (anonim değil) | **"Verimi indir"**: JSON (`bicim: veri-disa-aktarma-v1`). Ebeveyn: hesap, profil, aile, abonelik, çocuklar (cihaz kimliği yerine `oyun_cihazi_bagli`), görevler + atamalar, tamamlamalar, ödüller, istekler, coin/taş defterleri, haftalık hedef, oyun kayıtları, mesajlar, davranış kayıtları, ev programı kayıtları, uzman paylaşımları; **diğer ebeveynin yazdıkları ayıklanır** (`ayiklanan` sayıları), dosyalar `dosyalar` listesinde (kova + yol; uygulama imzalı bağlantı üretir). Uzman: hesap, klinik, üyelik (sahipse), belge incelemeleri (dosya yolu yok), anket; danışan kayıtları yok. Herkes: bildirimler, yasal onaylar, KVKK başvuruları, kullanım özeti (olay adı başına sayı), cihazlar (jeton yok), kişiye özel ayarlar, hesabındaki ekip işlemleri (yalnız işlem + zaman). Günde en çok 5 (`app_events` `kvkk.data_export`) |
+| `ops_health()` | yalnız sunucu (Edge Function `health`) | Sistem sağlığı `{status, checked_at, checks:[{key, level ok/info/warn/fail, label, detail}]}`: `cron`, `retention`, `kvkk` (süresi geçen kırmızı, 7 gün içinde sarı), `verifications` (3 günden eski), `clinic_trials` (3 gün içinde biten), `billing` (son RevenueCat olayı; ödeme açıkken 14 gün sessizlik sarı), `push` (Apple anahtarı olana 10 dk'dır gitmeyen), `net` (pg_net 5xx, son 6 saat), `storage_trash`, `legal`. Kişisel veri yok |
+| Edge Function `health` | herkes (Verify JWT **kapalı**) | `GET` → 200 `{status}` / 503 `{status:"fail"}`; başlık `x-health-key: <HEALTH_KEY>` (secret, isteğe bağlı) ile denetim adları + düzeyleri. Sayı/ayrıntı dönmez |
+
+**Uygulamaların yapacağı (SQL uygulanınca):** ParentApp ve ClinicApp › Ayarlar › Gizlilik › **"Verimi indir"**: yeniden giriş (şifre) iste → `my_data_export()` → JSON dosyası paylaşım sayfasıyla kaydedilir; `dosyalar` için istenirse kısa süreli imzalı bağlantılar (`mail`/`abc` kovası, kullanıcının zaten okuyabildiği dosyalar). GameApp: 30 gün girişsiz ve çocuğa bağlanmamış anonim oturum sunucuda silinebilir; oyun oturum yenileme hatasında yeniden anonim oturum açıp kod ekranına dönmeli (bağlı cihazlar silinmez).
+
+## 24. Destek talepleri (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; panel `admin.md` "Destek")
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `support_requests` | `ref` (`D-` + 6 karakter, kişiye gösterilir), uygulama (parent/child/clinic/other), konu (account/subscription/bug/privacy/clinic/other), e-posta (küçük harf), ad (isteğe bağlı), mesaj (10–3000), durum (new/in_progress/answered/closed/spam), iç not, ilgilenen, yanıt zamanı | Tablo kapalı; yazma yalnız `support_request_create` (sunucu), okuma panel |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `support_request_create(app, konu, e-posta, ad, mesaj)` | yalnız sunucu (Edge Function `support`) | `{ref}` ya da `{error: invalid / too_many / busy}`; e-posta başına 24 saatte 3, saatte toplam 60 |
+| Edge Function `support` | herkes (Verify JWT **kapalı**) | `GET` → 302 `<LEGAL_PUBLIC_URL kökü>/destek`; `POST {app, topic, email, name, message, adult, website, elapsed_ms}` → `{ok, ref}`; tuzak alanı dolu ya da 3 saniyeden kısa → sessizce `{ok}` (kayıt yok); `adult` değilse 400 |
+
+**Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.
+
+## 25. Tüm danışanlar dikkat panosu (`migrations/20261102600000_clinic_attention_summary.sql`, uygulandı 2 Kasım 2026; kullanıcı kararı "liste + neden")
+
+Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan başına tek satır, yalnız olgu söyleyen nedenler (puan, renkli risk, sıralama yok).
+
+| İşlev | Ne | Çağıran |
+|---|---|---|
+| `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |

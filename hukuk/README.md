@@ -31,6 +31,7 @@
 | `41-alt-isleyenler.md` | `alt-isleyenler` | herkes | — | taslak |
 | `42-saklama-imha-politikasi.md` | — | iç politika | — | taslak |
 | `43-veri-ihlali-proseduru.md` | — | iç prosedür | — | taslak |
+| `46-veri-envanteri.md` | — | Kişisel veri envanteri (VERBİS biçimi: kategori, kişi, amaç, hukuki sebep, alıcı, yurt dışı, süre) + tablo → kategori eki; `tools/veri_envanteri_kontrol.py` her yeni tabloyu denetler | — | iç |
 | `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
 | `44-kvkk-basvuru-usulu.md` | `kvkk-basvuru` | herkes | — | taslak |
 | `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler | — | taslak |
@@ -58,7 +59,7 @@
 | Hesap silme | Silme hakkı, abonelik iptali uyarısı | gizlilik, uygulama içi metinler | `delete_account()` |
 | KVKK başvurusu | md. 11, 13, 30 gün | kvkk-basvuru | `kvkk_requests` |
 | Veri ihlali | md. 12/5, 72 saat | ihlal prosedürü (iç) | panel acil işlemleri |
-| Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç) | **yapılacak:** zamanlanmış imha işi |
+| Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç), veri envanteri (46) | `retention_run` (gece, kuru başlar) + `retention_runs`; panel Hukuk › Saklama ve imha (öneri `kvkk_ops`, 2 Kasım 2026) |
 | ClinicApp web | Çerez/yerel depolama | cerez-clinicapp-web | — |
 | Sosyal medya paylaşımı (Marketing → panel onayı → Zernio) | Reklam/sağlık iddiası, YZ etiketi, telif, hesap güvenliği, insan onayı | 45-pazarlama-kurallari §8 | `social`, `admin_social_check` |
 

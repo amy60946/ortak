@@ -24,6 +24,8 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 
 **Herkes:** kullanım kayıtları (uygulama açma günleri, oturum sayısı, sürüm, platform, ekran/özellik olay adları — serbest metin ve içerik yok); bildirim kayıtları ve okunma; destek/ekip işlemlerinin denetim kaydı; giriş kodu deneme kayıtları (kötüye kullanım sınırı, IP dahil, 15 dakika); deneme geçmişi (yalnız ParentApp aileleri; yalnız e-posta özetinin SHA-256'sı, tekrar deneme suistimaline karşı).
 
+**Destek formu (herkese açık /destek, 2 Kasım 2026):** yalnız yetişkinler ("18 yaşından büyüğüm" kutusu); e-posta (zorunlu), ad (isteğe bağlı), uygulama, konu, mesaj. Yalnız talebi yanıtlamak için; ekip panelde okur, yanıtı kendi e-postasından verir. Kapanan talep 2 yıl, istenmeyen 30 gün sonra silinir. Dosya eki, telefon, çocuk adı sorulmaz; mesaj kutusunda şifre/kart/sağlık bilgisi yazmama uyarısı.
+
 **Bildirim metinleri:** bazı bildirimlerin başlık/metninde çocuğun adı geçebilir (ör. "Efe görevi tamamladı"); bu metin bildirim sağlayıcısı (Apple, yedek yolda Expo) üzerinden telefona iletilir. Sağlık bilgisi bildirim metnine konmaz.
 
 **Aile ya da çocuk silinince:** uzmanla paylaşım kaydı aileye bağlı olduğu için o çocuğa ait uzman notları, hedefleri ve takip planı da silinir (bugünkü sistem). Uzmanın mesleki kayıt saklama yükümlülüğüyle çatışabilir — avukat ve ürün kararı bekliyor.

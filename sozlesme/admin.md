@@ -64,6 +64,36 @@ Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kap
 
 Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapalı**): Takip planında ailede ekli rutin/göreve "Değişiklik öner" düğmesini gösterir (`akislar.md` 12.1 adım 6–7). ParentApp "Uzmanın değişiklik önerisi" kartını yayınlamadan açılmaz: eski ParentApp değişiklik önerisini yeni görev gibi ekler (çift görev). Açmak: `admin_set_flag('plan_change_suggestions', true, 100, …)`.
 
+## KVKK işletme ve izleme (öneri `proposed/20261102200000_kvkk_ops.sql`, 2 Kasım 2026)
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_retention_status(limit)` | okur | İmha ayarı (`app_config.retention`), pg_cron var mı, son çalışmalar (`retention_runs`). Panel: Hukuk › Saklama ve imha |
+| `admin_retention_dry_run(gerekçe)` | owner | Şimdi kuru çalıştır: yalnız sayar, imha kaydına ve denetim kaydına (`retention.dry_run`) yazar. Gerçek silme yalnız gece işinde ve `live` açıkken |
+| `admin_set_retention_config(jsonb, gerekçe)` | owner | Süreler ve `live`. Bilinmeyen anahtar, tam sayı olmayan ve alt sınırın altı reddedilir (imha kaydı ≥ 1095 gün, denetim kaydı ≥ 365, kullanım ≥ 400 …). `live` yalnız avukat süreleri onaylayınca açılır (`hukuk/42`) |
+| `admin_user_export(kullanıcı, gerekçe)` | support | KVKK erişim başvurusu için "Verimi indir" ile aynı JSON; denetim kaydına `user.data_export`. Panel: kullanıcı kartı › Verilerini indir (KVKK). Dosya başvurana güvenli yoldan iletilir, sonra silinir |
+| `admin_log_export(ne, satır, gerekçe)` | okur | Panelden toplu indirmenin kaydı (`export.csv`, hedef `system`/`customers.<app>`, satır sayısı). Müşteriler › CSV indir gerekçe ister ve "işin bitince dosyayı sil (en geç 30 gün)" uyarısı gösterir |
+| `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 23). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
+
+### Destek (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; kullanıcı kararı: sayfada form)
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_support_requests(durum='open', limit)` | support | Destek kuyruğu: `open` (yeni + işlemde, en eski önce), `answered`, `closed`, `spam`, `all`. E-posta ve mesaj içerir (kişinin ekibe yazdığı metin; aile mesajı değildir) → yalnız destek rolü ve sahip |
+| `admin_support_update(id, durum, iç not, gerekçe)` | support | Durum (new/in_progress/answered/closed/spam) ve iç not; denetim kaydına `support.update`, hedef `system`/`support:<D-no>` (e-posta ve mesaj yazılmaz) |
+
+Akış: herkese açık **`/destek`** (panelin Worker'ı; JavaScript'siz form: uygulama, konu, e-posta, isteğe bağlı ad, mesaj, "18 yaşından büyüğüm", gizli tuzak alanı, doldurma süresi) → Edge Function **`support`** (POST; e-posta başına 24 saatte 3, saatte toplam 60) → `support_requests` → panel **Destek** ekranı → "Yanıtla" ekibin e-posta uygulamasında taslak açar → durum "Yanıtlandı". Sabit adres `…/functions/v1/support` (GET) `LEGAL_PUBLIC_URL` köküne `/destek` olarak yönlenir: App Store **Support URL** ve uygulamalardaki "Yardım ve iletişim" bunu kullanır (alan adı gelince uygulama sürümü gerekmez). Sistem sağlığı: 2 günden uzun yanıtsız talep sarı. Saklama: kapanan 2 yıl, istenmeyen 30 gün (gece imha işi, `support_days`). Spam artarsa: Cloudflare Turnstile (ücretsiz; secret Supabase'e). Benchmark: Zammad web formu ve tuzak alanı, osTicket konu seçimi, Chatwoot yanıt süresi notu, laravel-honeypot doldurma süresi, Apple 1.3/1.5 ve App Store Connect Support URL açıklaması.
+
+### İzleme ve alarm
+
+Benchmark (2 Kasım 2026; kaynaklar DURUM satırında): Supabase Free'de log 1 gün ve uyarı kuralı yok, Log Drains yalnız Pro+ ve ücretli → **dışarıdan yoklama** + **içeride denetim işlevi** seçildi (Sentry/Healthchecks deseni).
+
+1. `ops_health()` her denetimi ok / info / warn / fail olarak döner (kişisel veri yok).
+2. Edge Function **`health`** (Verify JWT kapalı): 200 ya da 503 + yalnız genel durum.
+3. **GitHub Actions** `ortak/.github/workflows/saglik.yml`: her saat :41'de yoklar; 503 ya da yanıt yoksa iş kırmızı biter, GitHub e-posta gönderir (bildirim, dosyadaki zamanlamayı en son değiştiren hesaba gider; e-posta gelmiyorsa kullanıcı dosyadaki dakikayı GitHub'da bir kez değiştirsin). İşlev yayında değilse (404) yeşil biter.
+4. İsteğe bağlı ikinci kanal (telefona anlık): **Sentry Uptime** (ücretsiz planda 1 izleyici, 1–60 dk aralık) → adres `…/functions/v1/health`, anahtar konmaz. Kurulursa `hukuk/41-alt-isleyenler.md`'ye eklenir (kişisel veri gitmez).
+5. Gece imha işi kendi sonucunu `retention_runs`'a yazar; `ops_health` son 26 saatte çalışmadıysa sarı, hata verdiyse kırmızı.
+
 ## Uygulamaların okuması: `client_config(app)`
 
 Her uygulama açılışta (ve ön plana gelince) çağırır: `{"app": {"min_version", "maintenance", "banner"}, "flags": {"<key>": true|false}}`.
