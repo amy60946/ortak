@@ -461,9 +461,11 @@ Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp 
 
 Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
 
+**Web (4 Kasım 2026, kullanıcı isteği):** aynı akış web'de de çalışır. ParentApp + Pofi Adası tanıtım sayfası (`parent-app/site/`, kök) "Hesap oluştur" → `/app/#kayit` (adım 2'den başlar), "Giriş yap" → `/app/#giris`. `/app/` ParentApp'in web derlemesidir (giriş, kayıt, kurulum, cihaz bağlama QR'ı büyük ekranda); web'de satın alma ve bildirim yok, üyelik uygulamadan başlatılır. E-posta bağlantıları web'de `/app/`e döner (Supabase Redirect URLs'e `https://<alan adı>/app/**`). Yayın alan adı ve App Store yayınıyla birlikte (web'den açılan hesapta deneme kayıtta başlar).
+
 | # | Ekran | Ne olur | Veritabanı |
 |---|---|---|---|
-| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. | — |
+| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. Web'de tanıtım sayfasından gelince doğrudan 2 ya da giriş. | — |
 | 2 | Davet kodu? | "Davet kodun var mı?" (3 Kasım 2026'dan beri: uzmandan ya da seni davet eden bir aileden) Hayır → kayıt · Evet → "Davet kodunu yaz" → kayıt · "Hesabım var" → giriş. Kodun türü kendiliğinden anlaşılır: 6 karakter uzman daveti, 8 karakter aile davet kodu (19 "Aile davet et"; kurulumun başında kullanılır, sonuç pencereyle söylenir). Davet bağlantısıyla gelen bu soruyu görmez. | kayıt meta `clinic_invite` (kod ya da bağlantı anahtarı); aile kodu `redeem_guest_pass` |
 | 3 | Kayıt | Ad, e-posta, şifre (bugünkü ekran). | `handle_new_user` (davet aileye bağlanır) |
 | 4 | Aile soruları | Giriş ekranı ("Seni ve aileni tanıyalım", ne kadar sürer, ne işe yarar), ana hedef, diğer hedefler (ana hedef burada tekrar edilmez), bizi nereden duydun, kısa giriş, üç sıklık sorusu (araya bir "yalnız değilsin" ekranı). Her yanıt hemen kaydedilir. | `intake_answers` (`child_id` boş) |

@@ -1,6 +1,6 @@
 # ClinicApp Web Çerez Politikası
 | Anahtar | cerez-clinicapp-web | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ClinicApp web sürümü: giriş sayfasının alt bilgisinde bağlantı; ilk açılışta bilgilendirme bandı (aşağıda öneri); giriş yapıldıktan sonra Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 10, 12; KVKK Kurumu "Çerez Uygulamaları Hakkında Rehber" (2022); Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ |
+| Nerede | ClinicApp web sürümü ve (4 Kasım 2026'dan beri) ParentApp web sürümü (`/app/`; tanıtım sayfası çerez kullanmaz): giriş sayfasının alt bilgisinde bağlantı; ilk açılışta bilgilendirme bandı (aşağıda öneri); giriş yapıldıktan sonra Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 10, 12; KVKK Kurumu "Çerez Uygulamaları Hakkında Rehber" (2022); Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ |
 
 ## Kısaca
 
