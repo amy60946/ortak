@@ -666,7 +666,7 @@ Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) bi
 
 | Tablo / sütun | Ne | RLS |
 |---|---|---|
-| `clinics.personal_of` | bireysel alanın sahibi (uzman başına en çok bir); aileye "bağımsız uzman" | — |
+| `clinics.personal_of` | bireysel alanın sahibi (uzman başına en çok bir); aileye `independent = true` (ParentApp yalnız unvan + ad gösterir, klinik adı ve etiket yok) | — |
 | `clinics.members_can_invite` | ekip üyeleri aile davet edebilir mi (varsayılan `true`; sahip değiştirir) | — |
 | `clinic_members` (clinic_id, clinician_id, role `owner`/`member`, status `active`/`left`, invited_by, joined_at, left_at) | üyelik; rol alandan alana değişir | okuma: kendi satırları + etkin alanın ekibi; yazma yalnız işlevlerle |
 | `clinician_codes` (clinician_id, code 8 karakter) | uzmanın kalıcı kişisel kodu | hiç kimse doğrudan okumaz; `clinician_personal_code()` |
