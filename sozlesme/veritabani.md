@@ -659,3 +659,42 @@ Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; ya
 | `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
 
 Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
+
+## 30. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (`proposed/20261105090000_workspaces.sql`, öneri 5 Kasım 2026; kullanıcı kararı; akış `akislar.md` 21, durumlar `durumlar.md` P19)
+
+Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) birden çok **çalışma alanının** (`clinics`) üyesidir: kendi bireysel alanı (`clinics.personal_of` = uzman) ve ekibine katıldığı klinikler. Danışan, davetin gönderildiği alanındır; alanlar birbirini görmez.
+
+| Tablo / sütun | Ne | RLS |
+|---|---|---|
+| `clinics.personal_of` | bireysel alanın sahibi (uzman başına en çok bir); aileye "bağımsız uzman" | — |
+| `clinics.members_can_invite` | ekip üyeleri aile davet edebilir mi (varsayılan `true`; sahip değiştirir) | — |
+| `clinic_members` (clinic_id, clinician_id, role `owner`/`member`, status `active`/`left`, invited_by, joined_at, left_at) | üyelik; rol alandan alana değişir | okuma: kendi satırları + etkin alanın ekibi; yazma yalnız işlevlerle |
+| `clinician_codes` (clinician_id, code 8 karakter) | uzmanın kalıcı kişisel kodu | hiç kimse doğrudan okumaz; `clinician_personal_code()` |
+| `clinic_member_requests` (clinic_id, clinician_id, requested_by, status, expires_at 7 gün) | kliniğin ekibe ekleme isteği | okuma: hedef uzman + etkin alanın sahibi; yazma işlevlerle |
+
+**Etkin alan:** `my_clinic_id()` istek başlığı `x-clinic-id`'yi (ClinicApp her REST isteğine ekler) etkin üyelikle denetler; geçersizse `null` (hiçbir klinik satırı görünmez, `clinician_me().workspace_invalid`). Başlık yoksa varsayılan alan `clinicians.clinic_id` (etkin üyelik şartıyla): eski uygulama sürümleri ve hizmet rolü çağrıları böyle çalışır. `my_clinic_role()` alandaki rol; `clinic_is_owner()`, `clinician_access()`, `clinic_link_visible()`, `clinic_link_recipients()`, `notify_clinic()` (bildirime `clinic_id` ekler), `clinic_assign`, `clinic_set_responsible`, `clinic_create_invite`, `clinic_invite_email_take`, `suggestions_notify`, `clinic_redact_names`, `account_delete_of` üyelikten okur. Bildirim tetikleyicisi `notifications_clinic_scope` uzman bildirimine `data.clinic_id` yazar (paylaşım, davet kodu, seans ya da çocuk üzerinden); uygulama dokununca o alana geçer. Ses kaydı (Storage `abc`) başlık taşımadığı için `clinic_sees_child_any()` (herhangi bir etkin alan). `clinicians_member_sync` tetikleyicisi eski tek alanlı yazımları (ekip kodu, yönetim araçları) üyeliğe yansıtır.
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinician_me()` | K | etkin alanla: `role` (alandaki), `personal`, `members_can_invite`, `default_clinic_id`, `workspace_invalid`, `workspaces` (sayı), `has_personal`, `requests` (bekleyen istek sayısı) + eski alanlar |
+| `clinician_workspaces() → [{clinic_id, name, role, personal, active, access, default, members, joined_at}]` | K | alan seçici; bireysel alan önce |
+| `clinician_personal_workspace() → uuid` | K | bireysel alanı açar (yoksa); deneme süresi uzmanın açtığı alanlarla ortak |
+| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak |
+| `clinician_personal_code(rotate default false) → text` | K | kalıcı kod; `rotate` yeniler (gönderilmiş istekler geçerli kalır) |
+| `clinic_member_request(code) → {status sent/pending, id, name, title, expires_at} \| {error}` | K (etkin klinik alanının sahibi) | `invalid_code` (deneme sınırı `code_throttled`), `self`, `already_member`, `seat_full` (etkin üye + bekleyen istek ≥ koltuk), `personal_workspace`; uzmana `team_request` (`data.request_id`) |
+| `clinic_member_requests_mine()` | K | bekleyen isteklerim (klinik adı, gönderen, ekip sayısı, süre) |
+| `clinic_member_respond(id, accept) → {status} \| {error closed/seat_full}` | K (hedef uzman) | kabul: üyelik (`member`, `invited_by`), sahiplere `team_joined`; ret: gönderene `team_request_declined` |
+| `clinic_member_request_cancel(id)` | K (sahip) | bekleyen isteği geri çeker |
+| `clinic_team() → {members[{id,name,title,role,joined_at,invited_by_name,verified_as}], requests[], seat_limit, members_can_invite, personal}` | K | etkin alanın ekibi; istekler yalnız sahibe |
+| `clinic_member_remove(clinician)` | K (sahip) | üyeyi çıkarır (sahip çıkarılmaz); ona `team_removed` |
+| `clinic_leave()` | K (üye) | etkin klinik alanından ayrılır (sahip ve bireysel alan ayrılamaz); sahiplere `team_left` |
+| `clinic_invite_policy_set(bool)` | K (sahip) | ekip üyeleri aile davet edebilir mi; kapalıyken üyenin klinik adına daveti `invite_owner_only` |
+| `clinic_member_end(clinic, clinician)` | iç | üyelik `left`; o klinikte atama, sorumluluk (`clinic_links.clinician_id` → null), bekleyen aile davetleri (iptal), gelecekteki seanslar (uzmansız) ve çalışma saatleri kapanır; danışanlar ve uzmanın yazdıkları klinikte kalır; varsayılan alan buysa bireysel alana geçer |
+| `family_clinic_links()` | P | yeni sütun `independent` (bireysel alan) |
+| `clinic_invite_preview(code)` | P | yeni alan `independent` |
+| `clinic_busy_elsewhere(from, to)` (seans önerisinde) | K | etkin alanın uzmanlarının başka alanlardaki seansları: kendisinde alan adıyla, sahipte yalnız "dolu" |
+
+Hesap silme (`account_delete_of`): her etkin alanda ayrı karar: tek kişilikse alan silinir, sahipse alan en eski üyeye (önce başka sahip) geçer, üyeyse sorumlulukları boşalır; bireysel alan silinir.
+
+Eski ekip kodu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) yalnız eski uygulama sürümleri için çalışır ve üyeliği yazar; yeni ClinicApp göstermez (kaldırma DURUM Açık işler). Yönetim paneli işlevleri (`admin_clinic`, `admin_customers`) üye listesini hâlâ `clinicians.clinic_id`'den okur; üyelik tablosuna geçişi yönetim paneli penceresinin işi (DURUM).
+
