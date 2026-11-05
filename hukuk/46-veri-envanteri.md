@@ -23,7 +23,7 @@ Yurt dışı: Supabase `[SUPABASE BÖLGESİ]`; A, X, R, M ABD (ve/veya AB); C k�
 | K4 | Oyun kaydı | Ç | seviye, XP, eşyalar, ada düzeni | Oyunun sürmesi, cihaz değişince geri yükleme | md. 5/2-c | — | 2, 30 |
 | K5 | Aile içi iletişim içeriği | E, Ç | mesaj yazısı, fotoğraf, sesli mesaj, çıkartma, okundu | Ebeveyn ile çocuk arasında mesajlaşma | md. 5/2-c | — | 3 |
 | K6 | Davranış kayıtları | E, Ç | öncül–davranış–sonuç, şiddet, ses kaydı, zaman | Ebeveynin gözlem günlüğü; rızayla uzmanla paylaşım | md. 5/2-c; **sağlık verisi sayılırsa md. 6/3 açık rıza** — avukat (`hukuk_notlari.md`) | Uz (rızayla) | 4 |
-| K7 | Uzmanla paylaşım ve danışan kayıtları | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, haftalık değerlendirme, görev önerileri, takip planı ve ev programı kayıtları | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu (klinik mi platform mu) avukatta | Uz, C | 7, 9, 9a |
+| K7 | Uzmanla paylaşım ve danışan kayıtları | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, haftalık değerlendirme, görev önerileri, takip planı ve ev programı kayıtları, seans randevuları ve seans kayıtları (psikolog/terapistle randevunun varlığı sağlık verisi sayılabilir, md. 6) | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu (klinik mi platform mu) avukatta | Uz, C | 7, 9, 9a |
 | K8 | Klinik, ekip ve davet | U, D | klinik adı, ekip rolü, koltuk; davette ebeveyn adı/e-postası, çocuğun adı ve yaş grubu, davet kanalı; uzmanın rutin ve şablon kütüphanesi | Klinik hesabı ve aile daveti | md. 5/2-c (uzman); D için uzmanın beyanı + md. 5/2-f — avukat | M (davet e-postası) | 8, 10 |
 | K9 | Mesleki belge incelemesi | U | belge dosyası (karar anında silinir), özet (üniversite, bölüm, derece, yıl), barkod, BACB no, karar | Ailelere "Belgesi incelendi" rozeti | md. 5/2-c (uzmanın talebi); T.C. kimlik no saklanmaz | — | 11, 12 |
 | K10 | Uzman karşılama anketi | U | meslek, zorluklar, yararlı özellikler, geliş nedeni | Ürün geliştirme | md. 5/2-f meşru menfaat (isteğe bağlı, atlanabilir) | — | 13 |
@@ -87,10 +87,20 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `care_modules` | K7 | takip planı modülleri |
 | `care_module_goals` | K7 | |
 | `care_module_logs` | K7 | ebeveynin ev programı kayıtları |
+| `clinic_sessions` | K7 | seans randevusu (tarih, saat, tür, yer, durum, ailenin yanıtı); aile yalnız "aileye göster" açıkken tarih/saat/yer görür |
+| `clinic_session_records` | K7 | seans kaydı: katılanlar, gözlem, çalışılan, sonraki adım, gündem; aile görmez |
+| `clinic_session_packages` | K7 | seans paketi (seans sayısı; ödeme yok) |
+| `clinic_waitlist` | K7 | bekleme listesi ve uygun gün notu |
+| `clinic_external_events` | K7 | uzmanın dış takviminden okunan etkinlik (başlık, saat); yalnız uzmanın kendisi görür |
 | `clinics` | K8 | |
 | `clinic_invites` | K8 | ebeveyn adı/e-postası 30 gün sonra boşaltılır (imha işi) |
 | `clinic_routines` | K8 | uzmanın rutin kütüphanesi |
 | `clinic_plan_templates` | K8 | uzmanın plan şablonları |
+| `clinic_rooms` | K8 | oda ve şube adı |
+| `clinic_session_settings` | K8 | geç iptal süresi, hatırlatma dakikaları, randevu alma ayarı |
+| `clinic_availability` | K8 | uzmanın çalışma saatleri |
+| `clinic_calendar_feeds` | K8 | takvim aboneliği belirteci (uzmanın kendisi) |
+| `clinic_calendar_sources` | K8 | uzmanın dış takvim adresi (gizli iCal bağlantısı) |
 | `clinician_verifications` | K9 | dosya `verify` kovasında, karar anında silinir |
 | `clinician_surveys` | K10 | |
 | `family_subscriptions` | K11 | |

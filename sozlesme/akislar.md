@@ -588,3 +588,33 @@ Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum
 
 ParentApp olayları (bu bölüm): `invite.code` (`suggested`), `invite.tell`, `invite.accept`, `invite.decline`, `phone.code_sent`, `phone.verified`, `phone.skip`, `care.log` (`from: clinician`), `clinic.unlink` (`all`), `clinic.remove` (`n`), `guest_pass.share`, `referral.redeem`, `intake.later_done` (`n`), `code.redeem` (`kind: guest`).
 
+
+## 20. Seans planlama ve takip (öneri 5 Kasım 2026; ortak `proposed/20261105100000_sessions.sql`, `veritabani.md` 29, `durumlar.md` P18)
+
+Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentApp'in yapması gereken adımları söyle." Belge ve benchmark: https://claude.ai/artifact/TiMrtycSVdzbeNTiii6oNP, önizleme: https://claude.ai/artifact/DpcEfMzky7SqNWfrivbAVd. Konum: seans, seanslar arası ev programıyla bağlanır (C "seans döngüsü"); A, B, D, E aynı tabloların üstünde.
+
+**ClinicApp (uzman):**
+1. **Takvim** (A): ana ekrandan; gün / hafta, durum renkleri, sahip için uzman süzgeci, dolu saatler (`clinic_busy`), dış takvim blokları (E). "+ Seans": danışan ya da danışansız blok, uzman (sahip başkasına atar), tür, yer (yüz yüze / online / ev), oda, süre, tekrar (her hafta / iki haftada bir, kaç seans), aileye göster, paket.
+2. **Durum** (A): Yapıldı · Gelmedi · İptal (süre içinde Geç iptal; affedilebilir) · Ertelendi; "notu bekleyen" listesi (yapıldı ama kaydı yok, son 14 gün).
+3. **Seans öncesi özet** (C): son yapılan seanstan bu yana evde olanlar (rutin oranı ve önceki dönem, davranış kayıtları, bekleyen öneri, değerlendirme zamanı, ailenin yanıtı/notu) + kendiliğinden gündem; hesap ClinicApp'te mevcut verilerden.
+4. **Seans kaydı** (C): katılanlar, gözlem / çalışılan / sonraki adım (yalnız klinik), gündem işaretleri, aileye ev ödevi = Takip Planı'nın gönderilmemiş maddeleri seçilip "Aileye gönder" (`care_plan_publish_selected`), sonraki seans.
+5. **Danışan › Seanslar**: devam (yapıldı / gelmedi / geç iptal), son 10 hafta, her seansın ara döneminde evden gelenler, paket kullanımı, bekleme listesi.
+6. **Takvim ayarları** (D, E): çalışma saatleri ve "aileye açık" saatler, odalar ve şubeler (sahip), geç iptal süresi ve paket sayımı, hatırlatma dakikaları, aileye randevu alma (aç/kapat, bildirim süresi, ufuk, süre), takvim aboneliği bağlantısı (kopyala, baş harf göster, yenile, kapat), dış takvim adresi ekle/kaldır + "Şimdi eşitle".
+7. **Bekleme listesi** (D): danışanı listeye al; iptal ya da boş saatte "Bekleme listesine teklif et" → aile kabul ederse randevu.
+
+**ParentApp (ebeveyn) — ParentApp penceresi yapar:**
+1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Gelmedi / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
+2. **Yanıt** (B): gelecekteki planlı kartta "Geleceğiz" / "Uygun değil" (isteğe bağlı kısa not, ≤ 300) → `family_session_respond`; verilen yanıt kartta görünür, değiştirilebilir. Saat değişince yanıt sıfırlanır (sunucu).
+3. **Hatırlatma** (B): her açılışta ve `session_*` bildiriminde `family_sessions()` → gelecekteki `planned` her seans için `reminders` dakikaları kadar önce **yerel bildirim** (expo-notifications, cihazda; eski planlananlar silinip yeniden kurulur). Metin: "Yarın 15:00 Nazlı'nın seansı · Elif Örnek" / "2 saat sonra …". Bildirim ayarından kapatılabilir.
+4. **Takvime ekle**: kartta .ics paylaşımı (cihaz takvimi), yalnız o seans.
+5. **Bildirimler**: `session_scheduled`, `session_changed`, `session_cancelled`, `session_offer` → dokununca Uzmanım › Randevular (o seans vurgulu).
+6. **Boşalan saat teklifi** (D): `status = 'offered'` kart üstte, son geçerlilik (`offer_expires_at`) ile; "Kabul et" / "İstemiyorum" → `family_offer_respond`.
+7. **Randevu al** (D): `family_booking_slots(link)` boş değilse Randevular'da "Randevu al" → gün seç → saat seç → onay → `family_book_slot`; hatalar `slot_not_available` ("Bu saat az önce doldu"), `too_many_bookings` ("En çok 2 randevu alabilirsin").
+8. Paylaşım durdurulunca randevular kalkar (sunucu); yerel hatırlatmalar silinir.
+9. Olaylar: `session.list`, `session.respond` (`response`), `session.offer` (`accept`), `session.book`, `session.ics`.
+
+ClinicApp olayları: `screen.calendar`, `session.create` (`repeat`, `n`, `visible`, `client`), `session.update` (`scope`), `session.status` (`status`, `waive`), `session.record`, `session.homework`, `session.delete`, `session.package`, `waitlist.add`, `waitlist.offer`, `calendar.availability`, `calendar.feed`, `calendar.source`, `calendar.external`.
+
+**E · dış takvim**: abonelik (ClinicApp → uzmanın takvimi) tek yönlü ve adsız (tür + isteğe bağlı baş harf); dış takvimi okuma uzmanın gizli iCal adresiyle, −14 … +60 gün, tekrarlar açılır; seansa çevrilmeyen etkinlik yalnız uzmana görünür.
+
+**Bu öneride yok (karar ve hesap bekliyor):** seans ücreti tahsilatı ve e-fatura (Apple 3.1.3(e): uygulama dışında alınan hizmetin ödemesi App Store dışı yöntemle; ödeme ve e-fatura sağlayıcısı kullanıcı kararı), yeni ailelere açık herkese açık randevu sayfası (alan adı ve barındırma, ClinicApp açık soru 3), SMS / WhatsApp hatırlatması (İYS ve maliyet).

@@ -387,3 +387,17 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme > 7 gün), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
 | Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
 
+
+## P18. Seans (`proposed/20261105100000_sessions.sql`, öneri 5 Kasım 2026; `akislar.md` 20)
+
+| Alan | Değerler | Türkçe |
+|---|---|---|
+| `clinic_sessions.status` | `planned`, `done`, `no_show`, `late_cancel`, `cancelled`, `postponed`, `offered` | Planlandı, Yapıldı, Gelmedi, Geç iptal, İptal, Ertelendi, Teklif edildi (bekleme listesindeki aileye) |
+| `clinic_sessions.kind` | `individual`, `family`, `parent`, `group`, `intake`, `other` | Bireysel seans, Aile görüşmesi, Ebeveyn görüşmesi, Grup seansı, İlk görüşme, Diğer (danışansız blokta ör. toplantı) |
+| `clinic_sessions.mode` | `in_person`, `online`, `home` | Yüz yüze, Online, Ev ziyareti |
+| `clinic_sessions.family_response` | `ok`, `unavailable` | Geleceğiz, Uygun değil |
+| `clinic_sessions.booked_by` | `clinic`, `family` | uzman açtı, aile uygun saatten aldı |
+| `clinic_waitlist.status` | `waiting`, `offered`, `booked`, `removed` | Bekliyor, Teklif gönderildi, Randevu aldı, Listeden çıktı |
+| Bildirim (ebeveyn, `app='parent'`) | `session_scheduled`, `session_changed`, `session_cancelled`, `session_offer` | `data.session_id`; dokununca Uzmanım › Randevular |
+| Bildirim (uzman, `app='clinic'`) | `session_family_response`, `session_booked`, `session_offer_answered` | `data.session_id`, `data.link_id`; dokununca Takvim'de o seans |
+| Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources` | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
