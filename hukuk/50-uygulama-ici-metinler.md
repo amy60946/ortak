@@ -324,7 +324,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 |---|---|---|
 | Pofi Adası | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
 
-> İnciler adanın hazinesidir. Görevlerini yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
+> İnciler adanın hazinesidir. Sorumluluklarını tamamlayınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
 >
 > Güneş Taşları ailenin ödülleri içindir. Taşın yetince ödül isteyebilirsin. Kararı ailen verir.
 
@@ -441,7 +441,7 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 | Uygulama | İzin (`Info.plist` anahtarı) | Ne zaman sorulur | Metin |
 |---|---|---|---|
 | Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
-| Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da görevini onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
+| Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da maceranı onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
 | ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
 | ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
 | ParentApp | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
