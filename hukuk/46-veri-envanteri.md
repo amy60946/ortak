@@ -97,6 +97,9 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `clinic_routines` | K8 | uzmanın rutin kütüphanesi |
 | `clinic_plan_templates` | K8 | uzmanın plan şablonları |
 | `clinic_rooms` | K8 | oda ve şube adı |
+| `clinic_members` | K8 | uzmanın hangi klinik alanlarında ve hangi rolle çalıştığı, katılma/ayrılma tarihi, ekleyen |
+| `clinic_member_requests` | K8 | kliniğin uzmanı ekibe ekleme isteği ve sonucu |
+| `clinician_codes` | K1 | uzmanın kalıcı kişisel kodu (yalnız kendisi görür) |
 | `clinic_session_settings` | K8 | geç iptal süresi, hatırlatma dakikaları, randevu alma ayarı |
 | `clinic_availability` | K8 | uzmanın çalışma saatleri |
 | `clinic_calendar_feeds` | K8 | takvim aboneliği belirteci (uzmanın kendisi) |

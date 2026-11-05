@@ -215,7 +215,8 @@ drop policy if exists "çalışma saati: kendisi ya da sahip yazar" on public.cl
 create policy "çalışma saati: kendisi ya da sahip yazar" on public.clinic_availability for all to authenticated
   using (clinic_id = public.my_clinic_id() and public.clinician_access() and (clinician_id = auth.uid() or public.clinic_is_owner()))
   with check (clinic_id = public.my_clinic_id() and public.clinician_access() and (clinician_id = auth.uid() or public.clinic_is_owner())
-    and exists (select 1 from public.clinicians m where m.id = clinician_id and m.clinic_id = public.my_clinic_id())
+    and exists (select 1 from public.clinic_members m where m.clinician_id = clinic_availability.clinician_id
+                  and m.clinic_id = public.my_clinic_id() and m.status = 'active')
     and (room_id is null or exists (select 1 from public.clinic_rooms r where r.id = room_id and r.clinic_id = public.my_clinic_id())));
 grant select, insert, update, delete on public.clinic_availability to authenticated;
 
@@ -327,7 +328,7 @@ create or replace function public.session_check_refs(p_link uuid, p_clinician uu
 returns void language plpgsql stable security definer set search_path = '' as $$
 begin
   if p_link is not null and not public.clinic_link_mine(p_link) then raise exception 'link_not_visible' using errcode = '42501'; end if;
-  if p_clinician is not null and not exists (select 1 from public.clinicians m where m.id = p_clinician and m.clinic_id = public.my_clinic_id()) then
+  if p_clinician is not null and public.clinic_member_role(public.my_clinic_id(), p_clinician) is null then
     raise exception 'clinician_not_in_clinic' using errcode = '42501';
   end if;
   if p_clinician is not null and p_clinician <> auth.uid() and not public.clinic_is_owner() then
@@ -578,6 +579,26 @@ $$;
 revoke execute on function public.clinic_busy(timestamptz, timestamptz) from public, anon;
 grant execute on function public.clinic_busy(timestamptz, timestamptz) to authenticated;
 
+-- Çalışma alanları (20261105090000_workspaces.sql): etkin alanın uzmanlarının BAŞKA alanlardaki seansları. Uzman kendi
+-- seanslarında alanın adını görür; başkasının seansında yalnız "dolu" (alan, danışan, oda gelmez).
+create or replace function public.clinic_busy_elsewhere(p_from timestamptz, p_to timestamptz)
+returns table (clinician_id uuid, starts_at timestamptz, ends_at timestamptz, clinic text)
+language sql stable security definer set search_path = '' as $$
+  select s.clinician_id, s.starts_at, s.starts_at + make_interval(mins => s.duration_min),
+         case when s.clinician_id = auth.uid() then c.name end
+  from public.clinic_sessions s
+  join public.clinics c on c.id = s.clinic_id
+  where public.my_clinic_id() is not null and s.clinic_id <> public.my_clinic_id()
+    and s.status in ('planned', 'offered', 'done')
+    and s.clinician_id in (select m.clinician_id from public.clinic_members m
+                            where m.clinic_id = public.my_clinic_id() and m.status = 'active')
+    and (s.clinician_id = auth.uid() or public.clinic_is_owner())
+    and s.starts_at < p_to and s.starts_at + make_interval(mins => s.duration_min) > p_from
+    and p_to - p_from <= interval '62 days'
+$$;
+revoke execute on function public.clinic_busy_elsewhere(timestamptz, timestamptz) from public, anon;
+grant execute on function public.clinic_busy_elsewhere(timestamptz, timestamptz) to authenticated;
+
 -- Seans paketi (yalnız seans sayısı; ödeme yok)
 create or replace function public.clinic_package_save(p_id uuid, p_link uuid, p_title text, p_total int,
                                                       p_starts date default null, p_ends date default null, p_note text default null,
@@ -731,7 +752,7 @@ begin
   select * into l from public.clinic_links where id = p_link_id;
   st := public.clinic_session_settings_row(l.clinic_id);
   if not st.booking_enabled then return '[]'; end if;
-  v_clin := coalesce(l.clinician_id, (select id from public.clinicians where clinic_id = l.clinic_id and role = 'owner' limit 1));
+  v_clin := coalesce(l.clinician_id, (select clinician_id from public.clinic_members where clinic_id = l.clinic_id and role = 'owner' and status = 'active' order by joined_at limit 1));
   with days as (
     select d::date as day from generate_series((now() at time zone 'Europe/Istanbul')::date,
                                                (now() at time zone 'Europe/Istanbul')::date + st.booking_horizon_days, interval '1 day') d
@@ -773,13 +794,13 @@ begin
   select * into l from public.clinic_links where id = p_link_id;
   st := public.clinic_session_settings_row(l.clinic_id);
   select a.room_id into v_room from public.clinic_availability a
-   where a.clinician_id = coalesce(l.clinician_id, (select id from public.clinicians where clinic_id = l.clinic_id and role = 'owner' limit 1))
+   where a.clinician_id = coalesce(l.clinician_id, (select clinician_id from public.clinic_members where clinic_id = l.clinic_id and role = 'owner' and status = 'active' order by joined_at limit 1))
      and a.bookable and a.weekday = extract(isodow from (p_starts_at at time zone 'Europe/Istanbul'))
      and (p_starts_at at time zone 'Europe/Istanbul')::time >= a.start_time and (p_starts_at at time zone 'Europe/Istanbul')::time < a.end_time
    limit 1;
   insert into public.clinic_sessions (clinic_id, clinician_id, link_id, starts_at, duration_min, room_id, status, visible_to_family,
                                       booked_by, family_response, family_responded_at, created_by)
-  values (l.clinic_id, coalesce(l.clinician_id, (select id from public.clinicians where clinic_id = l.clinic_id and role = 'owner' limit 1)),
+  values (l.clinic_id, coalesce(l.clinician_id, (select clinician_id from public.clinic_members where clinic_id = l.clinic_id and role = 'owner' and status = 'active' order by joined_at limit 1)),
           p_link_id, p_starts_at, st.slot_minutes, v_room, 'planned', true, 'family', 'ok', now(), auth.uid())
   returning id into v;
   perform public.session_notify_clinician(v, 'session_booked', 'Aile randevu aldı', public.session_when(p_starts_at));

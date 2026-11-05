@@ -401,3 +401,14 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (ebeveyn, `app='parent'`) | `session_scheduled`, `session_changed`, `session_cancelled`, `session_offer` | `data.session_id`; dokununca Uzmanım › Randevular |
 | Bildirim (uzman, `app='clinic'`) | `session_family_response`, `session_booked`, `session_offer_answered` | `data.session_id`, `data.link_id`; dokununca Takvim'de o seans |
 | Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources` | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
+
+## P19. Çalışma alanları (`proposed/20261105090000_workspaces.sql`, öneri 5 Kasım 2026; `akislar.md` 21)
+
+| Alan | Değerler | Türkçe |
+|---|---|---|
+| `clinic_members.role` | `owner`, `member` | Klinik sahibi, Ekip üyesi (alana göre) |
+| `clinic_members.status` | `active`, `left` | Ekipte, Ayrıldı |
+| `clinic_member_requests.status` | `pending`, `accepted`, `declined`, `cancelled` | Bekliyor (7 gün), Kabul edildi, Reddedildi, Geri çekildi |
+| Bildirim (app `clinic`) | `team_request` (uzmana), `team_joined`, `team_request_declined`, `team_left` (sahibe), `team_removed` (uzmana) | "<Klinik> seni ekibine eklemek istiyor", "… ekibe katıldı", "… kabul etmedi", "… ekipten ayrıldı", "<Klinik> ekibinden çıkarıldın" |
+| İstek başlığı | `x-clinic-id: <clinic uuid>` | ClinicApp'in seçili alanı (yalnız REST; Edge Function'larda yalnız `clinic-billing`) |
+| Kişisel uzman kodu | 8 karakter (`random_code` alfabesi), süresiz, yenilenebilir | Ayarlar › Kişisel kodun |
