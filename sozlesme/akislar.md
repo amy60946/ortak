@@ -359,6 +359,8 @@ Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) ya
 
 ### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql` uygulandı 2 Kasım 2026, veritabani.md 22)
 
+**Ad (kullanıcı kararı 5 Kasım 2026):** ClinicApp'te takip planındaki hedefin adı **"Davranış hedefi"** (başlık, düğme, menü, kitaplık, rapor, ilerleme notu; eski "Hedef"). "Hedef düzey" (ulaşılacak düzey), "hedef davranış" (formdaki alan) ve GAS'ın "hedefe ulaşma" ölçeği değişmedi. Veritabanı (`care_goals`, `goal_id`) aynı. ParentApp'teki ad için kullanıcı kararı bekleniyor.
+
 Kararlar: ClinicApp'te **C · hedef hatları** (her hedef bir satır: hedef · aile programı · rutin/görev; ileride salt bakış "Harita"); bir program **birden çok hedefi** destekler; Şablonlarım paylaşımını **uzman seçer**; **tek "Aileye gönder"**; ailede ekli rutin/görev **değişiklik önerisiyle** düzenlenir; uzmanın kendi programı **yok** (sistem içerikleri kalır); iPad'de uzman **iPad görünümü / web görünümü** arasında seçer (sağ üstte düğme; yalnız uygulama ayarı). Taslaklar: https://claude.ai/artifact/MxXWHaP3MPLHp5o2GHj6VG, yan yana hikâye https://claude.ai/artifact/R3jRURSfeHDMyPcwLzYZNY.
 
 | # | Kim | Adım | Veritabanı |
