@@ -644,3 +644,23 @@ Olaylar (ClinicApp): `workspace.switch` (`personal`), `workspace.create` (`kind`
 
 Eski ekip kodu yolu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) eski sürümler için sunucuda çalışır; yeni ClinicApp'te yok. Hukuk: klinik alanındaki danışanda veri sorumlusu klinik, bireysel alanda uzman (`hukuk_notlari.md` 23, avukata soru).
 
+
+## 22. Gelişim › aile üyesi: ebeveyn eğitimi (öneri 5 Kasım 2026; `proposed/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
+
+Amaç: ebeveynin kendi becerisi (ABA / davranışçı ebeveyn eğitimi tarzı kısa dersler; içerik sonra hazırlanır). Benchmark (5 Kasım 2026, ParentApp penceresi): Triple P (kısa oturum + ev ödevi), PCIT (günlük 5 dk ev pratiği), Good Inside (kısa video + senaryo), Kinedu / Lovevery (haftalık etkinlik), NOCD / Manatee (terapistin atadığı ödev), Duolingo / Khan (kısa ders, ilerleme), Joon Health (ebeveyn modülleri). İşleyiş referansıdır; içerik, karakter ve metin kopyalanmaz. **Kullanıcı kararları (5 Kasım 2026):** (a) "Bu haftanın becerisi" kartı: 3–5 dk ders + "Bu hafta dene" + 5 günlük nokta şeridi ("bu hafta 2/5 gün"; seri yok, kayıpsız), altında "Öğrendiğin beceriler"; uzmanın önerdiği ders "Uzmanının önerisi" etiketiyle önde. (b) Güneş Taşı uygulanan güne: "Bugün uyguladım" başına 1, haftada en çok 3, ebeveynin cüzdanına; hediyeyi ebeveyn bugünkü dükkândan seçer; dersi açmak taş getirmez. (c) Uzman yoksa ya da önermediyse ebeveyn kütüphaneden kendisi seçer; içerik gelene kadar "Yakında" kartı.
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | Gelişim sekmesinin üstündeki seçicide çocuk avatarlarının yanında aile üyesi **"Ben"** (giriş yapan ebeveyn). Ben seçilince çocuk grafikleri yerine ebeveyn bölümü. | `family_lessons()` |
+| 2 | [P] | Katalog boşsa (içerik henüz yok) tek kart: "Yakında: kısa ebeveyn dersleri" + bir cümle açıklama. Sunucu güncellemesi yoksa (işlev yok) aynı kart. | `catalog = []` |
+| 3 | [P] | **Bu haftanın becerisi** kartı (bir ders `current`): ad, süre ("4 dk"), "Dersi aç", "Bu hafta dene" yönergesi, 5 nokta (bu hafta uygulanan günler; 5'ten fazlası da 5 dolu gösterilir), "Bugün uyguladım" (bugün işaretliyse ✓ ve geri al), "Öğrendim". Taş satırı: "Bu hafta n/3 taş". | `parent_lesson_start`, `parent_lesson_open`, `parent_lesson_practice`, `parent_lesson_finish` |
+| 4 | [P] | Bu haftanın becerisi yoksa: önce **Uzmanının önerisi** (uzman adı Uzmanım'daki gösterimle, `link_id` → `family_clinic_links`; not varsa), sonra kütüphane (kısa liste, "Başla"). Başka bir derse başlamak öncekini kapatır: uygulandıysa "Öğrendiğin beceriler"e, uygulanmadıysa kütüphaneye döner (`paused`, kayıp yok). | `assigned[]`, `catalog[]`, `mine[]` |
+| 5 | [P] | **Öğrendiğin beceriler**: öğrenilen dersler (ad, kaç gün uygulandı); dokununca ders yeniden açılır, istenirse yeniden "Bu haftanın becerisi" yapılır. | `mine[status = learned]` |
+| 6 | [P] | Ders sayfası: başlık, süre, metin (`body_md`, sade markdown), "Bu hafta dene", altta tek satır: "Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez." Önerilen derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." | `parent_lessons.body_md` |
+| 7 | [P] | Bildirim `lesson_assigned` → Gelişim › Ben. | `notifications` |
+| 8 | [K] | Danışan › Takip planı (ya da ayrı "Ebeveyn dersleri" bölümü): kütüphaneden ders seç + isteğe bağlı not (≤ 300) → **Öner**; önerilenler listesi (her ebeveyn: başladı / öğrendi, dersi açtı mı, öneriden sonra uygulanan günler), **Geri çek**. Uzman ders içeriğini yazmaz (sistem kataloğu). | `clinic_assign_lesson`, `clinic_parent_lessons`, `clinic_withdraw_lesson` |
+| 9 | [A] | İleride: panelde ders kataloğu düzenleme (taslak → yayın). Bugün SQL ile. | `parent_lessons` |
+
+Kurallar: Dersler bilgi amaçlıdır, tanı ya da tedavi değildir; arayüzde puan, seri, "kaçırdın" ve "takip / izleme / kontrol" sözcükleri yok. Uzman yalnız **kendi önerdiği** derslerde, öneri tarihinden sonraki günleri görür (paylaşım rızasındaki "takip planı uygulama kayıtların" kapsamı; `hukuk_notlari.md` 26); ebeveynin kendi seçtiği dersler uzmana gitmez; paylaşım bitince uzman ebeveyn bilgisini görmez. Paylaşım ekranındaki "Paylaşılır" listesinde bu satır yazılır (ParentApp `SCOPE_FULL`). Her ebeveynin dersi ve taşı kendisinindir; aile içindeki öteki ebeveyn görebilir (aile okur). Taş kuralı `ekonomi.md` 5C. GameApp etkilenmez (hediye bugünkü yoldan).
+
+Olaylar (ParentApp): `lesson.start` (`key`, `assigned`), `lesson.open` (`key`), `lesson.practice` (`key`, `on`, `stone`), `lesson.finish` (`key`).

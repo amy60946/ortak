@@ -19,11 +19,11 @@ Yurt dışı: Supabase `[SUPABASE BÖLGESİ]`; A, X, R, M ABD (ve/veya AB); C k�
 |---|---|---|---|---|---|---|---|
 | K1 | Kimlik ve iletişim | E, U, T | ad, takma ad, simge, e-posta, şifre özeti (yalnız kimlik sağlayıcıda), unvan | Hesap açma, giriş, iletişim | md. 5/2-c sözleşmenin kurulması ve ifası | M, C | 1, 8 |
 | K2 | Aile ve çocuk profili | E, Ç | aile adı, çocuğun adı/takma adı, simgesi, isteğe bağlı cinsiyet ve doğum günü, yaş grubu, aile/çocuk kodları, cihaz bağlantısı | Ailenin ve çocuğun uygulamayı kullanması | md. 5/2-c; veli beyanı (çocuk verisi veliden) | Uz (rızayla), C | 2 |
-| K3 | Görev, onay, ödül, sanal değer | E, Ç | görevler, tekrarlar, "Yaptım", onay/ret ve notu, ödüller, istekler, coin ve Güneş Taşı defterleri, haftalık hedef | Ürünün temel işlevi | md. 5/2-c | Uz (rızayla), C | 2 |
+| K3 | Görev, onay, ödül, sanal değer | E, Ç | görevler, tekrarlar, "Yaptım", onay/ret ve notu, ödüller, istekler, coin ve Güneş Taşı defterleri, haftalık hedef, ebeveynin ders kayıtları (başladığı/öğrendiği ders, uygulama günleri) | Ürünün temel işlevi | md. 5/2-c | Uz (rızayla), C | 2 |
 | K4 | Oyun kaydı | Ç | seviye, XP, eşyalar, ada düzeni | Oyunun sürmesi, cihaz değişince geri yükleme | md. 5/2-c | — | 2, 30 |
 | K5 | Aile içi iletişim içeriği | E, Ç | mesaj yazısı, fotoğraf, sesli mesaj, çıkartma, okundu | Ebeveyn ile çocuk arasında mesajlaşma | md. 5/2-c | — | 3 |
 | K6 | Davranış kayıtları | E, Ç | öncül–davranış–sonuç, şiddet, ses kaydı, zaman | Ebeveynin gözlem günlüğü; rızayla uzmanla paylaşım | md. 5/2-c; **sağlık verisi sayılırsa md. 6/3 açık rıza** — avukat (`hukuk_notlari.md`) | Uz (rızayla) | 4 |
-| K7 | Uzmanla paylaşım ve danışan kayıtları | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, haftalık değerlendirme, görev önerileri, takip planı ve ev programı kayıtları, seans randevuları ve seans kayıtları (psikolog/terapistle randevunun varlığı sağlık verisi sayılabilir, md. 6) | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu (klinik mi platform mu) avukatta | Uz, C | 7, 9, 9a |
+| K7 | Uzmanla paylaşım ve danışan kayıtları | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, haftalık değerlendirme, görev önerileri, takip planı ve ev programı kayıtları, uzmanın önerdiği ebeveyn dersi ve ebeveynin o dersteki uygulama günleri (öneriden sonrası), seans randevuları ve seans kayıtları (psikolog/terapistle randevunun varlığı sağlık verisi sayılabilir, md. 6) | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu (klinik mi platform mu) avukatta | Uz, C | 7, 9, 9a |
 | K8 | Klinik, ekip ve davet | U, D | klinik adı, ekip rolü, koltuk; davette ebeveyn adı/e-postası, çocuğun adı ve yaş grubu, davet kanalı; uzmanın rutin ve şablon kütüphanesi | Klinik hesabı ve aile daveti | md. 5/2-c (uzman); D için uzmanın beyanı + md. 5/2-f — avukat | M (davet e-postası) | 8, 10 |
 | K9 | Mesleki belge incelemesi | U | belge dosyası (karar anında silinir), özet (üniversite, bölüm, derece, yıl), barkod, BACB no, karar | Ailelere "Belgesi incelendi" rozeti | md. 5/2-c (uzmanın talebi); T.C. kimlik no saklanmaz | — | 11, 12 |
 | K10 | Uzman karşılama anketi | U | meslek, zorluklar, yararlı özellikler, geliş nedeni | Ürün geliştirme | md. 5/2-f meşru menfaat (isteğe bağlı, atlanabilir) | — | 13 |
@@ -71,7 +71,11 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `intake_answers` | K2, K6 | tanışma yanıtları (aile ve çocuk); tanı/ilaç yanıtları isteğe bağlı, açık rıza `saglik-yanit-v1` (sağlık verisi) |
 | `parent_assignments` | K3 | ebeveynin kendi görevleri (kime, zorluk) |
 | `parent_completions` | K3 | ebeveynin "Yaptım" işaretleri |
-| `parent_stone_ledger` | K3 | ebeveynin Güneş Taşı defteri (görev, hediye) |
+| `parent_stone_ledger` | K3 | ebeveynin Güneş Taşı defteri (görev, hediye, ders uygulaması) |
+| `parent_lessons` | — | ebeveyn eğitimi ders kataloğu (sistem içeriği) |
+| `parent_lesson_progress` | K3 | ebeveynin başladığı / öğrendiği dersler, ilk açılış; uzmanın önerdiği derste K7 (öneriden sonrası, rızayla) |
+| `parent_lesson_practice` | K3 | ebeveynin "Bugün uyguladım" günleri; uzmanın önerdiği derste öneriden sonraki günler K7 (rızayla) |
+| `parent_lesson_assignments` | K7 | uzmanın aileye önerdiği ders ve kısa notu |
 | `child_gifts` | K3 | ebeveynin çocuğa hediyesi (eşya, kısa not, gönderenin adı) |
 | `gift_items` | — | hediye kataloğu (fiyat, sıra) |
 | `guest_passes` | K11 | aile davet kodu (önce hediye kartı): kod, davet eden ve kullanan aile, tarihler, ödül işareti |

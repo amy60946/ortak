@@ -413,3 +413,15 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (app `clinic`) | `team_request` (uzmana), `team_joined`, `team_request_declined`, `team_left` (sahibe), `team_removed` (uzmana) | "<Klinik> seni ekibine eklemek istiyor", "… ekibe katıldı", "… kabul etmedi", "… ekipten ayrıldı", "<Klinik> ekibinden çıkarıldın" |
 | İstek başlığı | `x-clinic-id: <clinic uuid>` | ClinicApp'in seçili alanı (yalnız REST; Edge Function'larda yalnız `clinic-billing`) |
 | Kişisel uzman kodu | 8 karakter (`random_code` alfabesi), süresiz, yenilenebilir | Ayarlar › Kişisel kodun |
+
+## P20. Ebeveyn eğitimi (`proposed/20261105200000_parent_lessons.sql`, öneri 5 Kasım 2026; `akislar.md` 22)
+
+| Alan | Değerler | Türkçe |
+|---|---|---|
+| `parent_lessons.status` | `draft`, `published`, `retired` | Taslak (görünmez), Yayında, Kaldırıldı (yeni başlanmaz; öğrenilmişlerde adı görünür) |
+| `parent_lesson_progress.status` | `current`, `learned`, `paused` | Bu haftanın becerisi, Öğrendiğin beceri, Ara verildi (uygulanmadan bırakıldı; kütüphanede kalır) |
+| `parent_lesson_assignments.status` | `active`, `withdrawn` | Uzmanının önerisi, Geri çekildi |
+| `parent_stone_ledger.reason` | + `lesson`, `lesson_undo` | Ders uygulaması, Ders uygulaması geri alındı |
+| Bildirim (ebeveyn, `app='parent'`) | `lesson_assigned` | "Uzmanın sana bir ders önerdi" · "<ders> · Gelişim › Ben bölümünde."; `data.assignment_id`, `data.lesson_key`, `data.link_id`; dokununca Gelişim › Ben |
+| Hatalar (ipucu) | `lesson_not_found`, `lesson_not_started`, `date_range`, `link_not_visible`, `link_not_active`, `assignment_not_found` | |
+| Arayüz sözcükleri | "Bu haftanın becerisi", "Bu hafta dene", "Bugün uyguladım", "bu hafta n/5 gün", "Öğrendiğin beceriler", "Uzmanının önerisi", "Yakında" | seri, puan, "kaçırdın", "takip/izleme/kontrol" yok |
