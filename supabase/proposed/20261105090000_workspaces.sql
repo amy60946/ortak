@@ -262,7 +262,7 @@ begin
   if tg_op = 'INSERT' then
     if new.status = 'pending' then
       perform public.notify_parents(new.family_id, 'clinic_suggestion',
-        case when new.kind = 'change' then 'Uzmanın ' || nm || ' için değişiklik önerdi' else 'Uzmanın ' || nm || ' için görev önerdi' end,
+        case when new.kind = 'change' then 'Uzmanın ' || nm || ' için değişiklik önerdi' else 'Uzmanın ' || nm || ' için macera önerdi' end,
         coalesce(new.emoji || ' ', '') || new.title, d - 'link_id', new.child_id);
     end if;
   elsif old.status = 'pending' and new.status in ('accepted', 'declined') then
