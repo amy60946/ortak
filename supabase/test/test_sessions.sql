@@ -1,4 +1,4 @@
--- Seans planlama (proposed/20261105100000_sessions.sql): görünürlük (sahip, ekip üyesi, başka klinik, aile), yazma yalnız
+-- Seans planlama (migrations/20261105100000_sessions.sql): görünürlük (sahip, ekip üyesi, başka klinik, aile), yazma yalnız
 -- işlevlerle, tekrarlayan seans + tek bildirim, geç iptal, aile yanıtı, uygun saatten randevu, bekleme listesi teklifi,
 -- paket, kayıt aileye kapalı, paylaşım bitince iptal, takvim aboneliği ve dış takvim.
 \set ON_ERROR_STOP on

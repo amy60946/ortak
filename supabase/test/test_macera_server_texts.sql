@@ -1,4 +1,4 @@
--- Sunucu metinleri "macera" kuralına göre (proposed/20261105210000_macera_server_texts.sql; durumlar.md 5B).
+-- Sunucu metinleri "macera" kuralına göre (migrations/20261105210000_macera_server_texts.sql; durumlar.md 5B).
 -- Canlıdaki her işlevin gövdesinde eski "görev" metinleri kalmamalı (yasal metin tohumu ve panel KPI adı hariç).
 \set ON_ERROR_STOP on
 do $$

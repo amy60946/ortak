@@ -3,7 +3,8 @@
 Her işlevin EN SON tanımını (migrations/ + proposed/, dosya sırasıyla) alır, yalnız aşağıdaki metin parçalarını değiştirir
 (mantık, imza ve yetkiler aynı kalır) ve proposed/20261105210000_macera_server_texts.sql dosyasını üretir.
 En son tanımı proposed/ içinde olan işlevler (henüz uygulanmamış) burada yazılmaz; onlar kendi önerilerinde düzeltilir.
-Çalıştır: python3 tools/macera_sunucu_metinleri.py   (yeniden üretmek güvenlidir)"""
+Çalıştır: python3 tools/macera_sunucu_metinleri.py   (yeniden üretmek güvenlidir)
+UYGULANDI 5 Kasım 2026: çıktı migrations/20261105210000_macera_server_texts.sql'e taşındı; araç yalnız kayıt için durur."""
 import pathlib, re, sys
 
 root = pathlib.Path(__file__).resolve().parent.parent / 'supabase'

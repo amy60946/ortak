@@ -593,7 +593,7 @@ Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum
 ParentApp olayları (bu bölüm): `invite.code` (`suggested`), `invite.tell`, `invite.accept`, `invite.decline`, `phone.code_sent`, `phone.verified`, `phone.skip`, `care.log` (`from: clinician`), `clinic.unlink` (`all`), `clinic.remove` (`n`), `guest_pass.share`, `referral.redeem`, `intake.later_done` (`n`), `code.redeem` (`kind: guest`).
 
 
-## 20. Seans planlama ve takip (öneri 5 Kasım 2026; ortak `proposed/20261105100000_sessions.sql`, `veritabani.md` 29, `durumlar.md` P18)
+## 20. Seans planlama ve takip (uygulandı 5 Kasım 2026; ortak `migrations/20261105100000_sessions.sql`, `veritabani.md` 29, `durumlar.md` P18)
 
 Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentApp'in yapması gereken adımları söyle." Belge ve benchmark: https://claude.ai/artifact/TiMrtycSVdzbeNTiii6oNP, önizleme: https://claude.ai/artifact/DpcEfMzky7SqNWfrivbAVd. Konum: seans, seanslar arası ev programıyla bağlanır (C "seans döngüsü"); A, B, D, E aynı tabloların üstünde.
 
@@ -623,7 +623,7 @@ ClinicApp olayları: `screen.calendar`, `session.create` (`repeat`, `n`, `visibl
 
 **Bu öneride yok (karar ve hesap bekliyor):** seans ücreti tahsilatı ve e-fatura (Apple 3.1.3(e): uygulama dışında alınan hizmetin ödemesi App Store dışı yöntemle; ödeme ve e-fatura sağlayıcısı kullanıcı kararı), yeni ailelere açık herkese açık randevu sayfası (alan adı ve barındırma, ClinicApp açık soru 3), SMS / WhatsApp hatırlatması (İYS ve maliyet).
 
-## 21. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (öneri 5 Kasım 2026; `proposed/20261105090000_workspaces.sql`, `veritabani.md` 30, `durumlar.md` P19)
+## 21. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (uygulandı 5 Kasım 2026; `migrations/20261105090000_workspaces.sql`, `veritabani.md` 30, `durumlar.md` P19)
 
 Kullanıcı kararı (5 Kasım 2026): klinik uzmanı kendi kodunu paylaşarak davet etmez; her uzmanın tek kişisel kodu var, klinik bu kodu ister ve uzmanı ekibine ekler; Türkiye'de uzmanların çoğu birden çok yerde ya da kendi adına çalıştığı için uzman birden çok klinikte ve kendi bireysel alanında çalışır. Klinikteki uzmanlar aile davet edebilir (varsayılan açık, sahip kapatabilir). Benchmark: SimplePractice, Jane, Cliniko, TherapyNotes (bir hesap = bir muayenehane; ikinci e-posta / ayrı hesap), Practice Better (bireysel hesabı ekibe taşıma), Sessions Health, Allia, Fresha, GitHub (tek kimlik + alan seçici, iki taraflı onay); Joon (uzman başına koltuk, aile ücretsiz; çoklu klinik görünmüyor).
 
@@ -645,7 +645,7 @@ Olaylar (ClinicApp): `workspace.switch` (`personal`), `workspace.create` (`kind`
 Eski ekip kodu yolu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) eski sürümler için sunucuda çalışır; yeni ClinicApp'te yok. Hukuk: klinik alanındaki danışanda veri sorumlusu klinik, bireysel alanda uzman (`hukuk_notlari.md` 23, avukata soru).
 
 
-## 22. Gelişim › aile üyesi: ebeveyn eğitimi (öneri 5 Kasım 2026; `proposed/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
+## 22. Gelişim › aile üyesi: ebeveyn eğitimi (uygulandı 5 Kasım 2026; `migrations/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
 
 Amaç: ebeveynin kendi becerisi (ABA / davranışçı ebeveyn eğitimi tarzı kısa dersler; içerik sonra hazırlanır). Benchmark (5 Kasım 2026, ParentApp penceresi): Triple P (kısa oturum + ev ödevi), PCIT (günlük 5 dk ev pratiği), Good Inside (kısa video + senaryo), Kinedu / Lovevery (haftalık etkinlik), NOCD / Manatee (terapistin atadığı ödev), Duolingo / Khan (kısa ders, ilerleme), Joon Health (ebeveyn modülleri). İşleyiş referansıdır; içerik, karakter ve metin kopyalanmaz. **Kullanıcı kararları (5 Kasım 2026):** (a) "Bu haftanın becerisi" kartı: 3–5 dk ders + "Bu hafta dene" + 5 günlük nokta şeridi ("bu hafta 2/5 gün"; seri yok, kayıpsız), altında "Öğrendiğin beceriler"; uzmanın önerdiği ders "Uzmanının önerisi" etiketiyle önde. (b) Güneş Taşı uygulanan güne: "Bugün uyguladım" başına 1, haftada en çok 3, ebeveynin cüzdanına; hediyeyi ebeveyn bugünkü dükkândan seçer; dersi açmak taş getirmez. (c) Uzman yoksa ya da önermediyse ebeveyn kütüphaneden kendisi seçer; içerik gelene kadar "Yakında" kartı.
 

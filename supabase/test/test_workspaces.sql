@@ -1,4 +1,4 @@
--- Çalışma alanları (proposed/20261105090000_workspaces.sql): bireysel alan, kişisel kod, ekibe ekleme isteği + kabul/ret,
+-- Çalışma alanları (migrations/20261105090000_workspaces.sql): bireysel alan, kişisel kod, ekibe ekleme isteği + kabul/ret,
 -- x-clinic-id başlığıyla alan seçimi, alanlar arası yalıtım, aile daveti ayarı, ayrılma/çıkarma, eski ekip kodu,
 -- hesap silme, bildirim alanı, aileye "bağımsız uzman" bilgisi, satır düzeyi güvenlik.
 \set ON_ERROR_STOP on

@@ -1,5 +1,5 @@
 -- Ebeveyn eğitimi: ders kataloğu, uzman önerisi, ebeveynin dersi, uygulama günü ve haftalık taş
--- (proposed/20261105200000_parent_lessons.sql; akislar.md 22, ekonomi.md 5C).
+-- (migrations/20261105200000_parent_lessons.sql; akislar.md 22, ekonomi.md 5C).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
