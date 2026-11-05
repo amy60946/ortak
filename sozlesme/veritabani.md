@@ -679,7 +679,7 @@ Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) bi
 | `clinician_me()` | K | etkin alanla: `role` (alandaki), `personal`, `members_can_invite`, `default_clinic_id`, `workspace_invalid`, `workspaces` (sayı), `has_personal`, `requests` (bekleyen istek sayısı) + eski alanlar |
 | `clinician_workspaces() → [{clinic_id, name, role, personal, active, access, default, members, joined_at}]` | K | alan seçici; bireysel alan önce |
 | `clinician_personal_workspace() → uuid` | K | bireysel alanı açar (yoksa); deneme süresi uzmanın açtığı alanlarla ortak |
-| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak |
+| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak. **ClinicApp arayüzünde kullanılmıyor** (5 Kasım 2026, "Klinik aç" kalktı; `akislar.md` 21 adım 5) |
 | `clinician_personal_code(rotate default false) → text` | K | kalıcı kod; `rotate` yeniler (gönderilmiş istekler geçerli kalır) |
 | `clinic_member_request(code) → {status sent/pending, id, name, title, expires_at} \| {error}` | K (etkin klinik alanının sahibi) | `invalid_code` (deneme sınırı `code_throttled`), `self`, `already_member`, `seat_full` (etkin üye + bekleyen istek ≥ koltuk), `personal_workspace`; uzmana `team_request` (`data.request_id`) |
 | `clinic_member_requests_mine()` | K | bekleyen isteklerim (klinik adı, gönderen, ekip sayısı, süre) |
