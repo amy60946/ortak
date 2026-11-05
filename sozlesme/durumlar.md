@@ -142,7 +142,8 @@ Kod biçimi:
 
 | Kavram | Ad | Not |
 |---|---|---|
-| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
+| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests"; 19 Ekim–5 Kasım 2026 "Ev Görevleri") | **Maceralar** (kullanıcı kararı 5 Kasım 2026) | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır; ikisi karışmasın diye oyunda pano adı ve düğmesi açıkça "Maceralar". |
+| Ebeveynin verdiği görev / sorumluluk (üç üründe arayüz adı) | **Macera** · cümle içinde **sorumluluk** (kullanıcı kararı 5 Kasım 2026) | Ekran adı, sekme, düğme, sayaç ve kart etiketi "macera" ("Maceralar" sekmesi, "Macera ekle", "1 macera onayını bekliyor", "Uzmanından 4 macera önerisi", hazır rutin "6 macera"); açıklama cümlelerinde "sorumluluk" ("Verdiğin sorumluluklar Pofi Adası'nda macera olarak görünür"). Veritabanı adları değişmez (`tasks`, `task_assignments`, `completions`, `clinic_task_suggestions`). Sunucunun ürettiği bildirim metinleri de bu kurala uyar (yeni SQL'de). Menüdeki "M" harfi ileride marka (Moyo) tasarım çalışmasındaki harfle çizilecek (kullanıcı bilgisi, henüz iş yok). |
 | Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
 
 ## 6. Diğer sabit değerler (uygulanmış)

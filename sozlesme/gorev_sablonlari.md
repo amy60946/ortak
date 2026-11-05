@@ -1,4 +1,4 @@
-# Ev Görevleri şablon kataloğu (23 Ekim 2026)
+# Macera şablon kataloğu (23 Ekim 2026; 5 Kasım 2026'ya kadar adı "Ev Görevleri")
 
 **298 şablon**, 6 kategori × 4 yaş grubu. Kullanıcının referans kayıtlarından derlendi: görev adları Türkçe yazıldı, kopyalar birleştirildi, Türkiye'ye uyarlandı. Veri: [`veri/gorev_sablonlari.json`](../veri/gorev_sablonlari.json) (sürüm 2); sunucu tablosu: `supabase/migrations/20261023010000_task_templates.sql` (uygulandı 23 Ekim 2026). Sürüm 2 temizliği (anahtarlar `gs_<kategori>_<sıra>`, başka uygulamanın adları ve alanları yok): `supabase/migrations/20261023030000_task_templates_clean.sql` (uygulandı 23 Ekim 2026).
 
@@ -259,7 +259,7 @@
 | `gs_focus_019` | 🌟 Büyüyünce ne olmak istediğini çiz | KA | Kolay | — |
 | `gs_focus_020` | 🔧 Evde bozuk bir şeyi onar (bir büyüğünle) | BC | Orta | — |
 | `gs_focus_021` | 🎒 Eşyalarını topla | KABC | Orta | — |
-| `gs_focus_022` | 🎯 Günün bütün Ev Görevlerini bitir | KABC | Zor | — |
+| `gs_focus_022` | 🎯 Günün bütün maceralarını bitir | KABC | Zor | — |
 | `gs_focus_023` | 📅 Gününü planla | ABC | Kolay | — |
 | `gs_focus_024` | 🌈 Hafta sonu için 3 dilek yaz | KABC | Kolay | — |
 | `gs_focus_025` | 🗓️ Haftalık ders çalışma planı yap | BC | Zor | — |
@@ -282,7 +282,7 @@
 | `gs_focus_042` | 🎒 Okul çantanı düzenle | ABC | Kolay | — |
 | `gs_focus_043` | 🎒 Okul çantanı hazırla | KABC | Kolay | Ev İşleri |
 | `gs_focus_044` | 🎒 Okula giyinerek hazırlan | KABC | Kolay | — |
-| `gs_focus_045` | ✅ Oyuna girmeden önce bugünkü Ev Görevlerini bitir | KABC | Kolay | Ev İşleri |
+| `gs_focus_045` | ✅ Oyuna girmeden önce bugünkü maceralarını bitir | KABC | Kolay | Ev İşleri |
 | `gs_focus_046` | 🩳 Pijamanı kendin giy | KA | Kolay | — |
 | `gs_focus_047` | 🌙 Saat 21.00'den önce yat | KAB | Orta | — |
 | `gs_focus_048` | 🚪 Saat 8.00'de hazır ol | ABC | Orta | — |
