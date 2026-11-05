@@ -606,7 +606,7 @@ Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentA
 6. **Takvim ayarları** (D, E): çalışma saatleri ve "aileye açık" saatler, odalar ve şubeler (sahip), geç iptal süresi ve paket sayımı, hatırlatma dakikaları, aileye randevu alma (aç/kapat, bildirim süresi, ufuk, süre), takvim aboneliği bağlantısı (kopyala, baş harf göster, yenile, kapat), dış takvim adresi ekle/kaldır + "Şimdi eşitle".
 7. **Bekleme listesi** (D): danışanı listeye al; iptal ya da boş saatte "Bekleme listesine teklif et" → aile kabul ederse randevu.
 
-**ParentApp (ebeveyn) — ParentApp penceresi yapar:**
+**ParentApp (ebeveyn) — yapıldı 5 Kasım 2026 (parent-app acfa1d8; SQL uygulanana kadar bölüm görünmez):**
 1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Gelmedi / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
 2. **Yanıt** (B): gelecekteki planlı kartta "Geleceğiz" / "Uygun değil" (isteğe bağlı kısa not, ≤ 300) → `family_session_respond`; verilen yanıt kartta görünür, değiştirilebilir. Saat değişince yanıt sıfırlanır (sunucu).
 3. **Hatırlatma** (B): her açılışta ve `session_*` bildiriminde `family_sessions()` → gelecekteki `planned` her seans için `reminders` dakikaları kadar önce **yerel bildirim** (expo-notifications, cihazda; eski planlananlar silinip yeniden kurulur). Metin: "Yarın 15:00 Nazlı'nın seansı · Elif Örnek" / "2 saat sonra …". Bildirim ayarından kapatılabilir.
@@ -651,7 +651,7 @@ Amaç: ebeveynin kendi becerisi (ABA / davranışçı ebeveyn eğitimi tarzı k�
 
 | # | Kim | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [P] | Gelişim sekmesinin üstündeki seçicide çocuk avatarlarının yanında aile üyesi **"Ben"** (giriş yapan ebeveyn). Ben seçilince çocuk grafikleri yerine ebeveyn bölümü. | `family_lessons()` |
+| 1 | [P] | (ParentApp yapıldı 5 Kasım 2026, parent-app cd532f2 + acfa1d8) Gelişim sekmesinin üstündeki seçicide çocuk avatarlarının yanında aile üyesi **"Ben"** (giriş yapan ebeveyn). Ben seçilince çocuk grafikleri yerine ebeveyn bölümü. | `family_lessons()` |
 | 2 | [P] | Katalog boşsa (içerik henüz yok) tek kart: "Yakında: kısa ebeveyn dersleri" + bir cümle açıklama. Sunucu güncellemesi yoksa (işlev yok) aynı kart. | `catalog = []` |
 | 3 | [P] | **Bu haftanın becerisi** kartı (bir ders `current`): ad, süre ("4 dk"), "Dersi aç", "Bu hafta dene" yönergesi, 5 nokta (bu hafta uygulanan günler; 5'ten fazlası da 5 dolu gösterilir), "Bugün uyguladım" (bugün işaretliyse ✓ ve geri al), "Öğrendim". Taş satırı: "Bu hafta n/3 taş". | `parent_lesson_start`, `parent_lesson_open`, `parent_lesson_practice`, `parent_lesson_finish` |
 | 4 | [P] | Bu haftanın becerisi yoksa: önce **Uzmanının önerisi** (uzman adı Uzmanım'daki gösterimle, `link_id` → `family_clinic_links`; not varsa), sonra kütüphane (kısa liste, "Başla"). Başka bir derse başlamak öncekini kapatır: uygulandıysa "Öğrendiğin beceriler"e, uygulanmadıysa kütüphaneye döner (`paused`, kayıp yok). | `assigned[]`, `catalog[]`, `mine[]` |
