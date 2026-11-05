@@ -619,3 +619,43 @@ App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebili
 | `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle kod: boşsa havuzdan, doluysa elle (yedek yol). Denetim `referral.send_code` (`family`, yalnız son 4 karakter) |
 
 Sağlık (`ops_health`, `kvkk_ops` önerisine eklendi): anahtar `referral` — kod bekleyen ödül ya da aylık kod 5'ten az → sarı; havuz boş ya da kodların bir kısmının süresi 30 gün içinde bitiyor → bilgi.
+
+## 29. Seans planlama ve takip (`proposed/20261105100000_sessions.sql`, öneri 5 Kasım 2026; kullanıcı isteği "beş alternatifin geliştirmesini yap"; akış `akislar.md` 20, durumlar `durumlar.md` P18)
+
+Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; yazma işlevlerle (çalışma saatleri hariç). Aile tablolara bakmaz, yalnız `family_*` işlevleriyle görür.
+
+| Tablo | Ne | Kim okur |
+|---|---|---|
+| `clinic_sessions` | randevu: uzman, paylaşım (`link_id`, boşsa danışansız blok + `title`), `series_id`, `starts_at`, `duration_min`, `kind`, `mode`, `room_id`, `status`, `cancel_reason`, `visible_to_family`, `booked_by`, ailenin yanıtı (`family_response`, `family_note`), `package_id`, bekleme teklifi (`waitlist_id`, `offer_expires_at`), dış takvim `external_uid` | klinik: danışanlı seansı paylaşımı görebilen (`clinic_link_visible`), danışansızı kendisi ve sahip |
+| `clinic_session_records` | seans kaydı: `attendees[]`, `observation`, `worked`, `next_step`, `agenda` [{text, done, source}], `homework` [{kind, id, title}] | seansı gören klinik; **aile görmez** |
+| `clinic_rooms` | oda + şube (`location`), `active` | klinik; yazma sahip (`clinic_room_save`) |
+| `clinic_session_settings` | klinik başına: `cancel_hours` (24), `count_late_cancel`, `count_no_show`, `reminders` int[] dakika ({1440,120}), `booking_enabled` (kapalı), `booking_notice_hours` (24), `booking_horizon_days` (21), `slot_minutes` (45) | klinik; yazma sahip (`clinic_session_settings_save`) |
+| `clinic_availability` | uzman çalışma saati: `weekday` (ISO 1–7), `start_time`, `end_time`, `room_id`, `bookable` (aile alabilir) | klinik; **doğrudan yazılır**: kendisi ya da sahip |
+| `clinic_session_packages` | seans paketi: `title`, `total`, `starts_on`, `ends_on`, `note`, `closed_at` (ödeme yok; kullanılan = paketteki yapıldı + ayara göre gelmedi/geç iptal) | paylaşımı gören klinik |
+| `clinic_waitlist` | bekleme listesi: `link_id` başına tek açık satır, `note`, `status` | paylaşımı gören klinik |
+| `clinic_calendar_feeds` | uzmanın takvim aboneliği belirteci (48 hex), `show_initials` | yalnız kendisi |
+| `clinic_calendar_sources` | uzmanın dış takvim adresi (izinli sunucular: calendar.google.com, pNN-caldav.icloud.com, outlook.office365.com, outlook.live.com; en çok 3) | yalnız kendisi |
+| `clinic_external_events` | dış takvimden okunan etkinlik: `uid`, `starts_at`, `ends_at`, `summary`, `session_id`, `ignored` | yalnız kendisi |
+
+| İşlev | Kim | Ne yapar |
+|---|---|---|
+| `clinic_session_create(p jsonb) → {ids, conflicts}` | uzman | tek ya da `repeat` weekly/biweekly + `count` (≤ 52). `visible_to_family` ise aileye **tek** `session_scheduled`. Çakışmalar (oda / uzman) uyarı olarak döner, engellemez |
+| `clinic_session_update(id, p jsonb, scope 'one'\|'following') → {updated, conflicts}` | uzman | saat kayması serideki sonraki planlılara aynı ölçüde; saat değişince aile yanıtı sıfırlanır, aileye tek `session_changed` |
+| `clinic_session_set_status(id, status, reason?, waive?) → status` | uzman | `cancelled` iptal süresinin (`cancel_hours`) içindeyse `late_cancel` olur (`waive` ile iptal kalır); `done`/`no_show` başlamadan (30 dk öncesine kadar) yazılmaz; gelecekteki planlı iptal/ertelemede aileye `session_cancelled` |
+| `clinic_session_delete(id, scope)` | uzman | kaydı olan seans silinmez (`session_has_record`) |
+| `clinic_session_record_save(session, p jsonb)` | uzman | kaydı yazar (upsert) |
+| `clinic_busy(from, to)` | uzman | klinikteki dolu saatler (uzman, oda), danışan bilgisi olmadan; ≤ 62 gün |
+| `clinic_session_settings()`, `clinic_session_settings_save(p)` | uzman / sahip | ayar |
+| `clinic_room_save(id?, name, location?, active)` | sahip | oda |
+| `clinic_package_save(id?, link, title, total, starts?, ends?, note?, closed?)` | uzman | paket |
+| `clinic_waitlist_save(link, note?, remove?)`, `clinic_waitlist_offer(waitlist, starts_at, duration, room?, hours)` | uzman | bekleme listesi; teklif `status='offered'`, aileye `session_offer` |
+| `clinic_calendar_feed(action 'get'\|'rotate'\|'set'\|'delete', initials?)` | uzman | abonelik belirteci; adres `…/functions/v1/calendar-feed?t=<belirteç>` |
+| `clinic_calendar_source_save(url, label?, remove?)`, `clinic_external_event_mark(event, link?, kind, mode, ignore?)` | uzman | dış takvim; eşitleme Edge Function `calendar-import` (POST, oturumla) |
+| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders |
+| `family_session_respond(id, 'ok'\|'unavailable', note?)` | ebeveyn | gelecekteki planlı seans; "uygun değil" uzmana `session_family_response` |
+| `family_offer_respond(id, accept) → 'planned'\|'cancelled'` | ebeveyn | boşalan saat teklifi; uzmana `session_offer_answered` |
+| `family_booking_slots(link) → [{starts_at, duration_min}]` | ebeveyn | klinik açtıysa sorumlu uzmanın `bookable` saatlerinden, dolu saatler, bildirim süresi ve ufuk dışı çıkarılarak (≤ 60) |
+| `family_book_slot(link, starts_at) → id` | ebeveyn | listedeki saat; en çok 2 gelecek aile randevusu; uzmana `session_booked` |
+| `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
+
+Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
