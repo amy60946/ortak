@@ -609,6 +609,23 @@ begin
       'detail', case when n > 0 then n || ' talep 2 günden uzun süredir yanıtsız' else m || ' açık talep' end));
   end if;
 
+  -- davet ödülü kodları (20261103200000_referral_codes.sql uygulanmışsa): kod bekleyen ödül, havuz azaldı, süre yaklaşıyor
+  if to_regclass('public.offer_code_pool') is not null then
+    execute $q$select (select count(*) from public.referral_rewards where status = 'code_pending'),
+                      (select count(*) from public.offer_code_pool where assigned_at is null and billing = 'monthly'
+                          and expires_at > now() + interval '14 days'),
+                      (select count(*) from public.offer_code_pool),
+                      (select min(expires_at) from public.offer_code_pool where assigned_at is null and expires_at > now() + interval '14 days')
+               $q$ into n, m, k, t;
+    checks := checks || jsonb_build_array(jsonb_build_object('key', 'referral', 'label', 'Davet ödülü kodları',
+      'level', case when n > 0 or (k > 0 and m < 5) then 'warn' when k = 0 or t < now() + interval '30 days' then 'info' else 'ok' end,
+      'detail', case when n > 0 then n || ' ödül kod bekliyor: kod dosyası yükle'
+                     when k = 0 then 'Kod havuzu boş: App Store Connect''ten kod üretip yükle'
+                     when m < 5 then 'Aylık ürün için ' || m || ' kod kaldı'
+                     when t < now() + interval '30 days' then 'Kodların bir kısmının süresi ' || to_char(t at time zone 'Europe/Istanbul', 'DD.MM.YYYY') || ' bitiyor'
+                     else m || ' aylık kod hazır' end));
+  end if;
+
   -- silinmeyi bekleyen dosyalar
   select count(*) into n from public.storage_trash where created_at < now() - interval '2 days';
   checks := checks || jsonb_build_array(jsonb_build_object('key', 'storage_trash', 'label', 'Silinecek dosyalar',

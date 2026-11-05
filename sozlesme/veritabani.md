@@ -152,7 +152,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `clinicians` | Uzman (auth.users ile bire bir) | `id`, `clinic_id`, `name` (≤ 80), `title` (≤ 80), `role` (`owner`/`member`) | Sunucu (kayıtta); K yalnız kendi `name`, `title` | K (aynı klinik) |
 | `clinic_invites` | Klinik davet kodları | `code`, `clinic_id`, `clinician_id`, `kind` (`family`/`clinician`), `label` (≤ 60), `expires_at` (varsayılan **+7 gün**), `used_at`, `used_by` | Sunucu (`clinic_create_invite`) | K (kendi kliniği) |
 | `clinic_links` | **Rıza bağlantısı** klinik ↔ çocuk | `clinic_id`, `clinician_id`, `family_id`, `child_id`, `label`, `status` (`active`/`revoked`), `consent_by`, `consent_at`, `revoked_at`, `revoked_by`; bir klinik–çocuk çifti için tek `active` satır | Sunucu (`redeem_clinic_invite`, `revoke_clinic_link`); K yalnız `label`, `clinician_id` | K (kendi kliniği), P (kendi ailesi) |
-| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000) | K | K |
+| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000), `goal_id` (isteğe bağlı, §27) | K | K |
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
 | `abc_events` | Davranış kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
@@ -509,7 +509,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (14) | `family_access_of` |
 | `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
 | `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
-| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodunu yönetim paneli yazacak) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
+| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §28) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
@@ -593,3 +593,69 @@ Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan 
 | `abc_events_goal_guard` (tetikleyici, insert / update of goal_id, child_id) | Hedef aynı çocuğun **etkin** paylaşımına ait ve aileye **gönderilmiş** (`pub` dolu) olmalı; değilse hata `goal_mismatch` (23514). Paylaşım sonradan bitse de eski kayıtların bağı kalır | sunucu | — |
 
 ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `status = 'active'`) ile gösterir; seçilmezse "Diğer / emin değilim" (boş). ClinicApp kayıtları hedefe göre süzer ve hedef sayfasında listeler (Klinik penceresi). Test: `test_abc_goal.sql`.
+
+## 27. Hedefe bağlı uzman notu (`migrations/20261103100000_goal_notes.sql`, uygulandı 3 Kasım 2026; ClinicApp kullanıcı kararı "N3")
+
+- `clinic_notes.goal_id uuid null → clinic_goals(id) on delete set null`: not bir hedefe bağlanabilir; hedef silinirse not kalır, bağ boşalır. Tetikleyici `clinic_notes_goal_check`: hedef, notun bağlantısının (`link_id`) hedefi olmalı (`goal_link_mismatch`, 23514). `goal_id` sonradan değiştirilemez (güncelleme izni yok).
+- RLS değişmez: not yalnız klinikte (yetkili ekip), aile görmez. Değerlendirme notu ayrıca `goal_ratings.note` (≤ 300, 19 Ekim'den beri; ClinicApp "Değerlendir" penceresinde isteğe bağlı). Önceki uzmanın kayıtlarına (`clinic_inherited_records`) değerlendirme notu girmez.
+- ClinicApp: Takip Planı'nda hedefin bej kutusunda not simgesi (sayıyla) + son not; danışan › Notlar'da hedefin adıyla. Sütun yoksa simge görünmez (yalnız değerlendirme notu). Test `test/test_goal_notes.sql`.
+
+## 28. Davet ödülü kod havuzu (`migrations/20261103200000_referral_codes.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
+
+App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebilir (§20). Ekip App Store Connect'te **tek kullanımlık** kod üretir (aylık ve yıllık ürün için ayrı, "1 ay ücretsiz", en çok 6 ay geçerli) ve dosyayı panele yükler; ödül yazılınca kod kendiliğinden atanır. Benchmark (3 Kasım 2026): Apple tek kullanımlık kod her biri bir kez, en çok 6 ay; özel kod çok kişiye açık (ödülde yayılır, seçilmedi); RevenueCat: uygulama içi kod penceresi güvenilmez, App Store kod sayfası sorunsuz (ParentApp öyle yapar), mevcut abonede ücretsiz ay sonraki yenilemede başlar, kodlar sandbox'ta denenemez.
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `offer_code_pool` | Atanmamış ve atanmış Apple kodları (kişisel veri yok; aileye bağ `referral_rewards.offer_code`) | `code` pk (`^[A-Z0-9]{6,64}$`), `billing` (`monthly` / `yearly`), `batch` (parti adı), `expires_at` (App Store Connect'teki son tarihin başlangıcı, İstanbul), `added_at`, `added_by?`, `assigned_at?` | yalnız `admin_offer_codes_add` / `admin_offer_codes_remove` / `referral_assign` | yalnız sunucu (RLS açık, istemciye kapalı) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `referral_assign(ödül, kod?, bildir)` → kod ya da null | iç | Ödül `code_pending` değilse null. Kod boşsa havuzdan: ailenin `family_subscriptions.billing`'ine (yoksa aylık) uyan, **en az 14 gün** kalan, en erken bitecek kod (`for update skip locked`). Kod doluysa elle (harf/rakam 4–64; başka aileye gitmiş ya da havuzda atanmış kod olmaz). `status = 'code_sent'`, `offer_code`, `code_sent_at`; bildir: `referral_reward` "Hediye kodun hazır" |
+| `referral_assign_pending()` → sayı | iç | Bekleyen ödüllere sırayla havuzdan kod |
+| `referral_on_paid()` (değişti) | tetik | §20 ile aynı; `code_pending` yazınca hemen `referral_assign` dener: kod atanırsa **tek** bildirim "1 ay hediye kazandın … kodun hazır", atanmazsa eski "birkaç gün içinde" bildirimi |
+| `admin_referral_overview()` | her admin | `invites` (oluşturulan / kullanılan / abone olan, toplam ve son 30 gün), `rewards` (durum sayıları, son 30 günde verilen ay), `pending[]` (aile, tarih, ürün), `sent[]` (son 20, kodun yalnız son 4 karakteri), `pool` (kullanılabilir aylık/yıllık, 30 günde bitecek, süresi geçmiş, atanmış), `batches[]`. Atanmamış kod dönmez |
+| `admin_offer_codes_add(kodlar[], ürün, son_tarih, parti?, gerekçe)` | finance | 1–25000 kod; son tarih bugün+15 gün ile 6 ay arası; boşluklar silinir, büyük harfe çevrilir; geçersiz ve tekrar eden atlanır; ardından bekleyenlere atanır. Döner `{batch, added, invalid, duplicate, assigned}`. Denetim `referral.codes_add` (`system`/`offer_codes:<parti>`, yalnız sayılar) |
+| `admin_offer_codes_remove(parti?, gerekçe)` | finance | Partideki **atanmamış** kodları siler (yanlış dosya); parti boşsa süresi geçmiş atanmamış kodlar. Denetim `referral.codes_remove` |
+| `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle kod: boşsa havuzdan, doluysa elle (yedek yol). Denetim `referral.send_code` (`family`, yalnız son 4 karakter) |
+
+Sağlık (`ops_health`, `kvkk_ops` önerisine eklendi): anahtar `referral` — kod bekleyen ödül ya da aylık kod 5'ten az → sarı; havuz boş ya da kodların bir kısmının süresi 30 gün içinde bitiyor → bilgi.
+
+## 29. Seans planlama ve takip (`proposed/20261105100000_sessions.sql`, öneri 5 Kasım 2026; kullanıcı isteği "beş alternatifin geliştirmesini yap"; akış `akislar.md` 20, durumlar `durumlar.md` P18)
+
+Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; yazma işlevlerle (çalışma saatleri hariç). Aile tablolara bakmaz, yalnız `family_*` işlevleriyle görür.
+
+| Tablo | Ne | Kim okur |
+|---|---|---|
+| `clinic_sessions` | randevu: uzman, paylaşım (`link_id`, boşsa danışansız blok + `title`), `series_id`, `starts_at`, `duration_min`, `kind`, `mode`, `room_id`, `status`, `cancel_reason`, `visible_to_family`, `booked_by`, ailenin yanıtı (`family_response`, `family_note`), `package_id`, bekleme teklifi (`waitlist_id`, `offer_expires_at`), dış takvim `external_uid` | klinik: danışanlı seansı paylaşımı görebilen (`clinic_link_visible`), danışansızı kendisi ve sahip |
+| `clinic_session_records` | seans kaydı: `attendees[]`, `observation`, `worked`, `next_step`, `agenda` [{text, done, source}], `homework` [{kind, id, title}] | seansı gören klinik; **aile görmez** |
+| `clinic_rooms` | oda + şube (`location`), `active` | klinik; yazma sahip (`clinic_room_save`) |
+| `clinic_session_settings` | klinik başına: `cancel_hours` (24), `count_late_cancel`, `count_no_show`, `reminders` int[] dakika ({1440,120}), `booking_enabled` (kapalı), `booking_notice_hours` (24), `booking_horizon_days` (21), `slot_minutes` (45) | klinik; yazma sahip (`clinic_session_settings_save`) |
+| `clinic_availability` | uzman çalışma saati: `weekday` (ISO 1–7), `start_time`, `end_time`, `room_id`, `bookable` (aile alabilir) | klinik; **doğrudan yazılır**: kendisi ya da sahip |
+| `clinic_session_packages` | seans paketi: `title`, `total`, `starts_on`, `ends_on`, `note`, `closed_at` (ödeme yok; kullanılan = paketteki yapıldı + ayara göre gelmedi/geç iptal) | paylaşımı gören klinik |
+| `clinic_waitlist` | bekleme listesi: `link_id` başına tek açık satır, `note`, `status` | paylaşımı gören klinik |
+| `clinic_calendar_feeds` | uzmanın takvim aboneliği belirteci (48 hex), `show_initials` | yalnız kendisi |
+| `clinic_calendar_sources` | uzmanın dış takvim adresi (izinli sunucular: calendar.google.com, pNN-caldav.icloud.com, outlook.office365.com, outlook.live.com; en çok 3) | yalnız kendisi |
+| `clinic_external_events` | dış takvimden okunan etkinlik: `uid`, `starts_at`, `ends_at`, `summary`, `session_id`, `ignored` | yalnız kendisi |
+
+| İşlev | Kim | Ne yapar |
+|---|---|---|
+| `clinic_session_create(p jsonb) → {ids, conflicts}` | uzman | tek ya da `repeat` weekly/biweekly + `count` (≤ 52). `visible_to_family` ise aileye **tek** `session_scheduled`. Çakışmalar (oda / uzman) uyarı olarak döner, engellemez |
+| `clinic_session_update(id, p jsonb, scope 'one'\|'following') → {updated, conflicts}` | uzman | saat kayması serideki sonraki planlılara aynı ölçüde; saat değişince aile yanıtı sıfırlanır, aileye tek `session_changed` |
+| `clinic_session_set_status(id, status, reason?, waive?) → status` | uzman | `cancelled` iptal süresinin (`cancel_hours`) içindeyse `late_cancel` olur (`waive` ile iptal kalır); `done`/`no_show` başlamadan (30 dk öncesine kadar) yazılmaz; gelecekteki planlı iptal/ertelemede aileye `session_cancelled` |
+| `clinic_session_delete(id, scope)` | uzman | kaydı olan seans silinmez (`session_has_record`) |
+| `clinic_session_record_save(session, p jsonb)` | uzman | kaydı yazar (upsert) |
+| `clinic_busy(from, to)` | uzman | klinikteki dolu saatler (uzman, oda), danışan bilgisi olmadan; ≤ 62 gün |
+| `clinic_session_settings()`, `clinic_session_settings_save(p)` | uzman / sahip | ayar |
+| `clinic_room_save(id?, name, location?, active)` | sahip | oda |
+| `clinic_package_save(id?, link, title, total, starts?, ends?, note?, closed?)` | uzman | paket |
+| `clinic_waitlist_save(link, note?, remove?)`, `clinic_waitlist_offer(waitlist, starts_at, duration, room?, hours)` | uzman | bekleme listesi; teklif `status='offered'`, aileye `session_offer` |
+| `clinic_calendar_feed(action 'get'\|'rotate'\|'set'\|'delete', initials?)` | uzman | abonelik belirteci; adres `…/functions/v1/calendar-feed?t=<belirteç>` |
+| `clinic_calendar_source_save(url, label?, remove?)`, `clinic_external_event_mark(event, link?, kind, mode, ignore?)` | uzman | dış takvim; eşitleme Edge Function `calendar-import` (POST, oturumla) |
+| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders |
+| `family_session_respond(id, 'ok'\|'unavailable', note?)` | ebeveyn | gelecekteki planlı seans; "uygun değil" uzmana `session_family_response` |
+| `family_offer_respond(id, accept) → 'planned'\|'cancelled'` | ebeveyn | boşalan saat teklifi; uzmana `session_offer_answered` |
+| `family_booking_slots(link) → [{starts_at, duration_min}]` | ebeveyn | klinik açtıysa sorumlu uzmanın `bookable` saatlerinden, dolu saatler, bildirim süresi ve ufuk dışı çıkarılarak (≤ 60) |
+| `family_book_slot(link, starts_at) → id` | ebeveyn | listedeki saat; en çok 2 gelecek aile randevusu; uzmana `session_booked` |
+| `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
+
+Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).

@@ -84,6 +84,17 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 
 Akış: herkese açık **`/destek`** (panelin Worker'ı; JavaScript'siz form: uygulama, konu, e-posta, isteğe bağlı ad, mesaj, "18 yaşından büyüğüm", gizli tuzak alanı, doldurma süresi) → Edge Function **`support`** (POST; e-posta başına 24 saatte 3, saatte toplam 60) → `support_requests` → panel **Destek** ekranı → "Yanıtla" ekibin e-posta uygulamasında taslak açar → durum "Yanıtlandı". Sabit adres `…/functions/v1/support` (GET) `LEGAL_PUBLIC_URL` köküne `/destek` olarak yönlenir: App Store **Support URL** ve uygulamalardaki "Yardım ve iletişim" bunu kullanır (alan adı gelince uygulama sürümü gerekmez). Sistem sağlığı: 2 günden uzun yanıtsız talep sarı. Saklama: kapanan 2 yıl, istenmeyen 30 gün (gece imha işi, `support_days`). Spam artarsa: Cloudflare Turnstile (ücretsiz; secret Supabase'e). Benchmark: Zammad web formu ve tuzak alanı, osTicket konu seçimi, Chatwoot yanıt süresi notu, laravel-honeypot doldurma süresi, Apple 1.3/1.5 ve App Store Connect Support URL açıklaması.
 
+### Davet ödülleri (`migrations/20261103200000_referral_codes.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı: kod havuzu, elle giriş yedek)
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_referral_overview()` | herkes | Davet KPI'ları (kod oluşturulan / kullanılan / abone olan, verilen ödül ayı), kod bekleyen ödüller (aile, tarih, aylık/yıllık), son gönderilenler (kodun son 4 karakteri), havuz ve partiler |
+| `admin_offer_codes_add(kodlar, ürün, son tarih, parti, gerekçe)` | finance | App Store Connect'ten indirilen tek kullanımlık kod dosyası; bekleyenlere hemen atanır |
+| `admin_offer_codes_remove(parti, gerekçe)` | finance | Yanlış yüklenen partinin atanmamış kodlarını ya da süresi geçmiş kodları siler |
+| `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle havuzdan ya da elle kod (yedek) |
+
+Panel ekranı **Davetler** (`#/davet`). Kodun tamamı panelde ve denetim kaydında görünmez (kodu yalnız aile ParentApp davet sayfasında görür). Sistem sağlığı "Davet ödülü kodları" satırı havuz azalınca uyarır. Ekip işi: App Store Connect › ParentApp › aylık ve yıllık ürün › Offer Codes › "1 ay ücretsiz" (mevcut aboneler) › tek kullanımlık kodlar → dosyayı indir → panelde Davetler › "Kod dosyası yükle" (ürün ve son tarih seçilir). Kodlar en çok 6 ay geçerli; havuz 14 günden az kalan kodu atamaz.
+
 ### İzleme ve alarm
 
 Benchmark (2 Kasım 2026; kaynaklar DURUM satırında): Supabase Free'de log 1 gün ve uyarı kuralı yok, Log Drains yalnız Pro+ ve ücretli → **dışarıdan yoklama** + **içeride denetim işlevi** seçildi (Sentry/Healthchecks deseni).

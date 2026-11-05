@@ -357,11 +357,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 > ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 
-| Uygulama | Ekran | Bağlı belge |
-|---|---|---|
-| ClinicApp | Danışan › Davranış kayıtları sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
-
-> ClinicApp acil yardım ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen **112**'yi ara ya da aileyi hemen 112'ye yönlendir.
+**ClinicApp:** ekranlarda acil durum notu yok (kullanıcı kararı 3 Kasım 2026: uzman arayüzünde sınır uyarısı tekrarlanmaz). Sınır Uzman Hizmet Sözleşmesi 3.4 ve 3.4-a'da (acil durum ve kriz izleme hizmeti değildir; kayıtlar gecikmeyle ulaşabilir).
 
 ## 10. Pofi Adası — ebeveyn kapısı › Bilgi ekranı
 
@@ -444,11 +440,7 @@ ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) i
 
 > Bu sayılar çocuğunun uygulamadaki görevlerini özetler; tanı, zekâ ya da dikkat puanı değildir.
 
-| Uygulama | Ekran | Bağlı belge |
-|---|---|---|
-| ClinicApp | Göstergeler ve hedef grafikleri (alt bilgi) | `sozlesme-uzman` |
-
-> Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir.
+**ClinicApp ekranları:** göstergeler ve hedef grafiklerinin altında sınır metni yok (kullanıcı kararı 3 Kasım 2026; sözleşme 3.3 ve 3.4-a). Aşağıdaki çıktı alt bilgisi kalır.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
