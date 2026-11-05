@@ -105,7 +105,7 @@ select tst.check(jsonb_array_length(tst.mpub('00000000-0000-0000-0000-0000000070
 select tst.check(tst.st('Çantanı hazırla') = 'pending', 'bekletilen görev sonra gider');
 select tst.check(tst.nc('00000000-0000-0000-0000-0000000000a1') = 2, 'ikinci gönderim tek bildirim');
 reset role;
-select tst.check((select body from public.notifications where kind = 'care_plan_shared' order by created_at desc limit 1) like '%1 görev önerisi%',
+select tst.check((select body from public.notifications where kind = 'care_plan_shared' order by created_at desc limit 1) like '%1 macera önerisi%',
   'bildirim metni plan ve öneriyi söyler');
 set role authenticated;
 
