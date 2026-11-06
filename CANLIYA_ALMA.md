@@ -18,7 +18,8 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) Supabase Pro plan (yedek, duraklatma yok)
 
 ### 1.2 Alan adı ve web
-- [ ] (Siz) Alan adı
+- [x] (Siz) Alan adı — **alındı 6 Kasım 2026 (Natro):** asıl `moyoapp.com.tr`; yedek `moyomercek`, `moyoappmercek`, `moyoappklinik`, `moyooyun` (.com.tr). Yapı: `moyoapp.com.tr` ebeveyn tanıtım + `/destek` + `/yasal/*` + `/d/*` davet; `ebeveyn.` ebeveyn web giriş; `mercek.` Moyo Mercek (uzman ürünü) tanıtım; `uzman.` uzman girişi; panel ayrı adres. Önizleme dönemi: siteler gerçek adreste ama Cloudflare Access kilidi arkasında (yalnız kullanıcı), `/destek` ve `/yasal` açık.
+- [ ] (Siz) Natro → Cloudflare ad sunucusu değişikliği (adımlar DURUM 6 Kasım)
 - [ ] (Claude) Tanıtım + Gizlilik + Kullanım Koşulları + Destek sayfaları (3 ürün)
 - [ ] (Claude) ClinicApp sitesi yayını, auth yönlendirmeleri, `APP_URL`
 - [ ] (Claude) Universal Links (`apple-app-site-association`)
