@@ -142,7 +142,8 @@ Kod biçimi:
 
 | Kavram | Ad | Not |
 |---|---|---|
-| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests") | **Ev Görevleri** | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır. |
+| Ebeveynin gerçek görevlerinin adadaki panosu (eski geçici ad "Quests"; 19 Ekim–5 Kasım 2026 "Ev Görevleri") | **Maceralar** (kullanıcı kararı 5 Kasım 2026) | Sağ üstteki oyun içi seviye görevleri "Görev" olarak kalır; ikisi karışmasın diye oyunda pano adı ve düğmesi açıkça "Maceralar". |
+| Ebeveynin verdiği görev / sorumluluk (üç üründe arayüz adı) | **Macera** · cümle içinde **sorumluluk** (kullanıcı kararı 5 Kasım 2026) | Ekran adı, sekme, düğme, sayaç ve kart etiketi "macera" ("Maceralar" sekmesi, "Macera ekle", "1 macera onayını bekliyor", "Uzmanından 4 macera önerisi", hazır rutin "6 macera"); açıklama cümlelerinde "sorumluluk" ("Verdiğin sorumluluklar Pofi Adası'nda macera olarak görünür"). Veritabanı adları değişmez (`tasks`, `task_assignments`, `completions`, `clinic_task_suggestions`). Sunucunun ürettiği bildirim metinleri de bu kurala uyar: öneri `migrations/20261105210000_macera_server_texts.sql` (üretici `tools/macera_sunucu_metinleri.py`, test `test_macera_server_texts.sql`): "<Ad> macerayı tamamladı: <başlık>", "Yeni macera: …", "n macera önerisi", "n macera tamamladı", "Maceraları ve kayıtları artık görebilirsin", "Maceralar artık oyunda görünüyor" ve hata iletileri ("Macera bulunamadı", "Bu macera sana atanmamış", "Ücretsiz planda en çok 3 etkin macera olabilir" …); ipucu kodları ve veritabanı adları değişmedi. Bilerek değişmeyen: sürümlü yasal metinler (avukata soru 25), yönetim paneli KPI adı "İlk görev" (iç ekran). Menüdeki "M" harfi ileride marka (Moyo) tasarım çalışmasındaki harfle çizilecek (kullanıcı bilgisi, henüz iş yok). |
 | Onaylı gerçek görevin verdiği, adaya yerleştirilen taş | **Güneş Taşı** | Çoğul: Güneş Taşları. |
 
 ## 6. Diğer sabit değerler (uygulanmış)
@@ -388,7 +389,7 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
 
 
-## P18. Seans (`proposed/20261105100000_sessions.sql`, öneri 5 Kasım 2026; `akislar.md` 20)
+## P18. Seans (`migrations/20261105100000_sessions.sql`, uygulandı 5 Kasım 2026; `akislar.md` 20)
 
 | Alan | Değerler | Türkçe |
 |---|---|---|
@@ -402,7 +403,7 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (uzman, `app='clinic'`) | `session_family_response`, `session_booked`, `session_offer_answered` | `data.session_id`, `data.link_id`; dokununca Takvim'de o seans |
 | Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources` | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
 
-## P19. Çalışma alanları (`proposed/20261105090000_workspaces.sql`, öneri 5 Kasım 2026; `akislar.md` 21)
+## P19. Çalışma alanları (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; `akislar.md` 21)
 
 | Alan | Değerler | Türkçe |
 |---|---|---|
@@ -412,6 +413,18 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (app `clinic`) | `team_request` (uzmana), `team_joined`, `team_request_declined`, `team_left` (sahibe), `team_removed` (uzmana) | "<Klinik> seni ekibine eklemek istiyor", "… ekibe katıldı", "… kabul etmedi", "… ekipten ayrıldı", "<Klinik> ekibinden çıkarıldın" |
 | İstek başlığı | `x-clinic-id: <clinic uuid>` | ClinicApp'in seçili alanı (yalnız REST; Edge Function'larda yalnız `clinic-billing`) |
 | Kişisel uzman kodu | 8 karakter (`random_code` alfabesi), süresiz, yenilenebilir | Ayarlar › Kişisel kodun |
+
+## P20. Ebeveyn eğitimi (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; `akislar.md` 22)
+
+| Alan | Değerler | Türkçe |
+|---|---|---|
+| `parent_lessons.status` | `draft`, `published`, `retired` | Taslak (görünmez), Yayında, Kaldırıldı (yeni başlanmaz; öğrenilmişlerde adı görünür) |
+| `parent_lesson_progress.status` | `current`, `learned`, `paused` | Bu haftanın becerisi, Öğrendiğin beceri, Ara verildi (uygulanmadan bırakıldı; kütüphanede kalır) |
+| `parent_lesson_assignments.status` | `active`, `withdrawn` | Uzmanının önerisi, Geri çekildi |
+| `parent_stone_ledger.reason` | + `lesson`, `lesson_undo` | Ders uygulaması, Ders uygulaması geri alındı |
+| Bildirim (ebeveyn, `app='parent'`) | `lesson_assigned` | "Uzmanın sana bir ders önerdi" · "<ders> · Gelişim › Ben bölümünde."; `data.assignment_id`, `data.lesson_key`, `data.link_id`; dokununca Gelişim › Ben |
+| Hatalar (ipucu) | `lesson_not_found`, `lesson_not_started`, `date_range`, `link_not_visible`, `link_not_active`, `assignment_not_found` | |
+| Arayüz sözcükleri | "Bu haftanın becerisi", "Bu hafta dene", "Bugün uyguladım", "bu hafta n/5 gün", "Öğrendiğin beceriler", "Uzmanının önerisi", "Yakında" | seri, puan, "kaçırdın", "takip/izleme/kontrol" yok |
 
 ## P21. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; `akislar.md` 23)
 

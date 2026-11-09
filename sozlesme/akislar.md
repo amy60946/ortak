@@ -359,7 +359,7 @@ Kurallar: Aileyle paylaşılmayan hedef (eski hedefler dahil, `shared=false`) ya
 
 ### 12.1 Takip planı yeniden tasarımı (kullanıcı kararları 30 Ekim ve 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql` uygulandı 2 Kasım 2026, veritabani.md 22)
 
-**Ad (kullanıcı kararı 5 Kasım 2026):** ClinicApp'te takip planındaki hedefin adı **"Davranış hedefi"** (başlık, düğme, menü, kitaplık, rapor, ilerleme notu; eski "Hedef"). "Hedef düzey" (ulaşılacak düzey), "hedef davranış" (formdaki alan) ve GAS'ın "hedefe ulaşma" ölçeği değişmedi. Veritabanı (`care_goals`, `goal_id`) aynı. ParentApp'teki ad için kullanıcı kararı bekleniyor.
+**Ad (kullanıcı kararı 5 Kasım 2026):** ClinicApp'te takip planındaki hedefin adı **"Davranış hedefi"** (başlık, düğme, menü, kitaplık, rapor, ilerleme notu; eski "Hedef"). "Hedef düzey" (ulaşılacak düzey), "hedef davranış" (formdaki alan) ve GAS'ın "hedefe ulaşma" ölçeği değişmedi. Veritabanı (`care_goals`, `goal_id`) aynı. ParentApp'te de aynı ad (kullanıcı kararı 5 Kasım 2026): Takip planı'nda "Davranış hedefleri", davranış kaydında "Hangi davranış hedefiyle ilgili?", öneri ve rutin kartlarında "Davranış hedefi: …", hedefin ulaşılacak düzeyi "Hedef düzey: …".
 
 Kararlar: ClinicApp'te **C · hedef hatları** (her hedef bir satır: hedef · aile programı · rutin/görev; ileride salt bakış "Harita"); bir program **birden çok hedefi** destekler; Şablonlarım paylaşımını **uzman seçer**; **tek "Aileye gönder"**; ailede ekli rutin/görev **değişiklik önerisiyle** düzenlenir; uzmanın kendi programı **yok** (sistem içerikleri kalır); iPad'de uzman **iPad görünümü / web görünümü** arasında seçer (sağ üstte düğme; yalnız uygulama ayarı). Taslaklar: https://claude.ai/artifact/MxXWHaP3MPLHp5o2GHj6VG, yan yana hikâye https://claude.ai/artifact/R3jRURSfeHDMyPcwLzYZNY.
 
@@ -463,9 +463,11 @@ Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp 
 
 Kullanıcı kararları (27 Ekim 2026): önce kayıt, sonra sorular; akış kısaltıldı (ad kayıtta alınır, ayrı "ebeveyn bilgileri" ekranı yok; eşinin koduyla katılan çocuk sorularını görmez); yanıtlar yönetim panelinde **kişi bazlı** (avukat onayı canlıdan önce); tanı ve ilaç soruları **isteğe bağlı** (rıza sürümü `saglik-yanit-v1`).
 
+**Web (4 Kasım 2026, kullanıcı isteği):** aynı akış web'de de çalışır. ParentApp + Pofi Adası tanıtım sayfası (`parent-app/site/`, kök) "Hesap oluştur" → `/app/#kayit` (adım 2'den başlar), "Giriş yap" → `/app/#giris`. `/app/` ParentApp'in web derlemesidir (giriş, kayıt, kurulum, cihaz bağlama QR'ı büyük ekranda); web'de satın alma ve bildirim yok, üyelik uygulamadan başlatılır. E-posta bağlantıları web'de `/app/`e döner (Supabase Redirect URLs'e `https://<alan adı>/app/**`). Yayın alan adı ve App Store yayınıyla birlikte (web'den açılan hesapta deneme kayıtta başlar).
+
 | # | Ekran | Ne olur | Veritabanı |
 |---|---|---|---|
-| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. | — |
+| 1 | Açılış | "Başla" / "Hesabım var" (→ giriş). Marka tasarımı sonra. Web'de tanıtım sayfasından gelince doğrudan 2 ya da giriş. | — |
 | 2 | Davet kodu? | "Davet kodun var mı?" (3 Kasım 2026'dan beri: uzmandan ya da seni davet eden bir aileden) Hayır → kayıt · Evet → "Davet kodunu yaz" → kayıt · "Hesabım var" → giriş. Kodun türü kendiliğinden anlaşılır: 6 karakter uzman daveti, 8 karakter aile davet kodu (19 "Aile davet et"; kurulumun başında kullanılır, sonuç pencereyle söylenir). Davet bağlantısıyla gelen bu soruyu görmez. | kayıt meta `clinic_invite` (kod ya da bağlantı anahtarı); aile kodu `redeem_guest_pass` |
 | 3 | Kayıt | Ad, e-posta, şifre (bugünkü ekran). | `handle_new_user` (davet aileye bağlanır) |
 | 4 | Aile soruları | Giriş ekranı ("Seni ve aileni tanıyalım", ne kadar sürer, ne işe yarar), ana hedef, diğer hedefler (ana hedef burada tekrar edilmez), bizi nereden duydun, kısa giriş, üç sıklık sorusu (araya bir "yalnız değilsin" ekranı). Her yanıt hemen kaydedilir. | `intake_answers` (`child_id` boş) |
@@ -591,7 +593,7 @@ Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum
 ParentApp olayları (bu bölüm): `invite.code` (`suggested`), `invite.tell`, `invite.accept`, `invite.decline`, `phone.code_sent`, `phone.verified`, `phone.skip`, `care.log` (`from: clinician`), `clinic.unlink` (`all`), `clinic.remove` (`n`), `guest_pass.share`, `referral.redeem`, `intake.later_done` (`n`), `code.redeem` (`kind: guest`).
 
 
-## 20. Seans planlama ve takip (öneri 5 Kasım 2026; ortak `proposed/20261105100000_sessions.sql`, `veritabani.md` 29, `durumlar.md` P18)
+## 20. Seans planlama ve takip (uygulandı 5 Kasım 2026; ortak `migrations/20261105100000_sessions.sql`, `veritabani.md` 29, `durumlar.md` P18)
 
 Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentApp'in yapması gereken adımları söyle." Belge ve benchmark: https://claude.ai/artifact/TiMrtycSVdzbeNTiii6oNP, önizleme: https://claude.ai/artifact/DpcEfMzky7SqNWfrivbAVd. Konum: seans, seanslar arası ev programıyla bağlanır (C "seans döngüsü"); A, B, D, E aynı tabloların üstünde.
 
@@ -604,7 +606,7 @@ Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentA
 6. **Takvim ayarları** (D, E): çalışma saatleri ve "aileye açık" saatler, odalar ve şubeler (sahip), geç iptal süresi ve paket sayımı, hatırlatma dakikaları, aileye randevu alma (aç/kapat, bildirim süresi, ufuk, süre), takvim aboneliği bağlantısı (kopyala, baş harf göster, yenile, kapat), dış takvim adresi ekle/kaldır + "Şimdi eşitle".
 7. **Bekleme listesi** (D): danışanı listeye al; iptal ya da boş saatte "Bekleme listesine teklif et" → aile kabul ederse randevu.
 
-**ParentApp (ebeveyn) — ParentApp penceresi yapar:**
+**ParentApp (ebeveyn) — yapıldı 5 Kasım 2026 (parent-app acfa1d8; SQL uygulanana kadar bölüm görünmez):**
 1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Gelmedi / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
 2. **Yanıt** (B): gelecekteki planlı kartta "Geleceğiz" / "Uygun değil" (isteğe bağlı kısa not, ≤ 300) → `family_session_respond`; verilen yanıt kartta görünür, değiştirilebilir. Saat değişince yanıt sıfırlanır (sunucu).
 3. **Hatırlatma** (B): her açılışta ve `session_*` bildiriminde `family_sessions()` → gelecekteki `planned` her seans için `reminders` dakikaları kadar önce **yerel bildirim** (expo-notifications, cihazda; eski planlananlar silinip yeniden kurulur). Metin: "Yarın 15:00 Nazlı'nın seansı · Elif Örnek" / "2 saat sonra …". Bildirim ayarından kapatılabilir.
@@ -621,7 +623,7 @@ ClinicApp olayları: `screen.calendar`, `session.create` (`repeat`, `n`, `visibl
 
 **Bu öneride yok (karar ve hesap bekliyor):** seans ücreti tahsilatı ve e-fatura (Apple 3.1.3(e): uygulama dışında alınan hizmetin ödemesi App Store dışı yöntemle; ödeme ve e-fatura sağlayıcısı kullanıcı kararı), yeni ailelere açık herkese açık randevu sayfası (alan adı ve barındırma, ClinicApp açık soru 3), SMS / WhatsApp hatırlatması (İYS ve maliyet).
 
-## 21. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (öneri 5 Kasım 2026; `proposed/20261105090000_workspaces.sql`, `veritabani.md` 30, `durumlar.md` P19)
+## 21. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (uygulandı 5 Kasım 2026; `migrations/20261105090000_workspaces.sql`, `veritabani.md` 30, `durumlar.md` P19)
 
 Kullanıcı kararı (5 Kasım 2026): klinik uzmanı kendi kodunu paylaşarak davet etmez; her uzmanın tek kişisel kodu var, klinik bu kodu ister ve uzmanı ekibine ekler; Türkiye'de uzmanların çoğu birden çok yerde ya da kendi adına çalıştığı için uzman birden çok klinikte ve kendi bireysel alanında çalışır. Klinikteki uzmanlar aile davet edebilir (varsayılan açık, sahip kapatabilir). Benchmark: SimplePractice, Jane, Cliniko, TherapyNotes (bir hesap = bir muayenehane; ikinci e-posta / ayrı hesap), Practice Better (bireysel hesabı ekibe taşıma), Sessions Health, Allia, Fresha, GitHub (tek kimlik + alan seçici, iki taraflı onay); Joon (uzman başına koltuk, aile ücretsiz; çoklu klinik görünmüyor).
 
@@ -642,6 +644,26 @@ Olaylar (ClinicApp): `workspace.switch` (`personal`), `workspace.create` (`kind`
 
 Eski ekip kodu yolu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) eski sürümler için sunucuda çalışır; yeni ClinicApp'te yok. Hukuk: klinik alanındaki danışanda veri sorumlusu klinik, bireysel alanda uzman (`hukuk_notlari.md` 23, avukata soru).
 
+
+## 22. Gelişim › aile üyesi: ebeveyn eğitimi (uygulandı 5 Kasım 2026; `migrations/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
+
+Amaç: ebeveynin kendi becerisi (ABA / davranışçı ebeveyn eğitimi tarzı kısa dersler; içerik sonra hazırlanır). Benchmark (5 Kasım 2026, ParentApp penceresi): Triple P (kısa oturum + ev ödevi), PCIT (günlük 5 dk ev pratiği), Good Inside (kısa video + senaryo), Kinedu / Lovevery (haftalık etkinlik), NOCD / Manatee (terapistin atadığı ödev), Duolingo / Khan (kısa ders, ilerleme), Joon Health (ebeveyn modülleri). İşleyiş referansıdır; içerik, karakter ve metin kopyalanmaz. **Kullanıcı kararları (5 Kasım 2026):** (a) "Bu haftanın becerisi" kartı: 3–5 dk ders + "Bu hafta dene" + 5 günlük nokta şeridi ("bu hafta 2/5 gün"; seri yok, kayıpsız), altında "Öğrendiğin beceriler"; uzmanın önerdiği ders "Uzmanının önerisi" etiketiyle önde. (b) Güneş Taşı uygulanan güne: "Bugün uyguladım" başına 1, haftada en çok 3, ebeveynin cüzdanına; hediyeyi ebeveyn bugünkü dükkândan seçer; dersi açmak taş getirmez. (c) Uzman yoksa ya da önermediyse ebeveyn kütüphaneden kendisi seçer; içerik gelene kadar "Yakında" kartı.
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [P] | (ParentApp yapıldı 5 Kasım 2026, parent-app cd532f2 + acfa1d8) Gelişim sekmesinin üstündeki seçicide çocuk avatarlarının yanında aile üyesi **"Ben"** (giriş yapan ebeveyn). Ben seçilince çocuk grafikleri yerine ebeveyn bölümü. | `family_lessons()` |
+| 2 | [P] | Katalog boşsa (içerik henüz yok) tek kart: "Yakında: kısa ebeveyn dersleri" + bir cümle açıklama. Sunucu güncellemesi yoksa (işlev yok) aynı kart. | `catalog = []` |
+| 3 | [P] | **Bu haftanın becerisi** kartı (bir ders `current`): ad, süre ("4 dk"), "Dersi aç", "Bu hafta dene" yönergesi, 5 nokta (bu hafta uygulanan günler; 5'ten fazlası da 5 dolu gösterilir), "Bugün uyguladım" (bugün işaretliyse ✓ ve geri al), "Öğrendim". Taş satırı: "Bu hafta n/3 taş". | `parent_lesson_start`, `parent_lesson_open`, `parent_lesson_practice`, `parent_lesson_finish` |
+| 4 | [P] | Bu haftanın becerisi yoksa: önce **Uzmanının önerisi** (uzman adı Uzmanım'daki gösterimle, `link_id` → `family_clinic_links`; not varsa), sonra kütüphane (kısa liste, "Başla"). Başka bir derse başlamak öncekini kapatır: uygulandıysa "Öğrendiğin beceriler"e, uygulanmadıysa kütüphaneye döner (`paused`, kayıp yok). | `assigned[]`, `catalog[]`, `mine[]` |
+| 5 | [P] | **Öğrendiğin beceriler**: öğrenilen dersler (ad, kaç gün uygulandı); dokununca ders yeniden açılır, istenirse yeniden "Bu haftanın becerisi" yapılır. | `mine[status = learned]` |
+| 6 | [P] | Ders sayfası: başlık, süre, metin (`body_md`, sade markdown), "Bu hafta dene", altta tek satır: "Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez." Önerilen derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." | `parent_lessons.body_md` |
+| 7 | [P] | Bildirim `lesson_assigned` → Gelişim › Ben. | `notifications` |
+| 8 | [K] | Danışan › Takip planı (ya da ayrı "Ebeveyn dersleri" bölümü): kütüphaneden ders seç + isteğe bağlı not (≤ 300) → **Öner**; önerilenler listesi (her ebeveyn: başladı / öğrendi, dersi açtı mı, öneriden sonra uygulanan günler), **Geri çek**. Uzman ders içeriğini yazmaz (sistem kataloğu). | `clinic_assign_lesson`, `clinic_parent_lessons`, `clinic_withdraw_lesson` |
+| 9 | [A] | İleride: panelde ders kataloğu düzenleme (taslak → yayın). Bugün SQL ile. | `parent_lessons` |
+
+Kurallar: Dersler bilgi amaçlıdır, tanı ya da tedavi değildir; arayüzde puan, seri, "kaçırdın" ve "takip / izleme / kontrol" sözcükleri yok. Uzman yalnız **kendi önerdiği** derslerde, öneri tarihinden sonraki günleri görür (paylaşım rızasındaki "takip planı uygulama kayıtların" kapsamı; `hukuk_notlari.md` 26); ebeveynin kendi seçtiği dersler uzmana gitmez; paylaşım bitince uzman ebeveyn bilgisini görmez. Paylaşım ekranındaki "Paylaşılır" listesinde bu satır yazılır (ParentApp `SCOPE_FULL`). Her ebeveynin dersi ve taşı kendisinindir; aile içindeki öteki ebeveyn görebilir (aile okur). Taş kuralı `ekonomi.md` 5C. GameApp etkilenmez (hediye bugünkü yoldan).
+
+Olaylar (ParentApp): `lesson.start` (`key`, `assigned`), `lesson.open` (`key`), `lesson.practice` (`key`, `on`, `stone`), `lesson.finish` (`key`).
 
 ## 23. Ebeveyn eğitimi (öneri 9 Kasım 2026; ortak `proposed/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
 

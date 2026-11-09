@@ -92,7 +92,7 @@ select tst.check((select count(*) from public.notifications) = 1, 'çocuk yalnı
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a1', 'task_done') = 1 and tst.n('00000000-0000-0000-0000-0000000000a2', 'task_done') = 1, 'Yaptım → iki ebeveyne');
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a1', 'task_declined') = 1, 'Yapamam → ebeveyne');
-select tst.check((select title from public.notifications where kind = 'task_done') = 'Nazlı görevi yaptı: Odanı topla', 'başlık çocuğun adı + görev');
+select tst.check((select title from public.notifications where kind = 'task_done') = 'Nazlı macerayı tamamladı: Odanı topla', 'başlık çocuğun adı + görev');
 select tst.check((select count(*) from public.notifications) = (select count(*) from public.notifications where user_id = auth.uid()), 'ebeveyn yalnız kendi bildirimlerini görür');
 
 -- ebeveyn onayı/reddi → çocuğa; onaylayan ebeveyn kendine almaz

@@ -47,7 +47,7 @@ async function plans(): Promise<Plan[]> {
 }
 
 // Oturumdaki uzman ve çalışma alanı: `x-clinic-id` başlığı (ClinicApp seçili alanı gönderir) etkin üyelikle denetlenir;
-// başlık yoksa varsayılan alan. Rol alandaki üyelikten (ortak proposed/20261105090000_workspaces.sql).
+// başlık yoksa varsayılan alan. Rol alandaki üyelikten (ortak migrations/20261105090000_workspaces.sql).
 async function caller(req: Request) {
   const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
   if (!token) return null;

@@ -225,7 +225,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - görevler, onaylar, ödüller, coin ve Güneş Taşı geçmişi,
+> - maceralar, onaylar, ödüller, coin ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
@@ -280,7 +280,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 | ParentApp | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
 
 > **[PLAN ADI]**
-> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
+> Bütün aile için: birden çok çocuk, sınırsız macera, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
 >
 > ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
@@ -295,7 +295,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 - Fiyatlar mağazanın yerel fiyatından okunur; ekranda sabit fiyat yazılmaz.
 - Plan adı, süre ve fiyat düğmeden önce ve en az düğme kadar görünür olmalı.
-- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
+- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
 
 ### 6.2 ClinicApp
 
@@ -322,7 +322,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 - Metin: Bittiğinde ücretsiz planla devam edersin; senden kendiliğinden ücret alınmaz. Premium'u sürdürmek istersen üyelik ekranına bak.
 
 **ParentApp — bitince (açılışta, 6.1 ekranının üstünde):**
-> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
+> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
 
 **ClinicApp — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
@@ -438,7 +438,17 @@ ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) i
 |---|---|---|
 | ParentApp | Haftalık özet, gösterge ve ilerleme ekranlarının altı | `kosullar-parentapp` |
 
-> Bu sayılar çocuğunun uygulamadaki görevlerini özetler; tanı, zekâ ya da dikkat puanı değildir.
+> Bu sayılar çocuğunun uygulamadaki maceralarını özetler; tanı, zekâ ya da dikkat puanı değildir.
+
+**Ebeveyn dersleri (Gelişim › Ben; öneri 5 Kasım 2026, `sozlesme/akislar.md` 22):** ders sayfasının ve "Yakında" kartının altında:
+
+| Uygulama | Ekran | Bağlı belge |
+|---|---|---|
+| ParentApp | Gelişim › Ben › ders sayfası, Yakında kartı | `kosullar-parentapp` |
+
+> Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez.
+
+Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (ParentApp ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26).
 
 **ClinicApp ekranları:** göstergeler ve hedef grafiklerinin altında sınır metni yok (kullanıcı kararı 3 Kasım 2026; sözleşme 3.3 ve 3.4-a). Aşağıdaki çıktı alt bilgisi kalır.
 

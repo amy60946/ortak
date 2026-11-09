@@ -620,7 +620,7 @@ App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebili
 
 Sağlık (`ops_health`, `kvkk_ops` önerisine eklendi): anahtar `referral` — kod bekleyen ödül ya da aylık kod 5'ten az → sarı; havuz boş ya da kodların bir kısmının süresi 30 gün içinde bitiyor → bilgi.
 
-## 29. Seans planlama ve takip (`proposed/20261105100000_sessions.sql`, öneri 5 Kasım 2026; kullanıcı isteği "beş alternatifin geliştirmesini yap"; akış `akislar.md` 20, durumlar `durumlar.md` P18)
+## 29. Seans planlama ve takip (`migrations/20261105100000_sessions.sql`, uygulandı 5 Kasım 2026; kullanıcı isteği "beş alternatifin geliştirmesini yap"; akış `akislar.md` 20, durumlar `durumlar.md` P18)
 
 Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; yazma işlevlerle (çalışma saatleri hariç). Aile tablolara bakmaz, yalnız `family_*` işlevleriyle görür.
 
@@ -660,7 +660,7 @@ Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; ya
 
 Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
 
-## 30. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (`proposed/20261105090000_workspaces.sql`, öneri 5 Kasım 2026; kullanıcı kararı; akış `akislar.md` 21, durumlar `durumlar.md` P19)
+## 30. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; kullanıcı kararı; akış `akislar.md` 21, durumlar `durumlar.md` P19)
 
 Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) birden çok **çalışma alanının** (`clinics`) üyesidir: kendi bireysel alanı (`clinics.personal_of` = uzman) ve ekibine katıldığı klinikler. Danışan, davetin gönderildiği alanındır; alanlar birbirini görmez.
 
@@ -698,6 +698,30 @@ Hesap silme (`account_delete_of`): her etkin alanda ayrı karar: tek kişilikse 
 
 Eski ekip kodu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) yalnız eski uygulama sürümleri için çalışır ve üyeliği yazar; yeni ClinicApp göstermez (kaldırma DURUM Açık işler). Yönetim paneli işlevleri (`admin_clinic`, `admin_customers`) üye listesini hâlâ `clinicians.clinic_id`'den okur; üyelik tablosuna geçişi yönetim paneli penceresinin işi (DURUM).
 
+
+## 31. Ebeveyn eğitimi: Gelişim › Ben (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; kullanıcı kararları; akış `akislar.md` 22, taş `ekonomi.md` 5C, durumlar `durumlar.md` P20)
+
+Kısa dersler (3–5 dk) ebeveynin kendisi için; uzman kütüphaneden önerebilir. Dersler bilgi amaçlıdır, tanı ya da tedavi değildir. Bugünkü takip planı programı (`care_modules`, `care_module_logs`; uzmanın yazdığı, çocuğa bağlı ev programı) **değişmez**; ders kataloğu sistem içeriğidir, uzman yazmaz.
+
+| Tablo / sütun | Ne | RLS |
+|---|---|---|
+| `parent_lessons` (key, title, summary, minutes, body_md, try_text, domain, sources, position, status `draft`/`published`/`retired`) | ders kataloğu; içerik sonra (boşken ParentApp "Yakında") | okuma: girişli herkes, `published` + `retired`; yazma yok (SQL / ileride panel) |
+| `parent_lesson_assignments` (clinic_id, link_id, family_id, lesson_key, note ≤ 300, status `active`/`withdrawn`, assigned_by) | uzmanın aileye önerdiği ders; paylaşım başına aynı ders bir kez etkin | okuma: aile (etkin paylaşımdaki etkin öneri), klinik (görebildiği paylaşım); yazma işlevlerle |
+| `parent_lesson_progress` (user_id, lesson_key, family_id, assignment_id, status `current`/`learned`/`paused`, started_at, opened_at, learned_at) | ebeveynin dersi; kişi başına en çok bir `current` | okuma: aile; yazma işlevlerle |
+| `parent_lesson_practice` (user_id, lesson_key, family_id, day) | "Bugün uyguladım" günleri | okuma: aile; yazma işlevlerle |
+| `parent_stone_ledger.reason` | + `lesson`, `lesson_undo` (ref `lesson|<hafta başı>|<an>`) | değişmedi |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `family_lessons() → {today, week_start, catalog[], assigned[{id, lesson_key, link_id, note, created_at}], mine[{lesson_key, status, assignment_id, started_at, opened_at, learned_at, days, week_days[]}], week_practiced, week_stones, week_cap 3, balance}` | P | Gelişim › Ben'in bütün verisi (hafta Pzt–Paz, Türkiye saati) |
+| `parent_lesson_start(key) → family_lessons()` | P | "Bu haftanın becerisi" yapar; önceki uygulandıysa `learned`, uygulanmadıysa `paused`; önerisi varsa bağlanır. `lesson_not_found` |
+| `parent_lesson_open(key)` | P | ilk açılışı yazar (taş yok) |
+| `parent_lesson_finish(key) → family_lessons()` | P | "Öğrendim". `lesson_not_started` |
+| `parent_lesson_practice(key, day = bugün, done = true) → {ok, day, week_start, week_days[], week_practiced, week_stones, week_cap, stone_given, balance}` | P | gün bugün ve önceki 6 gün (`date_range`); hafta taşı yeniden hesaplanır (en çok 3). `lesson_not_started` |
+| `clinic_assign_lesson(link, key, note) → uuid` | K | önerir (varsa notu günceller); ebeveynlere `lesson_assigned`. `link_not_visible`, `link_not_active`, `lesson_not_found` |
+| `clinic_withdraw_lesson(id)` | K | öneriyi geri çeker. `assignment_not_found` |
+| `clinic_parent_lessons(link) → [{id, lesson_key, title, note, status, created_at, withdrawn_at, parents[{name, status, opened, days[]}]}]` | K | yalnız kendi önerdiği dersler, öneri tarihinden sonraki günler; paylaşım bitince `parents` boş. `link_not_visible` |
+| `tr_today()` | P, K | Türkiye tarihi (yardımcı) |
 
 ## 32. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; kullanıcı isteği; akış `akislar.md` 23, durumlar `durumlar.md` P21; test `test_parent_trainings.sql`)
 

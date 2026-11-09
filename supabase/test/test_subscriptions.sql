@@ -79,7 +79,7 @@ set role authenticated;
 select tst.check(not (public.family_access() ->> 'full')::boolean, 'anahtar açık: ücretsiz plan');
 select tst.check(tst.err($$insert into public.children (family_id, name, avatar) values (public.my_family_id(), 'Ali', 'kedi')$$) like 'Ücretsiz planda en çok 1 çocuk%', 'ücretsiz planda yeni çocuk eklenmez');
 insert into public.tasks (id, family_id, title, start_date, recurring) select gen_random_uuid(), public.my_family_id(), 'G' || x, current_date, true from generate_series(1, 3) x;
-select tst.check(tst.err($$insert into public.tasks (family_id, title, start_date) values (public.my_family_id(), 'Dördüncü', current_date)$$) like 'Ücretsiz planda en çok 3 etkin görev%', '4. görev eklenmez');
+select tst.check(tst.err($$insert into public.tasks (family_id, title, start_date) values (public.my_family_id(), 'Dördüncü', current_date)$$) like 'Ücretsiz planda en çok 3 etkin macera%', '4. görev eklenmez');
 select tst.check(tst.err($$insert into public.abc_events (family_id, child_id, behavior, intensity) values (public.my_family_id(), '00000000-0000-0000-0000-00000000c001', 'x', 2)$$) = 'Bu özellik Premium üyelikte: davranış kaydı', 'davranış kaydı kapalı');
 select tst.check(tst.err($$insert into public.messages (family_id, child_id, sender, sender_id, kind, body) values (public.my_family_id(), '00000000-0000-0000-0000-00000000c001', 'parent', auth.uid(), 'text', 'Merhaba')$$) like 'Bu özellik Premium%', 'ebeveyn mesajı kapalı');
 -- çocuk yine yazabilir, ebeveyn yine onaylayabilir
