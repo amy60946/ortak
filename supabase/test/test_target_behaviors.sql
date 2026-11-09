@@ -1,4 +1,4 @@
--- Hedef davranışlar ve olaylar (proposed/20261110110000_target_behaviors.sql): uzman hedef davranış ve strateji yazar, aile görür;
+-- Hedef davranışlar ve olaylar (migrations/20261110110000_target_behaviors.sql, uygulandı 9 Kasım 2026): uzman hedef davranış ve strateji yazar, aile görür;
 -- ebeveyn kayıt türüne göre olay bildirir (zorunlu alanlar), hedefe bağlı olmayan "diğer" olay; uzmana bildirim; aile tabloya yazamaz;
 -- başka aile / klinik görmez; ebeveyn kaydı kapalı ya da arşivli hedef aileye görünmez; paylaşım bitince kapanır.
 \set ON_ERROR_STOP on

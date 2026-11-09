@@ -426,7 +426,7 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Hatalar (ipucu) | `lesson_not_found`, `lesson_not_started`, `date_range`, `link_not_visible`, `link_not_active`, `assignment_not_found` | |
 | Arayüz sözcükleri | "Bu haftanın becerisi", "Bu hafta dene", "Bugün uyguladım", "bu hafta n/5 gün", "Öğrendiğin beceriler", "Uzmanının önerisi", "Yakında" | seri, puan, "kaçırdın", "takip/izleme/kontrol" yok |
 
-## P21. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; `akislar.md` 23)
+## P21. Ebeveyn eğitimi (`migrations/20261110100000_parent_trainings.sql`, uygulandı 9 Kasım 2026; `akislar.md` 23)
 
 | Alan | Değerler | Ekranda |
 |---|---|---|
@@ -437,7 +437,7 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (app `parent`) | `training_assigned`, `training_mastered`, `training_reminder` | "Uzmanından yeni bir eğitim", "Eğitimi tamamladın", "Uygulama görevlerin seni bekliyor" → Ben › Derslere devam et |
 | Bildirim (app `clinic`) | `training_activity` | "Ebeveyn eğitimi: <eğitim>" → danışan › Ebeveyn Eğitimi |
 
-## P22. Hedef davranışlar ve olaylar (`proposed/20261110110000_target_behaviors.sql`, öneri 9 Kasım 2026; `akislar.md` 24)
+## P22. Hedef davranışlar ve olaylar (`migrations/20261110110000_target_behaviors.sql`, uygulandı 9 Kasım 2026; `akislar.md` 24)
 
 | Alan | Değerler | Ekranda |
 |---|---|---|
