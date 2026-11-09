@@ -481,7 +481,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `legal_pending(app)` | authenticated | Güncel sürümü onaylanmamış, onay isteyen metinler (kayıt sonrası ve açılışta) |
 | `legal_accept(app, [{key, version}])` | authenticated | Yalnız o uygulamanın güncel, onay isteyen sürümleri; `app='child'` yalnız veli (ParentApp) çağırır. Dönüş: kalan bekleyenler |
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
-| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`); JSON isteği yönlenmez |
+| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`; adres `https://moyoapp.com.tr`, 6 Kasım 2026); JSON isteği yönlenmez |
 
 ## 19. Ebeveyn görevleri ve hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 18)
 
@@ -679,7 +679,7 @@ Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) bi
 | `clinician_me()` | K | etkin alanla: `role` (alandaki), `personal`, `members_can_invite`, `default_clinic_id`, `workspace_invalid`, `workspaces` (sayı), `has_personal`, `requests` (bekleyen istek sayısı) + eski alanlar |
 | `clinician_workspaces() → [{clinic_id, name, role, personal, active, access, default, members, joined_at}]` | K | alan seçici; bireysel alan önce |
 | `clinician_personal_workspace() → uuid` | K | bireysel alanı açar (yoksa); deneme süresi uzmanın açtığı alanlarla ortak |
-| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak |
+| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak. ClinicApp: Ayarlar › "Kendi kliniğini kur" (hesap seçicide değil; `akislar.md` 21 adım 5) |
 | `clinician_personal_code(rotate default false) → text` | K | kalıcı kod; `rotate` yeniler (gönderilmiş istekler geçerli kalır) |
 | `clinic_member_request(code) → {status sent/pending, id, name, title, expires_at} \| {error}` | K (etkin klinik alanının sahibi) | `invalid_code` (deneme sınırı `code_throttled`), `self`, `already_member`, `seat_full` (etkin üye + bekleyen istek ≥ koltuk), `personal_workspace`; uzmana `team_request` (`data.request_id`) |
 | `clinic_member_requests_mine()` | K | bekleyen isteklerim (klinik adı, gönderen, ekip sayısı, süre) |
