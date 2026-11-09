@@ -1,4 +1,4 @@
--- Ebeveyn eğitimi (proposed/20261110100000_parent_trainings.sql): uzman eğitim kurar, taslağı aile görmez, Etkin olunca atanan ebeveyne
+-- Ebeveyn eğitimi (migrations/20261110100000_parent_trainings.sql, uygulandı 9 Kasım 2026): uzman eğitim kurar, taslağı aile görmez, Etkin olunca atanan ebeveyne
 -- bildirim gider; ebeveyn modülü tamamlar, uygulama kaydı girer, yapılacağı işaretler (yalnız işlevle); öteki ebeveyn ve başka aile
 -- işlem yapamaz; gözlem verisini aile görmez; başka klinik görmez; paylaşım bitince aile ve uzman erişimi kapanır.
 \set ON_ERROR_STOP on

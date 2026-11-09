@@ -665,7 +665,7 @@ Kurallar: Dersler bilgi amaçlıdır, tanı ya da tedavi değildir; arayüzde pu
 
 Olaylar (ParentApp): `lesson.start` (`key`, `assigned`), `lesson.open` (`key`), `lesson.practice` (`key`, `on`, `stone`), `lesson.finish` (`key`).
 
-## 23. Ebeveyn eğitimi (öneri 9 Kasım 2026; ortak `proposed/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
+## 23. Ebeveyn eğitimi (uygulandı 9 Kasım 2026; ortak `migrations/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
 
 Kullanıcı isteği (9 Kasım 2026): rakibin "Parent training" ekranlarına ve kütüphanesine **sadık kal**; Takip planı aile programı (`care_modules`) ve 5 Kasım ders düzeniyle (22, `parent_lessons`) **birleştirilmedi**, "sonra değerlendiririz". İçerik `veri/ebeveyn_egitimi_kutuphane.json` (131 öğe: okuma, çoktan seçmeli test, açık uçlu; özgün Türkçe; gözden geçiren uzman bekliyor; video ve PDF yok).
 
@@ -686,7 +686,7 @@ Kullanıcı isteği (9 Kasım 2026): rakibin "Parent training" ekranlarına ve k
 
 Kurallar: aile tablolara yazamaz, yalnız işlevlerle; ebeveyn yalnız kendisine atanmış (ya da kimseye özel olmayan) **Etkin** eğitimde işlem yapar, aile içindeki öteki ebeveyn görür ama değiştiremez; uzman modül tamamlamasını ve yapılacak işaretini değiştiremez; gözlem verisini aile görmez; paylaşım bitince aile ve uzman erişimi kapanır. Test doğru sayısı ebeveynin bilgi yoklamasıdır, çocuğa ait puan değildir. Olaylar (ClinicApp): `training.create`, `training.status`, `training.delete`, `training.modules`, `training.task`, `training.todo`, `training.data`, `training.remind`.
 
-## 24. Hedef davranışlar ve bildirilen olaylar (öneri 9 Kasım 2026; ortak `proposed/20261110110000_target_behaviors.sql`, `veritabani.md` 33, `durumlar.md` P22)
+## 24. Hedef davranışlar ve bildirilen olaylar (uygulandı 9 Kasım 2026; ortak `migrations/20261110110000_target_behaviors.sql`, `veritabani.md` 33, `durumlar.md` P22)
 
 Kullanıcı isteği (9 Kasım 2026): rakibin "Target behaviors & reported incidents" ekranlarına sadık; mevcut "Davranış hedefi" (`clinic_goals`) ve "Davranış kaydı" (`abc_events`) ile **birleştirilmedi**.
 

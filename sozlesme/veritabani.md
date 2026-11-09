@@ -723,7 +723,7 @@ Kısa dersler (3–5 dk) ebeveynin kendisi için; uzman kütüphaneden önerebil
 | `clinic_parent_lessons(link) → [{id, lesson_key, title, note, status, created_at, withdrawn_at, parents[{name, status, opened, days[]}]}]` | K | yalnız kendi önerdiği dersler, öneri tarihinden sonraki günler; paylaşım bitince `parents` boş. `link_not_visible` |
 | `tr_today()` | P, K | Türkiye tarihi (yardımcı) |
 
-## 32. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; kullanıcı isteği; akış `akislar.md` 23, durumlar `durumlar.md` P21; test `test_parent_trainings.sql`)
+## 32. Ebeveyn eğitimi (`migrations/20261110100000_parent_trainings.sql`, uygulandı 9 Kasım 2026; kullanıcı isteği; akış `akislar.md` 23, durumlar `durumlar.md` P21; test `test_parent_trainings.sql`)
 
 | Tablo | Ne | Alanlar | Yazar | Okur |
 |---|---|---|---|---|
@@ -745,7 +745,7 @@ Kısa dersler (3–5 dk) ebeveynin kendisi için; uzman kütüphaneden önerebil
 
 Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustalaştı → `training_mastered`; atanan ebeveyn ya da ailedeki ebeveynler), `parent_training_activity_notify` (modül tamamlama, uygulama kaydı, yapılacak tamamlama → `clinic_link_recipients` uzmanlarına `training_activity`). RLS: uzman `my_clinic_id`, `clinician_access`, etkin ve görebildiği paylaşım (`clinic_link_mine` + `clinic_link_visible`); aile `family_link_active` + taslak değil; kayıtlar `my_family_id`.
 
-## 33. Hedef davranışlar ve bildirilen olaylar (`proposed/20261110110000_target_behaviors.sql`, öneri 9 Kasım 2026; akış `akislar.md` 24, durumlar `durumlar.md` P22; test `test_target_behaviors.sql`)
+## 33. Hedef davranışlar ve bildirilen olaylar (`migrations/20261110110000_target_behaviors.sql`, uygulandı 9 Kasım 2026; akış `akislar.md` 24, durumlar `durumlar.md` P22; test `test_target_behaviors.sql`)
 
 | Tablo | Ne | Alanlar | Yazar | Okur |
 |---|---|---|---|---|
