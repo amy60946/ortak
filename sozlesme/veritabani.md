@@ -722,3 +722,39 @@ Kısa dersler (3–5 dk) ebeveynin kendisi için; uzman kütüphaneden önerebil
 | `clinic_withdraw_lesson(id)` | K | öneriyi geri çeker. `assignment_not_found` |
 | `clinic_parent_lessons(link) → [{id, lesson_key, title, note, status, created_at, withdrawn_at, parents[{name, status, opened, days[]}]}]` | K | yalnız kendi önerdiği dersler, öneri tarihinden sonraki günler; paylaşım bitince `parents` boş. `link_not_visible` |
 | `tr_today()` | P, K | Türkiye tarihi (yardımcı) |
+
+## 32. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; kullanıcı isteği; akış `akislar.md` 23, durumlar `durumlar.md` P21; test `test_parent_trainings.sql`)
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `parent_trainings` | Uzmanın ebeveyne verdiği eğitim | `clinic_id`, `link_id`, `parent_id` (atanan ebeveyn; boşsa ailedeki ebeveynler), `parent_name` (sunucu doldurur), `title` (eğitim hedefi, 1–200), `status`, `criterion` (≤ 400), `started_at`, `activated_at`, `mastered_at`, `seen_at` (uzmanın son bakışı), `created_by` | K (etkin paylaşım; başka danışana taşınamaz; ebeveyn o aileden) | K; P taslak dışını (`family_trainings`) |
+| `parent_training_modules` | Öğrenme modülü (kütüphane öğesi anahtarı) | `item_key`, `position`, `archived`, `completed_at`, `completed_by`, `correct`, `total`, `answers` (jsonb dizi), `reviewed_at` (uzman inceledi) | K ekler / sıralar / arşivler / inceler; tamamlamayı yalnız P (`family_training_module_complete`) | K; P (arşivsiz, taslak dışı) |
+| `parent_training_tasks` | Uygulama görevi | `title` (1–80), `description` (≤ 600), `measure`, `position`, `archived` | K | K; P |
+| `parent_training_logs` | Ebeveynin uygulama kaydı | `task_id`, `training_id`, `family_id`, `day`, `count` / `successes` + `attempts` / `minutes` (ölçüme göre), `reflection` (≤ 255), `created_by` | yalnız P (`family_training_log`) | K; P (kendi ailesi) |
+| `parent_training_todos` | Hızlı yapılacak | `title`, `description` (≤ 255), `position`, `archived`, `done_at`, `done_by`, `rating` (1–5), `reflection` (≤ 140), `reviewed_at` | K yazar / inceler; işaret yalnız P (`family_training_todo_set`) | K; P |
+| `parent_training_data` | Uzmanın gözlem verisi | `day`, `value` (0–100) | K | yalnız K |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinic_link_parents(link)` | K | Paylaşımdaki ailenin ebeveynleri: `user_id`, `name` (iletişim yok) |
+| `family_trainings()` | P | Taslak dışı eğitimlerim (etkin paylaşımlar): modüller, görevler, son 120 günün kayıtları, yapılacaklar; `mine` = bana ya da herkese atanmış |
+| `family_training_module_complete(modül, yanıtlar?, doğru?, toplam?)` | P | Modülü bir kez tamamlar (etkin eğitim, atanan ebeveyn); açık uçlu yanıt ≤ 1000 |
+| `family_training_log(görev, gün?, sayı?, başarılı?, deneme?, dakika?, düşünce?)` | P | Ölçüme göre zorunlu alan; gün bugün ya da önceki 14 gün (Türkiye) |
+| `family_training_todo_set(yapılacak, tamam, puan?, düşünce?)` | P | Tamamla (puan 1–5, düşünce ≤ 140) ya da geri al |
+| `clinic_training_remind(eğitim)` | K | Etkin eğitimde atanan ebeveyne `training_reminder`; eğitim başına 12 saatte bir (true/false) |
+
+Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustalaştı → `training_mastered`; atanan ebeveyn ya da ailedeki ebeveynler), `parent_training_activity_notify` (modül tamamlama, uygulama kaydı, yapılacak tamamlama → `clinic_link_recipients` uzmanlarına `training_activity`). RLS: uzman `my_clinic_id`, `clinician_access`, etkin ve görebildiği paylaşım (`clinic_link_mine` + `clinic_link_visible`); aile `family_link_active` + taslak değil; kayıtlar `my_family_id`.
+
+## 33. Hedef davranışlar ve bildirilen olaylar (`proposed/20261110110000_target_behaviors.sql`, öneri 9 Kasım 2026; akış `akislar.md` 24, durumlar `durumlar.md` P22; test `test_target_behaviors.sql`)
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `clinic_target_behaviors` | Uzmanın hedef davranışı | `clinic_id`, `link_id`, `title` (1–80), `description` (≤ 1000), `strategies` (jsonb metin dizisi, ≤ 10, her biri 1–200), `status`, `parent_logging`, `log_type`, `started_at`, `archived`, `created_by` | K | K; P (arşivsiz, ebeveyn kaydı açık, etkin paylaşım) |
+| `behavior_incidents` | Ebeveynin bildirdiği olay | `link_id`, `family_id`, `child_id`, `behavior_id` (boş = diğer), `log_type`, `other_behavior` (≤ 120), `occurred_at`, `count`, `duration_min`, `antecedent` / `consequence` (≤ 500), `strategy` (≤ 200), `response` (1–5), `reporter_id`, `reporter_name` | yalnız P (`family_incident_report`) | K (etkin, görebildiği paylaşım); P (kendi ailesi) |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `family_target_behaviors()` | P | Etkin paylaşım başına `{link_id, child_id, child_name, clinic_id, behaviors[]}` (id, title, description, strategies, log_type, status) |
+| `family_incident_report(paylaşım, hedef?, zaman?, sayı?, dakika?, öncül?, sonuç?, strateji?, tepki?, diğer_davranış?)` | P | Olay bildirir; hedefe bağlıysa türe göre zorunlu alan (sıklık → sayı, ABC → öncül + sonuç, süre → dakika), değilse davranışın adı zorunlu; zaman ileri değil, en çok 30 gün geri |
+
+Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanlarına `behavior_incident`.
