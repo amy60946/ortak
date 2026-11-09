@@ -412,3 +412,24 @@ Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (
 | Bildirim (app `clinic`) | `team_request` (uzmana), `team_joined`, `team_request_declined`, `team_left` (sahibe), `team_removed` (uzmana) | "<Klinik> seni ekibine eklemek istiyor", "… ekibe katıldı", "… kabul etmedi", "… ekipten ayrıldı", "<Klinik> ekibinden çıkarıldın" |
 | İstek başlığı | `x-clinic-id: <clinic uuid>` | ClinicApp'in seçili alanı (yalnız REST; Edge Function'larda yalnız `clinic-billing`) |
 | Kişisel uzman kodu | 8 karakter (`random_code` alfabesi), süresiz, yenilenebilir | Ayarlar › Kişisel kodun |
+
+## P21. Ebeveyn eğitimi (`proposed/20261110100000_parent_trainings.sql`, öneri 9 Kasım 2026; `akislar.md` 23)
+
+| Alan | Değerler | Ekranda |
+|---|---|---|
+| `parent_trainings.status` | `draft`, `active`, `mastered` | Taslak (aile görmez, sarı), Etkin (yeşil), Ustalaştı (mor) |
+| `parent_training_tasks.measure` | `frequency`, `accuracy`, `duration`, `none` | Sıklık, Doğruluk (başarılı / toplam deneme), Süre (dk), Ölçüm yok (yalnız düşünce) |
+| `parent_training_todos.rating` | 1–5 | Ebeveyn: Çok kötü … Harika · Uzman: Çok kötü geçti, Daha iyi olabilirdi, Beklendiği gibi, Beklenenden iyi, Harika geçti |
+| Kütüphane öğe türü (`veri/ebeveyn_egitimi_kutuphane.json`) | `reading`, `quiz`, `short` (ileride `video`, `pdf`) | Okuma, Çoktan seçmeli (ebeveyne "Test"), Açık uçlu |
+| Bildirim (app `parent`) | `training_assigned`, `training_mastered`, `training_reminder` | "Uzmanından yeni bir eğitim", "Eğitimi tamamladın", "Uygulama görevlerin seni bekliyor" → Ben › Derslere devam et |
+| Bildirim (app `clinic`) | `training_activity` | "Ebeveyn eğitimi: <eğitim>" → danışan › Ebeveyn Eğitimi |
+
+## P22. Hedef davranışlar ve olaylar (`proposed/20261110110000_target_behaviors.sql`, öneri 9 Kasım 2026; `akislar.md` 24)
+
+| Alan | Değerler | Ekranda |
+|---|---|---|
+| `clinic_target_behaviors.status` | `baselining`, `stable`, `improving`, `regressing`, `mastered` | Başlangıç ölçümü (gri), Durağan (mavi), İyileşiyor (yeşil), Geriliyor (turuncu), Ustalaştı (mor) |
+| `clinic_target_behaviors.log_type` | `frequency`, `abc`, `duration` | Sıklık sayısı, ABC (öncül ve sonuç), Süre |
+| `behavior_incidents.response` | 1–5 | Çocuğun tepkisi: 1 Kötü … 5 Çok iyi |
+| `behavior_incidents.behavior_id` | boş | "Diğer bildirilen olaylar" (davranışın adı `other_behavior`) |
+| Bildirim (app `clinic`) | `behavior_incident` | "Yeni davranış olayı: <davranış>" → danışan › Davranışlar ve Olaylar |
