@@ -642,3 +642,34 @@ Olaylar (ClinicApp): `workspace.switch` (`personal`), `workspace.create` (`kind`
 
 Eski ekip kodu yolu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) eski sürümler için sunucuda çalışır; yeni ClinicApp'te yok. Hukuk: klinik alanındaki danışanda veri sorumlusu klinik, bireysel alanda uzman (`hukuk_notlari.md` 23, avukata soru).
 
+
+## 23. Ebeveyn eğitimi (öneri 9 Kasım 2026; ortak `proposed/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
+
+Kullanıcı isteği (9 Kasım 2026): rakibin "Parent training" ekranlarına ve kütüphanesine **sadık kal**; Takip planı aile programı (`care_modules`) ve 5 Kasım ders düzeniyle (22, `parent_lessons`) **birleştirilmedi**, "sonra değerlendiririz". İçerik `veri/ebeveyn_egitimi_kutuphane.json` (131 öğe: okuma, çoktan seçmeli test, açık uçlu; özgün Türkçe; gözden geçiren uzman bekliyor; video ve PDF yok).
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Danışan › Ebeveyn Eğitimi › "+ Eğitim ekle" → "Yeni eğitim oluştur": "Ebeveyn deneyimini önizle", "Bu eğitim kimin için?" (ailenin ebeveynleri), "Eğitim hedefi" (başlık olur) → İleri → **Taslak** eğitim | `clinic_link_parents`, `parent_trainings` |
+| 2 | [K] | Eğitim sayfası sekmeleri: **Özet** (özet kartları, "En uygun:" ekleme kartları, ustalık ölçütü + gözlem verisi %) · **Öğrenme modülleri** (kütüphaneden çoklu seçim, sıralama) · **Uygulama görevleri** (ad, açıklama, ölçüm Sıklık / Doğruluk / Süre / Ölçüm yok) · **Hızlı yapılacaklar** (ad, açıklama ≤ 255). Ana ekran › Kaynak kütüphanesi'nden de "Ebeveyn eğitimi olarak ata" (danışan → ebeveyn → eğitim ya da yeni) | `parent_training_modules`, `_tasks`, `_todos`, `_data` |
+| 3 | [K] | Durum Taslak → **Etkin**: onay penceresi "Eğitim Etkin olarak işaretlensin mi? Bu işlem eğitimi ebeveyne gönderir." → ebeveyne `training_assigned` | tetikleyici `parent_trainings_notify` |
+| 4 | [P] | Bildirim → Ben › "Görevlerin" (uzmanından n görev) ve "Derslere devam et" (eğitim + % çubuğu); Uzmanım › uzman › Günlük yapılacaklar. Eğitim sayfası: Öğrenme modülleri (tür etiketi + ad + işaret, %), Uygulama görevleri, Tek seferlik görevler, "Başla" | `family_trainings()` |
+| 5 | [P] | Oynatıcı: "%x · n öğe kaldı"; **okuma** sayfa sayfa, son sayfada "Bu metni okudum" işaretlenmeden "Sonraki" açılmaz; **test** giriş kartı ("n soruluk çoktan seçmeli test"), "Cevabı kontrol et" → "✓ Doğru / ✗ Yanlış", "Sonraki soru" / "Bitir", sonuç kartı "%50 · 2 sorudan 1 tanesini doğru yanıtladın! Bu konuyu bir sonraki seansında uzmanınla gözden geçirmeni öneririz."; **açık uçlu** giriş kartı + soru başına sayfa "Yanıtını yaz…". %100'de kutlama yok, eğitim sayfasına dönülür | `family_training_module_complete(modül, yanıtlar, doğru, toplam)` |
+| 6 | [P] | Uygulama görevi: "Parçası: <eğitim>", sarı başlık, açıklama, ölçüme göre sayı alanı ("Sıklık sayısı" / başarılı + toplam deneme / süre dk), "Paylaşmak istediğin bir düşünce var mı?" ≤ 255, Gönder | `family_training_log` (bugün ve önceki 14 gün) |
+| 7 | [P] | Tek seferlik görev: "Atandı: Bugün", açıklama, atanma tarihi, "✓ Tamamlandı olarak işaretle" → "Nasıl geçti?" (1 Çok kötü … 5 Harika) + düşünce ≤ 140 ("Bu yalnızca uzmanınla paylaşılır.") → "🎉 Tamamlandı!" | `family_training_todo_set(yapılacak, true, puan, düşünce)` |
+| 8 | [K] | Ebeveyn etkinliği → uzmana `training_activity` bildirimi, sol menüde nokta; Özet "• n incelemeye hazır · İncele"; modül / yapılacak satırında nokta, açınca incelendi (`reviewed_at`). "Etkileşimli modülü incele": sonuç tarihi, test "%50 (2 sorudan 1 doğru)", ebeveynin yanıtları. "Yapılacağı incele": puan etiketi + düşünce | tetikleyici `parent_training_activity_notify` |
+| 9 | [K] | Uygulama görevleri kartında "Hatırlatma gönder" (eğitim başına 12 saatte bir) → ebeveyne `training_reminder` | `clinic_training_remind` |
+| 10 | [K] | "Not oluştur": tarih aralığı (son 7 gün → bugün) → "Atananlar" listesi (tür: ad + atanma tarihi), Kopyala. Ustalaştı → ebeveyne `training_mastered` | — |
+
+Kurallar: aile tablolara yazamaz, yalnız işlevlerle; ebeveyn yalnız kendisine atanmış (ya da kimseye özel olmayan) **Etkin** eğitimde işlem yapar, aile içindeki öteki ebeveyn görür ama değiştiremez; uzman modül tamamlamasını ve yapılacak işaretini değiştiremez; gözlem verisini aile görmez; paylaşım bitince aile ve uzman erişimi kapanır. Test doğru sayısı ebeveynin bilgi yoklamasıdır, çocuğa ait puan değildir. Olaylar (ClinicApp): `training.create`, `training.status`, `training.delete`, `training.modules`, `training.task`, `training.todo`, `training.data`, `training.remind`.
+
+## 24. Hedef davranışlar ve bildirilen olaylar (öneri 9 Kasım 2026; ortak `proposed/20261110110000_target_behaviors.sql`, `veritabani.md` 33, `durumlar.md` P22)
+
+Kullanıcı isteği (9 Kasım 2026): rakibin "Target behaviors & reported incidents" ekranlarına sadık; mevcut "Davranış hedefi" (`clinic_goals`) ve "Davranış kaydı" (`abc_events`) ile **birleştirilmedi**.
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Danışan › Davranışlar ve Olaylar › "+ Hedef davranış ekle": "Ebeveyn deneyimini önizle", Hedef davranış (zorunlu), Açıklama (aileden istenen), Stratejiler (liste, en çok 10), Durum (Başlangıç ölçümü · Durağan · İyileşiyor · Geriliyor · Ustalaştı), "Ebeveyn davranış kaydı" (açık), Kayıt türü (Sıklık sayısı · ABC · Süre) | `clinic_target_behaviors` |
+| 2 | [P] | Ben › Görevlerin › "Çocuğunun davranış olayını bildir" (Uzmanım › uzman › Günlük yapılacaklar'da da): (1) "Hangi davranış oldu?" hedefler + "Hiçbiri"; (2) türe göre: sıklık → olay tarihi + "Kaç kez oldu?"; ABC → olay tarihi + "Bu olaydan önce ne oldu?" + "Bu olaydan sonra ne oldu?"; süre → olay tarihi + "Ne kadar sürdü?"; "Hiçbiri" → "Ne oldu?" + tarih + önce/sonra + süre + sıklık; (3) "Hangi stratejiyi denedin?" (hedefin stratejileri + "Hiçbiri"; diğer olayda serbest metin) + "Çocuğun bu uygulamaya ne kadar iyi tepki verdi?" (1 Kötü … 5 Çok iyi) → Gönder → "Bu olayı kaydettiğin için teşekkürler" · "Başka bir olay bildir" / "Ana sayfaya dön" | `family_target_behaviors()`, `family_incident_report` |
+| 3 | [K] | Yeni olay → paylaşımın uzmanlarına `behavior_incident` bildirimi. Hedef kartı (açılır): durum çipi, "Başlangıç: <tarih>", olay tablosu türe göre (Tarih · Bildiren · Sayı / Öncül · Sonuç / Süre · Uygulanan strateji · Çocuğun tepkisi). Altta "Diğer bildirilen olaylar" (Tarih · Bildiren · Davranış · Öncül · Sonuç · Süre · Sıklık · Uygulanan strateji · Çocuğun tepkisi). "Dışa aktar" (CSV) | — |
+
+Kurallar: aile tabloya yazamaz, yalnız `family_incident_report`; olay zamanı ileri olamaz, en çok 30 gün geri; türe göre zorunlu alan; ebeveyn kaydı kapalı ya da arşivli hedefe olay bildirilmez ve aile onu görmez; başka aile / klinik görmez; paylaşım bitince kapanır. Tepki ebeveynin gözlemidir, puan değildir.
