@@ -9,11 +9,11 @@ const env = { brand: '', baseUrl: '', storeUrl: '', privacyUrl: '' };
 
 test('konu: ad var, unvan yok; gövdede unvan + ad + kod', () => {
   const b = buildInviteEmail(inv, env);
-  assert.equal(b.subject, 'Ece Kaya sizi ParentApp uygulamasına davet ediyor');
-  assert.ok(b.text.includes('Klinik Psikolog Ece Kaya (Mavi Çocuk Merkezi) sizi ParentApp uygulamasına ABC123 koduyla davet ediyor.'));
+  assert.equal(b.subject, 'Ece Kaya sizi Moyo uygulamasına davet ediyor');
+  assert.ok(b.text.includes('Klinik Psikolog Ece Kaya (Mavi Çocuk Merkezi) sizi Moyo uygulamasına ABC123 koduyla davet ediyor.'));
   assert.ok(b.html.includes('<strong>Klinik Psikolog Ece Kaya</strong> (Mavi Çocuk Merkezi)'));
   assert.ok(b.html.includes('>ABC123<'));
-  assert.equal(b.fromName, 'Ece Kaya · ParentApp');
+  assert.equal(b.fromName, 'Ece Kaya · Moyo');
 });
 
 test('son geçerlilik İstanbul saatiyle', () => {
