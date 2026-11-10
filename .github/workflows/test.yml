@@ -32,3 +32,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Testler
         run: set -o pipefail; bash supabase/test/run.sh 2>&1 | grep -v 'NOTICE'
+      - name: Paylaşım takvimi testleri
+        run: node --test tools/paylasim/*.test.mjs
