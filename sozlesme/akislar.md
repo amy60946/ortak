@@ -203,6 +203,8 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 | 1a | [P] | Uzmanı hedef paylaştıysa (isteğe bağlı, 3 Kasım 2026 kullanıcı kararı): **"Hangi hedefle ilgili?"** uzmanın o çocuk için aileye gönderdiği etkin hedefler + "Diğer / emin değilim" (varsayılan). Seçilen hedefin açıklaması ipucu olarak görünür. Birden çok çocuk seçildiyse her çocuğun hedefi ayrı. Listede kaydın hedefi küçük etiketle görünür. Sunucu güncellemesi yoksa ya da hedef bu arada paylaşımdan çıktıysa kayıt hedefsiz kaydedilir (kayıt kaybolmaz). | `abc_events.goal_id` (`migrations/20261103120000_abc_goal.sql`, uygulandı 3 Kasım 2026; `abc_events_goal_guard`) |
 | 2 | [K] | Rızalı bağlantısı olan uzman okur; hedefe bağlı kayıtları hedefe göre süzer (ClinicApp, Klinik penceresi). | `abc_events` (RLS `clinic_sees_child`) |
 
+> **10 Kasım 2026 (kullanıcı kararı: "Davranışlar ve Olaylar güncel özelliğimiz"):** ClinicApp'te "Davranış Kayıtları" bölümü menüden kalktı (akış 24, hedef davranışlar ve bildirilen olaylar onun yerinde). Uzman eski kayıtları artık tek tek okuyamaz; sayıları raporda, ilerleme notunda, seans hazırlığında ve ana ekrandaki "Ebeveynden yeni" nedeninde durur, `abc_event` bildirimi Davranışlar ve Olaylar'ı açar. Veritabanı (`abc_events`, RLS, bildirim) değişmedi. **Açık karar:** ParentApp'teki "Davranış kaydı ekle" (1. adım) kalksın mı; kalana kadar ebeveynin bu yoldan girdiği kayıt uzmana yalnız sayı olarak ulaşır.
+
 ### 5.6 Uzmanın kendi çalışma alanı (aile görmez)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
