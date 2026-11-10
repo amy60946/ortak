@@ -1,4 +1,4 @@
--- KVKK işletme: imha işi, "Verimi indir", sistem sağlığı, CSV kaydı (proposed/20261102200000_kvkk_ops.sql)
+-- KVKK işletme: imha işi, "Verimi indir", sistem sağlığı, CSV kaydı (migrations/20261102200000_kvkk_ops.sql)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$

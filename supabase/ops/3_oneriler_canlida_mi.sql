@@ -1,7 +1,8 @@
 -- =====================================================================
 -- ÖNERİLER CANLIDA MI? (kvkk_ops, support, legal_seed) — YALNIZ OKUR, hiçbir şeyi değiştirmez.
 -- Kullanım: Supabase → SQL Editor → New query → tümünü yapıştır → Run. Çıkan tabloyu (5 satır) koordinatör penceresine yazın.
--- Ne için: proposed/20261102200000_kvkk_ops.sql, 20261102210000_support.sql ve 20261102120747_legal_seed.sql
+-- Sonuç 10 Kasım 2026: 4 × EVET, 12 / 12; üç dosya migrations/ altına taşındı.
+-- Ne için: migrations/20261102200000_kvkk_ops.sql, 20261102210000_support.sql ve 20261102120747_legal_seed.sql
 -- uygulanmış mı; uygulananlar migrations/'a taşınır, sonra 20261110120000_kvkk_export_v2.sql uygulanır.
 -- Yasal metin özetleri legal_seed dosyasından üretildi (10 Kasım 2026); seed yeniden üretilirse bu dosya da yenilenir.
 -- =====================================================================
