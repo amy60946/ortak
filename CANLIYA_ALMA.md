@@ -80,7 +80,7 @@ Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `mo
 - (Hukuk) VERBİS gerekliliği
 - (Hukuk) Yurt dışı aktarım: standart sözleşme + Kurul'a bildirim
 - ✓ (Claude) Kişisel veri envanteri: `hukuk/46-veri-envanteri.md` (VERBİS biçimi, 14 kategori; taslak, avukat onayı bekler) + her yeni tabloyu denetleyen `tools/veri_envanteri_kontrol.py` (2 Kasım 2026)
-- (Claude) Saklama ve imha işi (zamanlanmış) — **yazıldı ve testli** (`proposed/20261102200000_kvkk_ops.sql`, gece 03.17, kuru çalıştırmayla başlar); kalan: (Siz) SQL'i uygula, (Hukuk) süreler → panelden gerçek silme
+- (Claude) Saklama ve imha işi (zamanlanmış) — **yazıldı, testli, uygulandı** (`migrations/20261102200000_kvkk_ops.sql`, gece 03.17, kuru çalıştırmayla başlar); kalan: (Hukuk) süreler → panelden gerçek silme
 - (Claude) Verimi indir (aile verisi dışa aktarma) — **sunucu yazıldı** (`my_data_export`, panelde `admin_user_export`); kalan: (Siz) SQL, (ParentApp/ClinicApp penceresi) Ayarlar › Gizlilik › Verimi indir
 - (Claude) Ebeveyn onayının sürümlü kaydı (çocuk bağlanmadan önce)
 - (Siz + Hukuk) Veri ihlali prosedürü (72 saat)
@@ -181,7 +181,7 @@ D. Uygulamalar ve deneme
 - (Siz + Hukuk) Uzman sözleşmesi + veri işleme eki onay akışı
 - (Claude) Çerez bandı, `EXPO_PUBLIC_PRIVACY_URL`
 - (Claude) Web oturum zaman aşımı, çıktıda "tanı değildir"
-- **Abonelikler nasıl kurulur (1.8 A 4. adımın ayrıntısı; kullanıcı kararları 10 Kasım 2026):** App Store Connect › ClinicApp › Subscriptions › tek grup **"Moyo Mercek Üyelik"**, dört ürün: `com.clinicapp.uzman.solo.monthly` (1 ay), `com.clinicapp.uzman.solo.yearly` (1 yıl), `com.clinicapp.uzman.clinic.monthly`, `com.clinicapp.uzman.clinic.yearly`. Grup içi sıra (yükseltme): Klinik üstte, Bireysel altta. Fiyat: uygulamadaki taslak 749,99 / 7.499,99 / 2.999,99 / 29.999,99 TL; App Store'daki en yakın fiyat noktası seçilir, son fiyat kullanıcının kararı. **Introductory Offer (ücretsiz deneme) eklenmez:** deneme sunucuda, kartsız, **14 gün** (`proposed/20261110130000_clinic_trial_14.sql`). RevenueCat'te entitlement `clinic` (dört ürün bağlanır) ve offering `clinic` (dört paket); ClinicApp genel anahtarı (`appl_…`) → clinic-app GitHub Secrets `EXPO_PUBLIC_REVENUECAT_IOS_KEY`.
+- **Abonelikler nasıl kurulur (1.8 A 4. adımın ayrıntısı; kullanıcı kararları 10 Kasım 2026):** App Store Connect › ClinicApp › Subscriptions › tek grup **"Moyo Mercek Üyelik"**, dört ürün: `com.clinicapp.uzman.solo.monthly` (1 ay), `com.clinicapp.uzman.solo.yearly` (1 yıl), `com.clinicapp.uzman.clinic.monthly`, `com.clinicapp.uzman.clinic.yearly`. Grup içi sıra (yükseltme): Klinik üstte, Bireysel altta. Fiyat: uygulamadaki taslak 749,99 / 7.499,99 / 2.999,99 / 29.999,99 TL; App Store'daki en yakın fiyat noktası seçilir, son fiyat kullanıcının kararı. **Introductory Offer (ücretsiz deneme) eklenmez:** deneme sunucuda, kartsız, **14 gün** (`migrations/20261110130000_clinic_trial_14.sql`). RevenueCat'te entitlement `clinic` (dört ürün bağlanır) ve offering `clinic` (dört paket); ClinicApp genel anahtarı (`appl_…`) → clinic-app GitHub Secrets `EXPO_PUBLIC_REVENUECAT_IOS_KEY`.
 
 ## 3. Admin paneli (Faz 1 canlıdan önce)
 - ✓ (ortak) Sunucu tarafı yazıldı ve testli: `proposed/20261023000000_admin.sql`, `sozlesme/admin.md` (destek/KVKK talep tabloları Faz 2)

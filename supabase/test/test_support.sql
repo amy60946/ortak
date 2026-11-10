@@ -1,4 +1,4 @@
--- Destek talepleri (proposed/20261102210000_support.sql) + imha ve sağlık bağlantısı (20261102200000_kvkk_ops.sql)
+-- Destek talepleri (migrations/20261102210000_support.sql) + imha ve sağlık bağlantısı (20261102200000_kvkk_ops.sql)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid, aal text default 'aal1') returns void language plpgsql as $$

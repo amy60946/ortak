@@ -1,4 +1,4 @@
--- ClinicApp denemesi 14 gün (proposed/20261110130000_clinic_trial_14.sql)
+-- ClinicApp denemesi 14 gün (migrations/20261110130000_clinic_trial_14.sql)
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -36,13 +36,13 @@ update public.clinics set created_at = now() - interval '3 days', trial_ends_at 
 insert into public.clinics (name, created_by, created_at, trial_ends_at)
 values ('Uzatılmış', '00000000-0000-0000-0000-0000000000d1', now() - interval '20 days', now() + interval '30 days');
 -- d1'in ilk açılışı artık 20 gün önce → 14 günü geçmiş; süren denemeleri kısalmaz, uzamaz
-\ir ../proposed/20261110130000_clinic_trial_14.sql
+\ir ../migrations/20261110130000_clinic_trial_14.sql
 select tst.check((select bool_and(trial_ends_at between now() + interval '10 days 23 hours' and now() + interval '11 days 1 minute')
                     from public.clinics where created_by = '00000000-0000-0000-0000-0000000000d2'), 'süren deneme açılıştan 14 güne tamamlandı (3 gün geçti, 11 gün kaldı)');
 select tst.check((select trial_ends_at > now() + interval '29 days' from public.clinics where name = 'Uzatılmış'), 'panelden uzatılmış deneme kısalmadı');
 select tst.check((select count(*) = 0 from public.clinics where created_by = '00000000-0000-0000-0000-0000000000d1'
                     and name <> 'Uzatılmış' and trial_ends_at > now() + interval '14 days 1 minute'), 'ilk açılışı 14 günü geçmiş uzmanın denemesi uzamadı');
-\ir ../proposed/20261110130000_clinic_trial_14.sql
+\ir ../migrations/20261110130000_clinic_trial_14.sql
 select tst.check((select bool_and(trial_ends_at between now() + interval '10 days 23 hours' and now() + interval '11 days 1 minute')
                     from public.clinics where created_by = '00000000-0000-0000-0000-0000000000d2'), 'ikinci çalıştırma değiştirmez');
 
