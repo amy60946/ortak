@@ -245,7 +245,7 @@ Görünümler (şema `analytics`, anon/authenticated erişemez): `accounts` (her
 
 ## 8. ClinicApp üyeliği (`migrations/20261022200000_clinic_billing.sql`, uygulandı 23 Ekim)
 
-Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **7 gün** ücretsiz dener (kart yok, denemede 10 koltuk). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
+Paketler: **Bireysel** (`solo`, 1 uzman) ve **Klinik** (`clinic`, ekip dahil en çok 10 uzman); aylık ya da yıllık. Yeni klinik **14 gün** ücretsiz dener (kart yok, denemede 10 koltuk; kullanıcı kararı 10 Kasım 2026, öneri `proposed/20261110130000_clinic_trial_14.sql` — uygulanana kadar canlıda 7 gün; süren denemeler uzmanın ilk alanının açılışından 14 güne tamamlanır). Deneme ya da üyelik bitince uzman çocuk verisine erişemez; veriler silinmez.
 
 | Tablo / alan | Ne | Yazan | Okuyan |
 |---|---|---|---|

@@ -194,7 +194,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | Alan | Değerler | Anlamı |
 |---|---|---|
 | `clinic_links.status` | `active` (varsayılan) / `revoked` | Rıza etkin / ebeveyn ya da uzman sonlandırdı. Bir klinik–çocuk çifti için en fazla bir `active`. |
-| `clinics.plan` | `trial` (varsayılan; öneriyle 7 gün, eskiden 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
+| `clinics.plan` | `trial` (varsayılan; 14 gün — kullanıcı kararı 10 Kasım 2026, öneri `20261110130000_clinic_trial_14.sql`; 23 Ekim–10 Kasım 7 gün, ilk sürümde 14) / `solo` (Bireysel) / `clinic` (Klinik, 10 uzman) / `small` / `business` / `custom` / `inactive` | Etkin sayılanlar: süresi dolmamış `trial`, `period_end`'i geçmemiş `solo`/`clinic`, elle verilmiş `small`/`business`/`custom`. Üyelik ayrıntısı `veritabani.md` 8. |
 | `clinics.billing_source` | `revenuecat` (bugünkü yol) / `app_store` / `iyzico` (ileride kendi sistem) / `manual` / null | Ödeme kaynağı (öneri). |
 | `billing_subscriptions.status` | `active` / `canceled` (dönem sonuna kadar açık) / `expired` / `refunded` / `pending` | Öneri. |
 | `clinicians.role` | `owner` / `member` | Klinik sahibi ekibe davet eder, klinik adını değiştirir, bütün danışanları görür ve danışanları üyelere atar (`20261022100000`, uygulandı). Üye yalnız sorumlusu olduğu ve kendisine atanan danışanları görür. |
@@ -279,7 +279,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 | `family_access().state` | Anlam | Erişim |
 |---|---|---|
 | `pending` | Aileyi kuran ebeveyn e-postasını henüz doğrulamadı (deneme başlamadı) | Tam |
-| `trial` | 7 günlük deneme sürüyor (`trial_ends_at`, `days_left`) | Tam |
+| `trial` | 14 günlük deneme sürüyor (`trial_ends_at`, `days_left`; 10 Kasım 2026'ya kadar 7 gün) | Tam |
 | `premium` | Ücretli abonelik: `plan` = `monthly` / `yearly`; iptal edilse de `period_end`'e kadar | Tam |
 | `clinic` | Ücretli plandaki (`small`/`business`/`custom`) bir kliniğe bağlı çocuğu var | Tam |
 | `expired` | Deneme bitti, abonelik yok | `enforced` ise ücretsiz plan |

@@ -49,9 +49,9 @@ insert into public.clinic_links (clinic_id, clinician_id, family_id, child_id, l
 insert into public.abc_events (family_id, child_id, antecedent, behavior, consequence)
   select family_id, '00000000-0000-0000-0000-00000000c001', 'a', 'b', 'c' from public.profiles where id = '00000000-0000-0000-0000-0000000000a1';
 
--- ---------------------------------------------------------------- yeni klinik: 7 gün deneme, 10 koltuk
-select tst.check((select trial_ends_at between now() + interval '6 days 23 hours' and now() + interval '7 days 1 minute'
-                    from public.clinics where id = (select v::uuid from tst.kv where k = 'k1')), 'deneme 7 gün');
+-- ---------------------------------------------------------------- yeni klinik: 14 gün deneme (proposed/20261110130000), 10 koltuk
+select tst.check((select trial_ends_at between now() + interval '13 days 23 hours' and now() + interval '14 days 1 minute'
+                    from public.clinics where id = (select v::uuid from tst.kv where k = 'k1')), 'deneme 14 gün');
 select tst.check((select seat_limit from public.clinics where id = (select v::uuid from tst.kv where k = 'k1')) = 10, 'denemede 10 koltuk');
 
 set role authenticated;
