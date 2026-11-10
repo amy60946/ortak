@@ -26,7 +26,7 @@ Son güncelleme: 2026-11-03 (görünen ad İnci, §0); 2026-10-24 (hoş geldin c
 | Hikâye | İnci istiridyeden çıkar (ada yaşamı) — ama **yalnız onaylı gerçek görevden** gelir (§1): adada istiridye toplanıp inci bulunmaz. Önerilen gösteri (karar bekliyor): ebeveyn onayında istiridye açılır, inci çıkar. |
 | Simge | **İ1b (deliksiz derin sedef)**: açık krem-beyaz, yanardöner, hacimli parlak yuvarlak inci, delik yok (kullanıcı seçimi 3 Kasım 2026; önce S, aynı gün Güneş Taşı K2 ile aynı çizim diline getirildi; oyunda `Icons/ui_coin.png`, kaynak `game-app/art/icons/inci/`). ParentApp/ClinicApp inci gösterirse aynı görünümü kullanır. Sarı/altın tonu kullanılmaz (Güneş Taşı), XP yıldızından ayrı. |
 | Neden | Kullanıcı: "İnci daha mantıklı, istiridyeden çıkıyor, ada yaşamına uygun". GB20 değerlendirmesindeki eksiler (mücevher çağrışımı, "5 inci" okunuşu, kız adı) renk ve "tane" kuralıyla karşılanır. |
-| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 17). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
+| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 30). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
 
 ---
 
@@ -206,6 +206,7 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 ## 5A. Güneş Taşı (Ö1; `20261019030000_sun_stones` (uygulandı), karar 19 Ekim 2026)
 
 - **Yalnız ebeveyn onayıyla** gelir (oyun içi hiçbir eylem taş vermez). Zorluğa göre: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`). Coin'i 0 olan görev de taş verir.
+- **İncelemede ayar (`migrations/20261027130000_review_detail.sql`, uygulandı 27 Ekim 2026; kullanıcı isteği 27 Ekim 2026):** ebeveyn onaylarken o tamamlamanın taşını **0–6** arasında seçebilir (`review_completion(..., p_stones)` → `completions.stones`; boş = zorluğa göre). 0 seçilirse defter satırı yazılmaz. Geri almada verilen kadar düşer (değişmedi). Coin ödülü bu ayardan etkilenmez. Üst sınır 6 = zor görevin iki katı (ada ilerlemesi dengesi; oyun değişmez, taş toplamı `child_me().sun_stones`'tan gelir).
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
@@ -251,6 +252,15 @@ ClinicApp önerileri aynı kuralı izler. Şablon kataloğu: `sozlesme/gorev_sab
 - Oyun kaydındaki eski yıldız anahtarları yeniye taşınır: `responsibility`, `independence` → `teamwork`; `calm` → `stamina`; `self_care` → `strength`.
 - Her onaylı görev örneği becerisine **1 yıldız** ekler (oyun kaydında). Kademe: 5 yıldız bronz, 15 gümüş, 30 altın.
 - Raporlar (ParentApp, ClinicApp) beceri dağılımını bu altı anahtarla gösterir; hiçbiri tanı ya da puan değildir.
+
+## 5C. Ebeveynin Güneş Taşı ve hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; kullanıcı isteği 27 Ekim 2026)
+
+- Ebeveyn, kendisine atanan görevde "Yaptım" deyince taş kazanır: kolay **1**, orta **2**, zor **3** (`stones_for_difficulty`, çocukla aynı). İnceleme yok. Geri alınırsa verilen düşer; görev silinirse kazanılan kalır.
+- Ebeveynin taşı **ayrı defterdedir** (`parent_stone_ledger`); çocuğun ada ilerlemesine (`sun_stone_balance`) ve ödül bakiyesine (`stone_balance`) karışmaz.
+- Tek harcama: **hediye**. Fiyat = oyundaki coin fiyatı / 10, yukarı yuvarlanır, en az 1 (ör. Yuvarlak gözlük 15 coin → 2 taş, Akvaryum 100 → 10). Dükkânda yalnız kalıcı eşyalar (giyilebilir, ev, süs); yiyecek, temizlik, tohum ve özel setler yok.
+- Gerekçe: günde 1–2 ebeveyn göreviyle 1–2 haftada orta boy bir hediye; coin ekonomisini bozmaz (hediye çocuğun coin'ini artırmaz, eşyayı verir).
+- **Hediye seviye kilidini aşar** (kullanıcı kararı 27 Ekim 2026, GameApp penceresi aracılığıyla; game-app 2bd61af): hediye edilen eşya hemen giyilir ya da yerleştirilir; hediye ev eşyası "Süsle" bölümünü Sv 4'ten önce açar. Dükkânda satın alma kilidi değişmez.
+- **Ders uygulaması (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; kullanıcı kararı; `akislar.md` 22):** Gelişim › Ben'de "Bugün uyguladım" **uygulanan güne** 1 taş; aynı gün birden çok ders ya da ikinci dokunuş ek taş getirmez; **haftada (Pzt–Paz, Türkiye saati) en çok 3**. Dersi açmak ve "Öğrendim" taş getirmez. Hesap her işaretten sonra hafta için yeniden yapılır: hafta taşı = min(3, o hafta uygulanan farklı gün) (`parent_stone_ledger` `lesson` / `lesson_undo`); geri alınan gün düşer, hak boşalırsa haftanın başka günü sayılır. Gün en çok 6 gün geriye işaretlenir, ileri tarih yok. Taş ebeveynin cüzdanına gider; çocuğa hediyeyi ebeveyn bugünkü dükkândan kendisi seçer. Gerekçe: haftada 3 taş ≈ ayda bir orta boy hediye; görev taşının yanında küçük kalır, "uygulamak" ödüllenir, "okumak" değil.
 
 ## 6. Seviye tablosu (`levels.json`, yalnız oyun)
 
@@ -345,5 +355,5 @@ Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki
 
 - Ebeveyn ödül listesini ve fiyatları belirler; çocuk taşı yetince listeden **ister**, ebeveyn **onaylar** (karma model). Aynı anda tek bekleyen istek önerilir (GameApp).
 - Ödül, çocuğun zorlandığı işlere bağlanır; zaten severek yaptığı işlere bağlanmaz.
-- Taş düşürme yalnız önceden konuşulmuş kurallar için ve seyrek: ParentApp, bir çocuk için son 7 günde düşürülen taş (yeni düşürme dahil) × 4 > kazanılan görev taşı olursa taş düşürme sayfasında uyarı gösterir (engellemez).
+- Taş düşürme yalnız önceden konuşulmuş kurallar için ve seyrek: ParentApp, bir çocuk için son 7 günde düşürülen taş (yeni düşürme dahil) × 4 > kazanılan görev taşı olursa taş düşürme sayfasında uyarı gösterir (engellemez). Düşürme Ödüller ekranının üstünde değildir (kullanıcı kararı 3 Kasım 2026; benchmark Greenlight / ClassDojo): çocuğun bakiyesine dokununca o çocuğun Güneş Taşı hesabı açılır (hareketler), altta küçük "Güneş Taşı düşür" bağlantısı. Ebeveyn ekranlarında "taş" yerine **"Güneş Taşı"** yazılır (yalnız dar rozet ve tablo başlıklarında kısa "taş").
 - İlk kullanımda kısa ipuçları (ödül oluşturma, ödül verme, taş düşürme, istek kararı) bir kez gösterilir; metinler `parent-app/src/data/rewardTips.ts`.

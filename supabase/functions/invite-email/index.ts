@@ -7,7 +7,7 @@
 // Gönderim yolu (Supabase → Edge Functions → Secrets; anahtar sohbete ya da depoya yazılmaz):
 //   Canlı: RESEND_API_KEY + MAIL_FROM (alan adındaki adres, ör. davet@alanadi.com)
 //   Test:  SMTP_USER + SMTP_PASS (Gmail adresi + Google "uygulama şifresi"; SMTP_HOST varsayılan smtp.gmail.com, SMTP_PORT 465)
-//   İsteğe bağlı: INVITE_BASE_URL (ör. https://alanadi.com/d/), PARENTAPP_STORE_URL, PRIVACY_URL, BRAND_NAME (varsayılan ParentApp)
+//   İsteğe bağlı: INVITE_BASE_URL (ör. https://alanadi.com/d/), PARENTAPP_STORE_URL, PRIVACY_URL, BRAND_NAME (varsayılan Moyo)
 // İçerik: uzmanın unvanı + adı, kod, yükleme adımları, son geçerlilik. Çocuğun adı ve uzmanın notu e-postaya girmez; konu satırında
 // unvan yok (sağlık çağrışımı bildirim ekranında görünmesin). Yanıtlar uzmanın e-postasına gider (Reply-To).
 // Kod adımı ParentApp'in iki akışında da doğru (27 Ekim): yeni ilk kurulumda kod kayıttan önce sorulur ("Bir uzmandan davet kodu
@@ -27,7 +27,7 @@ export function untilText(iso: string) {
 }
 
 export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
-  const brand = e.brand || 'ParentApp';
+  const brand = e.brand || 'Moyo'; // görünen ad (kullanıcı kararı 9 Kasım 2026; eskisi ParentApp). Supabase secret BRAND_NAME varsa o kullanılır
   const name = headerSafe(m.clinician) || 'Uzmanınız';
   const who = [headerSafe(m.title), name].filter(Boolean).join(' ');
   const clinic = headerSafe(m.clinic);

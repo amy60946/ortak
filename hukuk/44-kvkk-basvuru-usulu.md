@@ -58,7 +58,7 @@ Amacımız verinizi başkasına vermemektir.
 | Talep (KVKK md. 11) | Ne yaparız | Uygulamada kendiniz hemen yapabilecekleriniz |
 |---|---|---|
 | Verinizin işlenip işlenmediğini öğrenmek; işlenmişse bilgi istemek; amacını ve amaca uygun kullanılıp kullanılmadığını öğrenmek | Hangi verinizi, hangi amaçla, hangi hukuki sebeple işlediğimizi ve ne kadar sakladığımızı yazarız | Gizlilik Politikası ve aydınlatma metinleri |
-| Verinizin bir kopyasını almak | Hesabınıza ait verilerin okunabilir bir dökümünü güvenli bir bağlantıyla göndeririz. Başka kişilere ait veriler (ör. diğer ebeveynin yazdıkları) ayıklanabilir | [Verimi indir — yapılınca eklenecek] |
+| Verinizin bir kopyasını almak | Hesabınıza ait verilerin okunabilir bir dökümünü güvenli bir bağlantıyla göndeririz. Başka kişilere ait veriler (ör. diğer ebeveynin yazdıkları) ayıklanabilir | ParentApp / ClinicApp › Ayarlar › Gizlilik › "Verimi indir" (sunucu hazır: `my_data_export`; uygulama ekranı eklenince) |
 | Eksik ya da yanlış verinin düzeltilmesi | Düzeltir, sonucunu bildiririz | Profil ve çocuk bilgilerini düzenlemek |
 | Verinin silinmesi ya da yok edilmesi | Şartlar oluşmuşsa siler, sonucunu bildiririz. Kanunen saklamak zorunda olduğumuz kayıtları (ör. ödeme kayıtları) yalnız o amaçla ve süresi kadar tutarız | Hesabımı sil; sağlık yanıtlarını sil; mesaj ve kayıtları silmek; [çocuk profilini sil — ParentApp'e eklenecek] |
 | Verinin yurt içinde ya da yurt dışında aktarıldığı kişileri öğrenmek | Alıcıları ve ülkelerini yazarız | Hizmet Sağlayıcılar Listesi (`alt-isleyenler`) |

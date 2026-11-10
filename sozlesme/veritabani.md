@@ -48,7 +48,7 @@ Anahtarlar: istemcilere yalnız **publishable/anon** anahtar girer. `service_rol
 | `children` | Çocuk | `id`, `family_id`, `name` (1–60 karakter), `avatar`, `gender` (`'kız'`/`'erkek'`/null), `birthday`, `user_id` (oyunun anonim oturumu; unique), `age_band` (M4) | P (ekle/düzenle/sil; `user_id` hariç); `user_id` yalnız `redeem_child_code` / `unlink_child_device` ile | P (aile), O (yalnız kendi satırı: `user_id = auth.uid()`) |
 | `tasks` | Görev (tekrarlı görev **tek satır**) | `title` (1–120), `emoji` (`'⭐'`), `skill`, `description`, `start_date`, `recurring`, `end_date`, `reminder` (`HH:MM`), `requires_review` (varsayılan `true`), `repeat_kind`, `repeat_days`, `sort_order` | P | P, O (yalnız kendisine atanmışlar; oyun pratikte `child_tasks` RPC'si üzerinden okur) |
 | `task_assignments` | Görev ↔ çocuk ataması ve ödülü | PK (`task_id`, `child_id`), `family_id`, `difficulty` (`easy`/`medium`/`hard`), `coins` (0–50) | P | P, O (kendi atamaları) |
-| `completions` | Bir görevin bir gündeki durumu | `task_id`, `child_id`, `date`, `status`, `parent_note` (M4, ≤ 300), `reviewed_at`, `reviewed_by`, `created_at`; **unique (`task_id`, `child_id`, `date`)** | O (`child_set_status` RPC'si), P (doğrudan + `review_completion`) | P, O (kendi satırları) |
+| `completions` | Bir görevin bir gündeki durumu | `task_id`, `child_id`, `date`, `status`, `parent_note` (M4, ≤ 300), `reviewed_at`, `reviewed_by`, `created_at`; `20261027130000`, uygulandı: `motivation` (1–5), `stones` (0–6); **unique (`task_id`, `child_id`, `date`)** | O (`child_set_status` RPC'si), P (doğrudan + `review_completion`) | P, O (kendi satırları) |
 | `messages` | Posta (ebeveyn ↔ çocuk) | `child_id`, `sender` (`parent`/`child`), `sender_id`, `kind` (`text`/`image`/`audio`), `body` (≤ 2000), `media_path`, `duration_ms` | P (sender=`parent`); çocuk (sender=`child`) RLS ile izinli | P, çocuk (kendi mesajları) |
 | `saved_templates` | Kaydedilen hazır/özel görev şablonları | `template_key` (ör. `t1`), `is_custom`, `saved`, `title`, `emoji`, `category` (`home`/`mind`/`learn`/`self`), `difficulty`, `skill` | P | P |
 | `task_templates` (uygulandı `20261023010000`, 23 Ekim 2026) | Ev Görevleri şablon kataloğu (Türkçe; `gorev_sablonlari.md`; sürüm 2 temizliği `migrations/20261023030000`) | `key` (`gs_<kategori>_<sıra>`), `title`, `emoji`, `category` (ana = beceri), `categories` (süzgeç etiketleri), `age_bands` (K/A/B/C), `difficulty`, `coins`, `skill`, `sort`, `active` | yalnız göç | P, K, O (oturumlu herkes okur; RLS select `active`) |
@@ -65,7 +65,9 @@ Notlar:
 | Tablo / sütun | Amaç | Önemli sütunlar | Yazar | Okur |
 |---|---|---|---|---|
 | `children.age_band` | Ebeveynin seçtiği yaş grubu (isteğe bağlı) | `'K'` (≤5) / `'A'` (6–8) / `'B'` (9–12) / `'C'` (13+) / null = otomatik (doğum gününden, `durumlar.md` §4) | P (doğrudan sütun izni + `set_child_age_band`) | O (`redeem_child_code`, `child_me` yanıtında), P |
-| `completions.parent_note` | Ebeveynin ret/onay notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
+| `completions.parent_note` | Ebeveynin ret/onay/tekrar dene notu | ≤ 300 karakter | P (`review_completion`) | O (`child_tasks`), P |
+| `completions.motivation` (uygulandı 27 Ekim 2026) | "Motive etmek ne kadar zordu?" ebeveyn gözlemi | 1 çok kolay … 5 çok zor, null = yanıtsız | P (`review_completion`) | P, K (bağlı ve rızalı; "tamamlama: bağlı klinik okur") |
+| `completions.stones` (uygulandı 27 Ekim 2026) | Onayda verilen Güneş Taşı | 0–6, null = zorluğa göre (yalnız `approved`'da dolu) | P (`review_completion`) | P, K |
 | `coin_ledger` | Coin defteri. Bakiye = `sum(amount)` | `id` (bigserial), `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`spend`/`adjust`; öneri §12: + `welcome`), `ref`, `item_id`, `quantity`; **unique (`child_id`, `reason`, `ref`)** | **Sunucu** (tetikleyici `completions_coin` + `spend_coins`; öneri §12: `claim_welcome_coins`). İstemci yazamaz. | P (aile), O (kendi satırları; pratikte bakiye `child_me` ile gelir) |
 | `sun_stone_ledger` | Güneş Taşı defteri (`20261019030000_sun_stones`, uygulandı 19 Ekim). Toplam = `sum(amount)` (en az 0) | `family_id`, `child_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`adjust`), `ref`; unique (`child_id`, `reason`, `ref`) | yalnız tetikleyici `completions_sun_stone` | P (aile), O (kendi) |
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
@@ -110,7 +112,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `game_save_get()` | `jsonb` (yoksa null) | O | Oyun kaydı yedeğini okur. |
 | `game_save_put(p_data jsonb)` | `void` | O | Yedeği yazar (en fazla 262 144 bayt). |
 | `set_child_age_band(p_child_id uuid, p_band text)` | `void` | P | Grubu yazar (`K`/`A`/`B`/`C`; null = otomatik). |
-| `review_completion(p_task_id, p_child_id, p_date, p_status, p_note default null)` | `void` | P | Ebeveyn kararı: `approved`/`rejected`/`pending`. Kayıt yoksa oluşturur; `parent_note`, `reviewed_at`, `reviewed_by` yazar. ParentApp onay ve ret için bunu çağırır (19 Ekim kararı). |
+| `review_completion(p_task_id, p_child_id, p_date, p_status, p_note default null, p_motivation default null, p_stones default null)` | `void` | P | Ebeveyn kararı: `approved`/`rejected`/`pending`/`retry` (`20261027130000`, uygulandı: + `retry`, motivasyon 1–5, taş 0–6; retry yalnız bugün, hint `retry_past`). Kayıt yoksa oluşturur; `parent_note`, `reviewed_at`, `reviewed_by` yazar. ParentApp onay ve ret için bunu çağırır (19 Ekim kararı). Eski 5 parametreli çağrılar aynen çalışır. |
 | `unlink_child_device(p_child_id uuid)` | `void` | P | `children.user_id = null`. Oyun bir sonraki kontrolde "bağlantın kapatıldı" der. |
 | `child_balance(p_child_id uuid)` | `integer` | P | Aynı ailedeki çocuğun coin bakiyesi. |
 | `suggest_age_band(p_birthday date)` | `text` | P, iç | `age_band(p_birthday)` ile aynı (eski ad, korunur). |
@@ -150,10 +152,10 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `clinicians` | Uzman (auth.users ile bire bir) | `id`, `clinic_id`, `name` (≤ 80), `title` (≤ 80), `role` (`owner`/`member`) | Sunucu (kayıtta); K yalnız kendi `name`, `title` | K (aynı klinik) |
 | `clinic_invites` | Klinik davet kodları | `code`, `clinic_id`, `clinician_id`, `kind` (`family`/`clinician`), `label` (≤ 60), `expires_at` (varsayılan **+7 gün**), `used_at`, `used_by` | Sunucu (`clinic_create_invite`) | K (kendi kliniği) |
 | `clinic_links` | **Rıza bağlantısı** klinik ↔ çocuk | `clinic_id`, `clinician_id`, `family_id`, `child_id`, `label`, `status` (`active`/`revoked`), `consent_by`, `consent_at`, `revoked_at`, `revoked_by`; bir klinik–çocuk çifti için tek `active` satır | Sunucu (`redeem_clinic_invite`, `revoke_clinic_link`); K yalnız `label`, `clinician_id` | K (kendi kliniği), P (kendi ailesi) |
-| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000) | K | K |
+| `clinic_notes` | Uzman notları (aile görmez) | `link_id`, `clinic_id`, `author_id`, `body` (1–4000), `goal_id` (isteğe bağlı, §27) | K | K |
 | `clinic_goals` | Hedef (GAS) | `link_id`, `title` (1–120), `description` (≤ 600), `archived` | K | K |
 | `goal_ratings` | Haftalık hedef puanı | PK (`goal_id`, `week`), `week` (haftanın pazartesisi), `rating` (−2 … +2), `note` (≤ 300) | K | K |
-| `abc_events` | Zor an kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
+| `abc_events` | Davranış kaydı (Öncesi–Davranış–Sonucu) | `family_id`, `child_id`, `occurred_at`, `antecedent` (≤ 400), `behavior` (1–400), `consequence` (≤ 400), `intensity` (1–5, varsayılan 3) | P | P, K (rızalı bağlantı varsa) |
 | `clinic_task_suggestions` | Uzmanın aileye görev önerisi | `link_id`, `family_id`, `child_id`, `title`, `emoji`, `skill`, `difficulty` (`easy`/`medium`/`hard`), `recurring` (varsayılan true), `note` (≤ 300), `status` (`pending`/`accepted`/`declined`), `decided_at`, `task_id` (kabulde oluşan görev; yalnız aynı ailenin görevi). **20261019140000 ile:** ParentApp görev alanları `description` (≤ 1000), `category` (`home`/`mind`/`learn`/`self`/null), `template_key` (ParentApp şablonu, ör. `t9`; özel görevde null), `coins` (0–50; null = zorluğun varsayılanı), `start_date` (null/geçmiş = kabul günü), `repeat_kind` (`daily`/`weekly`/`monthly`), `repeat_days` (haftalık 1–7, aylık 1–31), `end_date`, `reminder` (`HH:MM`/null), `requires_review` (varsayılan true), `updated_at` | K (ekler; `pending` iken `clinic_update_suggestion` ile günceller ya da geri çeker); P yalnız `status`, `decided_at`, `task_id` | K, P |
 | `family_subscriptions` | Aile aboneliği | `family_id` (PK), `plan` (`free`/`premium`), `source` (`store`/`web`/`manual`), `period_end` | Sunucu (service role) | P (kendi ailesi) |
 | `completions.child_done_at` (yeni sütun) | Çocuğun "Yaptım"/"Yapamam" dediği an | tetikleyici `completions_child_done_at` doldurur | Sunucu | P, K |
@@ -317,7 +319,7 @@ SQL: `supabase/migrations/20261022100000_codes_15min.sql`, `20261022110000_subsc
 | `set_family_subscription(...)` | service role | Ödeme webhook'u (Edge Function `billing-webhook`, RevenueCat; secret'lar `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`) |
 | `mark_messages_read(p_child_id)` | P (çocuğun mesajları), O (ebeveyn mesajları; parametresiz) | Okundu sayısı |
 | `child_send_message(p_kind, p_body)` | O | `text` (≤ 500) / `sticker` → `{id, created_at}` |
-| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` |
+| `child_messages(p_limit default 100)` | O | Sohbet (eskiden yeniye) + `from_name` + `from_avatar` (ebeveyn satırında gönderenin `profiles.avatar`'ı; `migrations/20261027220000_parent_avatar_game.sql`, uygulandı 3 Kasım 2026) |
 | `sun_stones_spendable(p_child_id)` | P (aile), O (yalnız kendisi) | Harcanabilir bakiye (`child_me.sun_stones_spendable` da). `child_me.sun_stones` = kazanılan (ada), değişmedi |
 | `give_reward(p_child_id, p_reward_id, p_quantity default 1)` | P | `{request_id, balance}` |
 | `deduct_sun_stones(p_child_id, p_amount, p_note)` | P | `{balance}` |
@@ -456,6 +458,19 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `clinician_survey_keys(tür)` | K | Geçerli anahtarlar (`profession`, `challenges`, `features`, `intent`); `veri/uzman_anketi.json` ile aynı |
 | `admin_kpi_clinician_survey(gün)` | yönetim paneli (`admin_require`, 2 adımlı) | Toplam sayılar: cevaplayan, geçen, seçenek başına sayı; kişi kimliği dönmez |
 
+## 17. ParentApp ilk kurulum ve tanışma soruları (`migrations/20261027120000_parent_setup_intake.sql`, uygulandı 27 Ekim 2026)
+
+| Tablo / alan | Kim okur | Kim yazar | Not |
+|---|---|---|---|
+| `intake_answers` (`family_id`, `user_id`, `child_id?`, `question_key`, `answer` jsonb dizi, `version`, `consent_version?`) | aile üyeleri | yalnız yanıtlayan (kendi satırı; aile/kişi kimliği sunucudan) | Kişi + çocuk + soru başına tek satır (`unique nulls not distinct`), upsert `onConflict: user_id,child_id,question_key`. Çocuk aileye ait olmalı; seçenekler `^[a-z0-9_]{1,40}$`; sağlık sorularında rıza sürümü (durumlar.md P16). Uzman erişimi yok. |
+| `profiles.setup_completed_at` | aile | `parent_setup_complete()` | İlk kurulum bitti mi; göçten önceki ebeveynler dolu. İstemci doğrudan yazamaz (sütun izni yok). |
+
+| Fonksiyon | Kim | Ne yapar |
+|---|---|---|
+| `parent_setup_complete()` | ebeveyn | Kurulumu bitti olarak işaretler (bir kez) |
+| `admin_intake(aile, gerekçe)` | admin support/owner (2FA) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
+| `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok, sağlık soruları (`child_diagnosis`, `child_medication`) hariç (hukuk_notlari I4) |
+
 ## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`migrations/20261027200000_legal.sql` + `20261027210000_legal_seed.sql`, uygulandı 27 Ekim 2026; Edge Function `legal` yayında; metinler `hukuk/`)
 
 | Tablo | Ne | Erişim |
@@ -470,9 +485,47 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | `legal_pending(app)` | authenticated | Güncel sürümü onaylanmamış, onay isteyen metinler (kayıt sonrası ve açılışta) |
 | `legal_accept(app, [{key, version}])` | authenticated | Yalnız o uygulamanın güncel, onay isteyen sürümleri; `app='child'` yalnız veli (ParentApp) çağırır. Dönüş: kalan bekleyenler |
 | `kvkk_request_create(app, tür, açıklama)` / `my_kvkk_requests()` | authenticated | Başvuru (en çok 5 açık; düzeltme/itiraz/zarar/diğer açıklama ister) ve listesi |
-| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`); JSON isteği yönlenmez |
+| Edge Function `legal` | herkes (Verify JWT kapalı) | `GET ?doc=<anahtar>[&v=<sürüm>][&format=json]` HTML/JSON; `GET` liste. Supabase alan adında HTML düz metin gider: secret `LEGAL_PUBLIC_URL` tanımlıysa tarayıcı isteği `<LEGAL_PUBLIC_URL>/yasal/<anahtar>[?v=]` sayfasına 302 ile yönlenir (yönetim paneli Worker'ı, `admin-panel/worker/`; adres `https://moyoapp.com.tr`, 6 Kasım 2026); JSON isteği yönlenmez |
 
-## 19. Günlük rutin v2 (`migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
+## 19. Ebeveyn görevleri ve hediye dükkânı (`migrations/20261027140000_parent_tasks_gifts.sql`, uygulandı 27 Ekim 2026; akış `akislar.md` 18)
+
+| Tablo | Ne | Alanlar | Kim yazar | Kim okur |
+|---|---|---|---|---|
+| `parent_assignments` | Görevin ebeveyn ataması | pk (`task_id`, `user_id`), `family_id`, `difficulty` (easy/medium/hard) | P (aile; tetikleyici: görev ve kişi aynı aileden, kimlik alanları değişmez) | P (aile) |
+| `parent_completions` | Ebeveynin "Yaptım" işareti | pk (`task_id`, `user_id`, `date`), `family_id`, `done_at` | yalnız `parent_task_done` | P (aile) |
+| `parent_stone_ledger` | Ebeveynin taş defteri; bakiye = toplam (en az 0) | `user_id`, `family_id`, `amount` (≠ 0), `reason` (`task`/`task_undo`/`gift`), `ref` (görev\|gün:zaman ya da hediye kimliği), `item_id?`, `child_id?`; unique (`user_id`, `reason`, `ref`) | yalnız işlevler | P (aile) |
+| `gift_items` | Hediye dükkânı (oyunun kalıcı eşyaları) | `item_id` (→ `game_items`), `stones` (= ceil(coin / 10)), `sort` | göç | herkes (giriş yapmış) |
+| `child_gifts` | Gönderilen hediye | `id`, `family_id`, `child_id`, `item_id`, `from_user`, `from_name` (gönderenin takma adı), `note?` (≤ 140), `stones`, `created_at`, `claimed_at?` | yalnız `send_gift` / `claim_child_gift` | P (aile), O (kendi) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `parent_task_done(görev, gün, yapıldı=true)` → yeni bakiye | P | Kendi atamasını işaretler / geri alır; gün bugün − 7 … + 1 (hint `date_range`), görev o gün olmalı (`not_on_date`), atanmış olmalı (`not_assigned`) |
+| `send_gift(çocuk, eşya, not)` → `{ok, balance, gift_id, error}` | P | `error`: `unknown_item` / `not_enough_stones`; başarıda taş düşer, çocuğa `gift` bildirimi |
+| `child_gifts_pending()` → (id, item_id, from_name, note, created_at, from_avatar) | O | Kapatılmamış hediyeler, eskiden yeniye; `from_avatar` gönderenin bugünkü avatarı (`migrations/20261027220000_parent_avatar_game.sql`, uygulandı 3 Kasım 2026; hesabı silinmişse null) |
+| `claim_child_gift(id)` → boolean | O | İlk çağrı true (kapatır), sonrakiler false |
+
+## 20. Aile davet et (önce "misafir kartı"; `migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026; akış `akislar.md` 19)
+
+3 Kasım 2026 (kullanıcı kararı): davet edilen aile 7 + 7 = **14 gün** dener; davet edilen aile ilk kez mağazadan ücretli aboneliğe geçince davet eden aile **1 ay** kazanır (son 365 günde en çok 12). Öneri henüz uygulanmadığı için dosyanın kendisi güncellendi.
+
+| Tablo / alan | Ne | Alanlar | Kim yazar | Kim okur |
+|---|---|---|---|---|
+| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (7) | smallint | yalnız `redeem_guest_pass` (14) | `family_access_of` |
+| `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
+| `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
+| `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §28) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `create_guest_pass()` → `{code, expires_at, new}` | P | Ailenin kullanılmamış, süresi dolmamış kartı varsa aynısı (paylaşılan kod değişmesin); yoksa yeni. Aile başına en çok 20 kart (hint `limit`) |
+| `redeem_guest_pass(kod)` → `{ok, trial_ends_at}` ya da `{ok:false, error}` | P | Kod denemesi ortak sınırda (`code_throttled`; hatalı kod `code_attempts`'e yazılır). `error`: `not_found` / `used` / `expired` / `own` (kendi ailesinin kartı) / `already` (aile daha önce kart kullandı) / `premium` (abone) / `not_new` (deneme başlayalı 7 günden fazla) / `too_many_attempts`. Başarıda `trial_days = 30`, deneme başlamadıysa bugün başlar; kartın sahibi ailenin ebeveynlerine `guest_pass_used` bildirimi (kullananın kimliği yok) |
+| `family_access_of(aile)` (değişti) | — | Deneme sonu `trial_started_at + coalesce(trial_days, ayar)`, `bonus_until` daha geçse o; dönüşe `trial_days`, `guest_pass` (aile kod kullandı mı) ve `bonus_until` eklendi. Diğer kurallar aynı |
+| `referral_on_paid()` (tetikleyici, `family_subscriptions` insert/update of plan, status) | sunucu | Aile mağazadan (`source = 'store'`) ilk kez `premium` + `active`/`grace` olunca, kullandığı davet kodu ödüllenmediyse: kodu `rewarded_at` işaretler; davet eden ailede son 365 günde 12 ödül varsa `capped`; davet eden mağazadan ödüyorsa `code_pending` (Apple teklif kodu gerekir, sunucu Apple aboneliğini uzatamaz); değilse `bonus_until = max(şimdi, bonus_until, deneme sonu) + 30 gün` ve `applied`. `applied` ve `code_pending`'de davet edene `referral_reward` bildirimi (davet edilenin kimliği yok). İade edilen abonelikte ödül geri alınmaz. Ürünlerde App Store ücretsiz denemesi (intro offer) yok; eklenirse webhook dönem türünü geçirmeli |
+| `my_referrals()` → `{joined, paid, months, year_left, pending_codes, codes[{code, sent_at}], bonus_until}` | P | Ailenin davet özeti; kimlik yok |
+
+Telefon numarası (ParentApp "Uzman bağla" sonrası, bayrak `parent_sms_verify`; `akislar.md` 19): yeni tablo yok. Numara Supabase Auth'un kendi akışıyla (`auth.updateUser({phone})` → SMS kodu → `verifyOtp(type: 'phone_change')`) `auth.users.phone`'a yazılır; uzmana ve öteki ebeveyne gösterilmez. SMS sağlayıcısı Supabase → Authentication → Sign In / Providers → Phone'da tanımlanınca çalışır (ücretli).
+
+## 21. Günlük rutin v2 (`migrations/20261028200000_routines_v2.sql`, uygulandı 28 Ekim 2026; akış `akislar.md` 5.4 "Günlük rutin v2")
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|
@@ -483,7 +536,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 
 RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()` + (oluşturan / `shared` / sahip); ekleme yalnız uzman (klinik ve oluşturan tetikleyiciyle); güncelleme ve silme oluşturan ya da sahip. Öneri ve görev politikaları değişmedi (ebeveyn öneride yine yalnız `status`, `decided_at`, `task_id` yazar). Test: `test_routines_v2.sql`.
 
-## 20. Takip planı yeniden tasarımı (uygulandı 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql`, 2 Kasım 2026; akış `akislar.md` 12.1)
+## 22. Takip planı yeniden tasarımı (uygulandı 2 Kasım 2026, `migrations/20261102100000_plan_redesign.sql`, 2 Kasım 2026; akış `akislar.md` 12.1)
 
 | Tablo / sütun | Ne | Yazar | Okur |
 |---|---|---|---|
@@ -492,7 +545,220 @@ RLS: `clinic_routines` okuma `clinic_id = my_clinic_id()` + `clinician_access()`
 | `clinic_task_suggestions.status` | `draft` eklendi: aile görmez, karar veremez, bildirim yok; `care_plan_publish` hepsini `pending` yapar | K | K; P yalnız `draft` olmayanı |
 | `clinic_task_suggestions.kind` (`new` / `change`), `target_task_id`, `change_remove` | `change`: ailede ekli göreve değişiklik önerisi; hedef görev bu ailenin ve bu çocuğa atanmış olmalı (`cts_change_guard`); görev başına tek açık öneri (`cts_one_open_change`). Yeni değerler öneri sütunlarında (`reminder`, `repeat_kind`, `repeat_days`, `recurring`, `end_date`); `change_remove` = görevi bitir | K | K, P (ParentApp "Uygula" ile görevi günceller) |
 | `care_plan_publish(link)` | Plan anlık görüntüsü + taslak öneriler `pending`; plan ve öneriler için **tek** bildirim (`care_plan_shared`; yalnız öneri varsa `clinic_suggestion`). Gönderilecek hiçbir şey yoksa hata | K | — |
+| `care_plan_publish_selected(link, hold[])` (`20261102500000_plan_publish_selected`, uygulandı 2 Kasım 2026) | Aynı gönderim, `hold` içindeki hedef / program / öneri kimlikleri bekler (hedef ve program ailede eski `pub`'ında, taslak taslak kalır). Plan değişmediyse ve öneri yoksa bildirim yok, hata yok. Programın `pub.goal_ids`'i yalnız `pub`'ı dolu hedefler (iç işlev `care_plan_snapshot_hold`, yalnız sunucu; `care_plan_snapshot(link)` ona yönlenir) | K | — |
 | `family_care_plan(link)` | `modules[].goal_ids` ve `routines[]` {id (rutin grubu ya da tek öneri), title, icon, single, goal_id (yalnız aileye gönderilmiş hedef), task_ids} eklendi | — | P |
 | `clinic_set_suggestion_goal(ids uuid[], goal uuid)` | Uzman kendi önerilerinin (ailede ekli rutin dahil) hedef bağını değiştirir ya da kaldırır (`null`); yalnız `goal_id` değişir, hedef aynı paylaşımın olmalı (`cts_goal_guard`). Dönüş: değişen satır sayısı | K | — |
 
 RLS ve kurallar: `care_module_goals` uzmanın programı görebildiği/yazabildiği kadar (`care_modules` "modül: klinik" ile aynı). `clinic_plan_templates` `clinic_routines` ile aynı kalıp. Öneri ekleme `status in ('draft','pending')`; geri çekme taslak ya da bekleyen; aile okuma ve karar `status <> 'draft'`. `clinic_update_suggestion` taslak ya da bekleyeni günceller (+ `goal_id`, `change_remove`). Paylaşım bitince taslaklar silinir (`clinic_links_drop_drafts`). Eski ClinicApp doğrudan `pending` ekler ve eskisi gibi tek tek bildirir. Test: `test_plan_redesign.sql`.
+
+## 23. KVKK işletme ve izleme (öneri `proposed/20261102200000_kvkk_ops.sql`, 2 Kasım 2026; panel `admin.md` "KVKK işletme", envanter `hukuk/46-veri-envanteri.md`)
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `retention_runs` | İmha kaydı: başlangıç/bitiş, tetik (`cron`/`admin`), kuru mu, adım başına sayı (`results`), hata (`errors`), `ok`. Kişisel veri yok; en az 3 yıl | Tablo kapalı (RLS, izin yok); panel `admin_retention_status` |
+| `usage_daily_totals` | Süresi dolan kullanım kayıtlarının anonim günlük toplamı: gün, uygulama, `metric` (`active` ya da `event:<olay>`), kişi ve olay sayısı | Tablo kapalı |
+| `app_config` `retention` | Süreler (gün; kod denemesi saat) ve `live` (varsayılan **false** = kuru çalıştırma, yalnız sayar) | yalnız panel |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `retention_run(tetik, kuru?)` | yalnız sunucu (pg_cron `retention-nightly`, 00:17 UTC = 03:17 TR) | `hukuk/42` §4 satır 10, 16, 17, 19, 20, 21, 22, 24, 27 + `cron.job_run_details` (7 gün). Her adım ayrı (biri hata verirse diğerleri sürer). 21: hiçbir çocuğa bağlı olmayan ve 30 gün girişsiz **anonim oyun oturumu** silinir (bağlı tablolar zincirleme). 22: denetim kaydı yalnız bu işle ve en az 1 yıl eski kesimle silinir (`admin_audit_immutable` istisnası) |
+| `my_data_export()` | authenticated (anonim değil) | **"Verimi indir"**: JSON (`bicim: veri-disa-aktarma-v1`). Ebeveyn: hesap, profil, aile, abonelik, çocuklar (cihaz kimliği yerine `oyun_cihazi_bagli`), görevler + atamalar, tamamlamalar, ödüller, istekler, coin/taş defterleri, haftalık hedef, oyun kayıtları, mesajlar, davranış kayıtları, ev programı kayıtları, uzman paylaşımları, tanışma yanıtları, ebeveyn görevleri + "Yaptım" + taş cüzdanı, ebeveyn dersleri + uygulama günleri, ebeveyn eğitimi (kendi tamamladığı modül + yanıtlar, uygulama kayıtları, yapılacaklar), davranış olayları (kendi bildirdikleri), hediyeler, haftalık hedef ayarları, görev hatırlatmaları, kayıtlı şablonlar, misafir geçişleri, davet ödülleri (`proposed/20261110120000_kvkk_export_v2.sql`; eğitim ve olay bölümleri tabloları varsa); **diğer ebeveynin yazdıkları ayıklanır** (`ayiklanan` sayıları; hediyede not + gönderen adı), dosyalar `dosyalar` listesinde (kova + yol; uygulama imzalı bağlantı üretir). Uzman: hesap, klinik, üyelik (sahipse), belge incelemeleri (dosya yolu yok), anket; danışan kayıtları yok. Herkes: bildirimler, yasal onaylar, KVKK başvuruları, kullanım özeti (olay adı başına sayı, uygulama açılış günleri), cihazlar (jeton yok), kişiye özel ayarlar, hesabındaki ekip işlemleri (yalnız işlem + zaman). Günde en çok 5 (`app_events` `kvkk.data_export`) |
+| `ops_health()` | yalnız sunucu (Edge Function `health`) | Sistem sağlığı `{status, checked_at, checks:[{key, level ok/info/warn/fail, label, detail}]}`: `cron`, `retention`, `kvkk` (süresi geçen kırmızı, 7 gün içinde sarı), `verifications` (3 günden eski), `clinic_trials` (3 gün içinde biten), `billing` (son RevenueCat olayı; ödeme açıkken 14 gün sessizlik sarı), `push` (Apple anahtarı olana 10 dk'dır gitmeyen), `net` (pg_net 5xx, son 6 saat), `storage_trash`, `legal`. Kişisel veri yok |
+| Edge Function `health` | herkes (Verify JWT **kapalı**) | `GET` → 200 `{status}` / 503 `{status:"fail"}`; başlık `x-health-key: <HEALTH_KEY>` (secret, isteğe bağlı) ile denetim adları + düzeyleri. Sayı/ayrıntı dönmez |
+
+**Uygulamaların yapacağı (SQL uygulanınca):** ParentApp ve ClinicApp › Ayarlar › Gizlilik › **"Verimi indir"**: yeniden giriş (şifre) iste → `my_data_export()` → JSON dosyası paylaşım sayfasıyla kaydedilir; `dosyalar` için istenirse kısa süreli imzalı bağlantılar (`mail`/`abc` kovası, kullanıcının zaten okuyabildiği dosyalar). GameApp: 30 gün girişsiz ve çocuğa bağlanmamış anonim oturum sunucuda silinebilir; oyun oturum yenileme hatasında yeniden anonim oturum açıp kod ekranına dönmeli (bağlı cihazlar silinmez).
+
+## 24. Destek talepleri (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; panel `admin.md` "Destek")
+
+| Tablo | Ne | Erişim |
+|---|---|---|
+| `support_requests` | `ref` (`D-` + 6 karakter, kişiye gösterilir), uygulama (parent/child/clinic/other), konu (account/subscription/bug/privacy/clinic/other), e-posta (küçük harf), ad (isteğe bağlı), mesaj (10–3000), durum (new/in_progress/answered/closed/spam), iç not, ilgilenen, yanıt zamanı | Tablo kapalı; yazma yalnız `support_request_create` (sunucu), okuma panel |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `support_request_create(app, konu, e-posta, ad, mesaj)` | yalnız sunucu (Edge Function `support`) | `{ref}` ya da `{error: invalid / too_many / busy}`; e-posta başına 24 saatte 3, saatte toplam 60 |
+| Edge Function `support` | herkes (Verify JWT **kapalı**) | `GET` → 302 `<LEGAL_PUBLIC_URL kökü>/destek`; `POST {app, topic, email, name, message, adult, website, elapsed_ms}` → `{ok, ref}`; tuzak alanı dolu ya da 3 saniyeden kısa → sessizce `{ok}` (kayıt yok); `adult` değilse 400 |
+
+**Uygulamaların yapacağı:** ParentApp ve ClinicApp › Ayarlar › "Yardım ve iletişim" → `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (tarayıcıda açılır). GameApp: ebeveyn kapısı › Bilgi › "Destek" aynı adres, Safari'de; adrese çocuk/cihaz kimliği eklenmez (`hukuk/50` §10). App Store Connect Support URL: aynı adres.
+
+## 25. Tüm danışanlar dikkat panosu (`migrations/20261102600000_clinic_attention_summary.sql`, uygulandı 2 Kasım 2026; kullanıcı kararı "liste + neden")
+
+Tablo değişmez. Salt okunur özet işlevi; ClinicApp ana ekranında danışan başına tek satır, yalnız olgu söyleyen nedenler (puan, renkli risk, sıralama yok).
+
+| İşlev | Ne | Çağıran |
+|---|---|---|
+| `clinic_attention_summary()` | `table(link_id, last_family_at, done_7d, abc_7d, abc_last_at, logs_7d, decided_7d, decided_last_at, pending, drafts, plan_unsent, goals_active, review_due, plan_published_at)`. Erişim `clinic_clients` ile aynı (kendi kliniği, etkin paylaşım, `clinician_access`, `clinic_link_visible`). `last_family_at` = ailenin son kaydı (görev "yaptım"/onay, davranış kaydı, program uygulaması, öneri kararı); `drafts` rutin paketini tek sayar; `plan_unsent` = `care_plan_snapshot_hold`'un yazacağı hâlden farklı `pub`; `review_due` = süren hedefte son değerlendirmeden (yoksa eklenişten) 28 gün ya da süre doldu ve son haftasında değerlendirilmedi (ClinicApp `planCore.reviewDue` ile aynı). Yalnız sayı ve zaman döner, metin yok. | K |
+
+## 26. Davranış kaydı ↔ uzmanın hedefi (`migrations/20261103120000_abc_goal.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı 3 Kasım 2026)
+
+| Tablo / sütun | Ne | Yazar | Okur |
+|---|---|---|---|
+| `abc_events.goal_id` | İsteğe bağlı: kaydın ilgili olduğu uzman hedefi (`clinic_goals.id`); hedef silinince boşalır | P (kayıt eklerken ya da düzenlerken; "Hangi hedefle ilgili?") | P, K (rızalı paylaşım; mevcut kural) |
+| `abc_events_goal_guard` (tetikleyici, insert / update of goal_id, child_id) | Hedef aynı çocuğun **etkin** paylaşımına ait ve aileye **gönderilmiş** (`pub` dolu) olmalı; değilse hata `goal_mismatch` (23514). Paylaşım sonradan bitse de eski kayıtların bağı kalır | sunucu | — |
+
+ParentApp hedefleri `family_care_plan(link).goals` (yalnız gönderilenler, `status = 'active'`) ile gösterir; seçilmezse "Diğer / emin değilim" (boş). ClinicApp kayıtları hedefe göre süzer ve hedef sayfasında listeler (Klinik penceresi). Test: `test_abc_goal.sql`.
+
+## 27. Hedefe bağlı uzman notu (`migrations/20261103100000_goal_notes.sql`, uygulandı 3 Kasım 2026; ClinicApp kullanıcı kararı "N3")
+
+- `clinic_notes.goal_id uuid null → clinic_goals(id) on delete set null`: not bir hedefe bağlanabilir; hedef silinirse not kalır, bağ boşalır. Tetikleyici `clinic_notes_goal_check`: hedef, notun bağlantısının (`link_id`) hedefi olmalı (`goal_link_mismatch`, 23514). `goal_id` sonradan değiştirilemez (güncelleme izni yok).
+- RLS değişmez: not yalnız klinikte (yetkili ekip), aile görmez. Değerlendirme notu ayrıca `goal_ratings.note` (≤ 300, 19 Ekim'den beri; ClinicApp "Değerlendir" penceresinde isteğe bağlı). Önceki uzmanın kayıtlarına (`clinic_inherited_records`) değerlendirme notu girmez.
+- ClinicApp: Takip Planı'nda hedefin bej kutusunda not simgesi (sayıyla) + son not; danışan › Notlar'da hedefin adıyla. Sütun yoksa simge görünmez (yalnız değerlendirme notu). Test `test/test_goal_notes.sql`.
+
+## 28. Davet ödülü kod havuzu (`migrations/20261103200000_referral_codes.sql`, uygulandı 3 Kasım 2026; kullanıcı kararı: seçenek B "kod havuzu", elle giriş yedek; panel `admin.md` "Davet ödülleri")
+
+App Store'dan ödeyen davet edene ödül yalnız Apple teklif koduyla verilebilir (§20). Ekip App Store Connect'te **tek kullanımlık** kod üretir (aylık ve yıllık ürün için ayrı, "1 ay ücretsiz", en çok 6 ay geçerli) ve dosyayı panele yükler; ödül yazılınca kod kendiliğinden atanır. Benchmark (3 Kasım 2026): Apple tek kullanımlık kod her biri bir kez, en çok 6 ay; özel kod çok kişiye açık (ödülde yayılır, seçilmedi); RevenueCat: uygulama içi kod penceresi güvenilmez, App Store kod sayfası sorunsuz (ParentApp öyle yapar), mevcut abonede ücretsiz ay sonraki yenilemede başlar, kodlar sandbox'ta denenemez.
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `offer_code_pool` | Atanmamış ve atanmış Apple kodları (kişisel veri yok; aileye bağ `referral_rewards.offer_code`) | `code` pk (`^[A-Z0-9]{6,64}$`), `billing` (`monthly` / `yearly`), `batch` (parti adı), `expires_at` (App Store Connect'teki son tarihin başlangıcı, İstanbul), `added_at`, `added_by?`, `assigned_at?` | yalnız `admin_offer_codes_add` / `admin_offer_codes_remove` / `referral_assign` | yalnız sunucu (RLS açık, istemciye kapalı) |
+
+| Fonksiyon | Kim | Ne |
+|---|---|---|
+| `referral_assign(ödül, kod?, bildir)` → kod ya da null | iç | Ödül `code_pending` değilse null. Kod boşsa havuzdan: ailenin `family_subscriptions.billing`'ine (yoksa aylık) uyan, **en az 14 gün** kalan, en erken bitecek kod (`for update skip locked`). Kod doluysa elle (harf/rakam 4–64; başka aileye gitmiş ya da havuzda atanmış kod olmaz). `status = 'code_sent'`, `offer_code`, `code_sent_at`; bildir: `referral_reward` "Hediye kodun hazır" |
+| `referral_assign_pending()` → sayı | iç | Bekleyen ödüllere sırayla havuzdan kod |
+| `referral_on_paid()` (değişti) | tetik | §20 ile aynı; `code_pending` yazınca hemen `referral_assign` dener: kod atanırsa **tek** bildirim "1 ay hediye kazandın … kodun hazır", atanmazsa eski "birkaç gün içinde" bildirimi |
+| `admin_referral_overview()` | her admin | `invites` (oluşturulan / kullanılan / abone olan, toplam ve son 30 gün), `rewards` (durum sayıları, son 30 günde verilen ay), `pending[]` (aile, tarih, ürün), `sent[]` (son 20, kodun yalnız son 4 karakteri), `pool` (kullanılabilir aylık/yıllık, 30 günde bitecek, süresi geçmiş, atanmış), `batches[]`. Atanmamış kod dönmez |
+| `admin_offer_codes_add(kodlar[], ürün, son_tarih, parti?, gerekçe)` | finance | 1–25000 kod; son tarih bugün+15 gün ile 6 ay arası; boşluklar silinir, büyük harfe çevrilir; geçersiz ve tekrar eden atlanır; ardından bekleyenlere atanır. Döner `{batch, added, invalid, duplicate, assigned}`. Denetim `referral.codes_add` (`system`/`offer_codes:<parti>`, yalnız sayılar) |
+| `admin_offer_codes_remove(parti?, gerekçe)` | finance | Partideki **atanmamış** kodları siler (yanlış dosya); parti boşsa süresi geçmiş atanmamış kodlar. Denetim `referral.codes_remove` |
+| `admin_referral_send_code(ödül, kod?, gerekçe)` | finance, support | Tek ödüle kod: boşsa havuzdan, doluysa elle (yedek yol). Denetim `referral.send_code` (`family`, yalnız son 4 karakter) |
+
+Sağlık (`ops_health`, `kvkk_ops` önerisine eklendi): anahtar `referral` — kod bekleyen ödül ya da aylık kod 5'ten az → sarı; havuz boş ya da kodların bir kısmının süresi 30 gün içinde bitiyor → bilgi.
+
+## 29. Seans planlama ve takip (`migrations/20261105100000_sessions.sql`, uygulandı 5 Kasım 2026; kullanıcı isteği "beş alternatifin geliştirmesini yap"; akış `akislar.md` 20, durumlar `durumlar.md` P18)
+
+Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; yazma işlevlerle (çalışma saatleri hariç). Aile tablolara bakmaz, yalnız `family_*` işlevleriyle görür.
+
+| Tablo | Ne | Kim okur |
+|---|---|---|
+| `clinic_sessions` | randevu: uzman, paylaşım (`link_id`, boşsa danışansız blok + `title`), `series_id`, `starts_at`, `duration_min`, `kind`, `mode`, `room_id`, `status`, `cancel_reason`, `visible_to_family`, `booked_by`, ailenin yanıtı (`family_response`, `family_note`), `package_id`, bekleme teklifi (`waitlist_id`, `offer_expires_at`), dış takvim `external_uid` | klinik: danışanlı seansı paylaşımı görebilen (`clinic_link_visible`), danışansızı kendisi ve sahip |
+| `clinic_session_records` | seans kaydı: `attendees[]`, `observation`, `worked`, `next_step`, `agenda` [{text, done, source}], `homework` [{kind, id, title}] | seansı gören klinik; **aile görmez** |
+| `clinic_rooms` | oda + şube (`location`), `active` | klinik; yazma sahip (`clinic_room_save`) |
+| `clinic_session_settings` | klinik başına: `cancel_hours` (24), `count_late_cancel`, `count_no_show`, `reminders` int[] dakika ({1440,120}), `booking_enabled` (kapalı), `booking_notice_hours` (24), `booking_horizon_days` (21), `slot_minutes` (45) | klinik; yazma sahip (`clinic_session_settings_save`) |
+| `clinic_availability` | uzman çalışma saati: `weekday` (ISO 1–7), `start_time`, `end_time`, `room_id`, `bookable` (aile alabilir) | klinik; **doğrudan yazılır**: kendisi ya da sahip |
+| `clinic_session_packages` | seans paketi: `title`, `total`, `starts_on`, `ends_on`, `note`, `closed_at` (ödeme yok; kullanılan = paketteki yapıldı + ayara göre gelmedi/geç iptal) | paylaşımı gören klinik |
+| `clinic_waitlist` | bekleme listesi: `link_id` başına tek açık satır, `note`, `status` | paylaşımı gören klinik |
+| `clinic_calendar_feeds` | uzmanın takvim aboneliği belirteci (48 hex), `show_initials` | yalnız kendisi |
+| `clinic_calendar_sources` | uzmanın dış takvim adresi (izinli sunucular: calendar.google.com, pNN-caldav.icloud.com, outlook.office365.com, outlook.live.com; en çok 3) | yalnız kendisi |
+| `clinic_external_events` | dış takvimden okunan etkinlik: `uid`, `starts_at`, `ends_at`, `summary`, `session_id`, `ignored` | yalnız kendisi |
+
+| İşlev | Kim | Ne yapar |
+|---|---|---|
+| `clinic_session_create(p jsonb) → {ids, conflicts}` | uzman | tek ya da `repeat` weekly/biweekly + `count` (≤ 52). `visible_to_family` ise aileye **tek** `session_scheduled`. Çakışmalar (oda / uzman) uyarı olarak döner, engellemez |
+| `clinic_session_update(id, p jsonb, scope 'one'\|'following') → {updated, conflicts}` | uzman | saat kayması serideki sonraki planlılara aynı ölçüde; saat değişince aile yanıtı sıfırlanır, aileye tek `session_changed` |
+| `clinic_session_set_status(id, status, reason?, waive?) → status` | uzman | `cancelled` iptal süresinin (`cancel_hours`) içindeyse `late_cancel` olur (`waive` ile iptal kalır); `done`/`no_show` başlamadan (30 dk öncesine kadar) yazılmaz; gelecekteki planlı iptal/ertelemede aileye `session_cancelled` |
+| `clinic_session_delete(id, scope)` | uzman | kaydı olan seans silinmez (`session_has_record`) |
+| `clinic_session_record_save(session, p jsonb)` | uzman | kaydı yazar (upsert) |
+| `clinic_busy(from, to)` | uzman | klinikteki dolu saatler (uzman, oda), danışan bilgisi olmadan; ≤ 62 gün |
+| `clinic_session_settings()`, `clinic_session_settings_save(p)` | uzman / sahip | ayar |
+| `clinic_room_save(id?, name, location?, active)` | sahip | oda |
+| `clinic_package_save(id?, link, title, total, starts?, ends?, note?, closed?)` | uzman | paket |
+| `clinic_waitlist_save(link, note?, remove?)`, `clinic_waitlist_offer(waitlist, starts_at, duration, room?, hours)` | uzman | bekleme listesi; teklif `status='offered'`, aileye `session_offer` |
+| `clinic_calendar_feed(action 'get'\|'rotate'\|'set'\|'delete', initials?)` | uzman | abonelik belirteci; adres `…/functions/v1/calendar-feed?t=<belirteç>` |
+| `clinic_calendar_source_save(url, label?, remove?)`, `clinic_external_event_mark(event, link?, kind, mode, ignore?)` | uzman | dış takvim; eşitleme Edge Function `calendar-import` (POST, oturumla) |
+| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders |
+| `family_session_respond(id, 'ok'\|'unavailable', note?)` | ebeveyn | gelecekteki planlı seans; "uygun değil" uzmana `session_family_response` |
+| `family_offer_respond(id, accept) → 'planned'\|'cancelled'` | ebeveyn | boşalan saat teklifi; uzmana `session_offer_answered` |
+| `family_booking_slots(link) → [{starts_at, duration_min}]` | ebeveyn | klinik açtıysa sorumlu uzmanın `bookable` saatlerinden, dolu saatler, bildirim süresi ve ufuk dışı çıkarılarak (≤ 60) |
+| `family_book_slot(link, starts_at) → id` | ebeveyn | listedeki saat; en çok 2 gelecek aile randevusu; uzmana `session_booked` |
+| `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
+
+Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
+
+## 30. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; kullanıcı kararı; akış `akislar.md` 21, durumlar `durumlar.md` P19)
+
+Seans önerisinden (29) **önce** uygulanır. Bir uzman (`clinicians`, kişi) birden çok **çalışma alanının** (`clinics`) üyesidir: kendi bireysel alanı (`clinics.personal_of` = uzman) ve ekibine katıldığı klinikler. Danışan, davetin gönderildiği alanındır; alanlar birbirini görmez.
+
+| Tablo / sütun | Ne | RLS |
+|---|---|---|
+| `clinics.personal_of` | bireysel alanın sahibi (uzman başına en çok bir); aileye `independent = true` (ParentApp yalnız unvan + ad gösterir, klinik adı ve etiket yok) | — |
+| `clinics.members_can_invite` | ekip üyeleri aile davet edebilir mi (varsayılan `true`; sahip değiştirir) | — |
+| `clinic_members` (clinic_id, clinician_id, role `owner`/`member`, status `active`/`left`, invited_by, joined_at, left_at) | üyelik; rol alandan alana değişir | okuma: kendi satırları + etkin alanın ekibi; yazma yalnız işlevlerle |
+| `clinician_codes` (clinician_id, code 8 karakter) | uzmanın kalıcı kişisel kodu | hiç kimse doğrudan okumaz; `clinician_personal_code()` |
+| `clinic_member_requests` (clinic_id, clinician_id, requested_by, status, expires_at 7 gün) | kliniğin ekibe ekleme isteği | okuma: hedef uzman + etkin alanın sahibi; yazma işlevlerle |
+
+**Etkin alan:** `my_clinic_id()` istek başlığı `x-clinic-id`'yi (ClinicApp her REST isteğine ekler) etkin üyelikle denetler; geçersizse `null` (hiçbir klinik satırı görünmez, `clinician_me().workspace_invalid`). Başlık yoksa varsayılan alan `clinicians.clinic_id` (etkin üyelik şartıyla): eski uygulama sürümleri ve hizmet rolü çağrıları böyle çalışır. `my_clinic_role()` alandaki rol; `clinic_is_owner()`, `clinician_access()`, `clinic_link_visible()`, `clinic_link_recipients()`, `notify_clinic()` (bildirime `clinic_id` ekler), `clinic_assign`, `clinic_set_responsible`, `clinic_create_invite`, `clinic_invite_email_take`, `suggestions_notify`, `clinic_redact_names`, `account_delete_of` üyelikten okur. Bildirim tetikleyicisi `notifications_clinic_scope` uzman bildirimine `data.clinic_id` yazar (paylaşım, davet kodu, seans ya da çocuk üzerinden); uygulama dokununca o alana geçer. Ses kaydı (Storage `abc`) başlık taşımadığı için `clinic_sees_child_any()` (herhangi bir etkin alan). `clinicians_member_sync` tetikleyicisi eski tek alanlı yazımları (ekip kodu, yönetim araçları) üyeliğe yansıtır.
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinician_me()` | K | etkin alanla: `role` (alandaki), `personal`, `members_can_invite`, `default_clinic_id`, `workspace_invalid`, `workspaces` (sayı), `has_personal`, `requests` (bekleyen istek sayısı) + eski alanlar |
+| `clinician_workspaces() → [{clinic_id, name, role, personal, active, access, default, members, joined_at}]` | K | alan seçici; bireysel alan önce |
+| `clinician_personal_workspace() → uuid` | K | bireysel alanı açar (yoksa); deneme süresi uzmanın açtığı alanlarla ortak |
+| `clinic_workspace_create(name) → uuid` | K | yeni klinik alanı (sahip); en çok 3; deneme ortak. ClinicApp: Ayarlar › "Kendi kliniğini kur" (hesap seçicide değil; `akislar.md` 21 adım 5) |
+| `clinician_personal_code(rotate default false) → text` | K | kalıcı kod; `rotate` yeniler (gönderilmiş istekler geçerli kalır) |
+| `clinic_member_request(code) → {status sent/pending, id, name, title, expires_at} \| {error}` | K (etkin klinik alanının sahibi) | `invalid_code` (deneme sınırı `code_throttled`), `self`, `already_member`, `seat_full` (etkin üye + bekleyen istek ≥ koltuk), `personal_workspace`; uzmana `team_request` (`data.request_id`) |
+| `clinic_member_requests_mine()` | K | bekleyen isteklerim (klinik adı, gönderen, ekip sayısı, süre) |
+| `clinic_member_respond(id, accept) → {status} \| {error closed/seat_full}` | K (hedef uzman) | kabul: üyelik (`member`, `invited_by`), sahiplere `team_joined`; ret: gönderene `team_request_declined` |
+| `clinic_member_request_cancel(id)` | K (sahip) | bekleyen isteği geri çeker |
+| `clinic_team() → {members[{id,name,title,role,joined_at,invited_by_name,verified_as}], requests[], seat_limit, members_can_invite, personal}` | K | etkin alanın ekibi; istekler yalnız sahibe |
+| `clinic_member_remove(clinician)` | K (sahip) | üyeyi çıkarır (sahip çıkarılmaz); ona `team_removed` |
+| `clinic_leave()` | K (üye) | etkin klinik alanından ayrılır (sahip ve bireysel alan ayrılamaz); sahiplere `team_left` |
+| `clinic_invite_policy_set(bool)` | K (sahip) | ekip üyeleri aile davet edebilir mi; kapalıyken üyenin klinik adına daveti `invite_owner_only` |
+| `clinic_member_end(clinic, clinician)` | iç | üyelik `left`; o klinikte atama, sorumluluk (`clinic_links.clinician_id` → null), bekleyen aile davetleri (iptal), gelecekteki seanslar (uzmansız) ve çalışma saatleri kapanır; danışanlar ve uzmanın yazdıkları klinikte kalır; varsayılan alan buysa bireysel alana geçer |
+| `family_clinic_links()` | P | yeni sütun `independent` (bireysel alan) |
+| `clinic_invite_preview(code)` | P | yeni alan `independent` |
+| `clinic_busy_elsewhere(from, to)` (seans önerisinde) | K | etkin alanın uzmanlarının başka alanlardaki seansları: kendisinde alan adıyla, sahipte yalnız "dolu" |
+
+Hesap silme (`account_delete_of`): her etkin alanda ayrı karar: tek kişilikse alan silinir, sahipse alan en eski üyeye (önce başka sahip) geçer, üyeyse sorumlulukları boşalır; bireysel alan silinir.
+
+Eski ekip kodu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) yalnız eski uygulama sürümleri için çalışır ve üyeliği yazar; yeni ClinicApp göstermez (kaldırma DURUM Açık işler). Yönetim paneli işlevleri (`admin_clinic`, `admin_customers`) üye listesini hâlâ `clinicians.clinic_id`'den okur; üyelik tablosuna geçişi yönetim paneli penceresinin işi (DURUM).
+
+
+## 31. Ebeveyn eğitimi: Gelişim › Ben (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; kullanıcı kararları; akış `akislar.md` 22, taş `ekonomi.md` 5C, durumlar `durumlar.md` P20)
+
+Kısa dersler (3–5 dk) ebeveynin kendisi için; uzman kütüphaneden önerebilir. Dersler bilgi amaçlıdır, tanı ya da tedavi değildir. Bugünkü takip planı programı (`care_modules`, `care_module_logs`; uzmanın yazdığı, çocuğa bağlı ev programı) **değişmez**; ders kataloğu sistem içeriğidir, uzman yazmaz.
+
+| Tablo / sütun | Ne | RLS |
+|---|---|---|
+| `parent_lessons` (key, title, summary, minutes, body_md, try_text, domain, sources, position, status `draft`/`published`/`retired`) | ders kataloğu; içerik sonra (boşken ParentApp "Yakında") | okuma: girişli herkes, `published` + `retired`; yazma yok (SQL / ileride panel) |
+| `parent_lesson_assignments` (clinic_id, link_id, family_id, lesson_key, note ≤ 300, status `active`/`withdrawn`, assigned_by) | uzmanın aileye önerdiği ders; paylaşım başına aynı ders bir kez etkin | okuma: aile (etkin paylaşımdaki etkin öneri), klinik (görebildiği paylaşım); yazma işlevlerle |
+| `parent_lesson_progress` (user_id, lesson_key, family_id, assignment_id, status `current`/`learned`/`paused`, started_at, opened_at, learned_at) | ebeveynin dersi; kişi başına en çok bir `current` | okuma: aile; yazma işlevlerle |
+| `parent_lesson_practice` (user_id, lesson_key, family_id, day) | "Bugün uyguladım" günleri | okuma: aile; yazma işlevlerle |
+| `parent_stone_ledger.reason` | + `lesson`, `lesson_undo` (ref `lesson|<hafta başı>|<an>`) | değişmedi |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `family_lessons() → {today, week_start, catalog[], assigned[{id, lesson_key, link_id, note, created_at}], mine[{lesson_key, status, assignment_id, started_at, opened_at, learned_at, days, week_days[]}], week_practiced, week_stones, week_cap 3, balance}` | P | Gelişim › Ben'in bütün verisi (hafta Pzt–Paz, Türkiye saati) |
+| `parent_lesson_start(key) → family_lessons()` | P | "Bu haftanın becerisi" yapar; önceki uygulandıysa `learned`, uygulanmadıysa `paused`; önerisi varsa bağlanır. `lesson_not_found` |
+| `parent_lesson_open(key)` | P | ilk açılışı yazar (taş yok) |
+| `parent_lesson_finish(key) → family_lessons()` | P | "Öğrendim". `lesson_not_started` |
+| `parent_lesson_practice(key, day = bugün, done = true) → {ok, day, week_start, week_days[], week_practiced, week_stones, week_cap, stone_given, balance}` | P | gün bugün ve önceki 6 gün (`date_range`); hafta taşı yeniden hesaplanır (en çok 3). `lesson_not_started` |
+| `clinic_assign_lesson(link, key, note) → uuid` | K | önerir (varsa notu günceller); ebeveynlere `lesson_assigned`. `link_not_visible`, `link_not_active`, `lesson_not_found` |
+| `clinic_withdraw_lesson(id)` | K | öneriyi geri çeker. `assignment_not_found` |
+| `clinic_parent_lessons(link) → [{id, lesson_key, title, note, status, created_at, withdrawn_at, parents[{name, status, opened, days[]}]}]` | K | yalnız kendi önerdiği dersler, öneri tarihinden sonraki günler; paylaşım bitince `parents` boş. `link_not_visible` |
+| `tr_today()` | P, K | Türkiye tarihi (yardımcı) |
+
+## 32. Ebeveyn eğitimi (`migrations/20261110100000_parent_trainings.sql`, uygulandı 9 Kasım 2026; kullanıcı isteği; akış `akislar.md` 23, durumlar `durumlar.md` P21; test `test_parent_trainings.sql`)
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `parent_trainings` | Uzmanın ebeveyne verdiği eğitim | `clinic_id`, `link_id`, `parent_id` (atanan ebeveyn; boşsa ailedeki ebeveynler), `parent_name` (sunucu doldurur), `title` (eğitim hedefi, 1–200), `status`, `criterion` (≤ 400), `started_at`, `activated_at`, `mastered_at`, `seen_at` (uzmanın son bakışı), `created_by` | K (etkin paylaşım; başka danışana taşınamaz; ebeveyn o aileden) | K; P taslak dışını (`family_trainings`) |
+| `parent_training_modules` | Öğrenme modülü (kütüphane öğesi anahtarı) | `item_key`, `position`, `archived`, `completed_at`, `completed_by`, `correct`, `total`, `answers` (jsonb dizi), `reviewed_at` (uzman inceledi) | K ekler / sıralar / arşivler / inceler; tamamlamayı yalnız P (`family_training_module_complete`) | K; P (arşivsiz, taslak dışı) |
+| `parent_training_tasks` | Uygulama görevi | `title` (1–80), `description` (≤ 600), `measure`, `position`, `archived` | K | K; P |
+| `parent_training_logs` | Ebeveynin uygulama kaydı | `task_id`, `training_id`, `family_id`, `day`, `count` / `successes` + `attempts` / `minutes` (ölçüme göre), `reflection` (≤ 255), `created_by` | yalnız P (`family_training_log`) | K; P (kendi ailesi) |
+| `parent_training_todos` | Hızlı yapılacak | `title`, `description` (≤ 255), `position`, `archived`, `done_at`, `done_by`, `rating` (1–5), `reflection` (≤ 140), `reviewed_at` | K yazar / inceler; işaret yalnız P (`family_training_todo_set`) | K; P |
+| `parent_training_data` | Uzmanın gözlem verisi | `day`, `value` (0–100) | K | yalnız K |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinic_link_parents(link)` | K | Paylaşımdaki ailenin ebeveynleri: `user_id`, `name` (iletişim yok) |
+| `family_trainings()` | P | Taslak dışı eğitimlerim (etkin paylaşımlar): modüller, görevler, son 120 günün kayıtları, yapılacaklar; `mine` = bana ya da herkese atanmış |
+| `family_training_module_complete(modül, yanıtlar?, doğru?, toplam?)` | P | Modülü bir kez tamamlar (etkin eğitim, atanan ebeveyn); açık uçlu yanıt ≤ 1000 |
+| `family_training_log(görev, gün?, sayı?, başarılı?, deneme?, dakika?, düşünce?)` | P | Ölçüme göre zorunlu alan; gün bugün ya da önceki 14 gün (Türkiye) |
+| `family_training_todo_set(yapılacak, tamam, puan?, düşünce?)` | P | Tamamla (puan 1–5, düşünce ≤ 140) ya da geri al |
+| `clinic_training_remind(eğitim)` | K | Etkin eğitimde atanan ebeveyne `training_reminder`; eğitim başına 12 saatte bir (true/false) |
+
+Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustalaştı → `training_mastered`; atanan ebeveyn ya da ailedeki ebeveynler), `parent_training_activity_notify` (modül tamamlama, uygulama kaydı, yapılacak tamamlama → `clinic_link_recipients` uzmanlarına `training_activity`). RLS: uzman `my_clinic_id`, `clinician_access`, etkin ve görebildiği paylaşım (`clinic_link_mine` + `clinic_link_visible`); aile `family_link_active` + taslak değil; kayıtlar `my_family_id`.
+
+## 33. Hedef davranışlar ve bildirilen olaylar (`migrations/20261110110000_target_behaviors.sql`, uygulandı 9 Kasım 2026; akış `akislar.md` 24, durumlar `durumlar.md` P22; test `test_target_behaviors.sql`)
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `clinic_target_behaviors` | Uzmanın hedef davranışı | `clinic_id`, `link_id`, `title` (1–80), `description` (≤ 1000), `strategies` (jsonb metin dizisi, ≤ 10, her biri 1–200), `status`, `parent_logging`, `log_type`, `started_at`, `archived`, `created_by` | K | K; P (arşivsiz, ebeveyn kaydı açık, etkin paylaşım) |
+| `behavior_incidents` | Ebeveynin bildirdiği olay | `link_id`, `family_id`, `child_id`, `behavior_id` (boş = diğer), `log_type`, `other_behavior` (≤ 120), `occurred_at`, `count`, `duration_min`, `antecedent` / `consequence` (≤ 500), `strategy` (≤ 200), `response` (1–5), `reporter_id`, `reporter_name` | yalnız P (`family_incident_report`) | K (etkin, görebildiği paylaşım); P (kendi ailesi) |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `family_target_behaviors()` | P | Etkin paylaşım başına `{link_id, child_id, child_name, clinic_id, behaviors[]}` (id, title, description, strategies, log_type, status) |
+| `family_incident_report(paylaşım, hedef?, zaman?, sayı?, dakika?, öncül?, sonuç?, strateji?, tepki?, diğer_davranış?)` | P | Olay bildirir; hedefe bağlıysa türe göre zorunlu alan (sıklık → sayı, ABC → öncül + sonuç, süre → dakika), değilse davranışın adı zorunlu; zaman ileri değil, en çok 30 gün geri |
+
+Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanlarına `behavior_incident`.

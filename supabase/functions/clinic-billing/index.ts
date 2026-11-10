@@ -22,7 +22,7 @@ const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), {
 
 const cors = () => ({
   'Access-Control-Allow-Origin': env('APP_URL') ? new URL(env('APP_URL')).origin : '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type, apikey, x-client-info',
+  'Access-Control-Allow-Headers': 'authorization, content-type, apikey, x-client-info, x-clinic-id',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   Vary: 'Origin',
 });
@@ -46,14 +46,22 @@ async function plans(): Promise<Plan[]> {
   return (data ?? []) as Plan[];
 }
 
-// Oturumdaki uzman (ve kliniği)
+// Oturumdaki uzman ve çalışma alanı: `x-clinic-id` başlığı (ClinicApp seçili alanı gönderir) etkin üyelikle denetlenir;
+// başlık yoksa varsayılan alan. Rol alandaki üyelikten (ortak migrations/20261105090000_workspaces.sql).
 async function caller(req: Request) {
   const token = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
   if (!token) return null;
   const { data } = await db.auth.getUser(token);
   if (!data?.user) return null;
   const { data: me } = await db.from('clinicians').select('id, clinic_id, role, name').eq('id', data.user.id).maybeSingle();
-  return me ? { ...me, email: data.user.email ?? '' } : null;
+  if (!me) return null;
+  const want = (req.headers.get('x-clinic-id') ?? '').trim() || me.clinic_id;
+  const { data: mem, error } = await db.from('clinic_members').select('clinic_id, role')
+    .eq('clinic_id', want).eq('clinician_id', me.id).eq('status', 'active').maybeSingle();
+  // üyelik tablosu yoksa (sunucu eski) eski davranış; başka hata (geçersiz alan) giriş yok sayılır
+  if (error) return error.code === '42P01' || error.code === 'PGRST205' ? { ...me, email: data.user.email ?? '' } : null;
+  if (!mem) return null;
+  return { ...me, clinic_id: mem.clinic_id, role: mem.role, email: data.user.email ?? '' };
 }
 
 async function apply(source: string, externalId: string, clinicId: string | null, planId: string, status: string,

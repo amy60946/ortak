@@ -42,7 +42,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 
 ## 4. Saklama ve imha tablosu
 
-"Bugün" sütunu: ✅ sistemde var · ⚠️ kısmen / teyit edilecek · ❌ yapılacak (10. bölüm).
+"Bugün" sütunu: ✅ sistemde var · ⚙️ yazıldı, Supabase'e uygulanmayı bekliyor (`supabase/proposed/20261102200000_kvkk_ops.sql`; uygulanınca **kuru çalıştırmayla** başlar, süreler avukat onayıyla kesinleşince panelden gerçek silme açılır) · ⚠️ kısmen / teyit edilecek · ❌ yapılacak (10. bölüm).
 
 | # | Veri kategorisi | Nerede | Saklama süresi | İmha yöntemi | Nasıl | Bugün |
 |---|---|---|---|---|---|---|
@@ -56,24 +56,24 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 8 | Uzman hesabı, klinik, ekip | `clinicians`, `clinics` | Hesap/klinik silinene kadar; tek kişilik klinik uzmanla birlikte silinir, ekipte sahiplik en eski üyeye geçer | Silme | Derhal | ✅ |
 | 9 | Uzmanın danışan kayıtları (notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planı, etiketler) | `clinic_notes`, `clinic_goals`, `goal_ratings`, `clinic_task_suggestions` ve takip planı tabloları | Klinik silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter ama kayıt kalır → [SÜRE] (öneri: paylaşım bittikten 12 ay sonra silme; uzmana 30 gün önce dışa aktarma bildirimi). **Aile ya da çocuk silinince o çocuğa ait kayıtlar da hemen silinir** (bugünkü sistem; avukat kararı bekliyor) | Silme | ❌ paylaşım sonrası süre işi yok | ❌ |
 | 9a | Üyeliği ya da denemesi bitmiş kliniğin bütün verisi | klinik tabloları | Bugün süresiz (erişim kapanır, veri kalır) → [SÜRE] (öneri: 6 ay; 30 gün önce uzmana hatırlatma ve dışa aktarma imkânı; `22-uzman-hizmet-sozlesmesi.md` notu 2) | Silme | ❌ | ❌ |
-| 10 | Davet bilgileri (ebeveyn adı ve e-postası, çocuğun adı ve yaş grubu) | `clinic_invites` | Bağlanmamış davet 3 gün; bağlanmış ama onaylanmamış en geç 30 gün; onay, ret ya da iptalde hemen | Silme | Otomatik (`clinic_invites_expire`, zamanlanmış) | ⚠️ zamanlanmış işin (pg_cron) canlıda açık olduğu teyit edilecek |
+| 10 | Davet bilgileri (ebeveyn adı ve e-postası, çocuğun adı ve yaş grubu) | `clinic_invites` | Bağlanmamış davet 3 gün; bağlanmış ama onaylanmamış en geç 30 gün; onay, ret ya da iptalde hemen | Silme | Otomatik (`clinic_invites_expire` çocuk alanları; gece imha işi ebeveyn adı/e-postası, 30 gün) | ⚙️ |
 | 11 | Uzman belge dosyası | kova `verify` | Karar, kendiliğinden ret, yeni belgeyle değiştirme ya da hesap silmede | Silme | Otomatik (`verify-doc` silme adımı) | ✅ |
 | 12 | Belge özeti, barkod, karar kaydı | `clinician_verifications` | Hesap süresince | Silme | Hesap silinince | ⚠️ hesap silinince silindiği teyit; barkodun kötüye kullanımı önlemek için hesap sonrası saklanması: [SÜRE] |
 | 13 | Uzman karşılama anketi | anket tablosu (öneri `20261027100000`) | Hesap silinene kadar; toplam raporlar kimliksizdir | Silme | Hesap silinince | ⚠️ |
 | 14 | Abonelik durumu | `family_subscriptions`, `billing_subscriptions` | Hesap/aile/klinik süresince | Silme | Hesapla birlikte | ✅ |
 | 15 | Abonelik ve ödeme olayları | ödeme olay tabloları | [SÜRE] (öneri: 10 yıl; vergi ve ticaret mevzuatı) | Hesap silinince kişiyi tanıtan alanlar çıkarılır (takma ad); süre dolunca silme | ❌ takma adlaştırma yok | ❌ |
-| 16 | Deneme geçmişi (e-posta SHA-256 özeti) | `trial_history` | [SÜRE] (öneri: denemenin başladığı tarihten 2 yıl) | Silme | ❌ otomatik iş yok | ❌ |
-| 17 | Giriş kodu deneme kayıtları (IP dahil) | `code_attempts` | 15 dakika – 1 gün | Silme | Otomatik | ⚠️ hangi işin sildiği teyit edilecek |
+| 16 | Deneme geçmişi (e-posta SHA-256 özeti) | `trial_history` | [SÜRE] (öneri: denemenin başladığı tarihten 2 yıl) | Silme | Gece imha işi | ⚙️ |
+| 17 | Giriş kodu deneme kayıtları (IP dahil) | `code_attempts` | 15 dakika – 1 gün | Silme | Gece imha işi (ayrıca giriş kodu işlevi) | ⚙️ |
 | 18 | Bildirim anahtarları | `push_tokens` | Çıkışta, anahtar geçersiz olunca ya da hesap silinince | Silme | Otomatik | ✅ |
-| 19 | Uygulama içi bildirimler | `notifications` | [SÜRE] (öneri: 12 ay); kullanıcı istediği an siler | Silme | ❌ otomatik iş yok | ❌ |
-| 20 | Kullanım kayıtları | `app_events`, `activity_days`, `user_activity` | [SÜRE] (öneri: 25 ay) | Anonim hâle getirme (günlük toplamlara indirme), sonra kişi bazlı satırların silinmesi | ❌ | ❌ |
-| 21 | Çocuk cihazlarının kimliği belirsiz oturumları | `auth.users` (anonim) | Çocuk profili ya da aile silinene, cihaz bağlantısı kapanana kadar | Silme | ❌ bağlantısı kalmayan anonim oturumların temizliği yok | ❌ |
-| 22 | Ekip işlemleri denetim kaydı | `admin_audit` | [SÜRE] (öneri: 5 yıl); silinen kullanıcının e-postası yazılmaz | Silme | ❌ kayıt "yalnız eklenir" kuralıyla korunuyor; imha için özel, kayıtlı yol gerekir | ❌ |
+| 19 | Uygulama içi bildirimler | `notifications` | [SÜRE] (öneri: 12 ay); kullanıcı istediği an siler | Silme | Gece imha işi | ⚙️ |
+| 20 | Kullanım kayıtları | `app_events`, `activity_days`, `user_activity` | [SÜRE] (öneri: 25 ay) | Anonim hâle getirme (günlük toplamlara indirme), sonra kişi bazlı satırların silinmesi | Gece imha işi: önce `usage_daily_totals`'a günlük toplam, sonra kişi bazlı satırlar silinir | ⚙️ |
+| 21 | Çocuk cihazlarının kimliği belirsiz oturumları | `auth.users` (anonim) | Çocuk profili ya da aile silinene, cihaz bağlantısı kapanana kadar | Silme | Gece imha işi: çocuğa bağlı olmayan ve 30 gün girişsiz anonim oturum | ⚙️ |
+| 22 | Ekip işlemleri denetim kaydı | `admin_audit` | [SÜRE] (öneri: 5 yıl); silinen kullanıcının e-postası yazılmaz | Silme | Gece imha işi (yalnız bu işle ve en az 1 yıl eski kesimle silinebilir) | ⚙️ |
 | 23 | Yasal metin onay kayıtları | `legal_acceptances` (öneri `20261027200000`) | Hesap silinse de rastgele kimlikle kalır (öneri SQL'i güncellendi 27 Ekim: auth.users'a bağ yok) → [SÜRE] | Silme / takma ad | ❌ karar bekliyor | ❌ |
-| 24 | KVKK başvuruları | `kvkk_requests` (öneri `20261027200000`) | Başvuru kapandıktan sonra [SÜRE] (öneri: 3 yıl) | Silme | ❌ | ❌ |
-| 25 | Destek yazışmaları | `destek@` posta kutusu | Son yazışmadan [SÜRE] (öneri: 2 yıl) | Silme | Elle, periyodik imhada | ❌ |
+| 24 | KVKK başvuruları | `kvkk_requests` (öneri `20261027200000`) | Başvuru kapandıktan sonra [SÜRE] (öneri: 3 yıl) | Silme | Gece imha işi | ⚙️ |
+| 25 | Destek talepleri ve yazışmaları | `support_requests` (/destek formu); ekibin e-posta kutusundaki yanıtlar | Kapanıştan [SÜRE] (öneri: 2 yıl); istenmeyen (spam) 30 gün | Silme | Tablo: gece imha işi (`support_days`); e-posta kutusu: elle, periyodik imhada | ⚙️ |
 | 26 | Veri ihlali envanteri | iç belge (`43-veri-ihlali-proseduru.md`) | [SÜRE] (öneri: 5 yıl) | Silme | Elle | — |
-| 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Otomatik | ❌ tablo yok |
+| 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Gece imha işi (en az 3 yıl, alt sınır sunucuda) | ⚙️ |
 | 28 | Panelden indirilen dosyalar (CSV) | ekip bilgisayarı | İş bitince, en geç [SÜRE] (öneri: 30 gün) | Silme + çöp kutusunu boşaltma | Elle | — |
 | 29 | Yedekler | Supabase | [SÜRE] (öneri: en çok 30 gün) | Kendiliğinden döner | Sağlayıcı | ⚠️ plan ve süre seçilince |
 | 30 | Pofi Adası yerel oyun kaydı | çocuğun cihazı | Cihaz bağlantısı kapanınca ya da aile silinince | Uygulama içi temizlik | ✅ oyun bağlantının kapandığını görünce kaydı ve oturumu siler (game-app `GameBootstrap.ForgetDevice`, 2 Kasım 2026; TestFlight'ta bir sonraki derlemede) | ❌ |
@@ -128,15 +128,15 @@ Her imha işlemi için kaydedilir: tarih ve saat, veri kategorisi (4. bölümdek
 
 ## 10. Yazılımda yapılacaklar
 
-1. **Zamanlanmış imha işi** (sunucuda, her gece; pg_cron): 4. bölümdeki ❌ satırları uygular — `trial_history` (16), `notifications` (19), kullanım kayıtlarını toplamlara indirip kişi bazlı satırları silme (20), bağlantısı kalmayan anonim çocuk oturumları (21), `admin_audit` (22), `kvkk_requests` (24), ödeme olaylarının takma adlaştırılması (15), paylaşım bittikten sonraki uzman kayıtları (9, süre kararı sonrası). Önce **kuru çalıştırma** (yalnız sayar), sonra gerçek silme.
-2. **İmha kaydı tablosu** (ör. `retention_runs`): RLS açık, yalnız sunucu yazar, panelde salt okunur; 3 yıl.
-3. **Denetim kaydında imha yolu:** `admin_audit` bugün kimsenin silemeyeceği biçimde korunuyor. Yalnız süresi dolan satırları silebilen, kendisi de imha kaydına yazan ayrı bir sunucu işlevi gerekir.
+1. ⚙️ (2 Kasım 2026: `retention_run`, öneri `kvkk_ops`; 15 ve 9/9a karar bekliyor) **Zamanlanmış imha işi** (sunucuda, her gece; pg_cron): 4. bölümdeki ❌ satırları uygular — `trial_history` (16), `notifications` (19), kullanım kayıtlarını toplamlara indirip kişi bazlı satırları silme (20), bağlantısı kalmayan anonim çocuk oturumları (21), `admin_audit` (22), `kvkk_requests` (24), ödeme olaylarının takma adlaştırılması (15), paylaşım bittikten sonraki uzman kayıtları (9, süre kararı sonrası). Önce **kuru çalıştırma** (yalnız sayar), sonra gerçek silme.
+2. ⚙️ (`retention_runs`) **İmha kaydı tablosu** (ör. `retention_runs`): RLS açık, yalnız sunucu yazar, panelde salt okunur; 3 yıl.
+3. ⚙️ (`admin_audit_immutable` yalnız imha işinin ≥ 1 yıl eski kesimine izin verir) **Denetim kaydında imha yolu:** `admin_audit` bugün kimsenin silemeyeceği biçimde korunuyor. Yalnız süresi dolan satırları silebilen, kendisi de imha kaydına yazan ayrı bir sunucu işlevi gerekir.
 4. **Yetim dosya temizliği:** Mesaj medyası ve davranış kaydı sesleri bugün uygulama tarafından siliniyor; satırı silinmiş ama dosyası kalmış nesneleri sunucu tarafında bulup silen iş.
 5. **Teyitler:** davranış kaydı silinince ses dosyası; sağlık rızası geri alınınca yanıtlar; uzman hesabı silinince belge özeti; `code_attempts` temizliği; `clinic_invites_expire`'ın canlıda zamanlanmış olarak çalıştığı.
 6. **Hesap silme ekleri:** RevenueCat'e abone silme isteği; onay kayıtlarının (`legal_acceptances`) takma adlı arşive taşınması (avukat kararından sonra); silinen hesap kimliğinin "yedekten dönünce yeniden sil" listesine yazılması.
 7. **Pofi Adası:** cihaz bağlantısı kapanınca ya da aile silinince yerel oyun kaydının temizlenmesi (`CANLIYA_ALMA.md` 1.7).
-8. **Yönetim paneli:** CSV indirmeyi denetim kaydına yazma ve indirme sırasında "İşin bitince bu dosyayı sil" uyarısı; panelde imha kaydı ve 6 aylık gözden geçirme hatırlatması.
-9. **Verimi indir** (aile verisinin dışa aktarılması, `CANLIYA_ALMA.md` 1.6): hem erişim başvurularında hem hareketsiz hesap silinmeden önce kullanılır.
+8. ⚙️ (panel: CSV gerekçe + kayıt + uyarı, Hukuk › Saklama ve imha, 6 aylık hatırlatma) **Yönetim paneli:** CSV indirmeyi denetim kaydına yazma ve indirme sırasında "İşin bitince bu dosyayı sil" uyarısı; panelde imha kaydı ve 6 aylık gözden geçirme hatırlatması.
+9. ⚙️ (`my_data_export`, `admin_user_export`; uygulama ekranları ParentApp/ClinicApp) **Verimi indir** (aile verisinin dışa aktarılması, `CANLIYA_ALMA.md` 1.6): hem erişim başvurularında hem hareketsiz hesap silinmeden önce kullanılır.
 10. **Hareketsiz hesap politikası (öneri, avukata):**
     - Ölçüt: hesabın ve bağlı çocuk cihazlarının **24 ay** boyunca hiç oturumu yoksa (`user_activity.last_seen_at`, üç uygulama birlikte).
     - Adımlar: silmeden **30 gün önce** e-posta + uygulama içi bildirim ("Hesabın 30 gün sonra silinecek; korumak için bir kez giriş yapman yeterli. İstersen önce verini indir."); 7 gün kala hatırlatma; süre dolunca `delete_account` ile aynı gövdeyle silme ve imha kaydı.

@@ -31,6 +31,7 @@
 | `41-alt-isleyenler.md` | `alt-isleyenler` | herkes | — | taslak |
 | `42-saklama-imha-politikasi.md` | — | iç politika | — | taslak |
 | `43-veri-ihlali-proseduru.md` | — | iç prosedür | — | taslak |
+| `46-veri-envanteri.md` | — | Kişisel veri envanteri (VERBİS biçimi: kategori, kişi, amaç, hukuki sebep, alıcı, yurt dışı, süre) + tablo → kategori eki; `tools/veri_envanteri_kontrol.py` her yeni tabloyu denetler | — | iç |
 | `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
 | `44-kvkk-basvuru-usulu.md` | `kvkk-basvuru` | herkes | — | taslak |
 | `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler | — | taslak |
@@ -58,7 +59,7 @@
 | Hesap silme | Silme hakkı, abonelik iptali uyarısı | gizlilik, uygulama içi metinler | `delete_account()` |
 | KVKK başvurusu | md. 11, 13, 30 gün | kvkk-basvuru | `kvkk_requests` |
 | Veri ihlali | md. 12/5, 72 saat | ihlal prosedürü (iç) | panel acil işlemleri |
-| Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç) | **yapılacak:** zamanlanmış imha işi |
+| Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç), veri envanteri (46) | `retention_run` (gece, kuru başlar) + `retention_runs`; panel Hukuk › Saklama ve imha (öneri `kvkk_ops`, 2 Kasım 2026) |
 | ClinicApp web | Çerez/yerel depolama | cerez-clinicapp-web | — |
 | Sosyal medya paylaşımı (Marketing → panel onayı → Zernio) | Reklam/sağlık iddiası, YZ etiketi, telif, hesap güvenliği, insan onayı | 45-pazarlama-kurallari §8 | `social`, `admin_social_check` |
 
@@ -66,7 +67,7 @@
 
 | # | Sorun | Kimin işi |
 |---|---|---|
-| 1 | ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği **varsayılan açık** (`akislar.md` 11 #2). Açık rıza önceden işaretli olamaz; varsayılan kapalı olmalı. | ParentApp penceresi |
+| 1 | ~~ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği varsayılan açık~~ **Düzeltildi 27 Ekim 2026** (parent-app c33ebad): varsayılan kapalı. | ParentApp penceresi |
 | 2 | Tanışma sorularında "çocuk bir uzmanla (psikolog vb.) çalışıyor mu" ve davranış sıklığı soruları (öfke nöbeti, endişe…) sağlık sorusu olarak işaretli değil; rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı. | Avukat → ParentApp |
 | 3 | `uzman-paylasim-v1` bugün yalnız uyarı + veli beyanını kayıt ediyor; taslak rıza cümlesi ve kısa aydınlatma eklendiği için yayında `uzman-paylasim-v2` olmalı; v1 onaylarının yeterliliği avukata. | Avukat → ParentApp |
 | 4 | Aile ya da çocuk silinince uzmanın o danışana ait notları ve hedefleri de siliniyor; uzmanın kayıt saklama yükümlülüğüyle çatışabilir. | Avukat + ürün (ortak) |
@@ -80,7 +81,7 @@
 | 12 | ~~ClinicApp ödeme yolları (iyzico)~~ **Geri alındı (27 Ekim 2026, kullanıcı):** Klinik penceresinin "web'de iyzico metinlerde yok" bulgusu hatalıydı. Karar (22 Ekim 2026, `DURUM.md`): ClinicApp üyeliği yalnız iPhone/iPad'den App Store ile, RevenueCat üzerinden alınır; web'de satış yok, iyzico kullanılmaz (`clinic-billing`'deki iyzico kodu ileride kendi sisteme geçiş için durur, yayınlanmaz). Metinler o karara döndürüldü (ortak#78'deki iyzico eklemeleri geri alındı; deneme süresi 7 gün düzeltmesi korundu). | — |
 | 13 | Tanışma sorularında yalnız sağlık sorularında "söylemek istemiyorum" var; Joon'da olduğu gibi **bütün** sorular atlanabilir olmalı (KVKK md. 4 ölçülülük; `03-joon-karsilastirma.md` J2). Yanıtların neyi değiştirdiği aydınlatmada somut yazılmalı (J3). | ParentApp (ürün) |
 | 14 | **SMS doğrulama** (bayrak `parent_sms_verify`, ParentApp, varsayılan kapalı; 28 Ekim 2026): açılırsa ebeveynin **telefon numarası** işlenir ve SMS, Supabase Auth'un SMS sağlayıcısı üzerinden gider. Açmadan önce: aydınlatma (ebeveyn) ve gizlilik politikasına telefon numarası + amaç (hesap güvenliği), alt işleyen listesine SMS sağlayıcısı (ad, konum, yurt dışı aktarım), saklama süresi. SMS ticari ileti değildir (hizmet/doğrulama). | Kullanıcı kararı + hukuk metni güncellemesi |
-| 15 | **Hediye kartı / misafir geçişi** (öneri `guest_pass`, ParentApp, 28 Ekim 2026): bir ailenin oluşturduğu kodla başka bir aile uzatılmış deneme alır. Kullanım koşullarına kısa madde: kart paraya çevrilemez, satılamaz, son kullanma tarihi, kötüye kullanımda iptal; kartı kullanan ailenin kimliği oluşturan aileye gösterilmiyor (bildirimde yalnız "bir aile kullandı"; ParentApp, 28 Ekim) — bu yüzden ek aydınlatma gerekmiyor; gösterilmeye başlanırsa eklenmeli. Deneme süresi ailenin `trial_days`'iyle değişebilir: koşullardaki "7 gün deneme" cümlesi "en az 7 gün" olarak düzeltilmeli. | Hukuk metni (uygulanınca) |
+| 15 | **Hediye kartı / misafir geçişi → Aile davet et** (öneri `guest_pass`, ParentApp, 28 Ekim 2026; 3 Kasım 2026: davet edilen 14 gün, davet eden ödeme olunca 1 ay, yılda en çok 12; `hukuk_notlari` J3): bir ailenin oluşturduğu kodla başka bir aile uzatılmış deneme alır. Kullanım koşullarına kısa madde: kart paraya çevrilemez, satılamaz, son kullanma tarihi, kötüye kullanımda iptal; kartı kullanan ailenin kimliği oluşturan aileye gösterilmiyor (bildirimde yalnız "bir aile kullandı"; ParentApp, 28 Ekim) — bu yüzden ek aydınlatma gerekmiyor; gösterilmeye başlanırsa eklenmeli. Deneme süresi ailenin `trial_days`'iyle değişebilir: koşullardaki "7 gün deneme" cümlesi "en az 7 gün" olarak düzeltilmeli. | Hukuk metni (uygulanınca) |
 | 16 | **ClinicApp karşılama anketi zorunlu oldu** (28 Ekim 2026, kullanıcı kararı): uzman aydınlatma metni anketi "isteğe bağlı" ve meşru menfaate dayalı yazıyor. Ya her soruya "söylemek istemiyorum / diğer" seçeneği eklenmeli (öneri), ya da aydınlatma "zorunlu" olarak düzeltilip her sorunun amacı somut yazılmalı (KVKK md. 4 ölçülülük). | Kullanıcı kararı → ClinicApp + hukuk |
 
 ## Canlıdan önce yapılacaklar (hukuk)

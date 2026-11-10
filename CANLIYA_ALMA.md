@@ -18,7 +18,13 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) Supabase Pro plan (yedek, duraklatma yok)
 
 ### 1.2 Alan adı ve web
-- [ ] (Siz) Alan adı
+- [x] (Siz) Alan adı — **alındı 6 Kasım 2026 (Natro):** asıl `moyoapp.com.tr`; yedek `moyomercek`, `moyoappmercek`, `moyoappklinik`, `moyooyun` (.com.tr). Yapı: `moyoapp.com.tr` ebeveyn tanıtım + `/destek` + `/yasal/*` + `/d/*` davet; `ebeveyn.` ebeveyn web giriş; `mercek.` Moyo Mercek (uzman ürünü) tanıtım; `uzman.` uzman girişi; panel ayrı adres. Önizleme dönemi: siteler gerçek adreste ama Cloudflare Access kilidi arkasında (yalnız kullanıcı), `/destek` ve `/yasal` açık.
+- [x] (Siz) Natro → Cloudflare ad sunucusu değişikliği (6 Kasım 2026, alan adı Cloudflare'de etkin)
+- [x] (Claude, yönetim paneli) **Cloudflare kurulumu (6 Kasım 2026):** Zero Trust (Free) + giriş yöntemi "E-posta kodu" (one-time PIN). Access uygulamaları: **"Moyo onizleme kilidi"** (`moyoapp.com.tr`, `ebeveyn.`, `mercek.`, `uzman.`; yalnız sahip, 7 gün oturum), **"Herkese acik: destek, yasal, AASA"** (`/destek`, `/yasal`, `/.well-known/apple-app-site-association`; bypass), **"Yonetim paneli (workers.dev)"** (`admin-panel.amy60946.workers.dev` + sürüm önizlemeleri; yalnız sahip, 24 saat) ve panel adresindeki `/destek` `/yasal` için bypass (yeni adrese 301). Kurallar Access'te tekrar kullanılabilir iki politika: "Yalniz sahip" (sahibin e-postası; depoya yazılmaz) ve "Herkese acik (bypass)". DNS: dört adres için kaynaksız `AAAA 100::` (proxied; Worker route'ları için, silinmez). Route'lar: `moyoapp.com.tr/destek`, `/destek/*`, `/yasal`, `/yasal/*` → Worker `admin-panel` (kökün geri kalanı ParentApp sitesinin). Denendi: kilitli adresler girişe, açık yollar sayfaya gidiyor.
+- [ ] (Siz) Supabase → Edge Functions → Secrets → `LEGAL_PUBLIC_URL` = `https://moyoapp.com.tr` (yasal metin ve destek bağlantıları doğrudan yeni adrese gider; yapılmasa da eski adres yönlenir).
+- [ ] (Siz) App Store Connect (üç uygulama) › App Information: **Privacy Policy URL** `https://moyoapp.com.tr/yasal/gizlilik`, sürüm sayfasında **Support URL** `https://moyoapp.com.tr/destek`. **Marketing URL** önizleme kilidi kalkana dek boş (kilitli sayfa inceleyiciye giriş ekranı gösterir).
+- [ ] (ParentApp, ClinicApp pencereleri + Siz) Siteleri Cloudflare Worker olarak yayınla: `moyo-site` (kök), `moyo-ebeveyn`, `moyo-mercek`, `moyo-uzman`; `workers_dev` ve `preview_urls` **kapalı** (yoksa workers.dev adresi kilitsiz açık kalır), route/özel alan adı yapılandırmada yok; depoyu Cloudflare'e siz bağlarsınız (Workers & Pages › Create › Import a repository). İlk yayından sonra yönetim paneli penceresi route'ları bağlar.
+- [ ] (Canlıya geçerken, yönetim paneli) Önizleme kilidini kaldır: Access › "Moyo onizleme kilidi" silinir (ya da yalnız `ebeveyn.`/`uzman.` gibi gerekirse daraltılır); panel kilidi kalır. Ardından Marketing URL'leri girilir.
 - [ ] (Claude) Tanıtım + Gizlilik + Kullanım Koşulları + Destek sayfaları (3 ürün)
 - [ ] (Claude) ClinicApp sitesi yayını, auth yönlendirmeleri, `APP_URL`
 - [ ] (Claude) Universal Links (`apple-app-site-association`)
@@ -34,7 +40,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 
 ### 1.4 Destek
 - [ ] (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
-- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında)
+- [ ] (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - [ ] (Claude) SSS
 - [ ] (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
 
@@ -56,17 +62,17 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 1.6 KVKK işlemleri
 - [ ] (Hukuk) VERBİS gerekliliği
 - [ ] (Hukuk) Yurt dışı aktarım: standart sözleşme + Kurul'a bildirim
-- [ ] (Claude) Kişisel veri envanteri
-- [ ] (Claude) Saklama ve imha işi (zamanlanmış)
-- [ ] (Claude) Verimi indir (aile verisi dışa aktarma)
+- [x] (Claude) Kişisel veri envanteri: `hukuk/46-veri-envanteri.md` (VERBİS biçimi, 14 kategori; taslak, avukat onayı bekler) + her yeni tabloyu denetleyen `tools/veri_envanteri_kontrol.py` (2 Kasım 2026)
+- [ ] (Claude) Saklama ve imha işi (zamanlanmış) — **yazıldı ve testli** (`proposed/20261102200000_kvkk_ops.sql`, gece 03.17, kuru çalıştırmayla başlar); kalan: (Siz) SQL'i uygula, (Hukuk) süreler → panelden gerçek silme
+- [ ] (Claude) Verimi indir (aile verisi dışa aktarma) — **sunucu yazıldı** (`my_data_export`, panelde `admin_user_export`); kalan: (Siz) SQL, (ParentApp/ClinicApp penceresi) Ayarlar › Gizlilik › Verimi indir
 - [ ] (Claude) Ebeveyn onayının sürümlü kaydı (çocuk bağlanmadan önce)
 - [ ] (Siz + Hukuk) Veri ihlali prosedürü (72 saat)
 
 ### 1.7 Hesap silme
 - [x] Sunucu: `delete_account()` (ebeveyn, uzman)
-- [ ] (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası
+- [ ] (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası · ParentApp yapıldı (2 Kasım: Aile › Hesap'ta Çıkış Yap'ın altında ayrı satır)
 - [x] (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği (2 Kasım 2026, `GameBootstrap.ForgetDevice`)
-- [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı
+- [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı · ParentApp yapıldı (2 Kasım: sunucu + RevenueCat durumu, uygulama içi abonelik yönetimi; silme serbest)
 
 ### 1.8 Ödeme
 - [ ] (Siz) ASC ürünleri (ParentApp 2, ClinicApp 4) + TR fiyatları
@@ -76,8 +82,8 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) RevenueCat: entitlement `premium`, offering `default` (`parentapp.premium.monthly`, `parentapp.premium.yearly`)
 - [ ] (Siz) Supabase Secrets: `BILLING_WEBHOOK_SECRET` (≥ 24 karakter), `REVENUECAT_API_KEY` (sk_…); denemede `BILLING_ALLOW_SANDBOX=1`
 - [ ] (Claude) `billing-webhook` dağıtımı (Verify JWT kapalı) + RevenueCat Webhook adresi ve Authorization başlığı
-- [ ] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets
-- [ ] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir
+- [x] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets · **Yapıldı (2 Kasım 2026):** 10.16.x, `parent-app/src/lib/purchases.ts`; fiyat mağazadan (yerel para birimi), gelmezse `plans.ts` yer tutucusu; secret adı `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (parent-app GitHub Secrets; yoksa ödeme "bağlı değil", CI `sk_`'yi reddeder). Açılması için yukarıdaki (Siz) maddeleri gerekir.
+- [x] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir (var: `hukuk/10-aydinlatma-ebeveyn.md` alıcılar tablosu, `hukuk/41-alt-isleyenler.md` 3.4; 2 Kasım'da denetlendi)
 - [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
 - [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
 - [x] `20261022200000_clinic_billing.sql` uygulandı (23 Ekim)
@@ -86,6 +92,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
 - [ ] (Siz) Gerçek fiyatlar
 - [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
+- [ ] (Siz) **Aile davet et ödülü için Apple teklif kodu** (3 Kasım 2026) · **Canlıya alırken hatırlat (kullanıcı, 3 Kasım 2026):** kod üretme + panele yükleme ParentApp yayından önce yapılır. App Store Connect › ParentApp › Abonelikler › **aylık ve yıllık ürün ayrı ayrı** › Offer Codes › "1 ay ücretsiz" (mevcut aboneler), tek kullanımlık kodlar (en çok 6 ay geçerli) → dosyayı indir → yönetim paneli › **Davetler** › "Kod dosyası yükle" (ürün + App Store Connect'teki son tarih). App Store'dan ödeyen davet edene uygun kod kendiliğinden gider (`referral_rewards` `code_pending` → `code_sent`; `sozlesme/admin.md` "Davet ödülleri"). SQL uygulandı (3 Kasım 2026). Kodlar test ortamında denenemez: ilk kodu kendi gerçek aboneliğinde dene. Süre dolmadan (Sistem sağlığı uyarır) yeni parti üret
 
 ### 1.9 Fatura
 - [ ] (MM) App Store gelirinin faturalanması (Apple'a)
@@ -97,7 +104,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [x] RLS + sızma testleri, anon kapalı, hız sınırları
 - [ ] (Siz + Claude) Staging Supabase projesi
 - [ ] (Siz) Günlük yedek + PITR + bir geri yükleme denemesi
-- [ ] (Claude) İzleme ve alarm (sunucu, Edge Function, webhook)
+- [ ] (Claude) İzleme ve alarm (sunucu, Edge Function, webhook) — **yazıldı**: `ops_health` + Edge Function `health` + panel Sistem sağlığı + saatlik GitHub yoklaması (`.github/workflows/saglik.yml`); kalan: (Siz) SQL + `health` yayını, isteğe bağlı Sentry Uptime
 - [ ] (Siz) `PUSH_SECRET`
 - [ ] (Claude) Push anahtarı taşıma riski kapatılsın
 - [ ] (Siz) Geliştirme anahtarlarının yenilenmesi
@@ -107,11 +114,11 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 ### 2.1 Hepsi
 - [x] Yayın biçimi: **elle** (kullanıcı, 2 Kasım 2026): App Store Connect → sürüm → "Manually release this version". Apple onaylar, kullanıcı onay verince yayına alınır (üç ürün)
 - [ ] (Siz) iOS imza / sertifika sınırı (ParentApp + GameApp)
-- [ ] (Claude) `PrivacyInfo.xcprivacy` — **GameApp yapıldı** (2 Kasım 2026, `IosPostBuild.AddPrivacyManifest`: izleme yok; anonim kimlik, oyun kaydı, mesaj, kullanım olayları, açılış süresi; UserDefaults CA92.1). ParentApp, ClinicApp kalan
-- [ ] (Siz + Claude) App Privacy etiketi
+- [ ] (Claude) `PrivacyInfo.xcprivacy` — **GameApp yapıldı** (2 Kasım 2026, `IosPostBuild.AddPrivacyManifest`: izleme yok; anonim kimlik, oyun kaydı, mesaj, kullanım olayları, açılış süresi; UserDefaults CA92.1). ParentApp, ClinicApp kalan · ParentApp yapıldı (2 Kasım: `app.json` → `ios.privacyManifests`; izleme yok, 14 veri türü, gerekçe kodları)
+- [ ] (Siz + Claude) App Privacy etiketi · ParentApp taslağı: "ParentApp mağaza paketi" https://claude.ai/artifact/JNi1LAZC4A2cZFSm42Njym
 - [ ] (Siz) Yaş derecelendirme anketi
 - [ ] (Claude) Ekran görüntüleri, açıklama, anahtar kelimeler
-- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not
+- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not · ParentApp notu ve hesap planı taslak (aynı belge)
 - [ ] (Claude) Bildirim izni ilk gereken anda — oyun için K7 B: yalnız ebeveyn açarsa, ilk onaylı görevden sonra (öneri `proposed/20261102200000_child_push.sql`)
 - [ ] (Claude) Yeni simge biçimi (Icon Composer)
 - [ ] (Siz) TestFlight dış deneme (5–10 aile, en az 1 uzman)
@@ -133,9 +140,10 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz) "Quests", "Güneş Taşı" adları; yükleme ekranı görseli
 
 ### 2.3 ParentApp
-- [ ] (Claude) Kayıt onayı + şifremi unuttum ekranları
-- [ ] (Claude) Abonelik ekranı 3.1.2 uyumu (fiyat, süre, yenileme, bağlantılar, geri yükle); ilk değerden sonra göster
-- [ ] (Claude) "Aboneliği yönet"
+- [ ] (Siz) **iPad ekran görüntüleri** (3 Kasım 2026: ParentApp artık iPad'i destekliyor, `supportsTablet: true`, iPad'de dikey + yatay): App Store Connect 13 inç iPad görüntüsü ister. Not: iPad desteği yayından sonra geri alınamaz
+- [x] (Claude) Kayıt onayı + şifremi unuttum ekranları (var: `AuthScreens.tsx`, bağlantılar `parentapp://auth`)
+- [x] (Claude) Abonelik ekranı 3.1.2 uyumu (fiyat, süre, yenileme, bağlantılar, geri yükle); ilk değerden sonra göster · 2 Kasım: fiyat mağazadan; deneme bitince açılır
+- [x] (Claude) "Aboneliği yönet" (2 Kasım: uygulama içi Apple sayfası `showManageSubscriptions`)
 - [ ] (Claude) `track_session` / `track_events('parent')`
 - [ ] (Claude) Mesajlar + Ödüller uçtan uca deneme
 - [ ] (Claude) Uzman önerisi alanlarının göreve taşınması

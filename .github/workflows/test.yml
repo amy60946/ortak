@@ -1,0 +1,36 @@
+name: SQL testleri
+# Her push ve PR'da: boş PostgreSQL'e göçler + öneriler (iki kez) + her test (supabase/test/run.sh), veri envanteri denetimi.
+# Kırmızıysa göç ya da öneri canlıya verilmeden düzeltilir (CLAUDE.md kural 4). Kullanıcı isteği 5 Kasım 2026:
+# "bir daha bozulmayacağından emin ol".
+on:
+  push:
+    paths: ['supabase/**', 'tools/**', 'hukuk/46-veri-envanteri.md', '.github/workflows/test.yml']
+  pull_request:
+    paths: ['supabase/**', 'tools/**', 'hukuk/46-veri-envanteri.md']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sql-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  sql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testler
+        run: set -o pipefail; bash supabase/test/run.sh 2>&1 | grep -v 'NOTICE'
+      - name: Paylaşım takvimi testleri
+        run: node --test tools/paylasim/*.test.mjs

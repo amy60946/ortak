@@ -44,5 +44,5 @@
 3. **Sürüm ve yeniden onay:** her metin `anahtar + sürüm`; esaslı değişiklikte uygulama açılışında yeniden onay istenir, küçük değişiklik bildirimle.
 4. **Herkese açık adres:** alan adı alınana dek metinler sunucu işlevinden (`legal`) yayımlanır; mağaza bağlantıları buraya.
 5. **Reklam yok / satış yok / izleme yok** cümlesi her aydınlatmanın özetinde.
-6. **Acil durum:** ParentApp ve ClinicApp'te "Acil durumlarda 112'yi arayın; uygulama acil yardım hizmeti değildir."
+6. **Acil durum:** ParentApp'te "Acil durumlarda 112'yi arayın; uygulama acil yardım hizmeti değildir." ClinicApp'te (uzman, B2B) 3 Kasım 2026'dan beri yalnız Uzman Hizmet Sözleşmesi 3.4'te; ekranda tekrarlanmaz (kullanıcı kararı).
 7. **Sanal değerler:** coin ve Güneş Taşı'nın para değeri olmadığı her iki uygulamanın koşullarında.

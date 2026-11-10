@@ -56,6 +56,12 @@
 - Koşullar kutusu işaretlenmeden "Hesap oluştur" pasif kalır. Aydınlatma bir onay değil, bilgilendirmedir: kutu konmaz; hesap oluşunca koşulların onayıyla birlikte aydınlatmanın **gösterildiği** de `legal_accept` ile kaydedilir (karar 27 Ekim 2026, avukat teyidi bekler).
 - Bu ekranda **açık rıza kutusu yoktur**. Sağlık soruları ve uzman paylaşımı kendi ekranlarında, isteğe bağlı sorulur. Pazarlama izni bugün istenmez.
 
+**Güncel (kullanıcı kararı 28 Ekim 2026, parent-app):** "Kayıt ol" düğmesinin üstünde tek küçük satır, tek kutu:
+
+> ☐ <u>Kullanım Koşulları</u>'nı kabul ediyorum. <u>Aydınlatma</u> · <u>Gizlilik</u>
+
+- Kutu işaretlenmeden "Kayıt ol" pasif (etkin eylem). Aydınlatma ve gizlilik yalnız bağlantı; aydınlatmanın gösterildiği hesap açılınca kaydedilir.
+
 ### 1.2 ClinicApp — kayıt
 
 | Uygulama | Ekran | Bağlı belge |
@@ -78,7 +84,9 @@
 
 > **Pofi Adası'nı {çocuk_adı}'nın cihazına bağlamadan önce**
 >
-> Pofi Adası'nda reklam, satın alma ve izleme aracı yok. Çocuğun yalnız ailesiyle yazışır; oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+> Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {çocuk_adı}'nın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+>
+> *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
 > ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
@@ -86,13 +94,25 @@
 
 - Kayıt: `legal_accept('child', …)` (çocuk cihazı onay veremez; sunucu reddeder).
 
+**Güncel (kullanıcı kararı 28 Ekim 2026: kısa, ayrıntı bağlantıda):** küçük kart; veli onayı ayrı kalır.
+
+> **Pofi Adası'nı bağlamadan önce**
+>
+> Oyunda reklam, satın alma ve dışarıdan izleme aracı yok. {çocuk_adı}'nın ilerlemesini yalnız ailesi, izin verirsen uzmanı görür.
+>
+> ☐ Velisi olarak <u>Pofi Adası Koşulları</u>'nı {çocuk_adı} adına kabul ediyorum. <u>Aydınlatma</u>
+
+- "Oyun ondan e-posta, konum, fotoğraf ya da ses almaz" cümlesi karttan çıktı; aydınlatma metninde duruyor.
+
 ### 1.4 ParentApp — çocuk ekleme
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Çocuk ekle / davetten çocuk onayı, "Kaydet" düğmesinin altı | `kosullar-parentapp` (veli beyanı maddesi) |
+| ParentApp | ~~Çocuk ekle, "Kaydet" düğmesinin altı~~ **3 Kasım 2026'dan beri ekranda yok** (kullanıcı kararı: beyan Kullanım Koşulları'nda) | `kosullar-parentapp` (veli beyanı maddesi) |
 
-> Çocuğu ekleyerek velisi ya da yasal temsilcisi olduğunu beyan edersin. Doğum günü ve cinsiyet isteğe bağlıdır.
+> ~~Çocuğu ekleyerek velisi ya da yasal temsilcisi olduğunu beyan edersin. Doğum günü ve cinsiyet isteğe bağlıdır.~~
+
+Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlamadan önce veli onayı (§1.3), uzman davetinde veli beyanı kutusu (`uzman-paylasim-v1`). Avukata soru: `hukuk_notlari.md` soru 21.
 
 ## 2. Yeniden onay ekranı
 
@@ -115,6 +135,7 @@
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
 - **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
+- **ParentApp (28 Ekim 2026):** aynı küçük kart. ParentApp koşulları için bir kutu ("<u>ParentApp Kullanım Koşulları</u> metnini kabul ediyorum."); Pofi Adası metinleri güncellendiyse **ayrı** veli kutusu ("Velisi olarak <u>Pofi Adası Koşulları</u> metnini {çocuklar} adına kabul ediyorum."); aydınlatmalar kutusuz bağlantı satırı ("Verilerinin nasıl işlendiği: …"); altta "hesabını silebilir ya da KVKK başvurusu gönderebilirsin".
 - Kutu işaretlenmeden "Devam et" pasif. Bu ekrandayken bile Ayarlar › Hesabımı sil, Yasal metinler ve KVKK başvurusu açılabilir olmalı.
 - **Pofi Adası koşulları güncellenince:** ParentApp'te ebeveyne "Pofi Adası koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
 - **Onay istemeyen metin güncellenince** (Gizlilik Politikası, Hizmet Sağlayıcılar): kapatılabilir üst bant:
@@ -124,7 +145,7 @@
 
 | Uygulama | Ekran | Kaynak |
 |---|---|---|
-| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026) | `legal_documents_for(app)` |
+| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026). **ParentApp:** Aile › Hesap › **"Yasal ve gizlilik"** tek satırı (eski "Yasal metinler" ve "KVKK başvurusu" satırları birleşti): metinler, Verdiğin izinler, "KVKK başvurusu ve başvurularım" (28 Ekim 2026) | `legal_documents_for(app)` |
 
 Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}".
 
@@ -146,7 +167,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde) | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
+| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde; ParentApp'te Aile › Hesap › Yasal ve gizlilik › "KVKK başvurusu ve başvurularım") | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
 
 **Üst metin:**
 > Kişisel verilerinle ilgili taleplerini buradan iletebilirsin. En geç 30 gün içinde, ücretsiz yanıt veririz. Yanıt {e-posta} adresine gelir. <u>Başvuru usulü</u>
@@ -204,7 +225,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - görevler, onaylar, ödüller, inci ve Güneş Taşı geçmişi,
+> - maceralar, onaylar, ödüller, inci ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
@@ -259,7 +280,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 | ParentApp | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
 
 > **[PLAN ADI]**
-> Bütün aile için: birden çok çocuk, sınırsız görev, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
+> Bütün aile için: birden çok çocuk, sınırsız macera, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
 >
 > ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
@@ -274,7 +295,7 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 - Fiyatlar mağazanın yerel fiyatından okunur; ekranda sabit fiyat yazılmaz.
 - Plan adı, süre ve fiyat düğmeden önce ve en az düğme kadar görünür olmalı.
-- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
+- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
 
 ### 6.2 ClinicApp
 
@@ -301,7 +322,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 - Metin: Bittiğinde ücretsiz planla devam edersin; senden kendiliğinden ücret alınmaz. Premium'u sürdürmek istersen üyelik ekranına bak.
 
 **ParentApp — bitince (açılışta, 6.1 ekranının üstünde):**
-> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin görevle devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
+> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
 
 **ClinicApp — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
@@ -314,7 +335,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Ödüller › "i" düğmesi; ilk kullanım ipucu | `kosullar-parentapp` |
+| ParentApp | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
 > **İnci ve Güneş Taşı nedir?**
 > **İnci**, çocuğunun senin onayladığın görevlerle kazandığı oyun içi puandır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
@@ -332,15 +353,11 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Davranış kaydı ekranının altı (sabit); Uzmanım ekranının altı; Yardım ve iletişim | `kosullar-parentapp` |
+| ParentApp | Davranış kaydı ekranının altı (sabit); ~~Uzmanım ekranının altı~~ (3 Kasım 2026 kullanıcı kararıyla kaldırıldı); Yardım ve iletişim | `kosullar-parentapp` |
 
 > ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 
-| Uygulama | Ekran | Bağlı belge |
-|---|---|---|
-| ClinicApp | Danışan › Davranış kayıtları sekmesinin üstü; Yardım/Hakkında; web alt bilgisi | `sozlesme-uzman` |
-
-> ClinicApp acil yardım ya da kriz izleme hizmeti değildir. Ailelerin kayıtları sana gecikmeyle ulaşabilir. Acil bir durum fark edersen **112**'yi ara ya da aileyi hemen 112'ye yönlendir.
+**ClinicApp:** ekranlarda acil durum notu yok (kullanıcı kararı 3 Kasım 2026: uzman arayüzünde sınır uyarısı tekrarlanmaz). Sınır Uzman Hizmet Sözleşmesi 3.4 ve 3.4-a'da (acil durum ve kriz izleme hizmeti değildir; kayıtlar gecikmeyle ulaşabilir).
 
 ## 10. Pofi Adası — ebeveyn kapısı › Bilgi ekranı
 
@@ -358,6 +375,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 > - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
 > - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
 > - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
+> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}
@@ -420,13 +438,19 @@ ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) i
 |---|---|---|
 | ParentApp | Haftalık özet, gösterge ve ilerleme ekranlarının altı | `kosullar-parentapp` |
 
-> Bu sayılar çocuğunun uygulamadaki görevlerini özetler; tanı, zekâ ya da dikkat puanı değildir.
+> Bu sayılar çocuğunun uygulamadaki maceralarını özetler; tanı, zekâ ya da dikkat puanı değildir.
+
+**Ebeveyn dersleri (Gelişim › Ben; öneri 5 Kasım 2026, `sozlesme/akislar.md` 22):** ders sayfasının ve "Yakında" kartının altında:
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Göstergeler ve hedef grafikleri (alt bilgi) | `sozlesme-uzman` |
+| ParentApp | Gelişim › Ben › ders sayfası, Yakında kartı | `kosullar-parentapp` |
 
-> Bu oranlar ev rutinine ilişkin gözlem özetidir; tanı, zekâ ya da dikkat puanı değildir.
+> Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez.
+
+Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (ParentApp ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26).
+
+**ClinicApp ekranları:** göstergeler ve hedef grafiklerinin altında sınır metni yok (kullanıcı kararı 3 Kasım 2026; sözleşme 3.3 ve 3.4-a). Aşağıdaki çıktı alt bilgisi kalır.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
