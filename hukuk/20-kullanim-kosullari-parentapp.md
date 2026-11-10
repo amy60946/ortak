@@ -1,6 +1,6 @@
 # ParentApp Kullanım Koşulları
 | Anahtar | kosullar-parentapp | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ParentApp › kayıt ekranı (önceden işaretli olmayan kabul kutusu + metin bağlantısı), Ayarlar › Yasal metinler, Üyelik ekranı (satın alma düğmesinin altında bağlantı); App Store açıklamasındaki Kullanım Koşulları (EULA) bağlantısı; herkese açık adres (`legal` işlevi / `[ALAN ADI]`) | Dayanak | TBK md. 20–25 (genel işlem koşulları), md. 115; 6502 sayılı TKHK md. 5, 48, 68, 73, 73/A; Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ğ; Abonelik Sözleşmeleri Yönetmeliği; KVKK md. 5, 6, 9, 12; TMK md. 335 vd. |
+| Nerede | ParentApp › kayıt ekranı (önceden işaretli olmayan kabul kutusu + metin bağlantısı), Ayarlar › Yasal metinler, Üyelik ekranı (satın alma düğmesinin altında bağlantı); App Store açıklamasındaki Kullanım Koşulları (EULA) bağlantısı; herkese açık adres (`legal` işlevi / `moyoapp.com.tr`) | Dayanak | TBK md. 20–25 (genel işlem koşulları), md. 115; 6502 sayılı TKHK md. 5, 48, 68, 73, 73/A; Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ğ; Abonelik Sözleşmeleri Yönetmeliği; KVKK md. 5, 6, 9, 12; TMK md. 335 vd. |
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Taslak maddeler: `sozlesme/hukuk_notlari.md` D, F, G, I (bu metne "siz" diliyle yerleştirildi). Sürüm adları korunmuştur: `uzman-paylasim-v1`, `uzman-gecis-v1`, `saglik-yanit-v1`. Hukuki görüş değildir.
 
@@ -57,7 +57,7 @@
 
 4.3. Hesabınız kişiseldir. Şifrenizi kimseyle paylaşmayın. Diğer ebeveyn kendi hesabıyla aileye katılır (7. madde).
 
-4.4. Hesabınızın izinsiz kullanıldığını düşünürseniz şifrenizi değiştirin ve `destek@[ALAN ADI]` adresine yazın.
+4.4. Hesabınızın izinsiz kullanıldığını düşünürseniz şifrenizi değiştirin ve `destek@moyoapp.com.tr` adresine yazın.
 
 4.5. Çocuğun giriş kodu ve ikinci ebeveyn davet kodu 15 dakika geçerlidir ve bir kez kullanılır. Uzmanın aile daveti 3 gün geçerlidir. Kötüye kullanımı önlemek için hatalı kod denemeleri sınırlanır.
 
@@ -91,7 +91,7 @@
 
 6.7. **Uzmanın hizmeti.** Uzman ile aileniz arasındaki mesleki ilişki, ücret, randevu ve tedavi kararları platformun dışındadır. Biz bu ilişkinin tarafı değiliz ve uzmanın mesleki tutum ve kararlarından sorumlu değiliz.
 
-6.8. **Kötüye kullanım bildirimi.** Tanımadığınız birinden davet alırsanız ya da bir uzmandan şüphelenirseniz paylaşmayın ve `destek@[ALAN ADI]` adresine bildirin. Hesabı inceler, gerekirse kapatırız.
+6.8. **Kötüye kullanım bildirimi.** Tanımadığınız birinden davet alırsanız ya da bir uzmandan şüphelenirseniz paylaşmayın ve `destek@moyoapp.com.tr` adresine bildirin. Hesabı inceler, gerekirse kapatırız.
 
 6.9. **Onay kaydı.** Onayınız, onayladığınız metnin sürümü ve zamanıyla kaydedilir.
 
@@ -121,7 +121,7 @@
 
 8.7. **İptal.** Aboneliğinizi her zaman, ek ücret ödemeden, kurduğunuz yoldan kapatabilirsiniz: iPhone'da **Ayarlar › [adınız] › Abonelikler › ParentApp › Aboneliği İptal Et**, ya da ParentApp'te **Aile › Hesap › Üyelik › Aboneliği yönet**. İptal, ödediğiniz dönemin sonunda geçerli olur; dönem bitene kadar özellikleri kullanırsınız. İptal, aboneliği satın alan ebeveynin Apple hesabından yapılır. **Uygulamayı ya da hesabınızı silmek aboneliği iptal etmez.**
 
-8.8. **Cayma hakkı ve iade.** Abonelik, satın alma onayınızla elektronik ortamda hemen başlayan bir hizmettir. Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ğ uyarınca, elektronik ortamda anında ifa edilen hizmetlerde cayma hakkı kullanılamaz. Satıcı Apple olduğu için iade talepleri Apple'ın iade politikasına göre Apple'a yapılır (Apple'ın "Sorun bildir" sayfası: reportaproblem.apple.com). Biz doğrudan iade yapamayız; başvurunuzda `destek@[ALAN ADI]` üzerinden yardımcı oluruz. Hizmet hiç ya da gereği gibi sunulmazsa kanundan doğan haklarınız saklıdır.
+8.8. **Cayma hakkı ve iade.** Abonelik, satın alma onayınızla elektronik ortamda hemen başlayan bir hizmettir. Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ğ uyarınca, elektronik ortamda anında ifa edilen hizmetlerde cayma hakkı kullanılamaz. Satıcı Apple olduğu için iade talepleri Apple'ın iade politikasına göre Apple'a yapılır (Apple'ın "Sorun bildir" sayfası: reportaproblem.apple.com). Biz doğrudan iade yapamayız; başvurunuzda `destek@moyoapp.com.tr` üzerinden yardımcı oluruz. Hizmet hiç ya da gereği gibi sunulmazsa kanundan doğan haklarınız saklıdır.
 
 8.9. **Satın alımları geri yükleme.** Telefon değiştirirseniz Üyelik ekranındaki "Satın alımları geri yükle" ile aboneliğiniz hesabınıza yeniden bağlanır.
 
@@ -183,7 +183,7 @@ ParentApp, Pofi Adası ve ClinicApp'in yazılımı, tasarımı, karakterleri, g�
 - App Store aboneliğiniz kendiliğinden iptal olmaz; Apple'dan ayrıca kapatın (8.7).
 - Kanunen saklamamız gereken kayıtlar Aydınlatma Metni 7. maddedeki sürelerle tutulur.
 
-14.2. **Bizim kapatmamız.** Bu koşulları ağır biçimde ihlal ederseniz (ör. veli olmadığınız bir çocuğu eklemek, çocuğa zarar verecek içerik göndermek, sistemi kötüye kullanmak) önce uyarır ya da hesabı geçici olarak askıya alırız; çocuk güvenliğini tehlikeye atan durumlarda hesabı derhal kapatabiliriz. Nedenini size bildiririz. İtiraz için `destek@[ALAN ADI]` adresine yazabilirsiniz. Haksız bir kapatmaya karşı kanuni haklarınız saklıdır.
+14.2. **Bizim kapatmamız.** Bu koşulları ağır biçimde ihlal ederseniz (ör. veli olmadığınız bir çocuğu eklemek, çocuğa zarar verecek içerik göndermek, sistemi kötüye kullanmak) önce uyarır ya da hesabı geçici olarak askıya alırız; çocuk güvenliğini tehlikeye atan durumlarda hesabı derhal kapatabiliriz. Nedenini size bildiririz. İtiraz için `destek@moyoapp.com.tr` adresine yazabilirsiniz. Haksız bir kapatmaya karşı kanuni haklarınız saklıdır.
 
 ### 15. Sorumluluk
 
@@ -233,11 +233,11 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 - **Küçük değişiklikleri** (yazım düzeltmesi, iletişim bilgisi, lehinize değişiklik) bildirimle yaparız.
 - Aleyhinize bir değişikliği onayınız olmadan uygulamayız.
 
-17.3. Her metnin sürüm adı vardır (`kosullar-parentapp` v1, v2 …). Önceki sürümler `[ALAN ADI]` adresinde arşivlenir.
+17.3. Her metnin sürüm adı vardır (`kosullar-parentapp` v1, v2 …). Önceki sürümler `moyoapp.com.tr` adresinde arşivlenir.
 
 ### 18. Uyuşmazlık
 
-18.1. Bu sözleşmeye Türk hukuku uygulanır. Bir sorununuz olursa önce `destek@[ALAN ADI]` adresine yazmanızı rica ederiz; bu zorunlu değildir.
+18.1. Bu sözleşmeye Türk hukuku uygulanır. Bir sorununuz olursa önce `destek@moyoapp.com.tr` adresine yazmanızı rica ederiz; bu zorunlu değildir.
 
 18.2. Uyuşmazlıklarda, her yıl Ticaret Bakanlığının ilan ettiği parasal sınırın altında kalan konularda **Tüketici Hakem Heyetine**, sınırın üstündekilerde **Tüketici Mahkemesine** başvurabilirsiniz. Tüketici Mahkemesinde dava açmadan önce arabulucuya başvurmak kanunen gerekebilir.
 
@@ -247,7 +247,7 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 
 ### 19. İletişim
 
-`[ŞİRKET UNVANI]`, `[ADRES]`. Destek: `destek@[ALAN ADI]`. Kişisel veriler: `kvkk@[ALAN ADI]`.
+`[ŞİRKET UNVANI]`, `[ADRES]`. Destek: `destek@moyoapp.com.tr`. Kişisel veriler: `kvkk@moyoapp.com.tr`.
 
 ### 20. Son hükümler
 

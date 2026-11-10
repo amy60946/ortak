@@ -1,19 +1,19 @@
 # ParentApp Aydınlatma Metni (Ebeveyn)
 | Anahtar | aydinlatma-ebeveyn | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ParentApp › kayıt ekranı (kayıttan önce bağlantı; "okudum" kaydı rıza değildir), Ayarlar › Yasal metinler, açık rıza ekranlarının üstündeki "Önce oku" bağlantısı; herkese açık adres (`legal` işlevi, alan adı alınınca `[ALAN ADI]`) | Dayanak | KVKK md. 4, 5, 6, 8, 9, 10, 11, 13, 14; Aydınlatma Yükümlülüğü Tebliği; Veri Sorumlusuna Başvuru Usul ve Esasları Tebliği |
+| Nerede | ParentApp › kayıt ekranı (kayıttan önce bağlantı; "okudum" kaydı rıza değildir), Ayarlar › Yasal metinler, açık rıza ekranlarının üstündeki "Önce oku" bağlantısı; herkese açık adres (`legal` işlevi, alan adı: `moyoapp.com.tr`) | Dayanak | KVKK md. 4, 5, 6, 8, 9, 10, 11, 13, 14; Aydınlatma Yükümlülüğü Tebliği; Veri Sorumlusuna Başvuru Usul ve Esasları Tebliği |
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Uyarlama ilkeleri: `hukuk/02-ornekler-ve-turk-hukuku.md`. Taslak maddeler: `sozlesme/hukuk_notlari.md` (C, I). Hukuki görüş değildir.
 
 ## Kısaca
 
-- Verilerinizin sorumlusu `[ŞİRKET UNVANI]`'dır. Sorularınız için: `kvkk@[ALAN ADI]`.
+- Verilerinizin sorumlusu `[ŞİRKET UNVANI]`'dır. Sorularınız için: `kvkk@moyoapp.com.tr`.
 - Hesabınızı, ailenizi, çocuklarınızın profilini, görevleri, ödülleri ve mesajları yalnız uygulamayı çalıştırmak için işleriz.
 - **Reklam yok. Verinizi satmayız. Sizi izlemeyiz:** reklam ağı, üçüncü taraf analiz ya da izleme aracı kullanmayız.
 - Tanı ve ilaç soruları isteğe bağlıdır. Yalnız ayrıca onay verirseniz kaydedilir.
 - Çocuğunuzun kayıtları bir uzmanla yalnız siz seçerseniz ve ayrıca onay verirseniz paylaşılır. Paylaşımı istediğiniz an durdurursunuz.
 - Veriler hizmet sağlayıcılarımızın yurt dışındaki sunucularında da tutulabilir. Bunu KVKK'nın öngördüğü güvencelerle yaparız.
 - Hesabınızı uygulamanın içinden silebilirsiniz. Ailede başka ebeveyn yoksa ailenin bütün verisi de silinir.
-- Haklarınız için uygulama içinden ya da `kvkk@[ALAN ADI]` adresine yazın. 30 gün içinde ücretsiz yanıt veririz.
+- Haklarınız için uygulama içinden ya da `kvkk@moyoapp.com.tr` adresine yazın. 30 gün içinde ücretsiz yanıt veririz.
 
 ## Tam metin
 
@@ -32,8 +32,8 @@
 | Unvan | `[ŞİRKET UNVANI]` |
 | Adres | `[ADRES]` |
 | MERSİS / VKN | `[MERSİS/VKN]` |
-| KVKK başvuruları | `kvkk@[ALAN ADI]` |
-| Destek | `destek@[ALAN ADI]` |
+| KVKK başvuruları | `kvkk@moyoapp.com.tr` |
+| Destek | `destek@moyoapp.com.tr` |
 
 ParentApp, Pofi Adası ve ClinicApp aynı veri sorumlusunun ürünleridir ve aynı sunucuları kullanır.
 
@@ -111,7 +111,7 @@ Uzman e-posta adresinizi de girmiş olabilir. Bu adresi yalnız tek bir davet e-
 
 | Sağlayıcı | Ne için | Hangi veri | Konum |
 |---|---|---|---|
-| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | `[SUPABASE BÖLGESİ]` |
+| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | Frankfurt, Almanya; AB bölgesi |
 | Apple | Bildirim gönderimi (APNs) | Bildirim jetonu, bildirim içeriği | ABD / AB |
 | RevenueCat | Abonelik durumunu doğrulama | Rastgele uygulama kullanıcı kimliği, satın alma kayıtları | ABD |
 | Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | E-posta adresi, e-postanın içeriği | ABD / AB |
@@ -181,7 +181,7 @@ Birçok işlemi başvuru yapmadan da uygulamada kendiniz yapabilirsiniz: bilgile
 
 10.1. Başvuru yolları:
 - ParentApp içinden: `[EKRAN YOLU: Ayarlar › Yasal metinler › KVKK başvurusu]`;
-- ParentApp'e kayıtlı e-posta adresinizden `kvkk@[ALAN ADI]` adresine;
+- ParentApp'e kayıtlı e-posta adresinizden `kvkk@moyoapp.com.tr` adresine;
 - yazılı ve imzalı olarak `[ADRES]` adresine;
 - kayıtlı elektronik posta (KEP) ya da güvenli elektronik imzayla `[KEP ADRESİ]` adresine.
 
@@ -193,7 +193,7 @@ Birçok işlemi başvuru yapmadan da uygulamada kendiniz yapabilirsiniz: bilgile
 
 ### 11. Bu metin değişirse
 
-Her metnin bir sürümü vardır. Esaslı bir değişiklikte sizi uygulamada bilgilendiririz; açık rızaya dayanan bir işlemin kapsamı değişirse yeniden onayınızı isteriz. Önceki sürümler `[ALAN ADI]` adresinde arşivlenir.
+Her metnin bir sürümü vardır. Esaslı bir değişiklikte sizi uygulamada bilgilendiririz; açık rızaya dayanan bir işlemin kapsamı değişirse yeniden onayınızı isteriz. Önceki sürümler `moyoapp.com.tr` adresinde arşivlenir.
 
 Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 
@@ -203,7 +203,7 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 2. **Tanışma yanıtlarında sağlık sınırı:** uygulamada yalnız "tanı" ve "ilaç" soruları sağlık sorusu olarak işaretli. "Çocuk şu uzmanlardan biriyle çalışıyor mu? (davranış terapisti, dil-konuşma terapisti/ergoterapist, psikolog ya da psikiyatrist)" ve "geçen hafta öfke nöbeti / endişe / dikkat isteyen işlerden kaçınma sıklığı" soruları açık rızasız alınıyor (kaynak: `admin-panel/src/data/tanisma_sorulari.json`). Bunlar sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı (sürüm `saglik-yanit-v2`).
 3. **Çocuk verisinin dayanağı:** çocuk ilgili kişidir; dayanak veliyle kurulan sözleşme (md. 5/2-c) olarak yazıldı. Yeterli mi, yoksa veliden çocuk adına açık rıza mı gerekir? 13 yaş ve üstü (yaş grubu C) için çocuğun kendi görüşü?
 4. **Uzman notlarında veri sorumlusu** (klinik mi, platform mu, ikisi mi) belirlenmeden 5.3 ve 7. madde kesinleşemez. Paylaşım durdurulunca uzmanın kendi notlarının klinikte kalması (`akislar.md` 5.3) ve aile hesabı silindiğinde bu notların akıbeti teyit edilmeli; uzmanın ayrıca kendi aydınlatma yükümlülüğü olur mu?
-5. **Yurt dışı aktarım:** Supabase bölgesi (`[SUPABASE BÖLGESİ]`); 2024 sonrası md. 9'da standart sözleşme + 5 iş günü bildirim sağlık verisi için de yeterli mi; Apple (bildirim) ve RevenueCat'in rolü (veri işleyen mi, bağımsız veri sorumlusu mu). `hukuk_notlari.md` I2'deki "sağlık verisi için ayrıca açık rıza" cümlesi yeni md. 9 düzeninde gerekli mi?
+5. **Yurt dışı aktarım:** Supabase bölgesi (Frankfurt, Almanya; AB bölgesi); 2024 sonrası md. 9'da standart sözleşme + 5 iş günü bildirim sağlık verisi için de yeterli mi; Apple (bildirim) ve RevenueCat'in rolü (veri işleyen mi, bağımsız veri sorumlusu mu). `hukuk_notlari.md` I2'deki "sağlık verisi için ayrıca açık rıza" cümlesi yeni md. 9 düzeninde gerekli mi?
 6. **Uygulama içi KVKK başvurusu henüz yok** (yönetim paneli "KVKK talepleri" Faz 2; `kvkk_requests` tablosu yok). Canlıdan önce yapılmalı ya da 10.1'den çıkarılmalı. KEP adresi gerekli mi?
 7. **Üçüncü taraf analiz çelişkisi:** `CANLIYA_ALMA.md` 4. bölümde ParentApp için Sentry + PostHog planı var; olgular "üçüncü taraf analiz yok" diyor. Eklenirse "Kısaca"daki "izlemeyiz" cümlesi, 5.5 tablosu ve yurt dışı aktarım değişir; yeni sürüm gerekir.
 8. **Saklama süreleri** (`[SÜRE]`), yedeklerde silinen verinin kalma süresi (Supabase yedek/PITR) ve periyodik imha işinin henüz yazılmamış olması (`CANLIYA_ALMA.md` 1.6). Deneme geçmişindeki e-posta özeti kişisel veri sayılır; hesap silindikten sonra tutulması md. 5/2-f ile yeterli mi?

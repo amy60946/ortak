@@ -1,6 +1,6 @@
 # Pofi Adası Kullanım Koşulları
 | Anahtar | kosullar-gameapp | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ParentApp › çocuğu oyuna ilk kez bağlarken ("Giriş kodu üret" öncesi; önceden işaretli olmayan veli onay kutusu + metin bağlantısı), ParentApp › Ayarlar › Yasal metinler; Pofi Adası › ebeveyn kapısı › Bilgi; App Store açıklamasındaki Kullanım Koşulları (EULA) bağlantısı; herkese açık adres (`legal` işlevi / `[ALAN ADI]`) | Dayanak | TBK md. 20–25 (genel işlem koşulları), md. 115; 6502 sayılı TKHK md. 5; TMK md. 335 vd. (velayet; md. 342 temsil); KVKK md. 10 |
+| Nerede | ParentApp › çocuğu oyuna ilk kez bağlarken ("Giriş kodu üret" öncesi; önceden işaretli olmayan veli onay kutusu + metin bağlantısı), ParentApp › Ayarlar › Yasal metinler; Pofi Adası › ebeveyn kapısı › Bilgi; App Store açıklamasındaki Kullanım Koşulları (EULA) bağlantısı; herkese açık adres (`legal` işlevi / `moyoapp.com.tr`) | Dayanak | TBK md. 20–25 (genel işlem koşulları), md. 115; 6502 sayılı TKHK md. 5; TMK md. 335 vd. (velayet; md. 342 temsil); KVKK md. 10 |
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md` §1, §2, §4. Ana sözleşme: `20-kullanim-kosullari-parentapp.md`. Hukuki görüş değildir.
 
@@ -92,7 +92,7 @@ Pofi Adası'nın yazılımı, karakterleri, görselleri, müziği, sesleri ve me
 
 ### 11. İletişim
 
-`[ŞİRKET UNVANI]`, `[ADRES]`. Destek: `destek@[ALAN ADI]`. Kişisel veriler: `kvkk@[ALAN ADI]`.
+`[ŞİRKET UNVANI]`, `[ADRES]`. Destek: `destek@moyoapp.com.tr`. Kişisel veriler: `kvkk@moyoapp.com.tr`.
 
 Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`.
 

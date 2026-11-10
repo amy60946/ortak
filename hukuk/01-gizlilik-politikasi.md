@@ -1,6 +1,6 @@
 # Gizlilik Politikası
 | Anahtar | gizlilik | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | Herkese açık adres (alan adı alınana dek `legal` sunucu işlevi, sonra `https://[ALAN ADI]/gizlilik`); Pofi Adası, ParentApp ve ClinicApp'in App Store sayfaları; üç uygulamada Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında); ClinicApp web sayfasının alt bilgisi; e-postaların altı | Dayanak | KVKK md. 4, 5, 6, 9, 10, 11, 12, 13; Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ; Apple App Review 5.1.1–5.1.2 |
+| Nerede | Herkese açık adres (alan adı: `https://moyoapp.com.tr/yasal/gizlilik`); Pofi Adası, ParentApp ve ClinicApp'in App Store sayfaları; üç uygulamada Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında); ClinicApp web sayfasının alt bilgisi; e-postaların altı | Dayanak | KVKK md. 4, 5, 6, 9, 10, 11, 12, 13; Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ; Apple App Review 5.1.1–5.1.2 |
 
 ## Kısaca
 
@@ -20,7 +20,7 @@
 > - Çocuktan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Çocuk yalnız kendi ailesiyle yazışır.
 > - Hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir.
 >
-> **Haklarınız:** Verinizi görebilir, düzeltebilir, silebilir, hesabınızı uygulamanın içinden kapatabilirsiniz. Başvuru: uygulamada Ayarlar › KVKK başvurusu ya da `kvkk@[ALAN ADI]`. 30 gün içinde ücretsiz yanıt veririz.
+> **Haklarınız:** Verinizi görebilir, düzeltebilir, silebilir, hesabınızı uygulamanın içinden kapatabilirsiniz. Başvuru: uygulamada Ayarlar › KVKK başvurusu ya da `kvkk@moyoapp.com.tr`. 30 gün içinde ücretsiz yanıt veririz.
 
 ## 1. Biz kimiz, bu metin neyi kapsar?
 
@@ -28,7 +28,7 @@ Bu politika **Pofi Adası** (çocuk oyunu, iOS), **ParentApp** (ebeveyn uygulama
 
 Kişisel verilerinizin veri sorumlusu:
 **[ŞİRKET UNVANI]**, [ADRES], MERSİS/VKN: [MERSİS/VKN]
-E-posta: `kvkk@[ALAN ADI]` (kişisel veri konuları), `destek@[ALAN ADI]` (diğer sorular).
+E-posta: `kvkk@moyoapp.com.tr` (kişisel veri konuları), `destek@moyoapp.com.tr` (diğer sorular).
 
 Bu metinde "biz" bu şirketi anlatır.
 
@@ -171,7 +171,7 @@ Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağla
 
 | Sağlayıcı | Ne için | Konum |
 |---|---|---|
-| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | [SUPABASE BÖLGESİ] |
+| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Frankfurt, Almanya; AB bölgesi |
 | Apple | App Store satışı ve aboneliği (satıcı Apple'dır), anlık bildirim (APNs) | ABD / AB |
 | Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | ABD |
 | RevenueCat | Abonelik durumunun doğrulanması | ABD |
@@ -228,7 +228,7 @@ KVKK md. 11 uyarınca şunları isteyebilirsiniz: verinizin işlenip işlenmedi�
 
 **Kendiniz hemen yapabilecekleriniz:** profil ve çocuk bilgilerini düzeltmek, sağlık yanıtlarını silmek, uzman paylaşımını geri almak, cihaz bağlantısını kapatmak, hesabınızı silmek.
 
-**Başvuru yolları:** uygulamada Ayarlar › KVKK başvurusu (hesabınıza bağlıdır, kimliğinizi ayrıca kanıtlamanız gerekmez); `kvkk@[ALAN ADI]` (kayıtlı e-posta adresinizden); [ADRES] adresine yazılı ve imzalı; KEP: [KEP ADRESİ].
+**Başvuru yolları:** uygulamada Ayarlar › KVKK başvurusu (hesabınıza bağlıdır, kimliğinizi ayrıca kanıtlamanız gerekmez); `kvkk@moyoapp.com.tr` (kayıtlı e-posta adresinizden); [ADRES] adresine yazılı ve imzalı; KEP: [KEP ADRESİ].
 
 Başvurunuzu en geç **30 gün** içinde **ücretsiz** yanıtlarız. Çocuğunuz adına veli olarak başvurabilirsiniz. Yanıttan memnun kalmazsanız Kişisel Verileri Koruma Kurulu'na şikâyette bulunabilirsiniz. Ayrıntı: **KVKK Başvuru Usulü** (`kvkk-basvuru`).
 
@@ -248,13 +248,13 @@ Yürürlük: [TARİH] · Sürüm: v1
 ## 17. İletişim
 
 [ŞİRKET UNVANI], [ADRES]
-Kişisel veri konuları: `kvkk@[ALAN ADI]` · Diğer konular: `destek@[ALAN ADI]`
+Kişisel veri konuları: `kvkk@moyoapp.com.tr` · Diğer konular: `destek@moyoapp.com.tr`
 
 ## Avukata notlar
 
 1. **Uzman notlarında veri sorumlusu (4. bölüm, seçenek A/B):** Yayından önce biri seçilmeli; seçim Uzman Hizmet Sözleşmesi ve Veri İşleme Eki, KVKK başvuru usulü (klinik yönlendirmesi) ve ihlal prosedürüyle aynı olmalı (`hukuk_notlari.md` 5/1).
 2. **Davranış kayıtları ve görev kayıtları sağlık verisi mi?** `02-ornekler` "davranış kayıtları: açık rıza" diyor, ama `00-olgular` §3'te davranış kaydı için ayrı açık rıza akışı yok (yalnız sağlık yanıtları, uzman paylaşımı, uzman geçişi). Davranış kaydının özel nitelikli sayılıp sayılmadığı ve ayrı onay gerekip gerekmediği karara bağlanmalı. Bugünkü metin davranış kaydını açık rıza tablosuna koymadı.
-3. **Sağlık verisinin yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi seçilince `[SUPABASE BÖLGESİ]` doldurulur.
+3. **Sağlık verisinin yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi: Frankfurt, Almanya; AB bölgesi (10 Kasım 2026'da dolduruldu).
 4. **Deneme hakkı e-posta özeti:** SHA-256 özeti tahmin edilebilir (e-posta adresleri sınırlı küme) olduğundan takma adlı kişisel veri sayılabilir; hesap silindikten sonra meşru menfaatle saklanması ve süresi ([SÜRE], öneri 2 yıl) onaylanmalı.
 5. **Bildirim yolu ve planlanan araçlar:** (a) Expo yedek bildirim yolu (`00-olgular.md` §5) bildirim başlığını ve metnini (çocuk adı geçebilir) ABD'ye taşıyor; canlıda kapatılması ya da alt işleyen olarak kalması kararı; bildirim metnini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir. (b) `CANLIYA_ALMA.md` 4. bölümde ParentApp ve ClinicApp için **Sentry + PostHog** planlanmış; eklenirse "üçüncü taraf analiz/izleme yok" cümlesi ve "Bir bakışta" kutusu değişmeli, ClinicApp web'de çerez onayı gerekir.
 6. **Aile ya da çocuk silinince uzman kayıtlarının silinmesi (12–13. bölüm):** Bugünkü sistemde uzmanın o çocuk için tuttuğu notlar, hedefler ve takip planı da siliniyor; metin bunu açıkça yazıyor. Uzmanın mesleki kayıt saklama yükümlülüğüyle çatışabilir (`00-olgular.md` §2, `22-uzman-hizmet-sozlesmesi.md` notu 4).

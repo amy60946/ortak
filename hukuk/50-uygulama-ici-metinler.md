@@ -131,7 +131,7 @@ Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlama
 >
 > [ Devam et ]
 >
-> <small>Kabul etmek istemiyorsan <u>hesabını silebilir</u> ya da `destek@[ALAN ADI]` adresine yazabilirsin.</small>
+> <small>Kabul etmek istemiyorsan <u>hesabını silebilir</u> ya da `destek@moyoapp.com.tr` adresine yazabilirsin.</small>
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
 - **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
@@ -246,7 +246,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 **Sonra:** "Hesabın silindi." ekranı + oturum kapanır.
 
-**Uygulamaya giremeyenler için** (yardım sayfası ve SSS): "Uygulamaya giremiyorsan [ALAN ADI]/hesap-sil sayfasından ya da `kvkk@[ALAN ADI]` adresinden silme talebinde bulunabilirsin."
+**Uygulamaya giremeyenler için** (yardım sayfası ve SSS): "Uygulamaya giremiyorsan moyoapp.com.tr/destek sayfasındaki formdan ya da `kvkk@moyoapp.com.tr` adresinden silme talebinde bulunabilirsin."
 
 ### 5.2 ClinicApp
 
@@ -378,7 +378,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 > - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
-> Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}
+> Destek: `destek@moyoapp.com.tr` · Sürüm {sürüm}
 >
 > [ Bu cihazın bağlantısını kaldır ] *(öneri: oyunun içinden de; `CANLIYA_ALMA.md` 2.2 "ebeveyn kapısı: bağlama")*
 

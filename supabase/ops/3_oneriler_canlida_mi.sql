@@ -1,25 +1,24 @@
 -- =====================================================================
 -- ÖNERİLER CANLIDA MI? (kvkk_ops, support, legal_seed) — YALNIZ OKUR, hiçbir şeyi değiştirmez.
 -- Kullanım: Supabase → SQL Editor → New query → tümünü yapıştır → Run. Çıkan tabloyu (5 satır) koordinatör penceresine yazın.
--- Sonuç 10 Kasım 2026: 4 × EVET, 12 / 12; üç dosya migrations/ altına taşındı.
--- Ne için: migrations/20261102200000_kvkk_ops.sql, 20261102210000_support.sql ve 20261102120747_legal_seed.sql
--- uygulanmış mı; uygulananlar migrations/'a taşınır, sonra 20261110120000_kvkk_export_v2.sql uygulanır.
--- Yasal metin özetleri legal_seed dosyasından üretildi (10 Kasım 2026); seed yeniden üretilirse bu dosya da yenilenir.
+-- İlk kullanım 10 Kasım 2026: kvkk_ops, support ve 20261102120747_legal_seed canlıda doğrulandı (4 × EVET, 12 / 12).
+-- 5. satır artık 20261110212650_legal_seed.sql'e (alan adı ve Supabase bölgesi dolu) göre denetler: uygulanınca 12 / 12.
+-- Yasal metin özetleri legal_seed dosyasından üretildi (10 Kasım 2026, 20261110212650); seed yeniden üretilirse bu dosya da yenilenir.
 -- =====================================================================
 with beklenen(key, version, ozet) as (
   values
-    ('gizlilik', 'v1', '042c8a977adf5f24d24ed89dd4f18520'),
-    ('aydinlatma-ebeveyn', 'v1', 'e7d28509436121265b999f44763e5349'),
-    ('aydinlatma-cocuk', 'v1', '4a221e98237439834fe4bb5ed47a4112'),
-    ('aydinlatma-uzman', 'v1', '2ca2157cb8cee9a62e7182a7cf3c6cf5'),
-    ('kosullar-parentapp', 'v1', '205641c55c0065d4543c8239ada5016a'),
-    ('kosullar-gameapp', 'v1', '819314fce315572ff594d8010640ae9e'),
-    ('sozlesme-uzman', 'v1', '7342d9777df134e225e95bf057ab2529'),
-    ('veri-isleme-eki', 'v1', '0073b9ec63554a97481fc9c48d99cd58'),
-    ('acik-riza-metinleri', 'v1', '42f1137d9c8ac834a4f675dc0be68da0'),
-    ('cerez-clinicapp-web', 'v1', 'b49cae25093e01bb24bcc8d420c8f5f3'),
-    ('alt-isleyenler', 'v1', '2a8e89fab363de0d6d40b167ca75f1ce'),
-    ('kvkk-basvuru', 'v1', '60f61e6a223bba2d91417ddb8f1ca9d9')
+    ('gizlilik', 'v1', '34f90ec52a7a62dbac73b6dd5eaa59e7'),
+    ('aydinlatma-ebeveyn', 'v1', '060bd68523346ae0b1b6d3cfec356c21'),
+    ('aydinlatma-cocuk', 'v1', '451702303223e0d067a958f9742cf6f6'),
+    ('aydinlatma-uzman', 'v1', 'c7fdafa731dd3a5e56eab26550b529c2'),
+    ('kosullar-parentapp', 'v1', 'eef4964be82f072c7f76f6c2abd62970'),
+    ('kosullar-gameapp', 'v1', 'aff6ea9e4e19bfb8299e77b78aebdfee'),
+    ('sozlesme-uzman', 'v1', '62581a8ed4334305c9c0c69364b9646c'),
+    ('veri-isleme-eki', 'v1', 'd10fe6cdf2f44df6dd3d2006055d997b'),
+    ('acik-riza-metinleri', 'v1', 'f7ce026fdd2d8c98c33d145783eacc5f'),
+    ('cerez-clinicapp-web', 'v1', '50ff386d14c84233181ab7a46a461796'),
+    ('alt-isleyenler', 'v1', '2c81ed2484fcfd87c2dcb8669f46c4aa'),
+    ('kvkk-basvuru', 'v1', '7997300714864b48861bb238faaaa34f')
 ),
 yasal as (
   select count(*) filter (where md5(d.body_md) = b.ozet) as eslesen,

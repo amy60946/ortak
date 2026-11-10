@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| Veri sorumlusu | `[ŞİRKET UNVANI]` (şahıs şirketi kurulacak), `[ADRES]`, `[MERSİS/VKN]`. İletişim: `kvkk@[ALAN ADI]`, `destek@[ALAN ADI]`. Alan adı henüz alınmadı. |
+| Veri sorumlusu | `[ŞİRKET UNVANI]` = gerçek kişi (kullanıcı kararı 10 Kasım 2026: şirket kurulmayacak, bireysel; ad soyad ve yayımlanacak adres avukat görüşüyle doldurulur, `hukuk_notlari.md` soru 28), `[ADRES]`, `[MERSİS/VKN]` (gerçek kişide uygulanmayabilir). İletişim: `kvkk@moyoapp.com.tr`, `destek@moyoapp.com.tr`. Alan adı `moyoapp.com.tr` (Kasım 2026). |
 | **Pofi Adası (GameApp)** | Çocuk oyunu, iOS. Hedef yaş 6–12 (yaş grupları K ≤5, A 6–8, B 9–12, C 13+). Ücretsiz; **uygulama içi satın alma yok, reklam yok, üçüncü taraf analiz/izleme aracı yok**. Çocuğun e-postası/şifresi yok: ebeveynin oluşturduğu çocuk profiline, ebeveynin gösterdiği 15 dakikalık tek kullanımlık kod ya da QR ile cihazdan bağlanılır (cihazda anonim oturum). Kamera yalnız QR okumak için, görüntü saklanmaz. Mağaza kategorisi: normal oyun (Kids kategorisi değil). |
 | **ParentApp** | Ebeveyn uygulaması, iOS. E-posta + şifre ile kayıt. Aile aboneliği (aylık/yıllık, App Store üzerinden; RevenueCat ile doğrulama), 7 gün deneme, ücretsiz planda sınırlı özellik. İkinci ebeveyn davet edilebilir. |
 | **ClinicApp** | Uzman (psikolog, klinik psikolog, PDR, ergoterapist, dil-konuşma terapisti, özel eğitim, çocuk gelişimi, BCBA, çocuk psikiyatristi, diğer) uygulaması; iPad + web. Klinik/uzman aboneliği (klinik sahibi birey olarak öder; App Store/RevenueCat; panelden elle üyelik), 14 gün deneme (kullanıcı kararı 10 Kasım 2026; sunucuda `migrations/20261110130000_clinic_trial_14.sql`, uygulandı 10 Kasım 2026; yönetim panelinden uzatılabilir). Ekip (klinik sahibi + üyeler). |
@@ -56,7 +56,7 @@ Platform **sağlık hizmeti sunmaz**, tanı koymaz, uzman istihdam etmez, uzman-
 
 | Sağlayıcı | Ne için | Veri | Konum |
 |---|---|---|---|
-| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | hepsi | `[SUPABASE BÖLGESİ]` (yurt dışı olabilir) |
+| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | hepsi | Frankfurt, Almanya; AB bölgesi (Türkiye dışı) |
 | Apple | App Store (satış ve abonelik — satıcı Apple'dır), bildirim (APNs) | abonelik işlemleri, bildirim jetonu, bildirim başlığı ve metni | ABD/AB |
 | Expo (yedek bildirim yolu) | Cihaz Expo bildirim anahtarı verirse bildirim Expo Push API üzerinden Apple'a iletilir | bildirim jetonu, bildirim başlığı ve metni | ABD |
 | RevenueCat | Abonelik durum doğrulaması | uygulama kullanıcı kimliği (rastgele kimlik), satın alma kayıtları | ABD |

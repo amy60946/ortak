@@ -86,7 +86,7 @@
 
 ## Canlıdan önce yapılacaklar (hukuk)
 
-1. Avukatla bu klasör + `sozlesme/hukuk_notlari.md` 5. bölüm (sorular) gözden geçirilir; yer tutucular (`[ŞİRKET UNVANI]`, `[ADRES]`, `[ALAN ADI]`, `[SUPABASE BÖLGESİ]`, `[SÜRE]`) doldurulur.
+1. Avukatla bu klasör + `sozlesme/hukuk_notlari.md` 5. bölüm (sorular) gözden geçirilir; yer tutucular doldurulur: `[ALAN ADI]` = `moyoapp.com.tr` ve `[SUPABASE BÖLGESİ]` = Frankfurt 10 Kasım 2026'da dolduruldu; kalan `[ŞİRKET UNVANI]` (gerçek kişi: kullanıcı kararı 10 Kasım 2026, şirket kurulmayacak), `[ADRES]`, `[MERSİS/VKN]`, `[KEP ADRESİ]`, `[SÜRE]`, `[TARİH]`.
 2. VERBİS, yurt dışı aktarım (standart sözleşme + Kurul bildirimi), saklama süreleri kararları.
 3. Onaylanan metinler panelden yayımlanır; mağaza sayfalarına `gizlilik` adresi girilir.
 4. Uygulamalarda: kayıt/yeniden onay ekranı, Ayarlar › Yasal metinler, KVKK başvurusu, hesap silme uyarıları (`50-uygulama-ici-metinler.md`).
