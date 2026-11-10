@@ -118,7 +118,7 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Siz + Claude) App Privacy etiketi · ParentApp taslağı: "ParentApp mağaza paketi" https://claude.ai/artifact/JNi1LAZC4A2cZFSm42Njym
 - [ ] (Siz) Yaş derecelendirme anketi
 - [ ] (Claude) Ekran görüntüleri, açıklama, anahtar kelimeler
-- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not · ParentApp notu ve hesap planı taslak (aynı belge)
+- [ ] (Claude) App Review deneme hesabı + kalıcı inceleme çocuk kodu + not · ParentApp notu ve hesap planı taslak (aynı belge) · **Oyun kodu yazıldı ve testli** (10 Kasım 2026, `proposed/20261110200000_review_child_code.sql`, akış `akislar.md` 2.0a); kalan: (Siz) SQL'i uygula, inceleme ailesini aç, `review_code_set` ile kodu al, App Review notuna yaz
 - [ ] (Claude) Bildirim izni ilk gereken anda — oyun için K7 B: yalnız ebeveyn açarsa, ilk onaylı görevden sonra (öneri `proposed/20261102200000_child_push.sql`)
 - [ ] (Claude) Yeni simge biçimi (Icon Composer)
 - [ ] (Siz) TestFlight dış deneme (5–10 aile, en az 1 uzman)

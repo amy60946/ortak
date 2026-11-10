@@ -54,6 +54,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `families` | K2 | |
 | `children` | K2 | `user_id`: çocuk cihazının anonim oturumu |
 | `invite_codes` | K2 | 15 dakikalık aile/çocuk kodları |
+| `review_child_codes` | K2 | App Review için kalıcı inceleme kodu (yalnız inceleme ailesinin çocuğu; kullanım sayısı + son kullanım; SQL Editor'den açılır/kapanır) |
 | `child_goal_settings` | K3 | |
 | `tasks` | K3 | |
 | `task_assignments` | K3 | |
@@ -127,6 +128,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `activity_days` | K12 | |
 | `user_activity` | K12 | |
 | `push_tokens` | K12 | |
+| `child_push_settings` | K12 | çocuğa anlık bildirim ayarı (ebeveyn açar/kapatır, sessiz saatler; K7 B) |
 | `notifications` | K12 | |
 | `code_attempts` | K13 | |
 | `admin_audit` | K13 | |

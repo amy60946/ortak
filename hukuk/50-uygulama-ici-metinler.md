@@ -88,7 +88,7 @@
 >
 > *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
-> ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
+> ☐ {çocuk_adı}'nın velisi olarak <u>Oyun Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
 > Çocuğunun verilerinin nasıl işlendiğini <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
 
@@ -369,13 +369,13 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 >
 > **Ebeveynler için bilgi**
 >
-> - Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
-> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız ParentApp'teki QR kodu okumak için açılır; görüntü kaydedilmez.
+> - Moyo Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
+> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız Moyo'daki QR kodu okumak için açılır; görüntü kaydedilmez.
 > - Çocuğun yalnız seninle ve ailendeki diğer ebeveynle yazışır.
-> - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
-> - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
-> - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
-> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
+> - Oyun, Moyo'da oluşturduğun profile bağlıdır. Profili Moyo'dan düzenlersin.
+> - Bu cihazın bağlantısını kapatmak için: Moyo › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da Moyo'da hesabını silerek aileyle birlikte silebilirsin.
+> - Çocuğun adına KVKK başvurusu: Moyo › Ayarlar › KVKK başvurusu.
+> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://moyoapp.com.tr/destek` (oyun 10 Kasım 2026'dan beri doğrudan bunu açar; adrese çocuk ya da cihaz kimliği eklenmez). Oyunda düğme "Yardım ve iletişim", yanında: "Soru, sorun ya da önerin için destek sayfasına yaz. Sayfa tarayıcıda açılır."
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}

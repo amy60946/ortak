@@ -68,6 +68,19 @@ ekleyelim mi?" + yaşına uygun 3 hazır görev (`veri/gorev_sablonlari.json`, t
 üretilir). Kesin engel konmaz (kayıtta vazgeçmeyi önlemek için). Oyunda pano hiçbir zaman boş başlamaz: rehberin hoş geldin görevi
 (`ekonomi.md` §5A) ilk ziyarette panonun en üstündedir. Sunucu değişikliği yok (`create_invite_code` aynı).
 
+### 2.0a App Review kalıcı kodu (öneri `proposed/20261110200000_review_child_code.sql`, 10 Kasım 2026)
+
+Apple inceleyicisinin oyuna girebilmesi için **inceleme ailesinin** tek bir çocuğuna süresiz, tekrar kullanılabilir kod.
+
+| Adım | Kim | Ne |
+|---|---|---|
+| 1 | Kullanıcı | ParentApp'te (Moyo) yalnız inceleme için bir aile hesabı açar (gerçek aile değil; Apple'a verilecek deneme hesabı da bu olabilir) ve bir çocuk ekler (ör. "Deniz"). |
+| 2 | Kullanıcı (SQL Editor) | `select public.review_code_set('<inceleme ebeveyninin e-postası>', 'Deniz');` → kod döner (ör. `O7KQ2M`). Yeni kod, o çocuğun eski inceleme kodunu kapatır. Kapatmak: `select public.review_code_off('O7KQ2M');` |
+| 3 | Kullanıcı (App Store Connect) | Pofi Adası › App Review Information › Notes: kod + kısa yol tarifi. |
+| 4 | [O] İnceleyici | Giriş ekranına kodu yazar; `redeem_child_code` aile kodu bulamazsa etkin inceleme koduna bakar, çocuğu bu cihaza bağlar (kod tükenmez; `use_count`, `last_used_at`). |
+
+Kurallar: kod "O" + 5 karakter (aile kodlarının alfabesinde O, I, L, 0, 1 yok, çakışmaz; O yerine 0 da kabul). Ebeveynin yeni aile kodu üretmesi inceleme kodunu bozmaz. Deneme sınırları aynen geçerli. Tablo istemciye kapalı (RLS açık, politika yok); `review_code_set/off` yalnız sunucu yetkisiyle (SQL Editor). İnceleme çocuğu her girişte son giren cihaza geçer: kullanıcının kendi deneme cihazını bu çocuğa bağlamaması gerekir.
+
 ### 2.1 Bağlantıyı kaldırma
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
