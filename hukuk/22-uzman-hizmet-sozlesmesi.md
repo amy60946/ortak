@@ -1,6 +1,6 @@
 # ClinicApp Uzman Hizmet Sözleşmesi
 | Anahtar | sozlesme-uzman | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ClinicApp (iPad + web): kayıt ekranında ve ekip koduyla katılımda onay kutusu (sürümlü onay kaydı); esaslı değişiklikte açılışta yeniden onay; Üyelik ekranında bağlantı; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | TBK md. 1 vd., 20–25 (genel işlem koşulları), 112–116 (borca aykırılık, sorumsuzluk anlaşmaları, yardımcı kişi); KVKK md. 4, 5, 6, 8, 9, 10, 12; 6563 s. Kanun (ticari ileti); Uzaktan Sağlık Hizmetlerinin Sunumu Hakkında Yönetmelik (kapsam dışı olduğu beyanı); HMK md. 17, 193; 6502 s. TKHK md. 5 ve Abonelik Sözleşmeleri Yönetmeliği (uzmanın tüketici sayılması hâlinde) |
+| Nerede | ClinicApp (iPad + web): kayıt ekranında ve ekip koduyla katılımda onay kutusu (sürümlü onay kaydı); esaslı değişiklikte açılışta yeniden onay; Üyelik ekranında bağlantı; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı: `moyoapp.com.tr`) | Dayanak | TBK md. 1 vd., 20–25 (genel işlem koşulları), 112–116 (borca aykırılık, sorumsuzluk anlaşmaları, yardımcı kişi); KVKK md. 4, 5, 6, 8, 9, 10, 12; 6563 s. Kanun (ticari ileti); Uzaktan Sağlık Hizmetlerinin Sunumu Hakkında Yönetmelik (kapsam dışı olduğu beyanı); HMK md. 17, 193; 6502 s. TKHK md. 5 ve Abonelik Sözleşmeleri Yönetmeliği (uzmanın tüketici sayılması hâlinde) |
 
 ## Kısaca
 
@@ -70,7 +70,7 @@
 
 ## 4. Hesap, klinik ve ekip
 
-4.1. **Hesap.** Uzman kayıtta doğru ad, unvan ve e-posta bilgisi verir ve bunları güncel tutar. Her uzman kendi hesabını kullanır; hesap paylaşılamaz. Şifrenin ve hesaba erişilen cihazların güvenliği uzmandadır; uzman, hesabının yetkisiz kullanıldığını fark ederse derhal `destek@[ALAN ADI]` adresine bildirir.
+4.1. **Hesap.** Uzman kayıtta doğru ad, unvan ve e-posta bilgisi verir ve bunları güncel tutar. Her uzman kendi hesabını kullanır; hesap paylaşılamaz. Şifrenin ve hesaba erişilen cihazların güvenliği uzmandadır; uzman, hesabının yetkisiz kullanıldığını fark ederse derhal `destek@moyoapp.com.tr` adresine bildirir.
 
 4.2. **Klinik.** Kayıtla birlikte uzman adına bir klinik oluşur ve uzman o kliniğin sahibi olur. Bireysel çalışan uzmanda klinik adı uzmanın adıdır.
 
@@ -188,7 +188,7 @@
    - f) hukuka, kişilik haklarına ya da çocuğun üstün yararına aykırı içerik girmek;
    - g) Platformu tanı veya tedavi hizmeti olarak tanıtmak; Platformun adını ve markalarını izinsiz kullanmak; rozeti madde 8.2'ye aykırı biçimde sunmak.
 
-11.2. Aykırılık hâlinde Platform, aykırılığın ağırlığına göre uyarabilir, ilgili özelliği kısıtlayabilir, hesabı askıya alabilir ya da sözleşmeyi madde 14.3 uyarınca feshedebilir. Aileleri, çocukları ya da sistemi korumak için gerekiyorsa bu önlemler önceden bildirim yapılmadan alınabilir; bu durumda uzmana gerekçe en kısa sürede bildirilir. Uzman `destek@[ALAN ADI]` adresinden itiraz edebilir.
+11.2. Aykırılık hâlinde Platform, aykırılığın ağırlığına göre uyarabilir, ilgili özelliği kısıtlayabilir, hesabı askıya alabilir ya da sözleşmeyi madde 14.3 uyarınca feshedebilir. Aileleri, çocukları ya da sistemi korumak için gerekiyorsa bu önlemler önceden bildirim yapılmadan alınabilir; bu durumda uzmana gerekçe en kısa sürede bildirilir. Uzman `destek@moyoapp.com.tr` adresinden itiraz edebilir.
 
 ## 12. Fikri mülkiyet
 
@@ -238,7 +238,7 @@
 
 14.5. **Dışa aktarma.** Uzman, sözleşme sona ermeden ya da hesabını silmeden önce:
    - a) ClinicApp'in sunduğu yazdırılabilir raporları alabilir;
-   - b) `destek@[ALAN ADI]` adresine başvurarak kendi danışan kayıtlarının (notlar, hedefler, değerlendirmeler, görev önerileri, takip planı) bir kopyasını isteyebilir. Platform talebi `[SÜRE]` (öneri: 30 gün) içinde, yaygın kullanılan ve okunabilir bir dosya biçiminde karşılar.
+   - b) `destek@moyoapp.com.tr` adresine başvurarak kendi danışan kayıtlarının (notlar, hedefler, değerlendirmeler, görev önerileri, takip planı) bir kopyasını isteyebilir. Platform talebi `[SÜRE]` (öneri: 30 gün) içinde, yaygın kullanılan ve okunabilir bir dosya biçiminde karşılar.
    Dışa aktarma uzmanın kendi girdileriyle sınırlıdır; aile verisi, ebeveynin ayrıca onayı olmadan dışa aktarılmaz.
 
 14.6. **Silme.** Hesap silindiğinde veriler madde 4.5'e göre derhal silinir; yedeklerden silinme Veri İşleme Eki'ndeki süre içinde tamamlanır. Kanunen saklanması gereken kayıtlar (ör. ödeme kayıtları) ve değiştirilemez denetim kaydı, kişiyi doğrudan tanımlayan bilgi (e-posta) çıkarılarak saklama süresince tutulur.
@@ -277,7 +277,7 @@
 
 ## 17. Bildirimler ve iletişim
 
-Platform uzmana uygulama içi bildirimle ve kayıtlı e-posta adresine yazar. Uzman Platforma `destek@[ALAN ADI]` (genel destek), `kvkk@[ALAN ADI]` (kişisel veriler) ve `[ADRES]` (yazılı bildirim) üzerinden ulaşır. Uzman, e-posta adresini güncel tutmakla yükümlüdür.
+Platform uzmana uygulama içi bildirimle ve kayıtlı e-posta adresine yazar. Uzman Platforma `destek@moyoapp.com.tr` (genel destek), `kvkk@moyoapp.com.tr` (kişisel veriler) ve `[ADRES]` (yazılı bildirim) üzerinden ulaşır. Uzman, e-posta adresini güncel tutmakla yükümlüdür.
 
 ## 18. Devir
 

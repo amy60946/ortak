@@ -1,6 +1,6 @@
 # ClinicApp Web Çerez Politikası
 | Anahtar | cerez-clinicapp-web | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ClinicApp web sürümü ve (4 Kasım 2026'dan beri) ParentApp web sürümü (`/app/`; tanıtım sayfası çerez kullanmaz): giriş sayfasının alt bilgisinde bağlantı; ilk açılışta bilgilendirme bandı (aşağıda öneri); giriş yapıldıktan sonra Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 10, 12; KVKK Kurumu "Çerez Uygulamaları Hakkında Rehber" (2022); Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ |
+| Nerede | ClinicApp web sürümü ve (4 Kasım 2026'dan beri) ParentApp web sürümü (`/app/`; tanıtım sayfası çerez kullanmaz): giriş sayfasının alt bilgisinde bağlantı; ilk açılışta bilgilendirme bandı (aşağıda öneri); giriş yapıldıktan sonra Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı: `moyoapp.com.tr`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 10, 12; KVKK Kurumu "Çerez Uygulamaları Hakkında Rehber" (2022); Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ |
 
 ## Kısaca
 
@@ -65,13 +65,13 @@ Bu depolamada danışan bilgisi, not, mesaj ya da başka kişisel içerik tutulm
 
 ## 7. Üçüncü taraflar ve yurt dışı
 
-7.1. Oturum bilgisi, kimlik doğrulama hizmet sağlayıcımız Supabase'in (`[SUPABASE BÖLGESİ]`) sunucularında doğrulanır. ClinicApp web'in barındırıldığı hizmet sağlayıcısı, sayfaları size iletirken IP adresi ve tarayıcı bilgisi gibi teknik bağlantı kayıtlarını işleyebilir. Hizmet sağlayıcılarımızın listesi ve yurt dışı aktarım bilgisi Uzman Aydınlatma Metni'nde ve `hukuk/41-alt-isleyenler.md`'de yer alır.
+7.1. Oturum bilgisi, kimlik doğrulama hizmet sağlayıcımız Supabase'in (Frankfurt, Almanya; AB bölgesi) sunucularında doğrulanır. ClinicApp web'in barındırıldığı hizmet sağlayıcısı, sayfaları size iletirken IP adresi ve tarayıcı bilgisi gibi teknik bağlantı kayıtlarını işleyebilir. Hizmet sağlayıcılarımızın listesi ve yurt dışı aktarım bilgisi Uzman Aydınlatma Metni'nde ve `hukuk/41-alt-isleyenler.md`'de yer alır.
 
 7.2. ClinicApp web, bu politikada sayılanlar dışında üçüncü taraf bir hizmetin tarayıcınıza çerez yerleştirmesine izin vermez.
 
 ## 8. Haklarınız ve başvuru
 
-KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'nde bulabilirsiniz. Sorularınız için: `kvkk@[ALAN ADI]`.
+KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'nde bulabilirsiniz. Sorularınız için: `kvkk@moyoapp.com.tr`.
 
 ## 9. Değişiklikler
 

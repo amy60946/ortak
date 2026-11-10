@@ -1,6 +1,6 @@
 # Pofi Adası Aydınlatma Metni (Veli ve Çocuk)
 | Anahtar | aydinlatma-cocuk | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | Kısım A: ParentApp › çocuğu oyuna bağlama ekranı (giriş kodu / QR üretilmeden önce bağlantı), ParentApp › Ayarlar › Yasal metinler, Pofi Adası › ebeveyn kapısı › Bilgi. Kısım B: Pofi Adası › ebeveyn kapısı › Bilgi (en üstte, büyük yazı, sesli okumalı). Herkese açık adres (`legal` işlevi / `[ALAN ADI]`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 9, 10, 11; Aydınlatma Yükümlülüğü Tebliği; TMK md. 335 vd. (velayet) |
+| Nerede | Kısım A: ParentApp › çocuğu oyuna bağlama ekranı (giriş kodu / QR üretilmeden önce bağlantı), ParentApp › Ayarlar › Yasal metinler, Pofi Adası › ebeveyn kapısı › Bilgi. Kısım B: Pofi Adası › ebeveyn kapısı › Bilgi (en üstte, büyük yazı, sesli okumalı). Herkese açık adres (`legal` işlevi / `moyoapp.com.tr`) | Dayanak | KVKK md. 4, 5/2-c, 5/2-f, 9, 10, 11; Aydınlatma Yükümlülüğü Tebliği; TMK md. 335 vd. (velayet) |
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md` §1–2, §5–7. Ebeveyn tarafı: `10-aydinlatma-ebeveyn.md`. Hukuki görüş değildir.
 
@@ -12,7 +12,7 @@
 - Çocuğunuz yalnız kendi ailesiyle mesajlaşır. Yabancılarla iletişim yoktur.
 - Kamera yalnız QR okumak için açılır. Görüntü kaydedilmez, gönderilmez.
 - Çocuğunuzdan konum, fotoğraf, ses ya da iletişim bilgisi almayız.
-- Çocuğunuzun haklarını veli olarak siz kullanırsınız: `kvkk@[ALAN ADI]`.
+- Çocuğunuzun haklarını veli olarak siz kullanırsınız: `kvkk@moyoapp.com.tr`.
 
 ## Kısım A — Velilere tam metin
 
@@ -26,7 +26,7 @@
 
 ### 2. Veri sorumlusu
 
-`[ŞİRKET UNVANI]`, `[ADRES]`, `[MERSİS/VKN]`. KVKK başvuruları: `kvkk@[ALAN ADI]`. Destek: `destek@[ALAN ADI]`.
+`[ŞİRKET UNVANI]`, `[ADRES]`, `[MERSİS/VKN]`. KVKK başvuruları: `kvkk@moyoapp.com.tr`. Destek: `destek@moyoapp.com.tr`.
 
 ### 3. Oyun çocuğunuzu nasıl tanır
 
@@ -76,7 +76,7 @@
 - **Siz ve ailenizdeki diğer ebeveyn:** görevleri, "Yaptım"ları, coin ve Güneş Taşı bakiyesini, mesajları, ödül isteklerini görürsünüz.
 - **Kardeşler:** birbirinin mesajlarını ve hesabını görmez. Her cihaz yalnız kendi çocuğunun profilini görür.
 - **Uzman — yalnız sizin açık rızanızla:** Çocuğunuzu ParentApp'te bir uzmanla paylaşırsanız uzman profil bilgilerini, görevleri ve "Yaptım" kayıtlarını **yalnız okur**. Oyun kaydını, mesajları, coin ve Güneş Taşı hareketlerini göremez. Paylaşımı istediğiniz an durdurursunuz.
-- **Hizmet sağlayıcılar:** veriler Supabase sunucularında (`[SUPABASE BÖLGESİ]`) tutulur; bildirimler Apple'ın bildirim hizmetiyle (APNs) gönderilir. Sağlayıcılar veriyi yalnız bizim adımıza işler. Yurt dışına aktarım KVKK md. 9'a uygun güvencelerle yapılır (ayrıntı: ParentApp Aydınlatma Metni 5.5–5.6).
+- **Hizmet sağlayıcılar:** veriler Supabase sunucularında (Frankfurt, Almanya; AB bölgesi) tutulur; bildirimler Apple'ın bildirim hizmetiyle (APNs) gönderilir. Sağlayıcılar veriyi yalnız bizim adımıza işler. Yurt dışına aktarım KVKK md. 9'a uygun güvencelerle yapılır (ayrıntı: ParentApp Aydınlatma Metni 5.5–5.6).
 - **Yetkili ekibimiz:** yalnız destek, güvenlik ve kanuni yükümlülük için, iki adımlı girişle, gerekçe yazarak ve kayıt altında erişir. Mesaj içerikleri ekip ekranlarında gösterilmez.
 - **Yetkili kurumlar:** yalnız usulüne uygun talep olursa ve talep kapsamıyla sınırlı olarak.
 
@@ -112,7 +112,7 @@
 
 ### 10. Haklarınız ve başvuru
 
-Çocuğunuz adına KVKK md. 11'deki hakları veli olarak siz kullanırsınız: verinin işlenip işlenmediğini öğrenmek, bilgi istemek, düzeltme, silme, aktarılan kişileri öğrenmek, itiraz ve zararın giderilmesini istemek. Başvuru yolları ve süreler ParentApp Aydınlatma Metni'nin 9. ve 10. maddelerindedir: uygulama içinden, kayıtlı e-postanızdan `kvkk@[ALAN ADI]` adresine ya da yazılı olarak `[ADRES]` adresine. En geç 30 gün içinde ücretsiz yanıt veririz.
+Çocuğunuz adına KVKK md. 11'deki hakları veli olarak siz kullanırsınız: verinin işlenip işlenmediğini öğrenmek, bilgi istemek, düzeltme, silme, aktarılan kişileri öğrenmek, itiraz ve zararın giderilmesini istemek. Başvuru yolları ve süreler ParentApp Aydınlatma Metni'nin 9. ve 10. maddelerindedir: uygulama içinden, kayıtlı e-postanızdan `kvkk@moyoapp.com.tr` adresine ya da yazılı olarak `[ADRES]` adresine. En geç 30 gün içinde ücretsiz yanıt veririz.
 
 Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 

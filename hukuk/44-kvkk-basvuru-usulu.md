@@ -1,12 +1,12 @@
 # KVKK Başvuru Usulü
 | Anahtar | kvkk-basvuru | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı alınınca `https://[ALAN ADI]/kvkk-basvuru`); Gizlilik Politikası 14. bölümden ve aydınlatma metinlerinden bağlantı; ParentApp ve ClinicApp'te Ayarlar › KVKK başvurusu ekranındaki "Başvuru usulü" bağlantısı; Pofi Adası'nda ebeveyn kapısının arkasındaki Bilgi ekranı | Dayanak | KVKK md. 11, 13, 14, 28/2; Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ |
+| Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı: `https://moyoapp.com.tr/yasal/kvkk-basvuru`); Gizlilik Politikası 14. bölümden ve aydınlatma metinlerinden bağlantı; ParentApp ve ClinicApp'te Ayarlar › KVKK başvurusu ekranındaki "Başvuru usulü" bağlantısı; Pofi Adası'nda ebeveyn kapısının arkasındaki Bilgi ekranı | Dayanak | KVKK md. 11, 13, 14, 28/2; Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ |
 
 ## Kısaca
 
 - Kişisel verilerinizle ilgili her talebi bize iletebilirsiniz: bilgi almak, kopyasını istemek, düzeltmek, silmek, itiraz etmek, kimlere aktarıldığını öğrenmek, zararın giderilmesini istemek.
 - **En kolay yol:** ParentApp ya da ClinicApp › Ayarlar › **KVKK başvurusu**. Hesabınıza bağlıdır; kimliğinizi ayrıca kanıtlamanız gerekmez.
-- Diğer yollar: `kvkk@[ALAN ADI]` (kayıtlı e-posta adresinizden), [ADRES] adresine imzalı dilekçe, KEP.
+- Diğer yollar: `kvkk@moyoapp.com.tr` (kayıtlı e-posta adresinizden), [ADRES] adresine imzalı dilekçe, KEP.
 - En geç **30 gün** içinde, **ücretsiz** yanıt veririz.
 - Çocuğunuz adına veli olarak başvurabilirsiniz.
 - Uzmanın danışan notları gibi kayıtlarda başvurunuzu uzmanın kliniğine yönlendirebiliriz (8. bölüm).
@@ -26,7 +26,7 @@ Başkası adına başvuru için noter onaylı vekâletname gerekir (velinin çoc
 | Yol | Nasıl | Kimlik |
 |---|---|---|
 | **Uygulama içi** (önerilen) | ParentApp ya da ClinicApp › Ayarlar › KVKK başvurusu. Başvurunuzun durumunu aynı ekranda "Başvurularım" altında görürsünüz | Hesabınızla giriş yapmış olmanız yeterlidir |
-| **E-posta** | `kvkk@[ALAN ADI]` | Sistemimizde kayıtlı e-posta adresinizden göndermeniz ya da güvenli elektronik imza veya mobil imza kullanmanız gerekir |
+| **E-posta** | `kvkk@moyoapp.com.tr` | Sistemimizde kayıtlı e-posta adresinizden göndermeniz ya da güvenli elektronik imza veya mobil imza kullanmanız gerekir |
 | **Yazılı** | [ADRES] adresine ıslak imzalı dilekçe; elden, posta ya da noter aracılığıyla | İmza ve 3. bölümdeki bilgiler |
 | **KEP** | [KEP ADRESİ] adresine kendi KEP adresinizden | KEP |
 
@@ -78,7 +78,7 @@ Amacımız verinizi başkasına vermemektir.
 
 - Pofi Adası'nda çocuğun ayrı bir hesabı yoktur; profilini veli ParentApp'te oluşturur. Çocuğun verisiyle ilgili talepleri veli yapar.
 - **Ailede kayıtlı ebeveynseniz:** ParentApp › Ayarlar › KVKK başvurusu › "Kimin için?" › çocuğunuzu seçin. Ebeveyn hesabınız ve çocuğu eklerken verdiğiniz veli beyanı yeterlidir.
-- **Ailede kayıtlı olmayan veli ya da vasi iseniz:** `kvkk@[ALAN ADI]`, yazılı ya da KEP yoluyla başvurun ve velayet ya da vesayetinizi gösteren belgeyi ekleyin.
+- **Ailede kayıtlı olmayan veli ya da vasi iseniz:** `kvkk@moyoapp.com.tr`, yazılı ya da KEP yoluyla başvurun ve velayet ya da vesayetinizi gösteren belgeyi ekleyin.
 - Çocuğun cihazının oyunla bağlantısını başvuru gerekmeden hemen kapatabilirsiniz: ParentApp › Aile › çocuk › Cihaz bağlantısını kaldır. Çocuğun profilinin ve ona bağlı verilerin (görevler, mesajlar, oyun kaydı) silinmesini bu sayfadaki yollarla isteyebilirsiniz; ailenin tamamı için hesabınızı silmeniz yeterlidir.
 
 ## 8. Uzmanla ilgili kayıtlar: kime başvurursunuz?
@@ -109,7 +109,7 @@ Başvurunuz reddedilirse, yanıtımızı yetersiz bulursanız ya da 30 gün içi
 
 Başvurunuzu, kanalını, türünü, açıklamanızı, durumunu, tarihlerini ve yanıt özetini kayıt altına alırız. Bu kaydı yalnız yetkili ekip üyeleri görür; her işlem denetim kaydına geçer. Başvuru kapandıktan sonra [SÜRE] saklanır.
 
-Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@[ALAN ADI]`
+Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@moyoapp.com.tr`
 
 ## Avukata notlar
 
@@ -146,7 +146,7 @@ Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@[ALA
 > Başvurunuz ([NO]) uzmanınızın ClinicApp'e girdiği kayıtlarla ilgili. Bu kayıtların veri sorumlusu uzmanınız ya da kliniğidir. Başvurunuzu bugün [KLİNİK ADI] kliniğine ilettik; kliniğin yanıt vermesi için gereken teknik desteği sağlayacağız. Uzmanla paylaşımı istediğiniz an ParentApp › Uzmanım'dan durdurabilirsiniz.
 
 **Ş8 — Aktarılan kişiler**
-> Verileriniz şu alıcılara aktarılmaktadır: [liste ve ülkeler]. Güncel liste: [ALAN ADI]/alt-isleyenler.
+> Verileriniz şu alıcılara aktarılmaktadır: [liste ve ülkeler]. Güncel liste: moyoapp.com.tr/yasal/alt-isleyenler.
 
 **Ş9 — Ret**
 > Başvurunuzu ([NO]) [gerekçe] nedeniyle yerine getiremiyoruz. Bu karara katılmıyorsanız, yanıtımızı öğrendiğiniz tarihten itibaren 30 gün ve her hâlde başvuru tarihinizden itibaren 60 gün içinde Kişisel Verileri Koruma Kurulu'na şikâyette bulunabilirsiniz.

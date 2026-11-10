@@ -173,7 +173,7 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 >
 > **Ne yapmanızı öneriyoruz?** [ör. ParentApp'e yeniden giriş yapın ve şifrenizi değiştirin. Bizden geliyormuş gibi görünen ve şifre ya da kod isteyen e-postalara yanıt vermeyin; biz şifrenizi hiçbir zaman sormayız.]
 >
-> Sorularınız için bu e-postayı yanıtlayabilir ya da `kvkk@[ALAN ADI]` adresine yazabilirsiniz.
+> Sorularınız için bu e-postayı yanıtlayabilir ya da `kvkk@moyoapp.com.tr` adresine yazabilirsiniz.
 >
 > Yaşattığımız endişe için özür dileriz.
 > [ŞİRKET UNVANI]
@@ -193,11 +193,11 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 >
 > Sorunu [TARİH SAAT]'te kapattık. Etkilenen danışanların listesi ve ayrıntılı bilgi ekte / ClinicApp'te. [Veri işleyen seçeneği: Veri sorumlusu olarak Kurul'a ve ailelere bildirim yapmanız gerekebilir; bunun için ihtiyaç duyduğunuz bütün bilgiyi sağlarız.] [Ayrı veri sorumlusu seçeneği: Durumu Kurul'a ve etkilenen ailelere biz de bildirdik.]
 >
-> İletişim: `kvkk@[ALAN ADI]`
+> İletişim: `kvkk@moyoapp.com.tr`
 
 ### 12.5 Uygulama üst bandı (`banner`, doğrudan ulaşılamayan kişiler için)
 
-> Bir güvenlik sorunu yaşadık ve kapattık. Ayrıntı: [ALAN ADI]/guvenlik-bildirimi
+> Bir güvenlik sorunu yaşadık ve kapattık. Ayrıntı: moyoapp.com.tr/guvenlik-bildirimi
 
 ## Avukata notlar
 
