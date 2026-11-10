@@ -64,6 +64,8 @@ Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kap
 
 Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapalı**): Takip planında ailede ekli rutin/göreve "Değişiklik öner" düğmesini gösterir (`akislar.md` 12.1 adım 6–7). ParentApp "Uzmanın değişiklik önerisi" kartını yayınlamadan açılmaz: eski ParentApp değişiklik önerisini yeni görev gibi ekler (çift görev). Açmak: `admin_set_flag('plan_change_suggestions', true, 100, …)`.
 
+Bayrak `care_plan` (ClinicApp + ParentApp, kullanıcı kararı 11 Kasım 2026 "lansman odağı: ebeveyn eğitimi"; tanım gerekmez, yoksa **kapalı**): Takip Planı'nı (davranış hedefleri, GAS, aile programı, tek gönderim) iki uygulamada **görünür** yapar. Kapalıyken ClinicApp'te Takip Planı bölümü, ona giden yollar ve ana ekrandaki plan nedenleri yok; danışan Ebeveyn Eğitimi'yle açılır (`akislar.md` 12.2). ParentApp aynı bayrağı `client_config('parent')` ile okur (aile tarafı gizlenir; ParentApp penceresi). Veri ve işlevler durur, yalnız arayüz gizlenir. Yeniden açmak: `admin_set_flag('care_plan', true, 100, …)`; önce tek uzmana: `admin_set_user_flag(uzman, 'care_plan', true, …)`. `plan_change_suggestions` yalnız bu bayrak açıkken anlam taşır.
+
 ## KVKK işletme ve izleme (`migrations/20261102200000_kvkk_ops.sql`, 2 Kasım 2026, **uygulandı**: canlıda doğrulandı 10 Kasım 2026)
 
 | Fonksiyon | Rol | Ne yapar |
