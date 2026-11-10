@@ -218,7 +218,7 @@ Not: Görev oluşunca ParentApp öneriye `task_id` yazar; uzman önerisinin hang
 ### 5.8 ClinicApp üyeliği (`migrations/20261022200000_clinic_billing.sql`, uygulandı 23 Ekim)
 | # | Uygulama | Adım | Veritabanı |
 |---|---|---|---|
-| 1 | [S] | Yeni klinik 7 gün ücretsiz dener (kart yok, 10 koltuk). | `clinics.plan='trial'`, `trial_ends_at` |
+| 1 | [S] | Yeni klinik 14 gün ücretsiz dener (kart yok, 10 koltuk; 10 Kasım 2026'ya kadar 7 gün, öneri `20261110130000_clinic_trial_14.sql`). | `clinics.plan='trial'`, `trial_ends_at` |
 | 2 | [K] | Ana ekranda kalan gün; "Üyelik" ekranında iki paket (Bireysel / Klinik), aylık–yıllık, içerik listesi. Yalnız klinik sahibi satın alır. | `billing_plans`, `clinician_me()` |
 | 3 | [K] iPhone/iPad | **Karar (kullanıcı, 22 Ekim 2026): klinik sahibi BİREY olarak öder** (şirket hesabı/fatura yok). App Store aboneliği **RevenueCat** ile (ParentApp ile aynı yol): ClinicApp RevenueCat'e uzmanın Supabase kimliğiyle giriş yapar → RevenueCat → `billing-webhook` → durum RevenueCat'ten yeniden okunur → `billing_apply('revenuecat', '<uzman>:<ürün>', …)`. Yalnız klinik sahibinin aboneliği yazılır; ek süre (grace) etkin sayılır; başka hesaba geçen (TRANSFER) satır biter. | `billing_apply` |
 | 3w | [K] web | Web panelinde satın alma yok: "Üyeliği iPhone/iPad'deki ClinicApp'ten alın". Üyelik uzman hesabına bağlı olduğu için web'de de açılır. (`clinic-billing` iyzico/Apple yolları ileride kendi sisteme geçiş için durur, yayınlanmaz.) | — |
