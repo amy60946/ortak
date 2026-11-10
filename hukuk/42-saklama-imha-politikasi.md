@@ -42,7 +42,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 
 ## 4. Saklama ve imha tablosu
 
-"Bugün" sütunu: ✅ sistemde var · ⚙️ yazıldı, Supabase'e uygulanmayı bekliyor (`supabase/proposed/20261102200000_kvkk_ops.sql`; uygulanınca **kuru çalıştırmayla** başlar, süreler avukat onayıyla kesinleşince panelden gerçek silme açılır) · ⚠️ kısmen / teyit edilecek · ❌ yapılacak (10. bölüm).
+"Bugün" sütunu: ✅ sistemde var · ⚙️ yazıldı ve Supabase'e uygulandı (`supabase/migrations/20261102200000_kvkk_ops.sql`, canlıda doğrulandı 10 Kasım 2026; imha işi **kuru çalıştırmayla** çalışır, süreler avukat onayıyla kesinleşince panelden gerçek silme açılır) · ⚠️ kısmen / teyit edilecek · ❌ yapılacak (10. bölüm).
 
 | # | Veri kategorisi | Nerede | Saklama süresi | İmha yöntemi | Nasıl | Bugün |
 |---|---|---|---|---|---|---|

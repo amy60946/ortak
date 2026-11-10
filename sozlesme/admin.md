@@ -64,7 +64,7 @@ Bayrak `clinician_verification` (`20261026050000`, uygulandı; varsayılan **kap
 
 Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapalı**): Takip planında ailede ekli rutin/göreve "Değişiklik öner" düğmesini gösterir (`akislar.md` 12.1 adım 6–7). ParentApp "Uzmanın değişiklik önerisi" kartını yayınlamadan açılmaz: eski ParentApp değişiklik önerisini yeni görev gibi ekler (çift görev). Açmak: `admin_set_flag('plan_change_suggestions', true, 100, …)`.
 
-## KVKK işletme ve izleme (öneri `proposed/20261102200000_kvkk_ops.sql`, 2 Kasım 2026)
+## KVKK işletme ve izleme (`migrations/20261102200000_kvkk_ops.sql`, 2 Kasım 2026, **uygulandı**: canlıda doğrulandı 10 Kasım 2026)
 
 | Fonksiyon | Rol | Ne yapar |
 |---|---|---|
@@ -75,7 +75,7 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 | `admin_log_export(ne, satır, gerekçe)` | okur | Panelden toplu indirmenin kaydı (`export.csv`, hedef `system`/`customers.<app>`, satır sayısı). Müşteriler › CSV indir gerekçe ister ve "işin bitince dosyayı sil (en geç 30 gün)" uyarısı gösterir |
 | `admin_health()` | okur | Sistem sağlığı (`ops_health`, `veritabani.md` 23). Panel: Sistem sağlığı ekranı + Özet'te uyarı bandı |
 
-### Destek (öneri `proposed/20261102210000_support.sql`, 2 Kasım 2026; kullanıcı kararı: sayfada form)
+### Destek (`migrations/20261102210000_support.sql`, 2 Kasım 2026, **uygulandı**: canlıda doğrulandı 10 Kasım 2026; kullanıcı kararı: sayfada form)
 
 | Fonksiyon | Rol | Ne yapar |
 |---|---|---|
