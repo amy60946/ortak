@@ -7,10 +7,10 @@ Bu depo kod değil, **sözleşme** tutar. Üç uygulama aynı Supabase projesine
 | GameApp | Çocuk | `amy60946/game-app` (Unity, C#) | "Oyun" |
 | ParentApp | Ebeveyn | `amy60946/parent-app` (Expo / React Native) | "Ebeveyn" |
 | ClinicApp | Uzman | `amy60946/clinic-app` (Expo: web + iPad) | "Klinik" |
-| Yönetim paneli | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) | "GameApp2" (ortak + admin-panel; yönetim paneli işlerinin hepsi bu pencerede, kullanıcı kararı 26 Ekim 2026) |
+| Koordinatör (bütün depolar; yönetim paneli + ortak + lansman takibi) | Ekip (admin) | `amy60946/admin-panel` (React web, Cloudflare Workers) + `ortak`; öteki depoları **okur** | "Koordinatör" (kullanıcı kararı 10 Kasım 2026; önceki adı "GameApp2"): yönetim paneli, ortak, SQL önerileri, Cloudflare ve lansman takibi bu pencerede; uygulama kodunu (parent-app, clinic-app, game-app, marketing içeriği) yazmaz, okur, doğrular, koordine eder |
 | Pazarlama | Ekip | `amy60946/marketing` (özel depo: strateji, kampanya, içerik) | "Marketing" (ortak + marketing; ürünleri ortaktan **okur**, ürün kodu/SQL/yasal metin yazmaz; kurallar `hukuk/45-pazarlama-kurallari.md`; kullanıcı isteği 28 Ekim 2026; **spiker sesi üretimi de bu pencerede**, 29 Ekim 2026) |
 
-Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, yönetim paneli / ortak işler = `ortak` + `admin-panel`, pazarlama = `ortak` + `marketing`. İlk iş: bu dosya + `DURUM.md`.
+Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitHub'daki takip panosunun adı da Island Game). Yeni pencere açarken depolar: Oyun = `game-app` + `ortak`, Ebeveyn = `parent-app` + `ortak`, Klinik = `clinic-app` + `ortak`, koordinatör (yönetim paneli / ortak işler / lansman takibi) = `ortak` + `admin-panel` (+ öteki depolar yalnız okumak için), pazarlama = `ortak` + `marketing`. İlk iş: bu dosya + `DURUM.md`.
 
 **Marketing penceresi için:** ürün bilgisi `hukuk/00-olgular.md` (ne var, ne toplanıyor), `sozlesme/akislar.md` (özellikler), `sozlesme/ekonomi.md` (coin, abonelik), `sozlesme/admin.md` (KPI tanımları), `DURUM.md` (son kararlar), iş modeli kanvası (Referanslar). Pazarlama metni ve kampanya `hukuk/45-pazarlama-kurallari.md`'ye uyar (sağlık iddiası yok, çocuğa doğrudan çağrı yok, izleme yalnız onayla, İYS). Strateji, bütçe ve rakip notları **herkese açık bu depoya değil** `marketing` özel deposuna yazılır. Sosyal medya paylaşımı `sozlesme/paylasim.md`: Marketing paketi taslak olarak gönderir, yayın yalnız panelde owner onayıyla (§8). Ortakta değişmesi gereken bir şey görürse ilgili pencereye iletir (kural 6).
 
@@ -49,6 +49,8 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
    - **Uzun çıktı yok:** günlük, JSON, dosya dökümleri `head`/`grep` ile kısaltılır; tekrar tekrar yoklama (polling) yapılmaz, olay ya da bildirim beklenir.
    - **Biten abonelik ve zamanlayıcılar kapatılır** (birleşen PR, biten derleme denemesi).
 
+9. **Takip sayfası (kullanıcı kararı 10 Kasım 2026):** süreç işleri tek takip sayfasında: "Canlıya Alma: Adım Adım ve Pencere İşleri" https://claude.ai/artifact/LdikjQHgM6Wgmv3QE7A8qd (Docs araçlarıyla okunur ve yazılır). Her pencere işi bitince ya da tıkanınca kendi satırını günceller (durum, engel, tarih, bağlantı), DURUM satırıyla aynı anda; koordinatör doğrular ve özetler. Ürün pencereleri bunun için koordinatöre mesaj atmaz; koordinatör bir pencereye yalnız o pencerenin şimdi bir şey yapması gerektiğinde tek, toplu mesaj gönderir. `CANLIYA_ALMA.md` ikinci bir liste değildir, yalnız bu sayfaya bağlantı ve "nasıl yapılır" anlatımı verir.
+
 ## Kullanıcı ve güvenlik
 
 - Kullanıcı yazılımcı değil: Türkçe, sade, adım adım; nereye tıklayacağını söyle. Belirsiz kararda kısa soru sor; kapsam dışına çıkma.
@@ -56,7 +58,7 @@ Claude'da bütün pencereler **Island Game** projesinin altında açılır (GitH
 - Şifre/anahtar sohbete ya da depoya **asla** yazılmaz; GitHub Secrets'a eklenir. Uygulamalara yalnız Supabase **publishable** anahtarı girer; `sb_secret_` / `service_role` asla.
 - Bu depo herkese açıktır: içine kişisel veri, gerçek kullanıcı bilgisi ya da anahtar konmaz.
 - Adlandırma: "Fidan" ve eski oyun adı kullanılmaz. Ürünler: GameApp (depo `game-app`), ParentApp, ClinicApp.
-- **Canlıya alma: elle yayın (kullanıcı kararı 2 Kasım 2026, üç ürün):** App Store Connect'te "Manually release this version" seçilir; Apple onayından sonra sürüm kullanıcı onayıyla yayına alınır, otomatik yayın yok. Adımlar `CANLIYA_ALMA.md`.
+- **Canlıya alma: elle yayın (kullanıcı kararı 2 Kasım 2026, üç ürün):** App Store Connect'te "Manually release this version" seçilir; Apple onayından sonra sürüm kullanıcı onayıyla yayına alınır, otomatik yayın yok. Durum takip sayfasında (kural 9); adımların anlatımı `CANLIYA_ALMA.md`.
 - **Hukuk arşivi (kullanıcı isteği 27 Ekim 2026):** hukuki her karar/madde `sozlesme/hukuk_notlari.md`'ye yazılır (avukata sorular dahil). Canlıya alma süreci yeniden başlarken ve herhangi bir ürün canlıya alınmadan önce kullanıcıya bu arşivi hatırlat (`CANLIYA_ALMA.md` 1.5).
 - Klinik sınır: hiçbir gösterge tanı, zekâ ya da dikkat puanı değildir; uzman verisi yalnız ebeveyn rızasıyla ve geri alınabilir şekilde paylaşılır.
 
