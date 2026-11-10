@@ -96,6 +96,20 @@ Kullanıcı isteği: "Düzeltme istediğimde talebim Marketing'e doğrudan aksı
 - Anahtar: `MARKETING_GITHUB_TOKEN` (Supabase → Edge Functions → Secrets). GitHub **ince yetkili** anahtar (fine-grained): yalnız `amy60946/marketing`; izinler **Pull requests: Read and write**, **Actions: Read and write** (Metadata: Read kendiliğinden). Süre en çok 1 yıl; bitmeden yenilenir. Anahtar yoksa panel "otomatik bildirim kapalı" der.
 - Yorumlar anahtarın sahibinin (kullanıcının) adıyla görünür; sondaki _Yönetim paneli (otomatik)_ satırı ayırır.
 
+## Takvim (Marketing'in planı görmesi, 10 Kasım 2026)
+
+Kullanıcı isteği: "Panele giden içeriklerin hangi gün, saat planda olduğunu Marketing penceresi görsün." Gönderici `durum` her çalıştığında (günde iki kez, her yeni pakette, panelde Onayla / Düzeltme iste / Sil sonrasında) `paylasim/durum.json`'un başına `takvim` yazar (`tools/paylasim/takvim.mjs`, testi `takvim.test.mjs`). Kaynak `status` çıktısı; `social` işlevi değişmedi, Marketing deposunda değişiklik gerekmez. İşleyiş referansı: Buffer "Queue", Later ve Hootsuite "Planner" (gün başlığı altında saat sırası, durum, platform, boş aralıklar).
+
+| Alan | Ne |
+|---|---|
+| `takvim.ozet` | `planli`, `onay_bekliyor`, `duzeltme_istendi`, `sorun` sayıları; `siradaki_yayin` (bir sonraki planlı gönderi satırı), `son_planli_gun`, `bos_gun_sayisi` |
+| `takvim.gunler[]` | Türkiye saatiyle gün gün (son 7 gün + ileri tarihler, saat sırasıyla): `tarih` (YYYY-MM-DD), `gun` ("11 Kasım Çarşamba"), `bugun`, `gonderiler[]` |
+| `gonderiler[]` (takvimde) | `saat` ("21:00"), `durum` (Onay bekliyor · Düzeltme istendi · Planlı · Yayında · Sorun), `kesin` (true = panelde onaylanmış ya da yayımlanmış saat; false = paketin `onerilen_zaman`'ı, gerçek saat onayda verilir), `gecikti` (önerilen saat geçti, hâlâ onay bekliyor), `satir` (tek satırlık özet), `paket`, `surum`, `tur`, `baslik`, `platformlar`, `platform_durumu`, `baglantilar` (yayımlanan gönderi adresleri), düzeltmede `duzeltme_notu` |
+| `takvim.saatsiz[]` | saati olmayan bekleyen gönderiler |
+| `takvim.bos_gunler[]` | bugünden itibaren 14 gün içinde planlı, onay bekleyen ya da düzeltilen gönderisi olmayan günler ("15 Kasım Pazar") |
+
+İş akışı günlüğü de ileri tarihli günleri ve boş günleri yazar. Saat panelde onayda değişir; değişiklik Marketing'e onay yorumu (`Yayın: …`) ve tazelenen `durum.json` ile gelir.
+
 ## Ölçümler (30 Ekim 2026)
 
 Kaynak: Zernio'nun gönderi analizi (`GET /v1/analytics?postId=`); ayrı Instagram/TikTok anahtarı gerekmez. `status` ve panel yayımlanan son 20 gönderi için verir:
@@ -112,7 +126,7 @@ Gönderici `durum` her çalıştığında `paylasim/olcum/<paket>.jsonl`'a satı
 |---|---|---|---|
 | Marketing | `upload` | `filename, contentType (video/mp4, video/quicktime, image/jpeg, image/png), size ≤ 1 GB` | `uploadUrl` (1 saat, PUT), `publicUrl` |
 | Marketing | `submit` | `paket` | `id, warnings` · 400 `errors[]` · 409 sürüm zaten onaylı |
-| Marketing | `status` | — | `posts[]` (özet + `tur` + `images` + `changesNote` + `stats`), `usage` (plan, bu dönem kullanılan / hak, yenilenme günü; kullandıkça öde planında bağlı hesap sayısı ve bu dönem harcama; servis vermezse `null`). 29 Ekim 2026: hesap **Usage-Based** (kullandıkça öde) planında → gönderi sınırı yok, ücret bağlı hesap başına |
+| Marketing | `status` | — | `posts[]` (özet + `tur` + `images` + `changesNote` + `stats`; gönderici bundan `takvim` üretir, yukarıda), `usage` (plan, bu dönem kullanılan / hak, yenilenme günü; kullandıkça öde planında bağlı hesap sayısı ve bu dönem harcama; servis vermezse `null`). 29 Ekim 2026: hesap **Usage-Based** (kullandıkça öde) planında → gönderi sınırı yok, ücret bağlı hesap başına |
 | Panel (her admin) | `overview` | — | `role, accounts[], posts[], usage` |
 | Panel (owner) | `approve` | `id, reason, scheduledFor (≥ 2 dk sonra, ≤ 180 gün), platforms, captions, yapay_zeka` | `post, notify` |
 | Panel (owner) | `request_changes` | `id, reason` (not Marketing'e gider) | `post, notify` |

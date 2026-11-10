@@ -2,13 +2,15 @@
 //   node gonder.mjs gonder <klasör>...    her klasör: paket.json + medya. Video: video.mp4 / video.mov [+ kapak.jpg].
 //                                          Kaydırmalı ("tur": "kaydirmali"): 01.jpg, 02.jpg … (2–20, sırayla). Hikâye ("tur": "hikaye"):
 //                                          video.mp4 ya da tek 01.jpg.
-//   node gonder.mjs durum <çıktı.json>    onay durumu, düzeltme notları ve sonuç sayıları
+//   node gonder.mjs durum <çıktı.json>    onay durumu, düzeltme notları, sonuç sayıları ve `takvim` (Türkiye saatiyle gün gün plan,
+//                                          boş günler; takvim.mjs)
 // Gizli anahtar YOK: iş akışında "permissions: id-token: write" olmalı; GitHub kısa ömürlü bir kimlik belgesi verir,
 // sunucu (social işlevi) bunun amy60946/marketing ana dalından geldiğini doğrular. Gönderiler yalnız TASLAK olur;
 // yayın, panelde owner onayıyla.
 import { appendFile, mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
+import { takvim, takvimMetni } from './takvim.mjs';
 
 const FN = process.env.SOCIAL_URL || 'https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/social';
 const TYPES = { '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
@@ -87,7 +89,8 @@ if (cmd === 'gonder' && args.length) {
   if (res.some((r) => r.hata)) process.exit(1);
 } else if (cmd === 'durum' && args.length === 1) {
   const { posts, usage } = await call({ action: 'status' });
-  await writeFile(args[0], JSON.stringify({ guncellendi: new Date().toISOString(), hak: usage ?? null, gonderiler: posts }, null, 2) + '\n');
+  const plan = takvim(posts);
+  await writeFile(args[0], JSON.stringify({ guncellendi: new Date().toISOString(), hak: usage ?? null, takvim: plan, gonderiler: posts }, null, 2) + '\n');
   // Ölçüm geçmişi: yayımlanan her gönderi için paylasim/olcum/<paket>.jsonl'a zaman damgalı bir satır (karşılaştırma için)
   const dir = join(dirname(args[0]), 'olcum');
   for (const p of posts.filter((x) => x.measuredAt && x.paket)) {
@@ -97,6 +100,7 @@ if (cmd === 'gonder' && args.length) {
   }
   const hak = usage?.limit != null ? ` · bu dönem ${usage.used ?? '?'} / ${usage.limit} gönderi hakkı` : '';
   console.log(`${posts.length} gönderi → ${args[0]}${hak}`);
+  console.log(takvimMetni(plan));
 } else {
   console.error('Kullanım: node gonder.mjs gonder <klasör>... | node gonder.mjs durum <çıktı.json>');
   process.exit(2);
