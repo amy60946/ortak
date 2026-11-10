@@ -29,14 +29,19 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) ClinicApp sitesi yayını, auth yönlendirmeleri, `APP_URL`
 - [ ] (Claude) Universal Links (`apple-app-site-association`)
 
-### 1.3 E-posta
-- [ ] (Siz) Gönderim servisi: **Resend ücretsiz** (karar 22 Ekim) — hesap açılacak, alan adı gerekli
-- [ ] (Siz + Claude) SPF, DKIM, DMARC
-- [ ] (Siz) Supabase SMTP + **Confirm email açık**
-- [ ] (Claude) Türkçe şablonlar: onay, şifre sıfırlama, e-posta değişikliği, sihirli bağlantı, davet
-- [ ] (Claude) Şifremi unuttum akışı (ParentApp, ClinicApp; `parentapp://`, `clinicapp://`)
-- [ ] (Claude) İşlem e-postaları: hoş geldin, deneme bitiyor, ödeme + fatura, hesap silindi
-- [ ] (Claude) Gmail / Outlook / iCloud uçtan uca deneme
+### 1.3 E-posta (Resend) — **iki uygulama için tek hesap, tek alan adı** (kullanıcı isteği 10 Kasım 2026: "hizalanarak, olabiliyorsa aynı hesaplardan"; ParentApp + Klinik pencereleri birlikte)
+Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `moyoapp.com.tr` yeter. Supabase Auth SMTP proje başına tek: onay / şifre sıfırlama / e-posta değişikliği şablonları **iki uygulamada ortak**, tek gönderici adıyla gider. İş bölümü: ortak Auth şablonları ParentApp penceresi (uzman cümleleri Klinik'e gösterilir); `invite-email` ve ClinicApp'e özgü e-postalar Klinik penceresi; DNS yönetim paneli penceresi (Cloudflare anahtarı) ya da kullanıcı.
+- [ ] (Siz) 1. resend.com'da hesap → Domains › Add domain › `moyoapp.com.tr` (bölge Avrupa)
+- [ ] (Siz ya da yönetim paneli) 2. DNS: Resend'in gösterdiği SPF + MX (`send` alt alanında), DKIM (`resend._domainkey`), DMARC (`_dmarc`, başta `p=none`); Cloudflare'de "DNS only". Resend'in "Cloudflare'e otomatik kur" düğmesi de olur
+- [ ] (Siz) 3. "Verified" olunca API Keys › yalnız gönderme yetkili **iki anahtar**: Supabase SMTP için, Edge Functions için (sohbete yapıştırılmaz)
+- [ ] (Siz) 4. Supabase › Authentication › Emails › SMTP Settings: `smtp.resend.com`, port 465, kullanıcı `resend`, şifre = 1. anahtar, gönderen `noreply@moyoapp.com.tr`, ad **Moyo**; Rate Limits'te saatlik e-posta sınırını yükselt
+- [ ] (ParentApp penceresi) 5. Türkçe Auth şablonları (onay, şifre sıfırlama, e-posta değişikliği, sihirli bağlantı, davet): nötr metin, uygulamaya göre fark dönüş adresinden (`parentapp://`, `ebeveyn.moyoapp.com.tr`, `clinicapp://`, `uzman.moyoapp.com.tr`) → (Siz) Authentication › Email Templates'e yapıştır
+- [ ] (Siz) 6. Edge Functions › Secrets: `RESEND_API_KEY` = 2. anahtar, `MAIL_FROM` = `davet@moyoapp.com.tr`, `BRAND_NAME` = `Moyo`
+- [ ] (Siz) 7. Gelen posta `destek@`, `kvkk@`, `fatura@`: Cloudflare › Email › Email Routing (ücretsiz, kökte MX; Resend'in MX'i `send` alt alanında, çakışmaz) → kendi posta kutunuza yönlendir
+- [ ] (Claude, iki pencere) 8. Gmail / Outlook / iCloud uçtan uca deneme (kayıt onayı, şifremi unuttum: ParentApp + ClinicApp; davet e-postası)
+- [ ] (Siz + iki pencere, birlikte seçilen an) 9. Authentication › Providers › Email › **Confirm email açık** — iki uygulamayı birden etkiler; App Review deneme hesapları önceden onaylı olmalı
+- [ ] (Claude) Şifremi unuttum akışı (ParentApp, ClinicApp; `parentapp://`, `clinicapp://`) — ekranlar var, 8. adımda denenir
+- [ ] (Claude) İşlem e-postaları: hoş geldin, deneme bitiyor, ödeme + fatura, hesap silindi (sonra; Resend Edge Function'dan)
 
 ### 1.4 Destek
 - [ ] (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
@@ -74,24 +79,31 @@ Kim: **Siz** = kullanıcı (hesap, ödeme, imza, karar) · **Claude** = kod/SQL/
 - [ ] (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği
 - [ ] (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı · ParentApp yapıldı (2 Kasım: sunucu + RevenueCat durumu, uygulama içi abonelik yönetimi; silme serbest)
 
-### 1.8 Ödeme
-- [ ] (Siz) ASC ürünleri (ParentApp 2, ClinicApp 4) + TR fiyatları
-- [ ] (Siz) IAP .p8 anahtarı (Secrets) + App Store Server Notifications V2 adresi
-- [x] ParentApp ödeme yolu: **RevenueCat** (kullanıcı, 22 Ekim). Sunucu tarafı hazır: `supabase/functions/billing-webhook` (+ `state.test.ts`). ClinicApp kendi `clinic-billing` yolunda kalır.
-- [ ] (Siz) RevenueCat hesabı + proje; ParentApp'i App Store Connect'e bağlama (In-App Purchase anahtarı .p8 + App Store Connect API anahtarı — RevenueCat paneline, sohbete değil)
-- [ ] (Siz) RevenueCat: entitlement `premium`, offering `default` (`parentapp.premium.monthly`, `parentapp.premium.yearly`)
-- [ ] (Siz) Supabase Secrets: `BILLING_WEBHOOK_SECRET` (≥ 24 karakter), `REVENUECAT_API_KEY` (sk_…); denemede `BILLING_ALLOW_SANDBOX=1`
-- [ ] (Claude) `billing-webhook` dağıtımı (Verify JWT kapalı) + RevenueCat Webhook adresi ve Authorization başlığı
-- [x] (ParentApp penceresi) `react-native-purchases`: `configure(appUserID = Supabase kullanıcı kimliği)`, oturum açılınca `logIn`, çıkışta `logOut`; üyelik ekranı, "Satın alımları geri yükle", "Aboneliği yönet"; satın almadan sonra `family_access()` yenile; herkese açık SDK anahtarı (appl_…) GitHub Secrets · **Yapıldı (2 Kasım 2026):** 10.16.x, `parent-app/src/lib/purchases.ts`; fiyat mağazadan (yerel para birimi), gelmezse `plans.ts` yer tutucusu; secret adı `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (parent-app GitHub Secrets; yoksa ödeme "bağlı değil", CI `sk_`'yi reddeder). Açılması için yukarıdaki (Siz) maddeleri gerekir.
-- [x] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) eklenir (var: `hukuk/10-aydinlatma-ebeveyn.md` alıcılar tablosu, `hukuk/41-alt-isleyenler.md` 3.4; 2 Kasım'da denetlendi)
-- [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
-- [ ] (Claude) Sandbox: satın al, geri yükle, iptal, iade, grace period
-- [x] `20261022200000_clinic_billing.sql` uygulandı (23 Ekim)
-- [ ] En son: `billing.enforce = true` (ParentApp ödemesi canlı olunca)
-- [ ] **Klinik denemeleri ~2 Kasım'da bitiyor:** ödeme canlı değilse panelden uzat
-- [ ] (ClinicApp penceresi) `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın"; iyzico ekranları gizlenir
+### 1.8 Ödeme (RevenueCat) — **iki uygulama için tek hesap, tek proje "Moyo"** (kullanıcı isteği 10 Kasım 2026; ParentApp + Klinik pencereleri birlikte)
+Karar: ParentApp ve ClinicApp ödemesi RevenueCat (22 Ekim; klinik sahibi birey olarak öder; iyzico yok). Ortaktaki `supabase/functions/billing-webhook` ikisini tek uçtan işler (aile → `family_subscriptions`, klinik → `billing_apply`). Proje genelinde entitlement ve offering listesi ortaktır: **ParentApp** entitlement `premium` + offering `default`; **ClinicApp** entitlement `clinic` + offering `clinic` (`getOfferings().all['clinic']`, `current` değil). İki uygulamada `appUserID` = Supabase kullanıcı kimliği. **Mağaza ücretsiz denemesi (intro offer) iki uygulamada da eklenmez:** deneme sunucuda ve kartsız (ParentApp 7 gün, ClinicApp 14 gün; ortak#172).
+A. App Store Connect
+- [ ] (Siz) 1. Business › Agreements › **Paid Apps** sözleşmesi + banka + vergi (etkin olmadan abonelikler TestFlight'ta da yüklenmez; onayı günler sürebilir, ilk iş)
+- [ ] (Siz) 2. Users and Access › Integrations › **In-App Purchase** anahtarı (.p8 + Key ID + Issuer ID; bir kez indirilir, sohbete değil RevenueCat paneline)
+- [ ] (Siz) 3. ParentApp › Subscriptions: grup "Moyo Premium", `parentapp.premium.monthly` (1 ay), `parentapp.premium.yearly` (1 yıl); TR fiyatı, Türkçe ad/açıklama, inceleme ekran görüntüsü (ilk abonelikler sürümle birlikte incelemeye gider)
+- [ ] (Siz) 4. ClinicApp › Subscriptions: `com.clinicapp.uzman.solo.{monthly,yearly}`, `com.clinicapp.uzman.clinic.{monthly,yearly}` (ayrıntı Klinik penceresi)
+B. RevenueCat
+- [ ] (Siz) 5. Hesap + proje **"Moyo"**; iki App Store uygulaması (`com.parentapp.ios`, `com.clinicapp.uzman`), ikisine 2. adımdaki .p8 + Key ID + Issuer ID
+- [ ] (Siz) 6. Her uygulamanın RevenueCat'teki "Apple Server Notification URL"si → App Store Connect › o uygulama › App Information › App Store Server Notifications (Production + Sandbox, Version 2)
+- [ ] (Siz) 7. Product catalog: ürünleri içe aktar; ParentApp `premium` + `default` (aylık + yıllık paket); ClinicApp `clinic` + `clinic`
+- [ ] (Siz) 8. API Keys: ParentApp genel anahtarı `appl_…` → parent-app GitHub Secrets `EXPO_PUBLIC_REVENUECAT_IOS_KEY`; ClinicApp genel anahtarı → clinic-app (Klinik penceresi söyler); **gizli anahtar** `sk_…` (API sürümü sorulursa v1; işlev REST v1 `/subscribers` okur)
+- [ ] (Siz) 9. Integrations › Webhooks: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/billing-webhook`, Authorization = `Bearer <en az 24 karakterlik rastgele şifre>`
+C. Supabase
+- [ ] (Claude verir, Siz yayınlarsınız) 10. Edge Function `billing-webhook` (index.ts + state.ts), **Verify JWT kapalı**
+- [ ] (Siz) 11. Edge Functions › Secrets: `BILLING_WEBHOOK_SECRET` (9. adımdaki şifre, "Bearer" olmadan), `REVENUECAT_API_KEY` (`sk_…`), denemede `BILLING_ALLOW_SANDBOX` = `1`
+D. Uygulamalar ve deneme
+- [x] (ParentApp penceresi) `react-native-purchases` 10.16.x (`parent-app/src/lib/purchases.ts`): `configure(appUserID)`, `logIn` / `logOut`, üyelik ekranı, geri yükle, "Aboneliği yönet", fiyat mağazadan; anahtar yoksa ödeme "bağlı değil" (2 Kasım 2026)
+- [ ] (ClinicApp penceresi) `expo-iap` / `clinic-billing` yerine `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın". Çalışma alanları: satın almadan önce RevenueCat abone niteliği `clinic_id`, `billing-webhook` onu okur (öneri Klinik penceresinde; webhook ortak, değişiklik DURUM'a)
+- [ ] (Claude, iki pencere) 12. TestFlight'ta satın al, geri yükle, iptal, iade, grace period (TestFlight alışverişi ücretsiz deneme ortamıdır)
 - [ ] (Siz) Gerçek fiyatlar
-- [ ] Klinik denemeleri ~2 Kasım'da bitiyor (gerekirse uzat)
+- [ ] En son (yayından önce): `BILLING_ALLOW_SANDBOX` silinir; yönetim panelinde `billing.enforce = true`
+- [x] (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) (`hukuk/10-aydinlatma-ebeveyn.md`, `hukuk/41-alt-isleyenler.md` 3.4; Resend 3.5)
+- [x] iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
+- [x] `20261022200000_clinic_billing.sql` uygulandı (23 Ekim)
 - [ ] (Siz) **Aile davet et ödülü için Apple teklif kodu** (3 Kasım 2026) · **Canlıya alırken hatırlat (kullanıcı, 3 Kasım 2026):** kod üretme + panele yükleme ParentApp yayından önce yapılır. App Store Connect › ParentApp › Abonelikler › **aylık ve yıllık ürün ayrı ayrı** › Offer Codes › "1 ay ücretsiz" (mevcut aboneler), tek kullanımlık kodlar (en çok 6 ay geçerli) → dosyayı indir → yönetim paneli › **Davetler** › "Kod dosyası yükle" (ürün + App Store Connect'teki son tarih). App Store'dan ödeyen davet edene uygun kod kendiliğinden gider (`referral_rewards` `code_pending` → `code_sent`; `sozlesme/admin.md` "Davet ödülleri"). SQL uygulandı (3 Kasım 2026). Kodlar test ortamında denenemez: ilk kodu kendi gerçek aboneliğinde dene. Süre dolmadan (Sistem sağlığı uyarır) yeni parti üret
 
 ### 1.9 Fatura
