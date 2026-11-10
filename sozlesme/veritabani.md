@@ -73,6 +73,7 @@ Notlar:
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
 | `game_levels` | Seviye eşikleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `level` (PK), `total_xp` | Sunucu (SQL ile tohumlanır; `levels.json` ile aynı) | Herkes (oturum açmış) |
 | `code_attempts` | Hatalı kod denemeleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `user_id`, `at` | yalnız `redeem_child_code` | kimse (RLS açık, politika yok) |
+| `review_child_codes` | App Review kalıcı çocuk kodu (öneri `20261110200000_review_child_code`, akış `akislar.md` 2.0a) | `code` (`^O[A-Z0-9]{5}$`), `child_id`, `active`, `note`, `created_at`, `last_used_at`, `use_count` | yalnız `review_code_set` / `review_code_off` (SQL Editor) ve `redeem_child_code` | kimse (RLS açık, politika yok) |
 | `game_saves` | Oyun kaydı yedeği | `child_id` (PK), `family_id`, `data` (jsonb, en fazla 262 144 bayt), `updated_at` | O (`game_save_put`) | O (`game_save_get`), P (aile; ParentApp bugün okumuyor) |
 
 `game_items` içeriği oyunun `Resources/Data/items.json` dosyasıyla birebir aynıdır (48 eşya; fiyat ve seviye 2026-10-19'da karşılaştırıldı, fark yok). Liste: `ekonomi.md`.
@@ -91,6 +92,7 @@ Oyuna 23 Ekim'de eklenen 19 komik eşya (`fancy`) için öneri `migrations/20261
 | `create_invite_code(p_kind text default 'parent', p_child_id uuid default null)` | `table(code text, expires_at timestamptz)` | P | Ebeveyn oturumu gerekir. `parent` (ikinci ebeveyn) ya da `child` (çocuk girişi) kodu üretir. **24 saat** geçerli, tek kullanımlık. `child` türünde aynı çocuğun kullanılmamış eski kodları silinir. Ailenin süresi dolmuş kullanılmamış kodları temizlenir. |
 | `join_family(p_code text)` | `uuid` (yeni aile); öneride `json {family_id}` + kod deneme sınırı (bölüm 9) | P | İkinci ebeveyn davet koduyla aileye katılır. Eski ailesinde başka ebeveyn yoksa eski aile ve tüm verisi silinir. |
 | `redeem_child_code(p_code text)` | `json {child_id, family_id, name, avatar, age_band}` | O | Anonim oturum gerekir; ebeveyn hesabıyla çağrılamaz. Kodu tüketir, `children.user_id = auth.uid()` yapar (aynı oturumun önceki çocuk bağlantısı kaldırılır). M4 ile yanıta `age_band` eklendi. Öneri `20261019020000_server_rules`: hatalı kod 400 `{error:'invalid_code'}`, 15 dk'da 10 hata → 429 `{error:'too_many_attempts'}` (`code_attempts`, RLS açık, politika yok). |
+| `review_code_set(p_parent_email text, p_child_name text, p_note text default 'App Review')` / `review_code_off(p_code text)` | `text` kod / `boolean` | yalnız sunucu (SQL Editor) | İnceleme ailesinin çocuğuna kalıcı kod verir (eskisini kapatır) / kapatır. `redeem_child_code` aile kodu bulamazsa etkin inceleme koduna bakar (kod tükenmez). Öneri `20261110200000_review_child_code`. |
 | `delete_account()` | `void` | P | Hesabı siler; ailede başka ebeveyn yoksa ailenin tüm verisi de silinir (Storage dosyaları önce uygulama tarafından silinir). |
 | `my_family_id()`, `my_child_id()`, `my_any_family_id()` | `uuid` | iç | Politikalarda oturumun ailesi / çocuğu. |
 | `task_family(uuid)`, `child_family(uuid)`, `task_assigned_to_me(uuid)` | `uuid` / `boolean` | iç | Politikalarda tablolar arası kontrol. |
@@ -200,17 +202,21 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 |---|---|---|---|---|
 | `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at` | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
 | `push_tokens` | Cihaz push anahtarı | `token` (PK), `user_id`, `app`, `platform`, `updated_at` | Yalnız RPC | Kendi satırları |
+| `child_push_settings` (**öneri** `proposed/20261102200000_child_push.sql`, K7 B) | Çocuğa anlık bildirim ayarı (çocuk başına; satır yoksa kapalı) | `child_id` (PK), `family_id`, `enabled` (varsayılan false), `quiet_from` (20:30), `quiet_to` (08:00), `school_quiet` (true: hafta içi 08:00–15:30), `last_sent_at`, `updated_by`, `updated_at` | Yalnız RPC | Ailenin ebeveynleri (RLS); çocuk yalnız `child_push_settings_me()` |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
 | `register_push_token(p_token, p_app, p_platform)` | O, P, K | Anahtarı bu kullanıcıya bağlar (cihaz hesap değiştirdiyse taşınır) |
 | `unregister_push_token(p_token)` | O, P, K | Çıkışta / bildirim kapatılınca |
 | `mark_notifications_read(p_ids bigint[] default null)` | O, P, K | Verilenleri ya da hepsini okundu yapar; sayı döndürür |
+| `parent_set_child_push(p_child, p_enabled, p_quiet_from '20:30', p_quiet_to '08:00', p_school_quiet true)` (öneri) | P | Çocuğa bildirimi açar/kapatır, sessiz saatleri yazar; kapatınca çocuğun cihaz anahtarları silinir; güncel ayarı döndürür |
+| `child_push_settings_me()` (öneri) | O | `{enabled, quiet_from, quiet_to, school_quiet}`; oyun izin akışını yalnız `enabled` ise gösterir |
+| İç: `child_push_claim(p_user, p_now)` (öneri; yalnız service_role), `child_push_quiet(…)` | sunucu | `push-apns` çocuk bildiriminden önce sorar: açık mı, sessiz saat dışı mı (Türkiye saati), bugün gönderilmedi mi; izin verirse günü işaretler |
 | `redeem_clinic_invite_children(p_code, p_child_ids uuid[])` | P | Tek kodla birden çok çocuk; `{link_ids, clinic_id}` |
 | `clinic_share_child(p_clinic_id, p_child_id)` | P | O klinikle etkin paylaşım varsa kodsuz çocuk ekler |
 | `family_clinic_links()` | P | Dönüşe `clinic_id` eklendi |
 | İç: `notify`, `notify_parents`, `notify_child`, `notify_clinic`, `child_name`, olay tetikleyicileri, `notifications_push` (pg_net → Edge Function `push-apns` / Expo) | — | İstemci çağıramaz |
-| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar |
+| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar. Çocuğa (`app='child'`): yalnız `child_push_claim` izin verirse, genel metinle ("Pofi Adası · Adada yeni bir haber var!"; görev başlığı/ad/not yok), `data` yalnız `kind` + `notification_id` (2 Kasım 2026) |
 
 ## 6. Klinik ekibi ve kullanıcı takibi (21 Ekim 2026'da uygulandı, `migrations/20261021100000_clinic_team_tracking.sql`)
 

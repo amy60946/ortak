@@ -76,7 +76,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Gece imha işi (en az 3 yıl, alt sınır sunucuda) | ⚙️ |
 | 28 | Panelden indirilen dosyalar (CSV) | ekip bilgisayarı | İş bitince, en geç [SÜRE] (öneri: 30 gün) | Silme + çöp kutusunu boşaltma | Elle | — |
 | 29 | Yedekler | Supabase | [SÜRE] (öneri: en çok 30 gün) | Kendiliğinden döner | Sağlayıcı | ⚠️ plan ve süre seçilince |
-| 30 | Pofi Adası yerel oyun kaydı | çocuğun cihazı | Cihaz bağlantısı kapanınca ya da aile silinince | Uygulama içi temizlik | ❌ bugün yerel kayıt kalıyor (`CANLIYA_ALMA.md` 1.7) | ❌ |
+| 30 | Pofi Adası yerel oyun kaydı | çocuğun cihazı | Cihaz bağlantısı kapanınca ya da aile silinince | Uygulama içi temizlik | ✅ oyun bağlantının kapandığını görünce kaydı ve oturumu siler (game-app `GameBootstrap.ForgetDevice`, 2 Kasım 2026; TestFlight'ta bir sonraki derlemede) | ❌ |
 | 31 | Hizmet sağlayıcılardaki kopyalar | RevenueCat, Resend, Apple, Cloudflare | Sağlayıcının süresi; hesap silinince RevenueCat'e silme isteği | Sağlayıcı silme yolu | ❌ | ❌ |
 | 32 | Kâğıt başvurular | kilitli dolap | Satır 24 ile aynı | Yok etme (imha makinesi) | Elle | — |
 

@@ -88,7 +88,7 @@
 >
 > *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
-> ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
+> ☐ {çocuk_adı}'nın velisi olarak <u>Oyun Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
 > Çocuğunun verilerinin nasıl işlendiğini <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
 
@@ -225,7 +225,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - maceralar, onaylar, ödüller, coin ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
+> - maceralar, onaylar, ödüller, inci ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
@@ -331,21 +331,21 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 **ClinicApp — bitince:**
 > **Deneme süren bitti.** Üyelik alana kadar danışanlar, notlar, hedefler, öneriler ve davetler kapalı. Verilerin silinmedi; üyelik alınca kaldığın yerden devam edersin.
 
-## 8. Coin ve Güneş Taşı bilgi notu
+## 8. İnci ve Güneş Taşı bilgi notu (görünen ad İnci: 3 Kasım 2026; teknik ad coin)
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | ParentApp | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
-> **Coin ve Güneş Taşı nedir?**
-> **Coin**, çocuğunun senin onayladığın görevlerle kazandığı oyun parasıdır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
+> **İnci ve Güneş Taşı nedir?**
+> **İnci**, çocuğunun senin onayladığın görevlerle kazandığı oyun içi puandır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
 > **Güneş Taşı**, çocuğuna verdiğin ödüllerin sayacıdır. Ödülleri ve değiş tokuş oranlarını (ör. "1 taş = 10 dk ekran") sen belirlersin. Taşın parasal değeri yoktur; ödülün sözünü sen verirsin, biz bu ödüllerin tarafı değiliz.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | Pofi Adası | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
 
-> Coin'ler adanın parasıdır. Görevlerini yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
+> İnciler adanın hazinesidir. Sorumluluklarını tamamlayınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
 >
 > Güneş Taşları ailenin ödülleri içindir. Taşın yetince ödül isteyebilirsin. Kararı ailen verir.
 
@@ -369,13 +369,13 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 >
 > **Ebeveynler için bilgi**
 >
-> - Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
-> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız ParentApp'teki QR kodu okumak için açılır; görüntü kaydedilmez.
+> - Moyo Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
+> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız Moyo'daki QR kodu okumak için açılır; görüntü kaydedilmez.
 > - Çocuğun yalnız seninle ve ailendeki diğer ebeveynle yazışır.
-> - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
-> - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
-> - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
-> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
+> - Oyun, Moyo'da oluşturduğun profile bağlıdır. Profili Moyo'dan düzenlersin.
+> - Bu cihazın bağlantısını kapatmak için: Moyo › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da Moyo'da hesabını silerek aileyle birlikte silebilirsin.
+> - Çocuğun adına KVKK başvurusu: Moyo › Ayarlar › KVKK başvurusu.
+> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://moyoapp.com.tr/destek` (oyun 10 Kasım 2026'dan beri doğrudan bunu açar; adrese çocuk ya da cihaz kimliği eklenmez). Oyunda düğme "Yardım ve iletişim", yanında: "Soru, sorun ya da önerin için destek sayfasına yaz. Sayfa tarayıcıda açılır."
 >
 > <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@[ALAN ADI]` · Sürüm {sürüm}
@@ -465,7 +465,7 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 | Uygulama | İzin (`Info.plist` anahtarı) | Ne zaman sorulur | Metin |
 |---|---|---|---|
 | Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
-| Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da görevini onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
+| Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da maceranı onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
 | ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
 | ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
 | ParentApp | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |

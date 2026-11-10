@@ -12,7 +12,21 @@ Kaynak:
 - `game-app/Assets/_Pofi/Resources/Data/items.json`, `levels.json`, `start.json`, `daily_quests.json`, `badges.json`
 - `game-app/docs/PLAN.md` (§3, §6 taslak sayılar), `M4_SUNUCU_ONERISI.md`
 
-Son güncelleme: 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
+Son güncelleme: 2026-11-03 (görünen ad İnci, §0); 2026-10-24 (hoş geldin coini, §1 ve §2.4; komik eşyalar sunucu kataloğuna, §4.2 ve E9)
+
+---
+
+## 0. Görünen ad: **İnci** (kullanıcı kararı 3 Kasım 2026; aynı gün K3'te seçilen "Boncuk"un yerine)
+
+Çocuğun ve ebeveynin gördüğü her yerde (oyun, ParentApp, ClinicApp raporu, ses, mağaza/pazarlama metni) gerçek görevden gelen oyun parasının adı **İnci**'dir. Bu belgede ve kodda teknik ad **coin** kalır: `coins`, `coin_ledger`, `spend_coins`, `claim_welcome_coins`, `task_assignments.coins`, olay adları değişmez (göç yok).
+
+| Kural | Ayrıntı |
+|---|---|
+| Yazım | "İnci" (büyük harf cümle başında ya da düğme/başlıkta), çoğul "inciler", ek "incin, incilerinle". Sayıdan sonra cümlede **"tane"**: "20 tane inci" ("20 inci" sıra sayısı gibi okunabilir); sayaç ve fiyatta yalnız sayı + simge. "Coin", "boncuk", "jeton", "altın", "para" yazılmaz; bilgi notunda "gerçek para değil" anlatımı korunur. |
+| Hikâye | İnci istiridyeden çıkar (ada yaşamı) — ama **yalnız onaylı gerçek görevden** gelir (§1): adada istiridye toplanıp inci bulunmaz. Önerilen gösteri (karar bekliyor): ebeveyn onayında istiridye açılır, inci çıkar. |
+| Simge | **İ1b (deliksiz derin sedef)**: açık krem-beyaz, yanardöner, hacimli parlak yuvarlak inci, delik yok (kullanıcı seçimi 3 Kasım 2026; önce S, aynı gün Güneş Taşı K2 ile aynı çizim diline getirildi; oyunda `Icons/ui_coin.png`, kaynak `game-app/art/icons/inci/`). ParentApp/ClinicApp inci gösterirse aynı görünümü kullanır. Sarı/altın tonu kullanılmaz (Güneş Taşı), XP yıldızından ayrı. |
+| Neden | Kullanıcı: "İnci daha mantıklı, istiridyeden çıkıyor, ada yaşamına uygun". GB20 değerlendirmesindeki eksiler (mücevher çağrışımı, "5 inci" okunuşu, kız adı) renk ve "tane" kuralıyla karşılanır. |
+| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 30). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
 
 ---
 
@@ -196,6 +210,7 @@ Not: Rozetlerden `badge_first_task` ve `badge_task_10` gerçek görev onayına (
 - Sunucu: `sun_stone_ledger` (nedenler `task` / `task_undo` / `adjust`), yalnız tetikleyici `completions_sun_stone` yazar. Onay geri alınırsa o tamamlamanın verdiği taş düşer. Toplam `child_me().sun_stones` (en az 0).
 - **Taş harcanmaz, adaya yerleştirilir**: onarım noktaları (sis, köprü, iskele, fener) oyun verisindedir (`Resources/Data/sun_spots.json`); yerleştirme oyun kaydında tutulur. Yerleştirilebilir = kazanılan toplam − yerleştirilen (en az 0). Onay geri alınıp toplam düşerse yerleştirilmiş taş geri alınmaz (ceza yok); yeni taşlar önce aradaki farkı kapatır.
 - ParentApp taş toplamını defterden (RLS: aile okur) gösterebilir.
+- **Simge** (kullanıcı seçimi 3 Kasım 2026): **K2 oval kehribar çakıl** — bal merkezden kızıl kenara derin kehribar, içten ışıma, birkaç ışıltılı pul (gerçek güneş taşı mineralini andırır), ışınsız, dış çizgi yok. Oyunda `Icons/ui_sunstone.png`, kaynak `game-app/art/icons/gunes_tasi/`. Sarı yıldızdan (XP) ve yuvarlak inciden biçimle ayrılır; ParentApp/ClinicApp taş gösterirse aynı görünümü kullanır.
 - **Hediye taş (tek istisna, yalnız ada; karar 24 Ekim 2026, GameApp GB19; kaynağı 26 Ekim 2026'da değişti):** ilk oyunda çocuk
   **1 Güneş Taşı**'nı panodaki **hoş geldin görevi**yle kazanır (kullanıcı, 26 Ekim 2026: "taşın nereden, nasıl kazanıldığı
   örnekle aktarılsın"). Mavi "panoya sana bir hoş geldin görevi bıraktım" der; Ev Görevleri'nin en üstünde Mavi mühürlü kart
