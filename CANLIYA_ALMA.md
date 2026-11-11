@@ -109,7 +109,7 @@ C. Supabase
 - (Siz) 11. Edge Functions › Secrets: `BILLING_WEBHOOK_SECRET` (9. adımdaki şifre, "Bearer" olmadan), `REVENUECAT_API_KEY` (`sk_…`), denemede `BILLING_ALLOW_SANDBOX` = `1`
 D. Uygulamalar ve deneme
 - ✓ (ParentApp penceresi) `react-native-purchases` 10.16.x (`parent-app/src/lib/purchases.ts`): `configure(appUserID)`, `logIn` / `logOut`, üyelik ekranı, geri yükle, "Aboneliği yönet", fiyat mağazadan; anahtar yoksa ödeme "bağlı değil" (2 Kasım 2026)
-- (ClinicApp penceresi) `expo-iap` / `clinic-billing` yerine `react-native-purchases`: yalnız klinik sahibine üyelik ekranı, geri yükle, yönet; web'de "iPhone/iPad'den alın". Çalışma alanları: satın almadan önce RevenueCat abone niteliği `clinic_id`, `billing-webhook` onu okur (öneri Klinik penceresinde; webhook ortak, değişiklik DURUM'a)
+- ✓ (ClinicApp penceresi, 11 Kasım 2026) `expo-iap` / `clinic-billing` yerine `react-native-purchases` 10.16.x (`clinic-app/src/lib/store.ios.ts`): yalnız klinik sahibine paketler + fiyat (mağazadan), geri yükle, "Aboneliği yönet"; web'de "iPhone/iPad'den alın"; CI anahtarı `.env`'e verir ve pakette denetler. Çalışma alanları: satın almadan önce RevenueCat abone niteliği `clinic_id`, `billing-webhook` onu okur — **webhook'un yeni sürümü yeniden yayınlanmalı** (`supabase/functions/_tek-dosya/billing-webhook.ts`, Verify JWT kapalı)
 - (Claude, iki pencere) 12. TestFlight'ta satın al, geri yükle, iptal, iade, grace period (TestFlight alışverişi ücretsiz deneme ortamıdır)
 - (Siz) Gerçek fiyatlar
 - En son (yayından önce): `BILLING_ALLOW_SANDBOX` silinir; yönetim panelinde `billing.enforce = true`
