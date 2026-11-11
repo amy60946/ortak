@@ -442,6 +442,18 @@ Kullanıcı Joon Health'in kayıt sonrası ekranlarını örnek gösterdi; Joon 
 
 Seçenekler: `veri/uzman_anketi.json` (anahtar + Türkçe ad + simge; ClinicApp kopyası `src/data/survey.json`). Cevaplar **aileye ve diğer uzmanlara görünmez**; tablo doğrudan okunamaz (yalnız RPC). Yönetim paneli yalnız **toplam sayılar** görür: `admin_kpi_clinician_survey(gün)` → `{answered, skipped, profession{}, challenges{}, features{}, intent{}}` (kişi listesi yok). Hesap silinince cevap da silinir. Olaylar: `survey.done` (`intent`, `profession`), `survey.skip` (`step`).
 
+### 12.2 Lansman odağı: Takip Planı kapalı, merkez Ebeveyn Eğitimi (kullanıcı kararı 11 Kasım 2026, seçenek "A")
+
+Kullanıcı: "Ürünün kullanımı basit olsun, lansmanda tek ya da iki özelliğe odaklanalım; Takip Planı eklenirse uzman içeride kaybolur." Karşılaştırma ve önizleme: https://claude.ai/artifact/G4p6zV2JTToh6RnfCG9xxA (seçilen: A, "tek iş: ebeveyn eğitimi"). **Veritabanı değişmedi**; Takip Planı'nın tabloları, işlevleri ve verisi durur, yalnız arayüz uzaktan ayar bayrağı `care_plan` arkasına alındı (varsayılan kapalı; `admin.md`).
+
+| Ürün | `care_plan` kapalıyken |
+|---|---|
+| ClinicApp | Danışan menüsünde Takip Planı yok (8 bölüm, hepsi açık; menü ☰ ile kapanıp açılır, grup "Daha fazla" yok). Danışan **Ebeveyn Eğitimi**'yle açılır. Ana ekranda "Senin sıran" nedenleri eğitimden (incelemeyi bekleyen, taslakta bekleyen eğitim, eğitim yok). Başlarken: örnek aile · davet · ilk eğitim · Etkin yap. Örnek ailede (Deniz) uydurma bir eğitim ve yaptırarak öğreten tur. Uygulama görevleri ve Hızlı yapılacaklar'da ne olduğunu üç adım ve dokununca formu dolduran üç örnekle anlatan kart. Seans kaydında "aileye ev ödevi" (Takip Planı maddeleri) yerine Ebeveyn Eğitimi bağlantısı; rutin önerisinde "hangi davranış hedefi için" yok; raporda davranış hedefi yoksa GAS bölümü yazılmaz. Ev Rutinleri › "+ Aileye öner" (macera ve rutin paketi önerisi) aynen çalışır |
+| ParentApp | Uzmanım'da Takip planı (davranış hedefleri, aile programı, "Bugün yapılacaklar"daki program satırları, uygulama kaydı), plan bildirimi ve davranış kaydındaki "Hangi davranış hedefiyle ilgili?" gizlenir (ParentApp penceresi). Kalır: macera ve rutin önerileri, Ebeveyn eğitimi (23), olay bildirme (24), randevular (20), paylaşılan çocuklar |
+| GameApp | Etkilenmez |
+
+Eski sürüm ParentApp bayrağı bilmez; ClinicApp kapalıyken plan gönderemediği için ailede yeni plan oluşmaz (TestFlight'ta daha önce gönderilmiş plan eski sürümde görünmeye devam eder). Bayrak açılırsa iki uygulamada da 12 ve 12.1'deki akış aynen geri gelir.
+
 ## 13. Kim kimi nasıl ekler — güncel tablo (26 Ekim 2026)
 
 | Kim | Kimi / neyi | Nasıl | Geçerlilik | Durum |
@@ -687,6 +699,8 @@ Kullanıcı isteği (9 Kasım 2026): rakibin "Parent training" ekranlarına ve k
 **ParentApp (yapıldı 9 Kasım 2026, parent-app `claude/parentapp-two-features-bn9o8e`):** adım 4–7. Ben › **Görevlerin** ("Uzmanından n görev": uygulama görevleri + tamamlanmamış tek seferlik görevler; tek eğitimde o eğitim, birden çokta "Görevlerin" listesi) ve **Derslere devam et** (eğitim + % çubuğu; Ustalaştı "Tamamlandı", öteki ebeveyne atanmış "<ad> için"); Uzmanım › uzman › Bugün yapılacaklar'da uygulama görevleri ve tek seferlik görevler; eğitim sayfası, oynatıcı (bitmiş öğe salt okunur, kayıtlı yanıtlarla), uygulama kaydı (bugünün günü), tek seferlik görev ("Geri al" ile işaret kaldırılır); bildirimler `training_*` → eğitim sayfası. İşlev yoksa (SQL uygulanmadı) bölümler görünmez. İçerik `src/data/trainingLibrary.json` ← `node tools/sync-training-library.mjs <ortak>/veri/ebeveyn_egitimi_kutuphane.json`. Kütüphanede ebeveyne görünen "Moyo Mercek" geçişi 6 Kasım kararına göre ("ebeveyn tarafında Mercek değil uzmanın") düzeltildi: `baslarken_r` başlığı "Uzmanınla eğitime başlarken" (ClinicApp yeniden eşitlemeli). Olaylar (ParentApp): `training.module` (`type`, `last`), `training.log` (`measure`, `note`), `training.todo` (`done`, `rating`).
 
 Kurallar: aile tablolara yazamaz, yalnız işlevlerle; ebeveyn yalnız kendisine atanmış (ya da kimseye özel olmayan) **Etkin** eğitimde işlem yapar, aile içindeki öteki ebeveyn görür ama değiştiremez; uzman modül tamamlamasını ve yapılacak işaretini değiştiremez; gözlem verisini aile görmez; paylaşım bitince aile ve uzman erişimi kapanır. Test doğru sayısı ebeveynin bilgi yoklamasıdır, çocuğa ait puan değildir. Olaylar (ClinicApp): `training.create`, `training.status`, `training.delete`, `training.modules`, `training.task`, `training.todo`, `training.data`, `training.remind`.
+
+**İlk kullanıcıya anlatım (ClinicApp, 11 Kasım 2026; veritabanı değişmedi):** Uygulama görevleri = ebeveynin evde tekrar tekrar uyguladığı beceri, her uygulayışta kayıt (Sıklık / Doğruluk / Süre); Hızlı yapılacaklar = bir kez yapılıp işaretlenen iş, ölçüm yok. İki sekmenin başında tek cümle + üç adım + dokununca formu dolduran üç örnek; "Anladım" ile tek satıra iner. Örnek aile Deniz'de uydurma bir eğitim (cihazda, sunucuya gitmez) ve tur.
 
 ## 24. Hedef davranışlar ve bildirilen olaylar (uygulandı 9 Kasım 2026; ortak `migrations/20261110110000_target_behaviors.sql`, `veritabani.md` 33, `durumlar.md` P22)
 
