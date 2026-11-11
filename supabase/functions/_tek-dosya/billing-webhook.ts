@@ -1,6 +1,6 @@
 // ÜRETİLDİ — elle düzenlenmez. Kaynak: supabase/functions/billing-webhook/index.ts + state.ts (tek dosyada birleşik).
 // Neden: Supabase panelindeki editörde ikinci dosya eklemek hata verdi (11 Kasım 2026); bu dosya tek başına yapıştırılır.
-// Kaynak değişirse yeniden üretilir; iki sürümün derlenmiş çıktısı aynı olmalıdır.
+// Kaynak değişirse yeniden üretilir (python3 tools/tek_dosya.py billing-webhook); iki sürümün derlenmiş çıktısı aynı olmalıdır.
 // billing-webhook: RevenueCat abonelik olaylarını aile aboneliğine (family_subscriptions) ve klinik üyeliğine
 // (billing_apply, kaynak 'revenuecat') yazar.
 // Karar (kullanıcı, 22 Ekim 2026): ParentApp ve ClinicApp ödemesi RevenueCat ile; klinik sahibi birey olarak öder. HENÜZ YAYINDA DEĞİL — kurulum CANLIYA_ALMA.md 1.8.
@@ -12,7 +12,8 @@
 //   böylece olay sırası karışsa da ve "geri yükle" başka hesaba geçse de (TRANSFER) doğru yazılır),
 //   BILLING_ALLOW_SANDBOX=1 yalnız denemede. "Verify JWT" kapalı (çağıran RevenueCat).
 // Ürün kimlikleri: parentapp.premium.monthly / parentapp.premium.yearly; ClinicApp com.clinicapp.uzman.{solo,clinic}.{monthly,yearly}
-//   (yalnız klinik sahibi; klinik yolu REVENUECAT_API_KEY ister). Elle verilen (manual/web) premium,
+//   (yalnız klinik sahibi; klinik yolu REVENUECAT_API_KEY ister; klinik = abone niteliği `clinic_id`, yoksa varsayılan alan).
+//   Elle verilen (manual/web) premium,
 //   mağaza aboneliği bitince ezilmez.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 // ---- state.ts (birleşik) ----
@@ -21,6 +22,7 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const PRODUCT_PREFIX = 'parentapp.premium.';
 const CLINIC_PREFIX = 'com.clinicapp.uzman.';
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type Sub = {
   plan: 'premium' | 'free';
@@ -107,6 +109,14 @@ function clinicSubs(body: any, nowMs: number, allowSandbox: boolean): ClinicSub[
   });
 }
 
+// ClinicApp çalışma alanları (akislar.md 21): üyelik hangi klinik için alındı. Uygulama satın almadan ve geri yüklemeden
+// hemen önce RevenueCat abone niteliği `clinic_id`'yi seçili alana yazar (clinic-app src/lib/store.ios.ts).
+// Yoksa (eski sürüm) ya da biçimi bozuksa null: uzmanın varsayılan kliniği kullanılır.
+function clinicAttribute(body: any): string | null {
+  const v = body?.subscriber?.subscriber_attributes?.clinic_id?.value;
+  return typeof v === 'string' && UUID.test(v) ? v.toLowerCase() : null;
+}
+
 // Olayın etkilediği kullanıcılar: normalde app_user_id; TRANSFER'de (geri yükleme başka hesaba geçti) iki taraf.
 function affectedUsers(e: any): string[] {
   const ids = e.type === 'TRANSFER'
@@ -129,8 +139,6 @@ function same(a: string, b: string) {
   return diff === 0;
 }
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 // RevenueCat'ten kullanıcının güncel kaydı. undefined = okunamadı (RevenueCat yeniden denesin).
 async function readSubscriber(userId: string, key: string): Promise<any | undefined> {
   const r = await fetch(`https://api.revenuecat.com/v1/subscribers/${encodeURIComponent(userId)}`, {
@@ -143,13 +151,28 @@ async function readSubscriber(userId: string, key: string): Promise<any | undefi
   return await r.json().catch(() => undefined);
 }
 
+// Yeni aboneliğin kliniği: abone niteliğindeki alan (uzman orada etkin sahipse); nitelik yoksa uzmanın varsayılan
+// kliniği (sahipse). Nitelik var ama uzman orada sahip değilse null: başka bir kliniğe yazılmaz, günlüğe düşer.
+async function clinicTarget(userId: string, attr: string | null): Promise<string | null> {
+  if (attr) {
+    const { data } = await db.from('clinic_members').select('clinic_id')
+      .eq('clinic_id', attr).eq('clinician_id', userId).eq('role', 'owner').eq('status', 'active').maybeSingle();
+    return data ? attr : null;
+  }
+  const { data: me } = await db.from('clinicians').select('clinic_id, role').eq('id', userId).maybeSingle();
+  return me?.clinic_id && me.role === 'owner' ? me.clinic_id : null;
+}
+
 // Klinik sahibinin klinik ürünlerini üyeliğe yazar. false = hata (500, RevenueCat yeniden dener).
 async function applyClinic(userId: string, body: any, allowSandbox: boolean, e: any): Promise<boolean> {
   const subs = clinicSubs(body, Date.now(), allowSandbox);
+  const { data: rows } = await db.from('billing_subscriptions').select('external_id, plan_id, status')
+    .eq('source', 'revenuecat').like('external_id', `${userId}:%`);
+  // Bilinen abonelik kliniğinde kalır (billing_apply'a klinik verilmez): sonradan başka alana geçmek yenilemeyi kaydırmaz.
+  const known = new Set((rows ?? []).map((o) => o.external_id));
   // RevenueCat'te artık görünmeyen (ör. TRANSFER ile başka hesaba geçen) eski satırlar bugün biter.
-  const { data: old } = await db.from('billing_subscriptions').select('external_id, plan_id')
-    .eq('source', 'revenuecat').like('external_id', `${userId}:%`).in('status', ['active', 'canceled']);
-  const gone = (old ?? []).filter((o) => !subs.some((c) => `${userId}:${c.productId}` === o.external_id));
+  const gone = (rows ?? []).filter((o) => (o.status === 'active' || o.status === 'canceled')
+    && !subs.some((c) => `${userId}:${c.productId}` === o.external_id));
   let ok = true;
   for (const o of gone) {
     const { error } = await db.rpc('billing_apply', {
@@ -159,16 +182,18 @@ async function applyClinic(userId: string, body: any, allowSandbox: boolean, e: 
     if (error) { console.error(error.message); ok = false; }
   }
   if (!subs.length) return ok;
-  const { data: me } = await db.from('clinicians').select('clinic_id, role').eq('id', userId).maybeSingle();
-  if (!me?.clinic_id || me.role !== 'owner') {
-    console.error('klinik aboneliği sahibi olmayan hesapta', userId);
-    return ok;
-  }
+  const fresh = subs.filter((c) => !known.has(`${userId}:${c.productId}`));
+  const target = fresh.length ? await clinicTarget(userId, clinicAttribute(body)) : null;
   for (const c of subs) {
+    const ext = `${userId}:${c.productId}`;
+    if (!known.has(ext) && !target) {
+      console.error('klinik aboneliği sahibi olmayan hesapta', userId);
+      continue;
+    }
     const { data: plan } = await db.from('billing_plans').select('id').eq('apple_product_id', c.productId).maybeSingle();
     if (!plan) { console.error('bilinmeyen ürün', c.productId); continue; }
     const { error } = await db.rpc('billing_apply', {
-      p_source: 'revenuecat', p_external_id: `${userId}:${c.productId}`, p_clinic_id: me.clinic_id, p_plan_id: plan.id,
+      p_source: 'revenuecat', p_external_id: ext, p_clinic_id: known.has(ext) ? null : target, p_plan_id: plan.id,
       p_status: c.status, p_period_end: c.periodEnd, p_auto_renew: c.autoRenew,
       p_environment: e.environment ?? null, p_payload: { type: e.type },
     });

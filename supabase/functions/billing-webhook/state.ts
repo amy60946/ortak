@@ -3,6 +3,7 @@
 
 export const PRODUCT_PREFIX = 'parentapp.premium.';
 export const CLINIC_PREFIX = 'com.clinicapp.uzman.';
+export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type Sub = {
   plan: 'premium' | 'free';
@@ -87,6 +88,14 @@ export function clinicSubs(body: any, nowMs: number, allowSandbox: boolean): Cli
     // Ek süre (grace) klinikte etkin sayılır: erişim ek süre bitene dek açık kalır.
     return { productId: product, status: st.status === 'grace' ? 'active' : st.status, periodEnd: st.periodEnd, autoRenew: st.autoRenew };
   });
+}
+
+// ClinicApp çalışma alanları (akislar.md 21): üyelik hangi klinik için alındı. Uygulama satın almadan ve geri yüklemeden
+// hemen önce RevenueCat abone niteliği `clinic_id`'yi seçili alana yazar (clinic-app src/lib/store.ios.ts).
+// Yoksa (eski sürüm) ya da biçimi bozuksa null: uzmanın varsayılan kliniği kullanılır.
+export function clinicAttribute(body: any): string | null {
+  const v = body?.subscriber?.subscriber_attributes?.clinic_id?.value;
+  return typeof v === 'string' && UUID.test(v) ? v.toLowerCase() : null;
 }
 
 // Olayın etkilediği kullanıcılar: normalde app_user_id; TRANSFER'de (geri yükleme başka hesaba geçti) iki taraf.

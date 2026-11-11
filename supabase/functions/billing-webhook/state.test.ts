@@ -1,7 +1,7 @@
 // node --experimental-strip-types --test supabase/functions/billing-webhook/state.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { affectedUsers, clinicSubs, fromEvent, fromSubscriber } from './state.ts';
+import { affectedUsers, clinicAttribute, clinicSubs, fromEvent, fromSubscriber } from './state.ts';
 
 const NOW = Date.parse('2026-11-01T00:00:00Z');
 const one = (product: string, s: Record<string, unknown>) => ({ subscriber: { subscriptions: { [product]: s } } });
@@ -82,4 +82,14 @@ test('ClinicApp: her klinik ürünü ayrı; ek süre etkin sayılır; aile ürü
   ]);
   assert.equal(r[1].periodEnd, '2026-11-10T00:00:00Z');
   assert.equal(fromSubscriber(body, NOW, false)?.productId, 'parentapp.premium.monthly');
+});
+
+test('ClinicApp: abone niteliği clinic_id (çalışma alanı); yoksa ya da bozuksa null', () => {
+  const id = '3F2504E0-4F89-41D3-9A0C-0305E82C3301';
+  const at = (v: unknown) => ({ subscriber: { subscriber_attributes: { clinic_id: { value: v, updated_at_ms: 1 } }, subscriptions: {} } });
+  assert.equal(clinicAttribute(at(id)), id.toLowerCase());
+  assert.equal(clinicAttribute(at('x')), null);
+  assert.equal(clinicAttribute(at(42)), null);
+  assert.equal(clinicAttribute({ subscriber: { subscriptions: {} } }), null);
+  assert.equal(clinicAttribute(null), null);
 });
