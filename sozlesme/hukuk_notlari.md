@@ -123,6 +123,17 @@ Onay düğmesi: "Önceki uzmanın kayıtlarını da paylaş (adı gizlenir)". Me
 - **Aktif Apple aboneliğinde hesap silme:** silme engellenmez (Apple 5.1.1(v): "gereksiz zorlaştırma" yasak). Ekran açıkça söyler: hesabı silmek aboneliği durdurmaz, ödeme Apple'da sürer, önce iptal; iade Apple'a yapılır. Abonelik durumu sunucudan ve o Apple Kimliği'nin RevenueCat kaydından okunur.
 - **Avukata soru:** mağaza etiketinde "Health" beyanı ile KVKK özel nitelikli veri dili (açık rıza, isteğe bağlılık) aynı şeyi mi anlatıyor; aydınlatmada ayrıca bir cümle gerekir mi?
 
+### L. Rakip metninin tanıtım sayfasında kullanılması (12 Kasım 2026; kullanıcı kararı, avukata soru)
+
+Kullanıcı ortak kural 7'deki kopyalama yasağını kaldırdı: rakiplerin (ilk örnek joonhealth.co) site metni bire bir ya da Türkçe uyarlamayla tanıtım sayfalarında kullanılabilir. Bize ait olmayan rakamlar (kullanıcı sayısı, mağaza puanı), araştırma sonuçları, kullanıcı yorumları ve bizde olmayan hizmetler (koçluk, klinik direktör) kullanılmaz: bizim için doğru değildir (Ticari Reklam ve Haksız Ticari Uygulamalar Yönetmeliği, `hukuk/45` 1.3).
+
+Avukata sorular:
+1. Yabancı bir şirketin İngilizce site metninin Türkçe çevirisi ya da yakın uyarlaması FSEK (çeviri ve işleme hakkı, md. 6) ve TTK 54–55 (haksız rekabet: başkasının iş ürününden yararlanma) bakımından risk taşır mı? Kısa başlık ve slogan ile uzun paragraf arasında fark var mı?
+2. Bölüm sırası ve sayfa düzeni aynı, cümleler uyarlanmış bir sayfa için risk nedir?
+3. Riski azaltmak için ne yeterli (kendi cümleyle yeniden yazım, kaynak göstermeme, belirli bir benzerlik sınırı)?
+
+Yayından önce: Marketing §7.1 kontrolü ve bu soruların yanıtı.
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
