@@ -356,15 +356,14 @@ Türkçe soru ve seçenek adları, sırası ve sağlık/çoklu seçim bilgisi: `
 | `task_conflict_freq`, `reminder_freq`, `prompt_conflict_freq` | ebeveyn | tek | `every_day`, `most_days`, `some_days`, `never` |
 | `relate_reminding`, `relate_rewards_fade`, `relate_no_energy` | ebeveyn | tek | `yes`, `no` |
 | `child_routine` | çocuk | tek | `yes`, `struggle`, `not_really` |
-| `child_diagnosis` (sağlık, isteğe bağlı) | çocuk | çoklu | `adhd`, `autism`, `odd`, `anxiety_depression`, `other`, `none`, `prefer_not` |
-| `child_medication` (sağlık, isteğe bağlı) | çocuk | tek | `yes`, `no`, `not_diagnosed`, `prefer_not` |
+| ~~`child_diagnosis`~~, ~~`child_medication`~~ (14 Kasım 2026'da kalktı; sunucu yazmaz, eski yanıtlar silinir) | çocuk | | |
 | `child_therapists` | çocuk | çoklu | `behavior`, `speech_ot`, `psych`, `other`, `none` |
-| `child_organizing`, `child_effort_avoid`, `child_rules_argue`, `child_tantrums`, `child_feelings`, `child_worry` | çocuk | tek | `every_day`, `most_days`, `some_days`, `never` (geçen hafta) |
+| `child_organizing`, `child_effort_avoid`, `child_waiting`, `child_rules_argue`, `child_tantrums`, `child_feelings`, `child_worry`, `child_transitions` | çocuk | tek | `every_day`, `most_days`, `some_days`, `never` (geçen hafta) |
 | `child_goals` | çocuk | çoklu | `chores`, `focus`, `impulses`, `bedtime`, `siblings`, `emotions`, `other` |
 | `child_interests` | çocuk | çoklu | `sports`, `books`, `games_tech`, `arts`, `music_dance`, `animals_nature`, `other` |
 | `child_motivators` | çocuk | çoklu | `screen_time`, `allowance`, `family_activity`, `friends_time`, `treats`, `other` |
 
-Sağlık sorularında `prefer_not` dışındaki yanıt `consent_version` ister (`saglik-yanit-v1`). Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.
+Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç soruları `saglik-yanit-v1` rızasıyla isteğe bağlıydı). Yeni iki madde (kullanıcı kararı): `child_waiting` "yerinde durmakta ya da sırasını beklemekte zorlandı", `child_transitions` "plan değişince ya da bir işten ötekine geçerken zorlandı". Hiçbir yanıt tanı, zekâ ya da dikkat puanı değildir; ebeveynin beyanıdır.
 
 ## P17. Yasal metinler ve KVKK başvuruları (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026)
 

@@ -134,6 +134,23 @@ Avukata sorular:
 
 Yayından önce: Marketing §7.1 kontrolü ve bu soruların yanıtı.
 
+### M. Avukat dosyası kararları (13–14 Kasım 2026; kullanıcı)
+
+Kaynak: avukat dosyası https://claude.ai/artifact/HifdcBS4JSWutcLA3K8cbb ("takip platformu" konumu, 9 karar); karar önizlemeleri https://claude.ai/artifact/5B5Br5g3VkjJajn1WEAuYZ ve https://claude.ai/artifact/7mU88ypLtpoXgP7D2cMfGf.
+
+1. **Tanışma sorularında tanı ve ilaç soruları kalkar.** Yerine haftalık gözlem sorularına iki günlük davranış maddesi: "yerinde durmakta ya da sırasını beklemekte zorlandı", "plan değişince ya da bir işten ötekine geçerken zorlandı". Sağlık yanıtı rızası (`saglik-yanit-v1`) kalkar, eski deneme yanıtları silinir (`proposed/20261114200000_intake_observation_owner.sql`). Mağaza gizlilik beyanındaki "Health" (K) çıkar; aydınlatma (`hukuk/10`) ve açık rıza metni (`hukuk/30`) yeni sürümde sadeleşir.
+2. **Tanıtım sayfaları.** Açılışta tanı adı yok; başlık: "Rutin, sorumluluk ve davranışta desteğe ihtiyaç duyan çocuklar ve aileleri için alışkanlık geliştirme platformu". Tanı adları yalnız SSS'de: "DEHB ya da otizm tanısı olan çocuklar kullanabilir mi? Evet. Moyo tanıdan bağımsız, her çocuğun günlük rutiniyle çalışır; tanı koymaz." (avukatın tanıtım dili yanıtına bağlı, soru 14). Moyo Mercek: "Kanıta dayalı eğitim içerikleri…" → "Araştırmalarla desteklenen davranış yaklaşımlarını (ABC, olumlu pekiştirme) sade dille anlatan eğitim içerikleri…" + kaynak bağlantısı (`hukuk/45` 1.4), "müdahale" sözcüğü çıkar; "Tedavi süreci ilerledikçe" → "Takip süreci ilerledikçe". "Tanı koymaz, tedavi yerine geçmez" koruyucu cümlesi kalır.
+   **Kullanıcının bilerek kabul ettiği iki risk:** Moyo Mercek sayfasındaki "Haftada 4–6 saatlik faturalandırılamayan iş yükünü azaltın" ve açılıştaki "Ev programlarına uyumu artıran" kalır. İkisinin de dayanağı bize ait bir ölçüm değil; ortak kural 7'nin "bize ait olmayan rakam ve iddia kullanılmaz" cümlesi ve `hukuk/45` 1.3 ile çelişir. Avukata 14. soruya eklenir; Marketing §7.1 kontrolünde işaretlenir.
+3. **"Belgesi incelendi" rozeti → "Belge yükledi".** Aileye görünen: "Uzman diploma belgesini yükledi"; Moyo doğrulama beyanı vermez (G). Özellik lansmanda kapalı (bayrak `clinician_verification`).
+4. **Tanışma yanıtlarını panelde kişi bazlı yalnız owner görür** (önce support + owner); toplamlar her rolde (`admin_intake_summary`).
+5. **Moyo'nun içeriği** (ebeveyn eğitimi kütüphanesi, plan şablonları): "Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz." cümlesi her eğitimde değil, kütüphane ekranında göze batmayan bir yerde (alt bilgi) bir kez durur. Konu sözleşmelerde işlenir (ebeveyn koşulları, uzman sözleşmesi). Gözden geçiren uzmanın adı şimdilik yazılmaz.
+6. **Terimler.** Yasal metinler ve tanıtım sayfalarında "danışan" → "aile" (bir kez tanım: "Aile: uzmanın Moyo Mercek'te birlikte çalıştığı ebeveyn ve çocuk"), gözlem anlamındaki "izlemek" → "takip etmek", "klinik karar" kalkar. Moyo Mercek uygulamasında "danışan" kalır (uzmanın kendi dili), menü grubu "İzle" → "Takip". Reklam takibi sözü ("izleme aracı kullanmıyoruz") ve "kriz izleme hizmeti değildir" kalır.
+7. **Dışa aktarılan belgeler:** rapor, ilerleme notu ve CSV'nin altında tek satır: "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." Bugünkü "Sınırlar" bloğu (pilot çalışma cümlesi dahil) ve "klinik karar" cümlesi kalkar; ekranlarda yok (3 Kasım kararı aynen).
+8–9. **Bireysel mi şirket mi; yayımlanacak ad ve adres:** lansmandan önceki son iş (kullanıcı, 14 Kasım 2026), avukatın yanıtıyla. Metinlerde yer tutucu kalır.
+
+Fiyatlar (Moyo Mercek, Moyo Premium, uzmana bağlı ailenin ne ödeyeceği) de lansmandan önceki son iş (`DURUM.md` HATIRLATMA).
+Sırada (koordinatör): `hukuk/*.md`'nin bu kararlarla ve avukat dosyasındaki çekirdek maddelerle yeni sürümü + yeni yasal seed (`proposed/`); "sağlık verisi" denen yedi yer dosyadaki tabloya göre.
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
