@@ -1,4 +1,4 @@
--- Anket meslek seçenekleri genişledi (proposed/20261114100000_survey_professions.sql): yeni meslekler kaydedilir,
+-- Anket meslek seçenekleri genişledi (migrations/20261114100000_survey_professions.sql, uygulandı 14 Kasım 2026): yeni meslekler kaydedilir,
 -- eski anahtarlar geçerli kalır, liste veri/uzman_anketi.json ile aynı (28 anahtar).
 \set ON_ERROR_STOP on
 create schema if not exists tst;

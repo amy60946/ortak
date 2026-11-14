@@ -1,7 +1,7 @@
 -- Uzman karşılama anketi: meslek seçenekleri genişledi (kullanıcı isteği 14 Kasım 2026: Joon'un "Type of therapist" listesi
 -- örnek alınıp Türkiye'ye uyarlandı; veri/uzman_anketi.json, sozlesme/akislar.md 15). Eski anahtarlar korunur, yalnız eklenir.
--- Bu öneri uygulanana kadar sunucu yeni meslekleri "Geçersiz meslek" diye reddeder; ClinicApp anketi yine kapanır ama
--- cevap kaydedilmediği için bir sonraki girişte yeniden sorulur.
+-- Uygulandı 14 Kasım 2026 (kullanıcı, SQL Editor). Öncesinde sunucu yeni meslekleri "Geçersiz meslek" diye reddediyordu; ClinicApp anketi kapanıyor ama
+-- cevap kaydedilmediği için bir sonraki girişte yeniden soruluyordu.
 -- Tekrar çalıştırılabilir (create or replace).
 create or replace function public.clinician_survey_keys(p_kind text)
 returns text[] language sql immutable set search_path = '' as $$
