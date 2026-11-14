@@ -24,6 +24,7 @@
       { "key": "oyun_terapisti", "group": "expressive", "label": "Oyun terapisti", "survey_only": true },
       { "key": "sanat_terapisti", "group": "expressive", "label": "Sanat, müzik ya da drama terapisti", "survey_only": true },
       { "key": "aile_danismani", "group": "mental", "label": "Aile danışmanı", "survey_only": true },
+      { "key": "cocuk_terapisti", "group": "mental", "label": "Çocuk ve ergen terapisti", "survey_only": true },
       { "key": "okul_rehber", "group": "edu", "label": "Okul rehber öğretmeni", "survey_only": true },
       { "key": "ogrenci", "group": "other", "label": "Öğrenci ya da stajyer", "survey_only": true },
       { "key": "diger", "group": "other", "label": "Diğer" }
