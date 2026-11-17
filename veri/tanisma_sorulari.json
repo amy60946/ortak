@@ -1,7 +1,6 @@
 {
-  "_doc": "ParentApp tanışma soruları (ilk kurulum). Kaynak: parent-app/src/data/intake.ts (tools/intake_json.sh ile üretilir); sözleşme sozlesme/durumlar.md P16, akislar.md 16. Sıra uygulamadaki adım sırasıdır. who: parent = aile/ebeveyn sorusu (child_id boş), child = çocuk başına (child_id dolu). {ad}: çocuğun adı. health: true = isteğe bağlı sağlık sorusu, 'prefer_not' dışındaki yanıt açık rıza ister (consent_version). exclusive: seçilince diğerleri kalkar. exclude: adı geçen sorunun yanıtları bu soruda seçenek olarak gösterilmez (ana hedef 'başka neler' sorusunda tekrar edilmez). Yanıtlar intake_answers.answer içinde seçenek anahtarları dizisidir.",
-  "version": "v1",
-  "consent_version": "saglik-yanit-v1",
+  "_doc": "ParentApp tanışma soruları (ilk kurulum). Kaynak: parent-app/src/data/intake.ts (tools/intake_json.sh ile üretilir); sözleşme sozlesme/durumlar.md P16, akislar.md 16. Sıra uygulamadaki adım sırasıdır. who: parent = aile/ebeveyn sorusu (child_id boş), child = çocuk başına (child_id dolu). {ad}: çocuğun adı. health: hep false (v2, 14 Kasım 2026: sağlık sorusu ve sağlık rızası yok; alan yönetim paneli uyumu için kalır). exclusive: seçilince diğerleri kalkar. exclude: adı geçen sorunun yanıtları bu soruda seçenek olarak gösterilmez (ana hedef 'başka neler' sorusunda tekrar edilmez). Yanıtlar intake_answers.answer içinde seçenek anahtarları dizisidir.",
+  "version": "v2",
   "questions": [
     {
       "key": "main_goal",
@@ -12,7 +11,7 @@
       "options": [
         {
           "key": "motivation",
-          "label": "Çocuğumun görevlerini isteyerek yapması"
+          "label": "Çocuğumun sorumluluklarını isteyerek yapması"
         },
         {
           "key": "structure",
@@ -46,7 +45,7 @@
       "options": [
         {
           "key": "motivation",
-          "label": "Çocuğumun görevlerini isteyerek yapması"
+          "label": "Çocuğumun sorumluluklarını isteyerek yapması"
         },
         {
           "key": "structure",
@@ -116,7 +115,7 @@
       "who": "parent",
       "type": "single",
       "health": false,
-      "title": "Görevler ve ev işleri yüzünden ne sıklıkla tartışma çıkıyor?",
+      "title": "Sorumluluklar ve ev işleri yüzünden ne sıklıkla tartışma çıkıyor?",
       "options": [
         {
           "key": "every_day",
@@ -208,70 +207,6 @@
       ]
     },
     {
-      "key": "child_diagnosis",
-      "who": "child",
-      "type": "multi",
-      "health": true,
-      "title": "{ad} için konmuş ya da düşündüğünüz bir tanı var mı?",
-      "options": [
-        {
-          "key": "adhd",
-          "label": "Dikkat eksikliği ve hiperaktivite (DEHB)"
-        },
-        {
-          "key": "autism",
-          "label": "Otizm spektrumu"
-        },
-        {
-          "key": "odd",
-          "label": "Karşıt olma, karşı gelme"
-        },
-        {
-          "key": "anxiety_depression",
-          "label": "Kaygı ya da depresyon"
-        },
-        {
-          "key": "other",
-          "label": "Başka bir tanı"
-        },
-        {
-          "key": "none",
-          "label": "Tanı yok",
-          "exclusive": true
-        },
-        {
-          "key": "prefer_not",
-          "label": "Belirtmek istemiyorum",
-          "exclusive": true
-        }
-      ]
-    },
-    {
-      "key": "child_medication",
-      "who": "child",
-      "type": "single",
-      "health": true,
-      "title": "{ad} düzenli kullandığı bir ilaç var mı?",
-      "options": [
-        {
-          "key": "yes",
-          "label": "Evet"
-        },
-        {
-          "key": "no",
-          "label": "Hayır"
-        },
-        {
-          "key": "not_diagnosed",
-          "label": "Tanı konmadı"
-        },
-        {
-          "key": "prefer_not",
-          "label": "Belirtmek istemiyorum"
-        }
-      ]
-    },
-    {
       "key": "child_therapists",
       "who": "child",
       "type": "multi",
@@ -332,6 +267,31 @@
       "type": "single",
       "health": false,
       "title": "Geçen hafta {ad} ne sıklıkla… uzun dikkat isteyen işlerden kaçındı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
+      "key": "child_waiting",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… yerinde durmakta ya da sırasını beklemekte zorlandı?",
       "options": [
         {
           "key": "every_day",
@@ -452,6 +412,31 @@
       ]
     },
     {
+      "key": "child_transitions",
+      "who": "child",
+      "type": "single",
+      "health": false,
+      "title": "Geçen hafta {ad} ne sıklıkla… plan değişince ya da bir işten ötekine geçerken zorlandı?",
+      "options": [
+        {
+          "key": "every_day",
+          "label": "Her gün"
+        },
+        {
+          "key": "most_days",
+          "label": "Çoğu gün"
+        },
+        {
+          "key": "some_days",
+          "label": "Bazı günler"
+        },
+        {
+          "key": "never",
+          "label": "Hiç"
+        }
+      ]
+    },
+    {
       "key": "child_goals",
       "who": "child",
       "type": "multi",
@@ -460,7 +445,7 @@
       "options": [
         {
           "key": "chores",
-          "label": "Görevlerini düzenli tamamlamak"
+          "label": "Sorumluluklarını düzenli tamamlamak"
         },
         {
           "key": "focus",

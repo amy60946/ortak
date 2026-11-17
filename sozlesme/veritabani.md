@@ -464,7 +464,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 | Fonksiyon | Kim | Ne yapar |
 |---|---|---|
 | `parent_setup_complete()` | ebeveyn | Kurulumu bitti olarak işaretler (bir kez) |
-| `admin_intake(aile, gerekçe)` | admin owner (2FA; 14 Kasım 2026 önerisinden önce support da) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
+| `admin_intake(aile, gerekçe)` | admin owner (2FA; 14 Kasım 2026'ya kadar support da; `20261114200000`, uygulandı) | Kişi bazlı yanıtlar (üye adı/takma adı, çocuk adı, soru, yanıt, sürüm); her açılış `admin_audit` (`intake.view`) |
 | `admin_intake_summary(gün=90)` | her admin rolü | Soru × seçenek başına yanıt ve aile sayısı; kimlik yok, sağlık soruları (`child_diagnosis`, `child_medication`) hariç (hukuk_notlari I4) |
 
 ## 18. Yasal metinler, onay kaydı, KVKK başvuruları (`migrations/20261027200000_legal.sql` + `20261027210000_legal_seed.sql`, uygulandı 27 Ekim 2026; Edge Function `legal` yayında; metinler `hukuk/`)

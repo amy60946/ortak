@@ -74,7 +74,7 @@ select tst.fails($$insert into public.intake_answers (child_id, question_key, an
   'başka ailenin çocuğuna yanıt yazılamaz');
 select tst.fails($$insert into public.intake_answers (question_key, answer) values ('main_goal2', '["Büyük harf"]')$$, 'seçenek biçimi denetlenir');
 select tst.fails($$insert into public.intake_answers (question_key, answer) values ('x', '[]')$$, 'boş yanıt ve kısa anahtar reddedilir');
--- Tanı ve ilaç soruları kalktı (proposed/20261114200000): eski sürüm gönderirse hata yok, satır yazılmaz
+-- Tanı ve ilaç soruları kalktı (migrations/20261114200000, uygulandı 14 Kasım 2026): eski sürüm gönderirse hata yok, satır yazılmaz
 insert into public.intake_answers (child_id, question_key, answer) values ('00000000-0000-0000-0000-00000000c001', 'child_diagnosis', '["adhd"]');
 insert into public.intake_answers (child_id, question_key, answer, consent_version)
   values ('00000000-0000-0000-0000-00000000c001', 'child_medication', '["yes"]', 'saglik-yanit-v1');
