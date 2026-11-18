@@ -151,6 +151,21 @@ Kaynak: avukat dosyası https://claude.ai/artifact/HifdcBS4JSWutcLA3K8cbb ("taki
 Fiyatlar (Moyo Mercek, Moyo Premium, uzmana bağlı ailenin ne ödeyeceği) de lansmandan önceki son iş (`DURUM.md` HATIRLATMA).
 Sırada (koordinatör): `hukuk/*.md`'nin bu kararlarla ve avukat dosyasındaki çekirdek maddelerle yeni sürümü + yeni yasal seed (`proposed/`); "sağlık verisi" denen yedi yer dosyadaki tabloya göre.
 
+### N. Bildirim, kampanya izni ve iptal akışı (17–18 Kasım 2026; tasarım önerisi, avukata sorular)
+
+Kaynak: `akislar.md` 25–26; belgeler https://claude.ai/artifact/HxWKqZ6dG8k3wF9jNjfeda ve https://claude.ai/artifact/SyThEGYqrGKSf3bgHUzz6U. Araştırmada Türk mevzuatının asıl metinleri okunmadı; hukuk bürosu özetleri kullanıldı.
+
+**Tasarımda tutulan çizgiler (avukat yanıtına kadar):**
+1. Kampanya / tanıtım bildirimi ve e-postası yalnız uygulama içinde ayrı, varsayılanı kapalı, geri alınabilir izinle (Apple kural 4.5.4; Reklam Kurulu 2024/4177: telefonun bildirim izni pazarlama onayı sayılmadı; KVKK 14 Ocak 2026 duyurusu: amaç amaç ayrı rıza). Avukat yanıtına kadar kampanya mesajı gönderilmez.
+2. Bildirim metninde ve e-posta konusunda çocuk adı, ebeveyn adı, davranış ayrıntısı, uzman konusu yok (Apple; yurt dışına aktarım).
+3. Pazarlama mesajı yalnız hesap ve üyelik durumuna göre kişiselleştirilir; çocuğun rutini, davranış kaydı ve uzman içeriği pazarlamada kullanılmaz.
+4. Deneme bitiş hatırlatması tarafsız bilgi olarak yazılır ("3 gün sonra bitiyor; devam etmek istemezsen App Store aboneliklerinden iptal edebilirsin"); "kaçırma", "son şans" gibi sözler yok.
+5. İptal akışı: iptal seçeneği her ekranda eşit görünürlükte; geri sayım ve yapay aciliyet yok; indirim geçen her yerde fiyat, süre, sonraki fiyat ve kendiliğinden yenilenme birlikte (2022 yönlendirici arayüz kuralı; Reklam Kurulu'nun küçük / soluk iptal seçeneklerine verdiği cezalar).
+
+**Avukata sorular (bildirim):** (1) Tanıtım amaçlı mobil bildirim "ticari elektronik ileti" midir, onayları İYS'ye kaydedilmeli mi? (2) Tanıtım e-postasından önce İYS'ye hizmet sağlayıcı kaydı gerekir mi? (3) Serbest çalışan uzmanlar tacir / esnaf istisnasına girer mi? (4) Kullanım hatırlatmaları ve ipuçları "hizmetin kullanımı" istisnasına girer mi? (5) Deneme bitiş hatırlatması paket ya da fiyat anarsa pazarlamaya döner mi? (6) Mesajları kullanım verisine göre zamanlamanın KVKK'daki dayanağı? (7) Davranış kayıtları ve ebeveyn eğitimi verisi özel nitelikli veri midir; hangi mesaj bunlara değinebilir? (8) Bildirim ve e-posta metninde yurt dışı aktarım açısından ne yer alabilir? (9) Deneme sonrası yenilemeden önce tüketiciye bildirim yükümlülüğü var mı? (10) Ticari iletiler için saat kısıtı var mı?
+
+**Avukata sorular (iptal ve teklif):** (11) Apple üzerinden satışta satıcı kimdir; bize doğrudan gelen iptal isteği yükümlülük doğurur mu? (12) Yıllık peşin ödenmiş dönem fesihte nasıl ele alınır? (13) İndirim söylemi için son 30 günün fiyatı kuralı iptal tekliflerine uygulanır mı? (14) Teklif kişiden kişiye değişiyorsa 1 Ağustos 2026 değişikliğindeki hedefli reklam şeffaflığı yükümlülüğü doğar mı? (15) İptal nedeni ve yazılan açıklama aydınlatma metinlerine nasıl eklenir?
+
 ## 4. Sistemdeki karşılığı (öneri `migrations/20261026100000_family_invite_links.sql`)
 
 | Gereklilik | Nasıl |
