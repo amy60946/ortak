@@ -715,3 +715,41 @@ Kullanıcı isteği (9 Kasım 2026): rakibin "Target behaviors & reported incide
 **ParentApp (yapıldı 9 Kasım 2026, parent-app `claude/parentapp-two-features-bn9o8e`):** adım 2. Giriş satırı yalnız ebeveyn kaydı açık en az bir hedef davranış varsa (Ben › Görevlerin, Uzmanım › uzman › Bugün yapılacaklar; o uzmanın paylaşımlarıyla). Birden çok çocuk paylaşılmışsa 1. adımda çocuk seçilir. Olay tarihi gün + saat (ileri değil, en çok 30 gün geri; sunucudaki kuralla aynı). Mevcut "Davranış kaydı" (`abc_events`) satırı yanında ayrı durur. Olay (ParentApp): `incident.report` (`type`: `frequency` / `abc` / `duration` / `other`, `strategy`).
 
 Kurallar: aile tabloya yazamaz, yalnız `family_incident_report`; olay zamanı ileri olamaz, en çok 30 gün geri; türe göre zorunlu alan; ebeveyn kaydı kapalı ya da arşivli hedefe olay bildirilmez ve aile onu görmez; başka aile / klinik görmez; paylaşım bitince kapanır. Tepki ebeveynin gözlemidir, puan değildir.
+
+## 25. Bildirim ve e-posta sistemi (ÖNERİ, 17–18 Kasım 2026; kullanıcı isteği "kişiselleştirilmiş bildirim sistemi kur, rahatsız etmesin, benchmark al"; karar bekleyen maddeler aşağıda; SQL yazılmadı)
+
+Belge (benchmark, iki ürünün mesaj tabloları, sınırlar, hukuk, plan): https://claude.ai/artifact/HxWKqZ6dG8k3wF9jNjfeda · kaynaklı tam rapor `clinic-app/docs/arastirma/bildirim-benchmark.md`.
+
+**İlke:** sayı değil isabet. Bir kişiye gidecek her mesaj tek karar adımından geçer; kişinin kendi kullanımına göre zamanlanır; işe yaramıyorsa durur; kampanya ayrı izne bağlıdır.
+
+**Mesaj türleri (öncelik sırasıyla):** `T` hesap ve ödeme · `H` bir insanın yaptığı (uzman modül atadı, ebeveyn tamamladı, davet kabul edildi) · `O` kişinin kendi bekleyen işi (onay bekleyen adımlar, incelenecek kayıtlar, özet) · `L` hatırlatma ve ipucu · `M` kampanya. Aynı konuda üst türden mesaj gittiyse alt tür 48 saat düşer.
+
+**Önerilen sınırlar (kullanıcı onayı bekliyor):**
+
+| | Moyo Ebeveyn (app `parent`) | Moyo Mercek (app `clinic`) |
+|---|---|---|
+| Bildirim, `T` dışında | günde en çok 4 | günde en çok 4, yalnız hafta içi |
+| `O` onay / aile kayıtları | günde 2, toplu (aynı konu tek bildirim; yenisi eskisinin yerine geçer) | günde 3, toplu |
+| `L` | günde 1, haftada 3 | haftada 2 |
+| `M` (yalnız ayrı izinle) | haftada 1, ayda 2 | haftada 1, ayda 2 |
+| Sessiz saat (Türkiye saati; cihazın saat dilimi varsa o) | 21:00–08:00 | hafta içi 08:30–19:00 dışı ve hafta sonu |
+
+**Durma:** üç `L` karşılıksız → 14 gün ara; 7 gün oturum yok → tek "hatırlatmaları durduruyoruz" mesajı; uzmanın atadığı açılmamış modül için en çok 1 bildirim + 1 e-posta.
+
+**Kararlaşan (kullanıcı, 18 Kasım 2026):** deneme bitiş hatırlatması iyi özellik: iki üründe de bitmeden **3 gün önce** tek, tarafsız hatırlatma; satın alma ekranı bunu takvimle söyler ("bugün ödeme yok · 3 gün kala hatırlatırız · şu tarihte yenilenir"), ekrandaki gün sayıları ve tarihler birbirini tutar.
+
+**Kurallar (hukuk_notlari N):** bildirim metninde çocuk adı, ebeveyn adı ve davranış ayrıntısı yok; kampanya izni ayrı anahtar, varsayılanı kapalı, hizmetin koşulu değil; pazarlama mesajı yalnız hesap ve üyelik durumuna göre kişiselleştirilir (çocuğun rutinine, davranış kaydına, uzman içeriğine göre asla); her hesap dışı e-postada tür bazında tek tıkla çıkış.
+
+**Aşamalar:** (1) uygulama içi, sunucu değişmeden: izin açıklaması yerinde (ilk rutin / ilk davet), Ayarlar'da hatırlatma anahtarı, cihazda planlanan `L` hatırlatmaları; uzaktan ayar bayrağı `lifecycle_nudges` (yoksa kapalı). (2) Sunucu: tür anahtarları ve kampanya izni tablosu, gönderim kaydı, toplama, sessiz saat, özetler, e-posta → bu bölüm o zaman sözleşmeye çevrilir (`veritabani.md`, `proposed/` + test). (3) Deneme takvimi ve deneme / ödeme e-postaları. (4) Kampanya, geri kazanım, kontrol grubu, panel ölçümü (avukat yanıtından sonra).
+
+## 26. İptal anında geri kazanım (ÖNERİ, 17–18 Kasım 2026; kullanıcı isteği "iptal etmeye çalışana özel teklif sun, benchmark al"; fiyat ve teklif derinliği kararı bekliyor)
+
+Belge: https://claude.ai/artifact/SyThEGYqrGKSf3bgHUzz6U · kaynaklı tam rapor `clinic-app/docs/arastirma/iptal-benchmark.md`.
+
+**Çerçeve:** iptali Apple yapar; uygulama iptal edemez, engelleyemez. Üç yerde söz alınır: (a) uygulamada, Apple'ın sayfasından önce ("Aboneliği yönet" → plan özeti, atlanabilir neden sorusu, nedene uyan tek seçenek, her ekranda görünür "Aboneliği iptal et" → `Purchases.showManageSubscriptions()`); (b) Apple'ın "İptali onayla" sayfasında (App Store Connect › Retention Messaging; metinde fiyat geçmez; kod yok); (c) yenileme kapandıktan sonra (kart, bitişe 3 gün kala bilgi, +7 / +30 / +90 gün; teklif taşıyan bildirim ve e-posta yalnız kampanya izniyle).
+
+**Nedene göre:** pahalı → aylıkta süreli indirim, yıllıkta yenileme hatırlatması ve aylığa geçiş · az kullanım / ara verme → 1 ay ücretsiz (App Store'da ara verme yok) · Mercek'te az danışan / ekip küçüldü → Klinik → Bireysel · sorun / eksik özellik → destek, teklif yok · ihtiyaç kalmadı / yanlışlıkla → teklif yok.
+
+**Değişmez kurallar:** iptal düğmesi her ekranda, öteki ikincil düğmeyle aynı boy ve kontrastta; ziyaret başına tek teklif; geri sayım, uydurma kıtlık, "emin misin" döngüsü yok; indirim geçen her yerde indirimli fiyat + süre + sonraki fiyat + kendiliğinden yenilenme; teklif mağazadan okunur; Mercek'te yalnız sahip görür.
+
+**Aşamalar:** (0) kullanıcı, kod yok: ödeme ek süresi 16 gün + yalnız metinli iptal sayfası mesajı. (1) Uygulama: yönetim ekranı, neden sorusu, plan değiştirme, iptal sonrası kart, ödeme bandı; neden ve adımlar şimdilik kullanım kaydıyla (`membership.cancel_*`), yeni tablo yok; bayrak `cancel_flow` (yoksa kapalı). (2) Teklifler (fiyat kararı + App Store Connect) ve %10 kontrol grubu; sunucuda teklif geçmişi ve "bu aboneye şimdi ne sunulabilir" → o zaman sözleşmeye çevrilir. (3) Geri kazanım teklifleri ve zamanlı mesajlar (bölüm 25'in 2. aşamasına bağlı).
