@@ -555,12 +555,12 @@ Sınırlar: çocuk saatte 60, ebeveyn 200 mesaj; çocuk dosya gönderemez; karde
 
 | # | Kim | Ne olur | Nerede |
 |---|---|---|---|
-| 1 | [P] | Kayıt + e-posta doğrulama → 7 günlük deneme başlar. Görevler ekranında "Deneme: N gün kaldı". | `families.trial_started_at`, `family_access()` |
+| 1 | [P] | Kayıt + e-posta doğrulama → **14 günlük** deneme başlar (kullanıcı kararı 18 Kasım 2026; `proposed/20261118200000_parent_trial_14.sql` uygulanınca, o zamana kadar 7). Görevler ekranında "Deneme: N gün kaldı". | `families.trial_started_at`, `family_access()` |
 | 2 | [P] | Deneme bitince uygulama açılışta üyelik ekranını gösterir (Aylık / Yıllık). "Şimdilik ücretsiz devam et" seçilebilir. | uygulama |
 | 3 | [P] | Satın alma mağazada (App Store); RevenueCat (karar 22 Ekim 2026) olayı sunucuya iletir; sunucu güncel durumu RevenueCat'ten yeniden okur (olay sırası, "geri yükle" ile hesap değişimi). ParentApp RevenueCat'e Supabase kullanıcı kimliğiyle giriş yapar (`app_user_id`). Elle verilen premium (`source` manual/web) mağaza aboneliği bitince ezilmez. ParentApp (2 Kasım 2026, `react-native-purchases` 10.16.x): ilk oturumda `configure(appUserID)`, kullanıcı değişince `logIn`, çıkışta `logOut`; entitlement `premium`, offering `default`; fiyat mağazadan. Satın alma / geri yüklemeden sonra `family_access()` birkaç saniye içinde yeniden okunur; webhook gelene kadar mağazadaki etkin üyelik kısıt göstermez (sunucu kısıtları webhook'la açılır). | `billing-webhook` → `set_family_subscription` |
 | 4 | [S] | Ücretsiz planda: 3 etkin görev, 1 çocuk; ödül/taş düşme/ebeveyn mesajı/davranış kaydı kapalı. Onay, oyun, uzman paylaşımı açık. | tetikleyiciler (`hint = premium_required`) |
 | 5 | [P] | Aile › Hesap › Üyelik: durum, plan, yenileme tarihi, "Satın alımları geri yükle", "Aboneliği yönet" (App Store). | uygulama |
-| 6 | [P] | **Aile davet et** (önce misafir kartı, 28 Ekim 2026; 3 Kasım 2026 güncellendi, `migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026): davet edilen yeni ailenin denemesi 7 yerine 14 gün; o aile mağazadan abone olunca davet eden 1 ay kazanır (yılda en çok 12). Ayrıntı 19. | `families.trial_days`, `guest_passes` |
+| 6 | [P] | **Aile davet et** (önce misafir kartı, 28 Ekim 2026; 3 Kasım 2026 güncellendi, `migrations/20261028120000_guest_pass.sql`, uygulandı 3 Kasım 2026): davet edilen yeni ailenin denemesi 14 yerine 21 gün (18 Kasım 2026 kararıyla; önce 7 yerine 14); o aile mağazadan abone olunca davet eden 1 ay kazanır (yılda en çok 12). Ayrıntı 19. | `families.trial_days`, `guest_passes` |
 
 Anahtar: `app_config.billing.enforce = false` iken (bugün) kimse kısıtlanmaz; ödeme bağlanınca açılır.
 
@@ -600,7 +600,7 @@ Davetle gelen yeni aile (bağlantı ya da kayıttan önce yazılan kod): kurulum
 |---|---|---|---|
 | 1 | [P] | Ana sayfa › "Aile davet et" kartı ya da hediye simgesi → "Davet kodunu paylaş": kod açılınca üretilir (kullanılmamış kod varsa aynısı), paylaşım metniyle gönderilir, kopyalanabilir. Ekranda iki taraf: **Onlar** 7 yerine 14 gün · **Sen** aile abone olursa 1 ay (yılda en çok 12). Altta özet: kaç aile başladı, kaçı abone oldu, kaç ay kazanıldı (kimlik yok). | `create_guest_pass()`, `my_referrals()` |
 | 2 | Yeni aile | ParentApp'i indirir; açılışta "Davet kodun var mı?" sorusunda (kayıttan önce; kurulumun başında kullanılır), kurulumda "Kodum var"da ya da Aile › Hesap › Kod gir kutusunda 8 karakterli kodu yazar. Tek kod kutusu türü kendiliğinden anlar (6: uzman ya da eşin kodu, 8: aile davet kodu). | `redeem_guest_pass(kod)` |
-| 3 | [S] | Kod yeni ailede (deneme ≤ 7 gün, daha önce kod yok, abone değil, kendi ailesi değil) bir kez geçerli: deneme **14 gün** olur. | `families.trial_days = 14` |
+| 3 | [S] | Kod yeni ailede (deneme başlayalı ≤ varsayılan süre = 14 gün, daha önce kod yok, abone değil, kendi ailesi değil) bir kez geçerli: deneme **21 gün** olur (varsayılan + 7; 18 Kasım 2026 önerisi uygulanana kadar ≤ 7 gün ve 14 gün). | `families.trial_days = 21` |
 | 4 | [S → P] | Kodu veren aileye `guest_pass_used` bildirimi ("Davetin kullanıldı", kullananın kimliği yok). | `notify_parents` |
 | 5 | [S] | Davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince (webhook → `family_subscriptions`): davet edene 1 ay. Davet eden abone değilse ücretsiz süresi hemen uzar (`bonus_until`); App Store'dan ödüyorsa ödül "kod bekliyor" olur. Son 365 günde 12 ödülden sonrası uygulanmaz. Bir aile için bir kez; iade edilen abonelikte geri alınmaz. | `referral_on_paid` → `referral_rewards`, `families.bonus_until` |
 | 6 | [S → P] | Davet edene `referral_reward` bildirimi ("1 ay hediye kazandın"); bildirime dokununca davet sayfası. | `notify_parents` |

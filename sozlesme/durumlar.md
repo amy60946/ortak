@@ -287,7 +287,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 | `expired` | Deneme bitti, abonelik yok | `enforced` ise ücretsiz plan |
 
 - `family_access().full`: kısıt uygulanacak mı (false yalnız `expired` + `enforced`).
-- `app_config.billing`: `enforce` (şimdilik **false**: ödeme bağlanınca true), `trial_days` 7, `free_max_tasks` 3, `free_max_children` 1.
+- `app_config.billing`: `enforce` (şimdilik **false**: ödeme bağlanınca true), `trial_days` **14** (kullanıcı kararı 18 Kasım 2026; `proposed/20261118200000_parent_trial_14.sql` uygulanınca, o zamana kadar 7), `free_max_tasks` 3, `free_max_children` 1.
 - Ücretsiz plan sınırı hatası: `hint = 'premium_required'` (uygulama üyelik ekranını açar).
 - `family_subscriptions.status`: `active` / `grace` (ödeme sorunu, ek süre) / `canceled` (yenileme kapalı, dönem sonuna kadar premium) / `expired` / `refunded`. `billing`: `monthly` / `yearly`.
 - Mağaza ürün kimlikleri: `parentapp.premium.monthly`, `parentapp.premium.yearly`.
@@ -384,9 +384,9 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 | Ad | Değerler | Not |
 |---|---|---|
 | Aile davet kodu | 8 karakter, `A–Z` ve `2–9` (`^[A-Z2-9]{8}$`); ekranda `ABCD EFGH` | Uzman/eş kodu 6 karakter: "Kod gir" kutusu uzunluktan ayırt eder |
-| Kod süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **14 gün** (7 + 7; `families.trial_days = 14`; 3 Kasım 2026, önce 30) | Varsayılan deneme 7 gün (`app_config.billing.trial_days`) |
+| Kod süresi | oluşturulunca 60 gün geçerli; kullanan ailenin denemesi **21 gün** (14 + 7; `families.trial_days = 21`; 18 Kasım 2026 kararı, önce 7 + 7 = 14; 3 Kasım 2026'dan önce 30) | Varsayılan deneme 14 gün (`app_config.billing.trial_days`; 18 Kasım 2026'ya kadar 7) |
 | Davet ödülü | davet edilen aile mağazadan ilk kez ücretli aboneliğe geçince davet edene **30 gün**; son 365 günde en çok **12** | `referral_rewards.status`: `applied` (süre uzadı, `families.bonus_until`) · `code_pending` (davet eden App Store'dan ödüyor; Apple teklif kodu bekliyor) · `code_sent` (kod gönderildi; havuzdan kendiliğinden ya da panelden elle, `offer_code_pool` ürün `monthly` / `yearly`, en az 14 gün kalan kod) · `capped` (yıllık sınır) |
-| `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme > 7 gün), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
+| `redeem_guest_pass` hataları | `not_found`, `used`, `expired`, `own`, `already`, `premium`, `not_new` (deneme başlayalı varsayılan süreden, 14 günden fazla olmuş; önce 7), `too_many_attempts` | ParentApp metinleri `src/lib/guestPass.ts` |
 | Özellik bayrağı `parent_sms_verify` | varsayılan **kapalı** | Açıkken ParentApp uzman bağlandıktan sonra "Telefon numaranı ekle" (SMS kodu) adımını gösterir; "Şimdilik geç" her zaman var. Açmadan önce: SMS sağlayıcısı + aydınlatma metni (hukuk_notlari J) |
 
 

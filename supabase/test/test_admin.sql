@@ -92,7 +92,7 @@ select tst.check(public.admin_clinic(tst.v('k1')) -> 'clinic' ->> 'name' = 'Mavi
 -- ---------------------------------------------------------------- destek işlemleri
 select tst.fails($$select public.admin_extend_trial(tst.v('fa'), 3, '')$$, 'gerekçesiz işlem yok');
 select tst.fails($$select public.admin_extend_trial(tst.v('fa'), 200, 'çok uzun')$$, 'en çok 90 gün');
-select tst.check((public.admin_extend_trial(tst.v('fa'), 5, 'destek talebi #12') ->> 'days_left')::int = 12, 'deneme 7+5 gün');
+select tst.check((public.admin_extend_trial(tst.v('fa'), 5, 'destek talebi #12') ->> 'days_left')::int = 19, 'deneme 14+5 gün');
 select tst.check((public.admin_clinic_extend_trial(tst.v('k1'), 10, 'pilot görüşme') ->> 'active')::boolean, 'klinik denemesi uzadı');
 select tst.check(public.admin_notify('00000000-0000-0000-0000-0000000000a1', 'Merhaba', 'Sorununuz çözüldü', 'destek talebi #12') > 0, 'kişiye bildirim');
 select tst.check(public.admin_notify('00000000-0000-0000-0000-0000000000c1', 'Pofi seni bekliyor', '', 'deneme') > 0, 'çocuğa bildirim');

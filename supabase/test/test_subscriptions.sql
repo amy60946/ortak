@@ -1,4 +1,4 @@
--- Abonelik: 7 günlük deneme, planlar, ücretsiz plan sınırları (20261021140000_subscriptions.sql).
+-- Abonelik: 14 günlük deneme (18 Kasım 2026'ya kadar 7; proposed/20261118200000_parent_trial_14.sql), planlar, ücretsiz plan sınırları (20261021140000_subscriptions.sql).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;
@@ -52,7 +52,7 @@ reset role;
 update auth.users set email_confirmed_at = now() where id = '00000000-0000-0000-0000-0000000000a1';
 set role authenticated;
 select tst.check(public.family_access() ->> 'state' = 'trial', 'doğrulayınca deneme başladı');
-select tst.check((public.family_access() ->> 'days_left')::int = 7, '7 gün kaldı');
+select tst.check((public.family_access() ->> 'days_left')::int = 14, '14 gün kaldı');
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
 select tst.check(public.family_access() ->> 'state' = 'trial', 'kayıtta doğrulanmış hesapta deneme hemen başlar');
 select tst.fails($$select public.set_family_subscription(public.my_family_id(), 'premium', 'yearly', 'active', now() + interval '1 year', true, 'p', 't')$$, 'istemci aboneliği kendisi yazamaz');
@@ -63,7 +63,7 @@ select tst.fails($$select * from public.trial_history$$, 'deneme geçmişi okuna
 
 -- deneme biter; uygulama anahtarı kapalıyken kimse kısıtlanmaz
 reset role;
-update public.families set trial_started_at = now() - interval '8 days' where id = tst.v('fid')::uuid;
+update public.families set trial_started_at = now() - interval '15 days' where id = tst.v('fid')::uuid;
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(public.family_access() ->> 'state' = 'expired', 'deneme bitti');
