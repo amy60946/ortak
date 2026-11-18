@@ -66,6 +66,10 @@ Bayrak `plan_change_suggestions` (ClinicApp, 2 Kasım 2026; varsayılan **kapal�
 
 Bayrak `care_plan` (ClinicApp + ParentApp, kullanıcı kararı 11 Kasım 2026 "lansman odağı: ebeveyn eğitimi"; tanım gerekmez, yoksa **kapalı**): Takip Planı'nı (davranış hedefleri, GAS, aile programı, tek gönderim) iki uygulamada **görünür** yapar. Kapalıyken ClinicApp'te Takip Planı bölümü, ona giden yollar ve ana ekrandaki plan nedenleri yok; danışan Ebeveyn Eğitimi'yle açılır (`akislar.md` 12.2). ParentApp aynı bayrağı `client_config('parent')` ile okur (aile tarafı gizlenir; ParentApp penceresi). Veri ve işlevler durur, yalnız arayüz gizlenir. Yeniden açmak: `admin_set_flag('care_plan', true, 100, …)`; önce tek uzmana: `admin_set_user_flag(uzman, 'care_plan', true, …)`. `plan_change_suggestions` yalnız bu bayrak açıkken anlam taşır.
 
+Bayrak `cancel_flow` (ClinicApp, 18 Kasım 2026; tanım gerekmez, yoksa **kapalı**): Üyelik ekranında "Aboneliği yönet"i doğrudan Apple'ın abonelik sayfası yerine iptal öncesi pencereyle açar; iptal edilmiş üyelik kartını ve ödeme sorunu bandını gösterir (`akislar.md` 26 aşama 1). Teklif (indirim, ücretsiz ay) içermez. Açmak: `admin_set_flag('cancel_flow', true, 100, …)`; önce tek uzmana: `admin_set_user_flag(uzman, 'cancel_flow', true, …)`. TestFlight'ta gerçek cihazda denenmeden herkese açılmaz.
+
+Bayrak `lifecycle_nudges` (ClinicApp, 18 Kasım 2026; tanım gerekmez, yoksa **kapalı**): cihazda planlanan hatırlatmaları (ilk davet, süresi dolan davet, ilk eğitim, taslak eğitim, deneme bitişinden 3 gün önce), davet sonrası izin açıklamasını ve Ayarlar › Bildirimler anahtarını açar (`akislar.md` 25 aşama 1). Açıkken iOS bildirim izni girişte değil, ilk davetten sonra sorulur. Kapatılınca cihazdaki planlı hatırlatmalar bir sonraki açılışta silinir. Sınırlar (hafta içi 08:30–19:00, günde 1, 7 günde 2, üç yanıtsız hatırlatmadan sonra 14 gün ara, %10 karşılaştırma grubu) şimdilik uygulamada sabit; kullanıcı kararı bekliyor.
+
 ## KVKK işletme ve izleme (`migrations/20261102200000_kvkk_ops.sql`, 2 Kasım 2026, **uygulandı**: canlıda doğrulandı 10 Kasım 2026)
 
 | Fonksiyon | Rol | Ne yapar |
