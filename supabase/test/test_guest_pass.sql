@@ -51,12 +51,12 @@ select tst.check((public.redeem_guest_pass((select v from tst.kv where k = 'code
 select tst.check((select count(*) from public.guest_passes) = 0, 'başka ailenin kartları görünmez');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000b1');
-select tst.check((public.family_access() ->> 'trial_days')::int = 7, 'yeni aile: 7 günlük deneme');
+select tst.check((public.family_access() ->> 'trial_days')::int = 14, 'yeni aile: 14 günlük deneme');
 select tst.check((public.redeem_guest_pass('ZZZZZZZZ') ->> 'error') = 'not_found', 'olmayan kod');
 select tst.check((public.redeem_guest_pass(lower((select v from tst.kv where k = 'code'))) ->> 'ok')::boolean, 'yeni aile kartı kullanır (küçük harf de olur)');
-select tst.check((public.family_access() ->> 'trial_days')::int = 14, 'deneme 7 + 7 = 14 gün');
+select tst.check((public.family_access() ->> 'trial_days')::int = 21, 'deneme 14 + 7 = 21 gün');
 select tst.check((public.family_access() ->> 'guest_pass')::boolean, 'erişimde davet işareti');
-select tst.check((public.family_access() ->> 'days_left')::int between 13 and 14, 'kalan gün ~14');
+select tst.check((public.family_access() ->> 'days_left')::int between 20 and 21, 'kalan gün ~21');
 select tst.check(public.family_access() ->> 'state' = 'trial', 'durum deneme');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
@@ -89,7 +89,7 @@ insert into tst.kv select 'famF', id::text from public.families where created_by
 -- B mağazadan abone olur (webhook yazar): A abone değil → A'nın ücretsiz süresine 30 gün
 select public.set_family_subscription((select v from tst.kv where k = 'famB')::uuid, 'premium', 'monthly', 'active', now() + interval '30 days', true, 'parentapp.premium.monthly', 'tx-b1');
 select tst.check((select count(*) from public.referral_rewards where family_id = (select v from tst.kv where k = 'famA')::uuid and status = 'applied') = 1, 'davet edene ödül yazıldı (uygulandı)');
-select tst.check((select bonus_until from public.families where id = (select v from tst.kv where k = 'famA')::uuid) > now() + interval '36 days', 'A: deneme sonu (7 gün) + 30 gün');
+select tst.check((select bonus_until from public.families where id = (select v from tst.kv where k = 'famA')::uuid) > now() + interval '43 days', 'A: deneme sonu (14 gün) + 30 gün');
 select tst.check((select count(*) from public.notifications n join public.profiles p on p.id = n.user_id
                    where n.kind = 'referral_reward' and p.family_id = (select v from tst.kv where k = 'famA')::uuid) = 1, 'davet edene ödül bildirimi');
 -- Yenileme ve durum güncellemesi ikinci ödül yazmaz
@@ -98,7 +98,7 @@ select public.set_family_subscription((select v from tst.kv where k = 'famB')::u
 select tst.check((select count(*) from public.referral_rewards) = 1, 'aynı aile için ödül bir kez');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
-select tst.check((public.family_access() ->> 'days_left')::int between 36 and 37, 'A: kalan ücretsiz gün ~37');
+select tst.check((public.family_access() ->> 'days_left')::int between 43 and 44, 'A: kalan ücretsiz gün ~44');
 select tst.check(public.family_access() ->> 'state' = 'trial', 'A: durum deneme (ödüllü)');
 select tst.check((public.my_referrals() ->> 'paid')::int = 1 and (public.my_referrals() ->> 'months')::int = 1 and (public.my_referrals() ->> 'year_left')::int = 11, 'özet: 1 abone, 1 ay, 11 hak');
 -- B (davet edilen) kimin davet ettiğini görmez; A kimin abone olduğunu görmez
