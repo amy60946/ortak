@@ -506,7 +506,7 @@ Edge Function `invite-info` (Verify JWT kapalı): `GET ?t=<token>` → `{status,
 
 | Tablo / alan | Ne | Alanlar | Kim yazar | Kim okur |
 |---|---|---|---|---|
-| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (14; 18 Kasım 2026 önerisine kadar 7) | smallint | yalnız `redeem_guest_pass` (varsayılan + 7 = 21; önce 14) | `family_access_of` |
+| `families.trial_days` | Ailenin kendi deneme süresi (gün, 1–90); boşsa `app_config.billing.trial_days` (14; 19 Kasım 2026 göçünden önce 7) | smallint | yalnız `redeem_guest_pass` (varsayılan + 7 = 21; önce 14) | `family_access_of` |
 | `families.bonus_until` | Davet ödülüyle kazanılan ücretsiz sürenin sonu (deneme sonundan sonraysa erişim buna kadar `trial`) | timestamptz | yalnız `referral_on_paid` | `family_access_of`, `my_referrals` |
 | `guest_passes` | Ailenin davet kodu | `code` pk (`^[A-Z2-9]{8}$`), `family_id`, `created_by`, `created_at`, `expires_at` (+60 gün), `redeemed_family?`, `redeemed_at?`, `rewarded_at?` (davet edilen aile abone oldu, ödül yazıldı) | yalnız `create_guest_pass` / `redeem_guest_pass` / `referral_on_paid` (istemci yazamaz) | P (kendi ailesinin kodları; RLS) |
 | `referral_rewards` | Davet ödülü (davet eden aile başına) | `id`, `family_id` (davet eden), `pass_code` (tekil), `created_at`, `status` (`applied` / `code_pending` / `code_sent` / `capped`), `days` (30), `bonus_until?`, `offer_code?` (Apple teklif kodu), `code_sent_at?` | yalnız sunucu (`referral_on_paid`; Apple kodu havuzdan ya da panelden `referral_assign`, §28) | yalnız `my_referrals` (RLS açık, istemciye hiçbir yetki yok) |

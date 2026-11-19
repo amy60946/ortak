@@ -224,7 +224,7 @@ Yönetim paneli (27 Ekim 2026): aile kartında sağlık yanıtları varsayılan 
 
 ### O. Moyo denemesi 14 gün: yasal metin ve pazarlama etkisi (18 Kasım 2026)
 
-Kullanıcı kararı (18 Kasım 2026, Moyo Mercek + tanıtım sayfaları penceresi): Moyo (ParentApp) ücretsiz denemesi 7 → 14 gün, davet koduyla gelen aile 14 → 21 gün (`proposed/20261118200000_parent_trial_14.sql`; araştırma https://claude.ai/artifact/DbmzVu1K8GxUhwh4sTVQPc). Deneme kartsız kalır, süre bitince ücretsiz plan; kendiliğinden ücret yok (değişmedi).
+Kullanıcı kararı (18 Kasım 2026, Moyo Mercek + tanıtım sayfaları penceresi): Moyo (ParentApp) ücretsiz denemesi 7 → 14 gün, davet koduyla gelen aile 14 → 21 gün (`migrations/20261118200000_parent_trial_14.sql`, uygulandı 19 Kasım 2026; araştırma https://claude.ai/artifact/DbmzVu1K8GxUhwh4sTVQPc). Deneme kartsız kalır, süre bitince ücretsiz plan; kendiliğinden ücret yok (değişmedi).
 
 Güncellenecek metinler (Koordinatör; SQL uygulanınca):
 1. `hukuk/20-kullanim-kosullari-parentapp.md` özet satırı ve madde 8.2: "7 günlük" → "14 günlük" (+ yeni `legal_seed`). Soru: değişiklik kullanıcının lehine; sürüm artışı yeniden onay ekranı çıkarmalı mı, yoksa onaysız küçük düzeltme sayılabilir mi (avukat / kullanıcı kararı).
