@@ -287,7 +287,7 @@ nedenli ret, IP sınırı. Yanıt geriye uyumlu (`error` değişmedi):
 | `expired` | Deneme bitti, abonelik yok | `enforced` ise ücretsiz plan |
 
 - `family_access().full`: kısıt uygulanacak mı (false yalnız `expired` + `enforced`).
-- `app_config.billing`: `enforce` (şimdilik **false**: ödeme bağlanınca true), `trial_days` **14** (kullanıcı kararı 18 Kasım 2026; `proposed/20261118200000_parent_trial_14.sql` uygulanınca, o zamana kadar 7), `free_max_tasks` 3, `free_max_children` 1.
+- `app_config.billing`: `enforce` (şimdilik **false**: ödeme bağlanınca true), `trial_days` **14** (kullanıcı kararı 18 Kasım 2026; `migrations/20261118200000_parent_trial_14.sql`, uygulandı 19 Kasım 2026), `free_max_tasks` 3, `free_max_children` 1.
 - Ücretsiz plan sınırı hatası: `hint = 'premium_required'` (uygulama üyelik ekranını açar).
 - `family_subscriptions.status`: `active` / `grace` (ödeme sorunu, ek süre) / `canceled` (yenileme kapalı, dönem sonuna kadar premium) / `expired` / `refunded`. `billing`: `monthly` / `yearly`.
 - Mağaza ürün kimlikleri: `parentapp.premium.monthly`, `parentapp.premium.yearly`.
