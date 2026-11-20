@@ -196,8 +196,8 @@ D. Uygulamalar ve deneme
 - (Siz) İlk süper admin + iki adımlı doğrulama
 
 ## 4. Analitik ve hata izleme
-- (Siz) Sentry + PostHog (AB) hesapları (oyun için hesap yok)
+- ~~(Siz) Sentry + PostHog (AB) hesapları (oyun için hesap yok)~~ **Lansmanda yok (kullanıcı kararı 20 Kasım 2026; hukuk/README sorun 6).** Eklenirse önce aydınlatma, gizlilik ve alt işleyen metinleri.
 - (ortak) ParentApp ve GameApp olay listeleri `sozlesme/akislar.md` §9
 - (Claude) GameApp: Supabase'e olay servisi + Xcode Organizer/MetricKit
-- (Claude) ParentApp + ClinicApp: Sentry + PostHog; replay ParentApp maskeli, ClinicApp kapalı
+- ~~(Claude) ParentApp + ClinicApp: Sentry + PostHog; replay ParentApp maskeli, ClinicApp kapalı~~ (lansmanda yok, yukarıda)
 - (Claude) Admin Raporlar: kayıt, günlük aktif, G1/G7/G30, üç huni

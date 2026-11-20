@@ -241,3 +241,15 @@ Fiyat kararı (kullanıcı, 20 Kasım 2026; `ekonomi.md` 9): Moyo Premium aylık
 - Nerede: Moyo › Aile › Üyelik, yıllık plan kartı. Mağaza fiyatları yıllık = aylık × 10 olduğunda uygulama bu ifadeyi gösterir; oran değişirse kendiliğinden "%… avantajlı"ya döner (`PaywallScreen.tsx` `planView`). Mağaza fiyatı gelmezse yedek `src/data/plans.ts`.
 - Çelişki: `hukuk/45` 1.5 ("ücretsiz" yalnız gerçekten ücretsiz olan için). Avukata madde 30 olarak sorulur; tanıtım sayfası, mağaza metni ya da reklamda da kullanılacaksa Marketing §7.1 kontrolünde aynı soru geçerlidir (`ekonomi.md` 9 "tanıtımda 2 ay ücretsiz").
 - Avukat uygun bulmazsa: rozet "10 ay fiyatına 12 ay" olur (iki dosyada tek satır).
+
+### P. Kullanıcının hukuk kararları (20 Kasım 2026; karar belgesi https://claude.ai/artifact/QuUn4gUYnvKj6rigcVT5tB)
+
+1. **Uygulama içi kısa metinler (`hukuk/50` §15):** karar verilmedi, bekliyor.
+2. **Rozeti olmayan uzman:** Moyo Ebeveyn'de "Belgesi incelenmedi" yazısı kalkar, yerine bir şey yazılmaz (A). Rozet yalnız belge yüklenmişse "Uzman diploma belgesini yükledi" der; özellik lansmanda kapalı. Moyo penceresi uygular.
+3. **Paylaşım ya da klinik silinince ailenin kayıtları:** ailenin kendi girdiği ebeveyn eğitimi yanıtları ve davranış olayları kalır, uzmanın erişimi kapanır (A). Aile ya da çocuk silinirse hepsi silinir. Sunucu önerisi koordinatörde (`proposed/20261120200000_family_keeps_records.sql`, hazırlanıyor); ardından Moyo penceresi uzmansız kalan kayıtları gösterir.
+4. **Mercek tanıtım sayfasına "Araştırmalarla desteklenen davranış yaklaşımları…" cümlesi:** eklenmez (B). M.2'deki öneri kapandı.
+5. **Bildirim ve iptal akışı sınırları:** kullanıcı ayrıntı istedi; alt kararlar karar belgesinde ayrı tabloda.
+6. **Karşılama anketi:** anket sayfalarının köşesinde küçük bir "Geç" düğmesi olur (kullanıcının kendi seçeneği; 28 Ekim "atlanamaz" kararının yerine geçer). Uzman aydınlatmasındaki "isteğe bağlı" böylece doğru kalır. Moyo Mercek penceresi uygular.
+7. **Moyo Ebeveyn tanışma soruları:** hepsi "Geç" ile atlanabilir (A). Moyo penceresi uygular.
+8. **Üçüncü taraf hata/analiz aracı (Sentry, PostHog):** lansmanda yok (A); "üçüncü taraf analiz yok" cümleleri kalır.
+9. **Lansmandan önceki son iş** (uzmana bağlı ailenin ne ödeyeceği, bireysel mi şirket mi, ad ve adres): lansman günü, avukatın yanıtıyla (`DURUM.md` HATIRLATMA).
