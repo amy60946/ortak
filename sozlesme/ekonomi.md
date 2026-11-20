@@ -26,7 +26,7 @@ Son güncelleme: 2026-11-03 (görünen ad İnci, §0); 2026-10-24 (hoş geldin c
 | Hikâye | İnci istiridyeden çıkar (ada yaşamı) — ama **yalnız onaylı gerçek görevden** gelir (§1): adada istiridye toplanıp inci bulunmaz. Önerilen gösteri (karar bekliyor): ebeveyn onayında istiridye açılır, inci çıkar. |
 | Simge | **İ1b (deliksiz derin sedef)**: açık krem-beyaz, yanardöner, hacimli parlak yuvarlak inci, delik yok (kullanıcı seçimi 3 Kasım 2026; önce S, aynı gün Güneş Taşı K2 ile aynı çizim diline getirildi; oyunda `Icons/ui_coin.png`, kaynak `game-app/art/icons/inci/`). ParentApp/ClinicApp inci gösterirse aynı görünümü kullanır. Sarı/altın tonu kullanılmaz (Güneş Taşı), XP yıldızından ayrı. |
 | Neden | Kullanıcı: "İnci daha mantıklı, istiridyeden çıkıyor, ada yaşamına uygun". GB20 değerlendirmesindeki eksiler (mücevher çağrışımı, "5 inci" okunuşu, kız adı) renk ve "tane" kuralıyla karşılanır. |
-| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 32). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
+| Yasal metinler | `hukuk/` taslaklarında teknik terim "coin" geçer; avukat revizyonunda "İnci (oyun içi puan)" yazılır (`hukuk_notlari.md` 33). Uygulama içi bilgi notu `hukuk/50` §8 güncellendi. |
 
 ---
 
