@@ -2,6 +2,8 @@
 | Anahtar | iç belge | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
 | Nerede | İşletme içi: işletme sahibi (sorumlu), ekip, yazılımcılar (zamanlanmış imha işi); VERBİS kaydı gerekirse Kurul denetiminde sunulur. Kamuya açık özeti Gizlilik Politikası 12. bölümdedir | Dayanak | KVKK md. 4/2-d, 7, 12; Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik (md. 4–13); KVKK md. 16 (VERBİS) |
 
+> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ürün adları: Moyo Ebeveyn (ParentApp), Moyo Oyun (GameApp / Pofi Adası), Moyo Mercek (ClinicApp). İşletmeci gerçek kişidir (`00-olgular.md` §1).
+
 ## Kısaca
 
 - Her veri kategorisinin bir **saklama süresi** vardır. Süre dolunca veri **silinir**, **yok edilir** ya da **anonim hâle getirilir**.
@@ -12,7 +14,7 @@
 
 ## 1. Amaç ve kapsam
 
-Bu politika, [ŞİRKET UNVANI]'nın Pofi Adası (GameApp), ParentApp, ClinicApp ve yönetim panelinde işlediği kişisel verilerin ne kadar saklanacağını, süre dolunca nasıl imha edileceğini ve bu işten kimin sorumlu olduğunu belirler. Bütün kayıt ortamlarını (veritabanı, dosya depolama, yedekler, hizmet sağlayıcılar, e-posta kutuları, ekip bilgisayarları, kâğıt) kapsar.
+Bu politika, Moyo'yu işleten [AD SOYAD] tarafından Moyo Oyun (GameApp), Moyo Ebeveyn (ParentApp), Moyo Mercek (ClinicApp) ve yönetim panelinde işlenen kişisel verilerin ne kadar saklanacağını, süre dolunca nasıl imha edileceğini ve bu işten kimin sorumlu olduğunu belirler. Bütün kayıt ortamlarını (veritabanı, dosya depolama, yedekler, hizmet sağlayıcılar, e-posta kutuları, ekip bilgisayarları, kâğıt) kapsar.
 
 Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md. 4/2-d). Kanun daha uzun saklamayı zorunlu kılıyorsa o süre kadar, yalnız o amaçla ve en az veriyle saklanır.
 
@@ -34,7 +36,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | Supabase dosya depolama (özel kovalar) | Mesaj fotoğrafları ve sesli mesajlar (`mail`), davranış kayıtlarındaki ses kayıtları, uzman belgeleri (`verify`) | Dosya silme |
 | Supabase yedekleri | Veritabanının günlük yedekleri ve zamana dönük geri yükleme kayıtları | Yedekler [SÜRE] sonunda kendiliğinden döner (öneri: en çok 30 gün) |
 | Hizmet sağlayıcılar (`alt-isleyenler`) | RevenueCat abone kaydı, Resend gönderim kayıtları, Apple bildirim anahtarları, Cloudflare ağ kayıtları | Sağlayıcının silme yolu (API ya da destek talebi) ve sağlayıcının kendi saklama süreleri |
-| Kullanıcı cihazları | Pofi Adası'nın yerel oyun kaydı; ParentApp ve ClinicApp önbelleği | Uygulama tarafında temizlik (bkz. 10. bölüm) |
+| Kullanıcı cihazları | Moyo Oyun'un yerel oyun kaydı; Moyo Ebeveyn ve Moyo Mercek önbelleği | Uygulama tarafında temizlik (bkz. 10. bölüm) |
 | E-posta kutuları | `destek@`, `kvkk@`, `fatura@` yazışmaları | E-postanın silinmesi ve çöp kutusunun boşaltılması |
 | Ekip bilgisayarları | Panelden indirilen müşteri listeleri (CSV, en çok 500 satır), ekran görüntüleri | Dosyanın silinmesi ve çöp kutusunun boşaltılması |
 | Kâğıt | Yazılı KVKK başvuruları ve ekleri | Kilitli dolapta saklama; süre dolunca imha makinesinde yok etme |
@@ -47,14 +49,14 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | # | Veri kategorisi | Nerede | Saklama süresi | İmha yöntemi | Nasıl | Bugün |
 |---|---|---|---|---|---|---|
 | 1 | Ebeveyn hesabı ve profili (ad, takma ad, simge, e-posta, şifre özeti) | `auth.users`, `profiles` | Hesap silinene kadar | Silme | Kullanıcı (uygulama içi "Hesabımı sil") ya da ekip (`admin_delete_user`), derhal | ✅ |
-| 2 | Aile, çocuk profilleri, görevler, tamamlamalar, ödüller, Güneş Taşı ve coin defterleri, oyun yedekleri | `families` ve bağlı tablolar | Aile silinene kadar; çocuk profili ebeveyn silince | Silme (zincirleme) | Son ebeveyn hesabını silince ya da ebeveyn çocuğu silince, derhal | ⚠️ veritabanı tek çocuğun silinmesine izin veriyor ama ParentApp'te ekranı yok (`README.md` sorun 5) |
+| 2 | Aile, çocuk profilleri, rutinler ve adımlar (`tasks`), tamamlamalar, ödüller, Güneş Taşı ve coin defterleri, oyun yedekleri | `families` ve bağlı tablolar | Aile silinene kadar; çocuk profili ebeveyn silince | Silme (zincirleme) | Son ebeveyn hesabını silince ya da ebeveyn çocuğu silince, derhal | ⚠️ veritabanı tek çocuğun silinmesine izin veriyor ama Moyo Ebeveyn'de ekranı yok (`README.md` sorun 5) |
 | 3 | Aile içi mesajlar ve mesaj medyası | `messages`, kova `mail` | Aile silinene ya da ebeveyn mesajı silene kadar | Silme | Dosyayı bugün **uygulama** siliyor, sonra hesap silinir | ⚠️ sunucu tarafı yetim dosya temizliği yok |
-| 4 | Davranış kayıtları ve ses kaydı | `abc_events`, kova `abc` | Aile silinene ya da ebeveyn kaydı silene kadar | Silme | Derhal | ⚠️ kayıt silinince ses dosyasının da silindiği teyit edilecek |
-| 5 | Tanışma yanıtları | `intake_answers` | Hesap silinene ya da ebeveyn silene kadar | Silme | Derhal | ✅ |
-| 6 | Sağlık yanıtları (tanı, ilaç) | `intake_answers` (açık rıza sürümüyle) | Ebeveyn silene, rızasını geri alana ya da hesap silinene kadar | Silme | Derhal | ⚠️ rıza geri alınınca yanıtın da silindiği teyit edilecek |
+| 4 | Davranış kayıtları ve ses kaydı (özel nitelikli veri içerebilecek kayıtlar) | `abc_events`, kova `abc` | Aile silinene ya da ebeveyn kaydı silene kadar | Silme | Derhal | ⚠️ kayıt silinince ses dosyasının da silindiği teyit edilecek |
+| 5 | Tanışma yanıtları (hazır seçenekler; 14 Kasım 2026'dan beri tanı ve ilaç sorusu yok) | `intake_answers` | Hesap silinene ya da ebeveyn silene kadar | Silme | Derhal | ✅ |
+| 6 | ~~Sağlık yanıtları (tanı, ilaç)~~ **Kalktı 14 Kasım 2026:** sorular ve açık rıza `saglik-yanit-v1` kaldırıldı, var olan yanıtlar silindi; sunucu bu iki soruya yanıt yazmaz (`migrations/20261114200000_intake_observation_owner.sql`). `consent_version` sütunu duruyor, doldurulmuyor | `intake_answers` | — | — | — | ✅ (satır numarası korunuyor) |
 | 7 | Uzman paylaşımı ve geçiş onayları | `clinic_links.consent_*`, `clinic_link_history` | Paylaşım sürdükçe; geçiş izni geri alınınca satır silinir | Silme | Derhal | ✅ · paylaşım bittikten sonra ispat için saklama: [SÜRE] |
 | 8 | Uzman hesabı, klinik, ekip | `clinicians`, `clinics` | Hesap/klinik silinene kadar; tek kişilik klinik uzmanla birlikte silinir, ekipte sahiplik en eski üyeye geçer | Silme | Derhal | ✅ |
-| 9 | Uzmanın danışan kayıtları (notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planı, etiketler) | `clinic_notes`, `clinic_goals`, `goal_ratings`, `clinic_task_suggestions` ve takip planı tabloları | Klinik silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter ama kayıt kalır → [SÜRE] (öneri: paylaşım bittikten 12 ay sonra silme; uzmana 30 gün önce dışa aktarma bildirimi). **Aile ya da çocuk silinince o çocuğa ait kayıtlar da hemen silinir** (bugünkü sistem; avukat kararı bekliyor) | Silme | ❌ paylaşım sonrası süre işi yok | ❌ |
+| 9 | Uzmanın aile kayıtları (notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, takip planı, etiketler) ile ebeveyn eğitimi kayıtları ve davranış olayları (özel nitelikli veri içerebilecek kayıtlar) | `clinic_notes`, `clinic_goals`, `goal_ratings`, `clinic_task_suggestions`, takip planı tabloları, `parent_training_*`, `clinic_target_behaviors`, `behavior_incidents` (hepsi paylaşım kaydına `clinic_links` bağlı; klinik ya da paylaşım kaydı silinince zincirleme silinir) | Klinik silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter ama kayıt kalır → [SÜRE] (öneri: paylaşım bittikten 12 ay sonra silme; uzmana 30 gün önce dışa aktarma bildirimi). **Aile ya da çocuk silinince o çocuğa ait kayıtlar da hemen silinir** (bugünkü sistem; avukat kararı bekliyor) | Silme | ❌ paylaşım sonrası süre işi yok | ❌ |
 | 9a | Üyeliği ya da denemesi bitmiş kliniğin bütün verisi | klinik tabloları | Bugün süresiz (erişim kapanır, veri kalır) → [SÜRE] (öneri: 6 ay; 30 gün önce uzmana hatırlatma ve dışa aktarma imkânı; `22-uzman-hizmet-sozlesmesi.md` notu 2) | Silme | ❌ | ❌ |
 | 10 | Davet bilgileri (ebeveyn adı ve e-postası, çocuğun adı ve yaş grubu) | `clinic_invites` | Bağlanmamış davet 3 gün; bağlanmış ama onaylanmamış en geç 30 gün; onay, ret ya da iptalde hemen | Silme | Otomatik (`clinic_invites_expire` çocuk alanları; gece imha işi ebeveyn adı/e-postası, 30 gün) | ⚙️ |
 | 11 | Uzman belge dosyası | kova `verify` | Karar, kendiliğinden ret, yeni belgeyle değiştirme ya da hesap silmede | Silme | Otomatik (`verify-doc` silme adımı) | ✅ |
@@ -76,7 +78,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Gece imha işi (en az 3 yıl, alt sınır sunucuda) | ⚙️ |
 | 28 | Panelden indirilen dosyalar (CSV) | ekip bilgisayarı | İş bitince, en geç [SÜRE] (öneri: 30 gün) | Silme + çöp kutusunu boşaltma | Elle | — |
 | 29 | Yedekler | Supabase | [SÜRE] (öneri: en çok 30 gün) | Kendiliğinden döner | Sağlayıcı | ⚠️ plan ve süre seçilince |
-| 30 | Pofi Adası yerel oyun kaydı | çocuğun cihazı | Cihaz bağlantısı kapanınca ya da aile silinince | Uygulama içi temizlik | ❌ bugün yerel kayıt kalıyor (`CANLIYA_ALMA.md` 1.7) | ❌ |
+| 30 | Moyo Oyun yerel oyun kaydı | çocuğun cihazı | Cihaz bağlantısı kapanınca ya da aile silinince | Uygulama içi temizlik | ❌ bugün yerel kayıt kalıyor (`CANLIYA_ALMA.md` 1.7) | ❌ |
 | 31 | Hizmet sağlayıcılardaki kopyalar | RevenueCat, Resend, Apple, Cloudflare | Sağlayıcının süresi; hesap silinince RevenueCat'e silme isteği | Sağlayıcı silme yolu | ❌ | ❌ |
 | 32 | Kâğıt başvurular | kilitli dolap | Satır 24 ile aynı | Yok etme (imha makinesi) | Elle | — |
 
@@ -84,7 +86,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 
 **Saklamayı gerektiren:** sözleşmenin ifası (hesap açık kaldıkça); vergi ve ticaret mevzuatı (ödeme kayıtları); bir hakkın tesisi, kullanılması veya korunması (onay kayıtları, ekip işlemleri kaydı, KVKK başvuruları); meşru menfaat (kötüye kullanımı önleme, güvenlik).
 
-**İmhayı gerektiren:** işleme amacının ortadan kalkması (hesap silme, davetin süresinin dolması, belge incelemesinin bitmesi); açık rızanın geri alınması (sağlık yanıtları, uzman paylaşımı, geçiş izni); ilgili kişinin şartları oluşmuş silme talebi; saklama süresinin dolması.
+**İmhayı gerektiren:** işleme amacının ortadan kalkması (hesap silme, davetin süresinin dolması, belge incelemesinin bitmesi); açık rızanın geri alınması (uzman paylaşımı, geçiş izni); ilgili kişinin şartları oluşmuş silme talebi; saklama süresinin dolması.
 
 ## 6. Periyodik imha
 
@@ -132,11 +134,11 @@ Her imha işlemi için kaydedilir: tarih ve saat, veri kategorisi (4. bölümdek
 2. ⚙️ (`retention_runs`) **İmha kaydı tablosu** (ör. `retention_runs`): RLS açık, yalnız sunucu yazar, panelde salt okunur; 3 yıl.
 3. ⚙️ (`admin_audit_immutable` yalnız imha işinin ≥ 1 yıl eski kesimine izin verir) **Denetim kaydında imha yolu:** `admin_audit` bugün kimsenin silemeyeceği biçimde korunuyor. Yalnız süresi dolan satırları silebilen, kendisi de imha kaydına yazan ayrı bir sunucu işlevi gerekir.
 4. **Yetim dosya temizliği:** Mesaj medyası ve davranış kaydı sesleri bugün uygulama tarafından siliniyor; satırı silinmiş ama dosyası kalmış nesneleri sunucu tarafında bulup silen iş.
-5. **Teyitler:** davranış kaydı silinince ses dosyası; sağlık rızası geri alınınca yanıtlar; uzman hesabı silinince belge özeti; `code_attempts` temizliği; `clinic_invites_expire`'ın canlıda zamanlanmış olarak çalıştığı.
+5. **Teyitler:** davranış kaydı silinince ses dosyası; uzman hesabı silinince belge özeti; `code_attempts` temizliği; `clinic_invites_expire`'ın canlıda zamanlanmış olarak çalıştığı.
 6. **Hesap silme ekleri:** RevenueCat'e abone silme isteği; onay kayıtlarının (`legal_acceptances`) takma adlı arşive taşınması (avukat kararından sonra); silinen hesap kimliğinin "yedekten dönünce yeniden sil" listesine yazılması.
-7. **Pofi Adası:** cihaz bağlantısı kapanınca ya da aile silinince yerel oyun kaydının temizlenmesi (`CANLIYA_ALMA.md` 1.7).
+7. **Moyo Oyun:** cihaz bağlantısı kapanınca ya da aile silinince yerel oyun kaydının temizlenmesi (`CANLIYA_ALMA.md` 1.7).
 8. ⚙️ (panel: CSV gerekçe + kayıt + uyarı, Hukuk › Saklama ve imha, 6 aylık hatırlatma) **Yönetim paneli:** CSV indirmeyi denetim kaydına yazma ve indirme sırasında "İşin bitince bu dosyayı sil" uyarısı; panelde imha kaydı ve 6 aylık gözden geçirme hatırlatması.
-9. ⚙️ (`my_data_export`, `admin_user_export`; uygulama ekranları ParentApp/ClinicApp) **Verimi indir** (aile verisinin dışa aktarılması, `CANLIYA_ALMA.md` 1.6): hem erişim başvurularında hem hareketsiz hesap silinmeden önce kullanılır.
+9. ⚙️ (`my_data_export`, `admin_user_export`; uygulama ekranları Moyo Ebeveyn / Moyo Mercek) **Verimi indir** (aile verisinin dışa aktarılması, `CANLIYA_ALMA.md` 1.6): hem erişim başvurularında hem hareketsiz hesap silinmeden önce kullanılır.
 10. **Hareketsiz hesap politikası (öneri, avukata):**
     - Ölçüt: hesabın ve bağlı çocuk cihazlarının **24 ay** boyunca hiç oturumu yoksa (`user_activity.last_seen_at`, üç uygulama birlikte).
     - Adımlar: silmeden **30 gün önce** e-posta + uygulama içi bildirim ("Hesabın 30 gün sonra silinecek; korumak için bir kez giriş yapman yeterli. İstersen önce verini indir."); 7 gün kala hatırlatma; süre dolunca `delete_account` ile aynı gövdeyle silme ve imha kaydı.
@@ -151,9 +153,9 @@ Yürürlük: [TARİH] · Sürüm: v1 · Sorumlu: işletme sahibi
 
 ## Avukata notlar
 
-1. **Süreler:** 4. bölümdeki bütün `[SÜRE]`'ler: deneme geçmişi (öneri 2 yıl), denetim kaydı (öneri 5 yıl), ödeme olayları (öneri 10 yıl — şahıs şirketi için VUK ve TTK saklama süreleri mali müşavirle birlikte), kullanım kayıtları (öneri 25 ay), bildirimler (öneri 12 ay), KVKK başvuruları (öneri 3 yıl), destek yazışmaları (öneri 2 yıl), yedekler (öneri en çok 30 gün), ihlal envanteri (öneri 5 yıl).
-2. **Uzman danışan kayıtları (satır 9 ve 9a):** Bugün aile ya da çocuk silinince uzmanın o çocuğa ait notları da hemen siliniyor; üyeliği biten klinikte ise veri süresiz kalıyor. İkisi de karara bağlanmalı. Paylaşım bittikten sonra ne kadar saklanmalı; uzmanın mesleki kayıt saklama yükümlülüğü (psikolog, terapist vb.) platforma nasıl yansır; veri sorumlusu seçimiyle (gizlilik 4. bölüm A/B) birlikte karara bağlanmalı (`hukuk_notlari.md` 5/3–5/4).
+1. **Süreler:** 4. bölümdeki bütün `[SÜRE]`'ler: deneme geçmişi (öneri 2 yıl), denetim kaydı (öneri 5 yıl), ödeme olayları (öneri 10 yıl — işletmeci gerçek kişi olduğu için VUK ve, tacir sayılırsa, TTK saklama süreleri mali müşavirle birlikte; `hukuk_notlari.md` soru 28), kullanım kayıtları (öneri 25 ay), bildirimler (öneri 12 ay), KVKK başvuruları (öneri 3 yıl), destek yazışmaları (öneri 2 yıl), yedekler (öneri en çok 30 gün), ihlal envanteri (öneri 5 yıl).
+2. **Uzmanın aile kayıtları (satır 9 ve 9a):** Bugün aile ya da çocuk silinince uzmanın o çocuğa ait notları da hemen siliniyor; üyeliği biten klinikte ise veri süresiz kalıyor. İkisi de karara bağlanmalı. Paylaşım bittikten sonra ne kadar saklanmalı; uzmanın mesleki kayıt saklama yükümlülüğü (psikolog, terapist vb.) platforma nasıl yansır; veri sorumlusu seçimiyle (gizlilik 4. bölüm A/B) birlikte karara bağlanmalı (`hukuk_notlari.md` 5/3–5/4).
 3. **Hareketsiz hesap politikası (10/10):** 24 ay + 30 gün uyarı + silme önerisi; tüketici mevzuatı ve aile aboneliği açısından uygun mu, Kullanım Koşulları'na madde gerekir mi.
 4. **Onay kayıtlarının ispatı (satır 23):** Hesap silindikten sonra hangi onay kaydının, ne kadar ve hangi dayanakla (md. 5/2-e) takma adla saklanacağı.
-5. **VERBİS ve politika zorunluluğu:** Yönetmelik bu politikayı VERBİS'e kayıt yükümlüsü veri sorumluları için zorunlu kılıyor. Sağlık verisi işleme ana faaliyet sayılırsa istisna dışı kalırız; o durumda bu politika zorunludur ve VERBİS kaydıyla tutarlı olmalı.
+5. **VERBİS ve politika zorunluluğu:** Yönetmelik bu politikayı VERBİS'e kayıt yükümlüsü veri sorumluları için zorunlu kılıyor. Özel nitelikli veri içerebilecek kayıtların işlenmesi ana faaliyet sayılırsa istisna dışı kalırız; o durumda bu politika zorunludur ve VERBİS kaydıyla tutarlı olmalı.
 6. **5651 sayılı Kanun:** Aile içi mesajlaşma nedeniyle yer sağlayıcı sayılırsak trafik bilgisi (IP, zaman) saklama yükümlülüğü doğabilir. Bugün IP yalnız kod deneme kayıtlarında ve en çok 1 gün tutuluyor; çelişki varsa süre buna göre değişmeli.

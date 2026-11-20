@@ -2,6 +2,8 @@
 | Anahtar | iç belge | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
 | Nerede | İşletme içi: işletme sahibi (ihlal sorumlusu), yönetim paneli rolleri (support, owner), yazılımcı; yılda bir tatbikatla denenir. **İhlal kayıtları herkese açık `ortak` deposuna yazılmaz** | Dayanak | KVKK md. 12/1, 12/5; Kişisel Verileri Koruma Kurulu'nun 24.01.2019 tarihli ve 2019/10 sayılı Kararı (Kişisel Veri İhlali Bildirim Usul ve Esasları); Kurul'un Kişisel Veri Güvenliği Rehberi (Teknik ve İdari Tedbirler) |
 
+> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ürün adları: Moyo Ebeveyn (ParentApp), Moyo Oyun (GameApp / Pofi Adası), Moyo Mercek (ClinicApp; aileye dönük metinlerde Moyo Uzman). İşletmeci gerçek kişidir (`00-olgular.md` §1).
+
 ## Kısaca
 
 - **Ne zaman çalışır?** Kişisel verinin yetkisiz kişilerin eline geçtiği ya da geçmiş olabileceği her durumda. Şüphe yeterlidir.
@@ -28,7 +30,7 @@
 
 | Düzey | Ne zaman |
 |---|---|
-| **Yüksek** | Sağlık verisi (tanı/ilaç yanıtları, davranış kayıtları, uzman notları), çocuk verisi, mesaj içeriği, fotoğraf, ses, uzman belgesindeki kimlik bilgisi; ya da çok sayıda kişi; ya da sızıntı sürüyor |
+| **Yüksek** | Özel nitelikli veri içerebilecek kayıtlar (davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, uzman notları ve seans kayıtları, serbest metinler), çocuk verisi, mesaj içeriği, fotoğraf, ses, uzman belgesindeki kimlik bilgisi; ya da çok sayıda kişi; ya da sızıntı sürüyor |
 | **Orta** | Ad ve e-posta gibi iletişim verisi; sınırlı sayıda kişi; veri bilinen ve güvenilir bir alıcıda kaldı |
 | **Düşük** | Yalnız kullanım kayıtları ya da özetlenmiş veri; kimseye ulaşmadığı doğrulandı |
 
@@ -82,12 +84,12 @@ Panel işlemleri iki adımlı girişle yapılır; her biri gerekçe ister ve sil
 | **Sahibin (owner) kendi hesabı** ele geçirilmiş olabilir | Supabase hesabına girip şifreyi ve iki adımlı doğrulamayı yenile; SQL Editor'den `admin_users` satırını geçici olarak kaldır; iki adımlı doğrulama faktörünü sıfırla (panel, son owner'ın düşürülmesine izin vermez) | Supabase paneli | İşletme sahibi |
 | Gizli anahtar sızdı | Supabase'de gizli anahtarı yenile; sızan Edge Function secret'larını yenile (`APNS_KEY_P8`, `RESEND_API_KEY`, `BILLING_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`, `PUSH_SECRET`, `SMTP_PASS` …) ve GitHub Secrets'ı güncelle; ilgili sağlayıcının panelinde eski anahtarı iptal et | Supabase, sağlayıcı panelleri, GitHub | İşletme sahibi + yazılımcı |
 | Bir Edge Function kötüye kullanılıyor | İşlevi geçici olarak kapat ya da önceki sürümü yayınla | Supabase › Edge Functions | İşletme sahibi + yazılımcı |
-| Herkesin oturumunu kapatmak gerekiyor | Yazılımcıyla Supabase oturumlarının toplu kapatılması (çocuk cihazlarının yeniden kodla bağlanması gerekebilir; ParentApp'te duyuru yapılır) | Supabase | İşletme sahibi + yazılımcı |
+| Herkesin oturumunu kapatmak gerekiyor | Yazılımcıyla Supabase oturumlarının toplu kapatılması (çocuk cihazlarının yeniden kodla bağlanması gerekebilir; Moyo Ebeveyn'de duyuru yapılır) | Supabase | İşletme sahibi + yazılımcı |
 | Ekip bilgisayarı ya da telefonu kayıp | Panel oturumunu kapat, iki adımlı doğrulama faktörünü yenile, cihazı uzaktan sil; cihazda indirilmiş CSV varsa olay "Yüksek" sayılır | Panel, cihaz üreticisi hizmeti | İşletme sahibi |
 
 ## 6. Değerlendirme ve bildirim kararı
 
-**Değerlendirilecekler:** Veri türü (özel nitelikli mi, çocuğa mı ait); kişi ve kayıt sayısı; veri okunabilir mi (şifreli, özetlenmiş, kimliksiz?); kimin eline geçti (bilinen ve güvenilir bir alıcı mı, bilinmeyen biri mi); sızıntı sürüyor mu; olası sonuçlar (ayrımcılık, itibar kaybı, oltalama/dolandırıcılık, çocuğun güvenliği, uzmanın mesleki zararı).
+**Değerlendirilecekler:** Veri türü (özel nitelikli veri içerebilecek kayıtlar etkilendi mi, çocuğa mı ait); kişi ve kayıt sayısı; veri okunabilir mi (şifreli, özetlenmiş, kimliksiz?); kimin eline geçti (bilinen ve güvenilir bir alıcı mı, bilinmeyen biri mi); sızıntı sürüyor mu; olası sonuçlar (ayrımcılık, itibar kaybı, oltalama/dolandırıcılık, çocuğun güvenliği, uzmanın mesleki zararı).
 
 **Karar kuralı (öneri):** KVKK'da "düşük risk" istisnası yazılı değildir. Kişisel veri başkalarınca elde edildiyse ya da bu ihtimal dışlanamıyorsa **Kurul'a bildirilir**. Şüphede bildirilir. Bildirim yapılmamasına karar verilirse gerekçesi envantere yazılır.
 
@@ -102,20 +104,20 @@ Panel işlemleri iki adımlı girişle yapılır; her biri gerekçe ister ve sil
   1. Veri sorumlusu bilgileri ve irtibat kişisi.
   2. İhlalin başlangıç ve bitiş tarihi/saati; öğrenme tarihi/saati; nasıl öğrenildiği.
   3. İhlalin kaynağı ve nasıl gerçekleştiği (siber saldırı, yetkisiz erişim, kayıp, hata, alt işleyen kaynaklı …).
-  4. Etkilenen veri kategorileri; özel nitelikli veri olup olmadığı.
+  4. Etkilenen veri kategorileri; özel nitelikli veri içerebilecek kayıtların etkilenip etkilenmediği.
   5. Etkilenen kişi ve kayıt sayısı; kişi grupları (ebeveyn, çocuk, uzman, ekip).
   6. Olası sonuçlar.
   7. Alınan ve alınacak tedbirler.
   8. İlgili kişilere bildirim yapılıp yapılmadığı, ne zaman ve hangi yolla.
   9. Yurt dışı alıcı ya da alt işleyen varsa adı ve ülkesi.
-- **Danışan kayıtları:** Uzmanın danışan kayıtları bakımından veri işleyen sayılırsak (Gizlilik Politikası 4. bölüm, seçenek A) ilgili klinik(ler)e gecikmeden bildiririz; Kurul'a bildirimi klinik yapar, biz bilgi ve destek veririz. Ayrı veri sorumlusuysak biz de bildiririz.
+- **Uzmanın aile kayıtları:** Uzmanın aileyle ilgili kayıtları bakımından veri işleyen sayılırsak (Gizlilik Politikası 4. bölüm, seçenek A) ilgili klinik(ler)e gecikmeden bildiririz; Kurul'a bildirimi klinik yapar, biz bilgi ve destek veririz. Ayrı veri sorumlusuysak biz de bildiririz.
 
 ## 8. İlgili kişilere bildirim
 
 - **Süre:** Etkilenen kişiler belirlenince en kısa sürede.
 - **Yol:** Doğrudan — kayıtlı e-posta adresine e-posta ve uygulama içi bildirim (`admin_notify`). Doğrudan ulaşılamıyorsa internet sitemizde duyuru ve uygulamada üst bant (`banner`).
-- **Çocuk verisi:** Bildirim ailedeki **bütün ebeveynlere** yapılır. Pofi Adası'nda çocuğa ihlal mesajı gösterilmez.
-- **Danışan kayıtları:** Uzmana ya da kliniğe; veri sorumlusu seçimine göre ebeveyne de.
+- **Çocuk verisi:** Bildirim ailedeki **bütün ebeveynlere** yapılır. Moyo Oyun'da çocuğa ihlal mesajı gösterilmez.
+- **Uzmanın aile kayıtları:** Uzmana ya da kliniğe; veri sorumlusu seçimine göre ebeveyne de.
 - **İçerik:** ne oldu ve ne zaman; hangi verileriniz etkilendi; olası sonuçlar; ne yaptık; sizin ne yapmanızı öneriyoruz; nasıl ulaşırsınız.
 - **Dil:** Sade, kısa, kaygıyı büyütmeyen ama bir şeyi küçültmeyen.
 
@@ -129,7 +131,7 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 | Öğrenme anı / nasıl öğrenildi | 2026-11-03 14:20 · kullanıcı e-postası |
 | İhlal aralığı | 2026-11-02 09:00 – 2026-11-03 15:10 |
 | Ne oldu (kısa) | … |
-| Veri kategorileri / özel nitelikli mi | e-posta, çocuk adı · hayır |
+| Veri kategorileri / özel nitelikli veri içerebilecek kayıt var mı | e-posta, çocuk adı · hayır |
 | Etkilenen kişi ve kayıt sayısı | 12 ebeveyn, 15 çocuk |
 | Ciddiyet | Yüksek / Orta / Düşük |
 | Alınan acil işlemler (denetim kaydı numaralarıyla) | … |
@@ -159,7 +161,7 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 
 ### 12.1 Kurul bildirim formu — "İhlalin açıklaması" alanı
 
-> [TARİH SAAT] tarihinde, [nasıl öğrenildi] üzerine, [ŞİRKET UNVANI] olarak işlettiğimiz [Pofi Adası / ParentApp / ClinicApp] uygulamasında [ihlalin kısa tanımı] tespit edilmiştir. İhlal [başlangıç] ile [bitiş] arasında gerçekleşmiştir. Etkilenen veri kategorileri: [liste]; özel nitelikli veri [vardır/yoktur]. Etkilenen kişi sayısı yaklaşık [sayı] olup bunların [sayısı] çocuktur (çocuk verisi velisi tarafından oluşturulan profillere aittir). İhlal fark edilir edilmez [alınan acil tedbirler] uygulanmış, [kalıcı düzeltme] yapılmıştır. İlgili kişilere [tarih] tarihinde [e-posta ve uygulama içi bildirim] ile bilgi verilmiştir / verilecektir. Veri işleyen olarak [sağlayıcı, ülke] [etkilenmiştir / etkilenmemiştir].
+> [TARİH SAAT] tarihinde, [nasıl öğrenildi] üzerine, veri sorumlusu [AD SOYAD] tarafından işletilen [Moyo Ebeveyn / Moyo Oyun / Moyo Mercek] uygulamasında [ihlalin kısa tanımı] tespit edilmiştir. İhlal [başlangıç] ile [bitiş] arasında gerçekleşmiştir. Etkilenen veri kategorileri: [liste]; etkilenen kayıtlar arasında özel nitelikli veri içerebilecek kayıt [vardır/yoktur]. Etkilenen kişi sayısı yaklaşık [sayı] olup bunların [sayısı] çocuktur (çocuk verisi velisi tarafından oluşturulan profillere aittir). İhlal fark edilir edilmez [alınan acil tedbirler] uygulanmış, [kalıcı düzeltme] yapılmıştır. İlgili kişilere [tarih] tarihinde [e-posta ve uygulama içi bildirim] ile bilgi verilmiştir / verilecektir. Veri işleyen olarak [sağlayıcı, ülke] [etkilenmiştir / etkilenmemiştir].
 
 ### 12.2 Ebeveyne e-posta
 
@@ -171,27 +173,27 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 >
 > **Ne yaptık?** Sorunu [TARİH SAAT]'te kapattık, [ör. bütün oturumları kapattık ve güvenlik anahtarlarını yeniledik] ve durumu Kişisel Verileri Koruma Kurulu'na bildirdik.
 >
-> **Ne yapmanızı öneriyoruz?** [ör. ParentApp'e yeniden giriş yapın ve şifrenizi değiştirin. Bizden geliyormuş gibi görünen ve şifre ya da kod isteyen e-postalara yanıt vermeyin; biz şifrenizi hiçbir zaman sormayız.]
+> **Ne yapmanızı öneriyoruz?** [ör. Moyo Ebeveyn uygulamasına yeniden giriş yapın ve şifrenizi değiştirin. Bizden geliyormuş gibi görünen ve şifre ya da kod isteyen e-postalara yanıt vermeyin; biz şifrenizi hiçbir zaman sormayız.]
 >
 > Sorularınız için bu e-postayı yanıtlayabilir ya da `kvkk@moyoapp.com.tr` adresine yazabilirsiniz.
 >
 > Yaşattığımız endişe için özür dileriz.
-> [ŞİRKET UNVANI]
+> Moyo · [AD SOYAD]
 
 ### 12.3 Uygulama içi bildirim (`admin_notify`)
 
 - **Başlık:** Güvenlik bildirimi
 - **Metin:** Hesabınızı etkileyebilecek bir güvenlik sorunu yaşadık ve kapattık. Ayrıntıları ve önerilerimizi e-posta adresinize gönderdik.
 
-### 12.4 Uzmana ya da kliniğe e-posta (danışan kayıtları)
+### 12.4 Uzmana ya da kliniğe e-posta (uzmanın aile kayıtları)
 
-> **Konu:** ClinicApp güvenlik bildirimi — danışan kayıtları
+> **Konu:** Moyo Mercek güvenlik bildirimi — aile kayıtları
 >
 > Merhaba [AD],
 >
-> [TARİH] tarihinde ClinicApp'te [kısa tanım] fark ettik. Kliniğinize ait [hangi kayıtlar: ör. 3 danışanın hedef kayıtları] [ARALIK] arasında yetkisiz erişime açık kalmış olabilir. Uzman notlarınızın metni [etkilendi / etkilenmedi].
+> [TARİH] tarihinde Moyo Mercek'te [kısa tanım] fark ettik. Kliniğinize ait [hangi kayıtlar: ör. 3 ailenin hedef kayıtları] [ARALIK] arasında yetkisiz erişime açık kalmış olabilir. Uzman notlarınızın metni [etkilendi / etkilenmedi].
 >
-> Sorunu [TARİH SAAT]'te kapattık. Etkilenen danışanların listesi ve ayrıntılı bilgi ekte / ClinicApp'te. [Veri işleyen seçeneği: Veri sorumlusu olarak Kurul'a ve ailelere bildirim yapmanız gerekebilir; bunun için ihtiyaç duyduğunuz bütün bilgiyi sağlarız.] [Ayrı veri sorumlusu seçeneği: Durumu Kurul'a ve etkilenen ailelere biz de bildirdik.]
+> Sorunu [TARİH SAAT]'te kapattık. Etkilenen ailelerin listesi ve ayrıntılı bilgi ekte / Moyo Mercek'te. [Veri işleyen seçeneği: Veri sorumlusu olarak Kurul'a ve ailelere bildirim yapmanız gerekebilir; bunun için ihtiyaç duyduğunuz bütün bilgiyi sağlarız.] [Ayrı veri sorumlusu seçeneği: Durumu Kurul'a ve etkilenen ailelere biz de bildirdik.]
 >
 > İletişim: `kvkk@moyoapp.com.tr`
 
@@ -202,7 +204,8 @@ Her olay için (bildirim yapılmasa bile) şu alanlar doldurulur:
 ## Avukata notlar
 
 1. **Bildirim eşiği:** KVKK md. 12/5 ve 2019/10 sayılı Kurul kararında risk eşiği yazılı değil; 6. bölümdeki "veri başkalarınca elde edildiyse ya da dışlanamıyorsa bildir" kuralı doğru mu? Yalnız erişilemezlik ya da silinme olaylarında (veri kimsenin eline geçmeden) bildirim gerekir mi?
-2. **Kim bildirir (danışan kayıtları):** Veri sorumlusu seçimine (gizlilik 4. bölüm A/B) göre Kurul'a ve ailelere bildirimi klinik mi biz mi yaparız; Veri İşleme Eki'ne "gecikmeden, en geç [SÜRE] saat içinde kliniğe bildirim" süresi yazılmalı (öneri: 24 saat).
+2. **Kim bildirir (uzmanın aile kayıtları):** Veri sorumlusu seçimine (gizlilik 4. bölüm A/B) göre Kurul'a ve ailelere bildirimi klinik mi biz mi yaparız; Veri İşleme Eki'ne "gecikmeden, en geç [SÜRE] saat içinde kliniğe bildirim" süresi yazılmalı (öneri: 24 saat).
 3. **Bildirim kanalı ve form:** Kurul'un güncel ihlal bildirim kanalı (çevrim içi form / VERBİS) ve formun güncel alanları; VERBİS kaydımız yoksa bildirimin nasıl yapılacağı.
 4. **Veliye bildirim:** Ailede kayıtlı olmayan ikinci bir veli (ör. ayrı yaşayan ebeveyn) bilinmiyorsa yalnız kayıtlı ebeveynlere bildirmek yeterli mi?
 5. **Sahte uzman vakası:** Ebeveynin rızasıyla ama aldatılarak bir sahte uzmana paylaşılan çocuk verisi "kanuni olmayan yolla elde etme" sayılıp Kurul'a bildirim gerektirir mi?
+6. **Terim (20 Kasım 2026):** iç belgelerde "sağlık verisi" yerine "özel nitelikli veri içerebilecek kayıtlar" kullanıldı (`hukuk_notlari.md` M.2). Kurul formundaki "özel nitelikli veri var mı" sorusu ise evet/hayır ister; davranış kaydı, davranış olayı ve uzman notu etkilenen bir ihlalde formda nasıl yanıt verileceği (şüphede "vardır" mı) avukata. Tanı ve ilaç yanıtları 14 Kasım 2026'da silindiği için artık sistemde yok.
