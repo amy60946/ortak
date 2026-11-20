@@ -16,6 +16,8 @@
 - Her onayı **istediğin an geri alırsın;** erişim hemen biter.
 - Hangi metni ne zaman onayladığın, metnin sürümüyle birlikte kaydedilir.
 
+"Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
+
 ## Bütün rıza ekranları için ortak kurallar
 
 1. Rıza ekranından **önce**, aynı ekranın üstünde kısa bir aydınlatma kutusu ve "Aydınlatma Metni'nin tamamı" bağlantısı (`aydinlatma-ebeveyn`) gösterilir. Aydınlatmayı okumak rıza sayılmaz.
@@ -44,7 +46,7 @@
 
 ### 1.2 Ekranda gösterilecek tam metin
 
-Üst bölüm (bugünkü ekran): **"[Unvan] [Uzman adı] ([Klinik adı]), [çocuğun adı] ([yaş grubu]) için seni davet etti. Bilgiler doğru mu?"** Ad ve yaş grubu düzenlenebilir; ailede başka çocuk varsa onlar da işaretlenebilir. Uzman hakkında doğrulama ya da rozet bilgisi gösterilmez (belge yükleme özelliği kaldırıldı).
+Üst bölüm (bugünkü ekran): **"[Unvan] [Uzman adı] ([Klinik adı]), [çocuğun adı] ([yaş grubu]) için seni davet etti. Bilgiler doğru mu?"** Ad ve yaş grubu düzenlenebilir; ailede başka çocuk varsa onlar da işaretlenebilir. Uzman hakkında doğrulama ya da rozet bilgisi gösterilmez.
 
 Uyarı (`hukuk_notlari.md` E; yalnız ürün adı güncellendi):
 
@@ -74,7 +76,7 @@ Rıza cümlesi (yeni):
 
 ### 1.6 Kayıt ve sürüm
 
-`clinic_links.consent_version`, `consent_by`, `consent_at`. Bugün `uzman-paylasim-v1` adıyla yalnız uyarı (E) ve onay kutusu kaydediliyor. Bu taslak ekrana rıza cümlesini ve kısa aydınlatmayı ekliyor. **Kullanıcı kararı (20 Kasım 2026):** sürüm `uzman-paylasim-v1` kalır; bu metin v1'in kapsamıdır ve 1.1'deki liste Ebeveyn Aydınlatma Metni 5.3 ile aynıdır.
+`clinic_links.consent_version`, `consent_by`, `consent_at`. Bugün `uzman-paylasim-v1` adıyla yalnız uyarı (E) ve onay kutusu kaydediliyor. Bu taslak ekrana rıza cümlesini ve kısa aydınlatmayı ekliyor. Sürüm `uzman-paylasim-v1` kalır; bu metin v1'in kapsamıdır ve 1.1'deki liste Ebeveyn Aydınlatma Metni 5.3 ile aynıdır.
 
 ---
 
@@ -126,7 +128,7 @@ Kutu boş bırakılırsa yeni uzmanla paylaşım yine olur (1. bölüm), ama ön
 5. **Tanışma sorularının sınırı:** tanı ve ilaç soruları 14 Kasım 2026'da kalktı. Kalan "Çocuk bir psikolog, psikiyatrist ya da terapistle çalışıyor mu?" ve davranış sıklığı soruları (öfke nöbeti, endişe, dikkat isteyen işlerden kaçınma; 14 Kasım'da eklenen iki günlük davranış maddesi) rızasız alınıyor ve uzmana gitmiyor. Özel nitelikli veri sayılırlarsa ayrı açık rıza gerekir mi? Davranış kayıtları için de ayrı rıza gerekip gerekmediği (`10-aydinlatma-ebeveyn.md` not 1).
 6. **Yurt dışında saklama:** özel nitelikli veri içerebilecek kayıtlar yurt dışındaki sunucuda tutulacak; bu taslakta yurt dışı aktarım rızası işleme rızasıyla birleştirilmedi, yalnız bilgi olarak yazıldı. 2024 sonrası md. 9'da standart sözleşme yeterli mi, yoksa özel nitelikli veri için ayrı açık rıza mı gerekir (`hukuk_notlari.md` I2)?
 7. **`uzman-gecis-v1` (B) metni:** (a) "Önceki uzmanın adı ve bilgileri yeni uzmana gösterilmez" kesin bir ifade; metindeki adların gizlenmesi "en iyi çaba" (yazım hatalı ya da kısaltılmış ad yakalanmayabilir) — ifade yumuşatılmalı mı (sürüm v2 olur)? (b) Ebeveyn, hiç görmediği notların aktarımına rıza veriyor; rıza "bilgilendirmeye dayalı" sayılır mı? (c) Önceki uzmana aktarım anında bildirim gerekir mi (`hukuk_notlari.md` 5. bölüm soru 2)?
-8. **Geri almanın sonucu:** paylaşım durdurulunca uzmanın kendi notları klinikte kalıyor. Rıza geri alınınca bu notların silinmesi ya da anonimleştirilmesi gerekir mi (KVKK md. 7), yoksa uzmanın mesleki kayıt saklama yükümlülüğü mü önce gelir? Veri sorumlusunun kim olduğuna bağlı.
+8. **Geri almanın sonucu:** paylaşım durdurulunca uzmanın kendi notları klinikte kalıyor. Rıza geri alınınca bu notların silinmesi ya da anonimleştirilmesi gerekir mi (KVKK md. 7), yoksa uzmanın mesleki kayıt saklama yükümlülüğü mü önce gelir? Veri sorumlusunun kim olduğuna bağlı (kullanıcı kararı 20 Kasım 2026: uzman kayıtlarında uzman veri sorumlusu, Moyo veri işleyen; silme talebi bu kayıtlar için uzmana yönelir).
 9. **Kimin rızası:** rızalar onaylayan tek ebeveynle kaydediliyor; diğer velinin bilgisi F5 beyanına dayanıyor. Ayrıca 13 yaş ve üstü çocuğun (yaş grubu C) kendi görüşü alınmalı mı?
 10. **Madde numarası:** 7499 sayılı Kanun (1 Haziran 2024) sonrası özel nitelikli veride açık rıza md. 6/3-a; önceki taslaktaki "md. 6/2" atıfları buna çevrildi. Avukat teyidi.
 11. **Açık rıza sözleşmeye gömülmez (kullanıcı, C.11):** Moyo Ebeveyn Kullanım Koşulları 6.3 bu ekranın varlığını ve kapsamını bildirir, rızanın kendisi bağlanma anında bu ekranda ayrıca alınır (ortak kural 4). Uzman Hizmet Sözleşmesi 7.4: uzman ailenin açık rızası olmadan hiçbir kaydı göremez.

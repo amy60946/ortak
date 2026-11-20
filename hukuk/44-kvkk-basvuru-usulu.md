@@ -14,7 +14,7 @@
 - Çocuğunuz adına veli olarak başvurabilirsiniz.
 - Uzmanın aileyle ilgili notları gibi kayıtlarda başvurunuzu uzmanın kliniğine yönlendirebiliriz (8. bölüm).
 
-"Moyo" ya da "Platform": [AD SOYAD] tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Bu metinde "biz", Moyo'yu işleten [AD SOYAD]'ı (veri sorumlusu) anlatır.
+"Moyo" ya da "Platform": [AD SOYAD] tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Bu metinde "biz", Moyo'yu işleten veri sorumlusunu ([AD SOYAD]) anlatır.
 
 ## 1. Kimler başvurabilir?
 
