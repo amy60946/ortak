@@ -1,13 +1,16 @@
-# Pazarlama ve reklam kuralları (Pofi Adası · ParentApp · ClinicApp)
+# Pazarlama ve reklam kuralları (Moyo: Moyo Ebeveyn · Moyo Oyun · Moyo Mercek)
 
 | Anahtar | iç belge | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
 |---|---|---|---|---|---|
 | Kim kullanır | "Marketing" penceresi ve pazarlama işi yapan herkes | Dayanak | 6502 s. TKHK, Ticari Reklam ve Haksız Ticari Uygulamalar Yönetmeliği, Reklam Kurulu kılavuzları, 6563 s. Kanun + İYS, KVKK, Apple App Store kuralları |
 
 > 28 Ekim 2026, kullanıcı isteği (Marketing penceresi açılırken). Pazarlama metni, reklam, sosyal medya içeriği, mağaza sayfası ve kampanya hazırlanırken bu liste uygulanır. Ürünle ilgili her iddia `hukuk/00-olgular.md` ve `sozlesme/`'deki gerçeğe dayanır; olmayan özellik vaat edilmez. Madde numaraları avukat tarafından doğrulanacak.
+>
+> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ürün adları: Moyo Ebeveyn (eski ParentApp), Moyo Oyun (eski Pofi Adası / GameApp), Moyo Mercek (eski ClinicApp; aileye dönük tanıtımda Moyo Uzman).
 
 ## Kısaca
 
+- **Konum:** Moyo bir takip aracıdır; sağlık hizmeti sunmaz, tanı koymaz (1.7).
 - **Sağlık iddiası yok:** ürünlerimiz tanı koymaz, tedavi etmez, DEHB'yi ya da herhangi bir durumu "iyileştirmez". "Klinik olarak kanıtlanmış", "terapi yerine geçer" gibi ifadeler kullanılmaz.
 - **Çocuğa doğrudan satış yok:** reklam ebeveyne ve uzmana yönelir; çocuğu satın almaya ya da ebeveynini ikna etmeye çağıran dil kullanılmaz.
 - **Gerçek ve doğrulanabilir:** sayı, oran, "en iyi", "ilk" gibi iddialar belgelenmeden kullanılmaz; kullanıcı yorumları gerçek ve izinli olur.
@@ -20,18 +23,21 @@
 ## 1. Ürün iddiaları
 
 1.1. Yalnız var olan özellik anlatılır (kaynak: `hukuk/00-olgular.md`, `sozlesme/akislar.md`). Yakında gelecek bir özellik "yakında" diye açıkça işaretlenir.
-1.2. **Kullanılabilir:** "ev rutinlerini oyunlaştırır", "ebeveyn ve çocuk arasında görev ve ödül düzeni kurar", "uzmanınızla ilerlemeyi paylaşmanızı sağlar (izninizle)", "reklam yok, veri satışı yok".
+1.2. **Kullanılabilir:** "ev rutinlerini oyunlaştırır", "ebeveyn ve çocuk arasında rutin ve ödül düzeni kurar", "uzmanınızla ilerlemeyi paylaşmanızı sağlar (izninizle)", "reklam yok, veri satışı yok".
 1.3. **Kullanılamaz:** "DEHB tedavisi", "dikkat eksikliğini giderir", "klinik olarak kanıtlanmış", "terapi yerine geçer", "çocuğunuzun zekâsını ölçer", "tanı koyar", "garantili sonuç". Göstergeler tanı, zekâ ya da dikkat puanı değildir (ortak kuralı).
 1.4. Araştırmaya dayanan bir ifade (ör. "rutinler çocukların öz düzenlemesine yardımcı olabilir") kullanılacaksa kaynak gösterilir, ifade genel bilgi olarak kurulur, ürünün etkisi gibi sunulmaz.
-1.5. Fiyat ve deneme: "ücretsiz" ifadesi yalnız gerçekten ücretsiz olan için (Pofi Adası ücretsiz; ParentApp 7 gün deneme sonra ücretsiz planda sınırlı; ClinicApp 7 gün deneme). Abonelik fiyatı, dönem ve otomatik yenileme açıkça yazılır. İndirim varsa önceki fiyat ve süre gerçek olur.
+1.5. Fiyat ve deneme: "ücretsiz" ifadesi yalnız gerçekten ücretsiz olan için. Moyo Oyun ücretsiz. Moyo Ebeveyn **14 gün** ücretsiz deneme (kart istenmez, kendiliğinden ücretli aboneliğe dönmez; bitince ücretsiz planda sınırlı özellikle sürer); başka bir ailenin davet koduyla (Aile davet et) katılan aile **21 gün**; uzman daveti süreyi değiştirmez (kullanıcı kararı 18 Kasım 2026, uygulandı 19 Kasım 2026). Moyo Mercek **14 gün** ücretsiz deneme (kart yok; App Store aboneliğinde ayrıca deneme yok). Tanıtımda tek bir süre yazılıyorsa 14 gündür; 21 gün yalnız davet kodunu anlatan yerde, koşuluyla birlikte yazılır. Abonelik fiyatı, dönem ve otomatik yenileme açıkça yazılır; "ücretsiz deneme" ifadesinin yanında aboneliğin fiyatı, dönemi ve kendiliğinden yenilendiği, Moyo Ebeveyn'de ayrıca denemenin kendiliğinden ücretli aboneliğe dönmediği yazılır. İndirim varsa önceki fiyat ve süre gerçek olur.
 1.6. Karşılaştırmalı reklam: rakip (ör. Joon) adı ancak doğru, karşılaştırılabilir ve kötüleyici olmayan bir karşılaştırmada kullanılır; avukata danışılır.
+1.7. **Konum ve son satır (öneri, kullanıcı kararı bekler; `50-uygulama-ici-metinler.md` §15):** Moyo bir takip aracıdır. Mağaza açıklamasının ve tanıtım sayfasının son satırı: "Moyo bir takip aracıdır; sağlık hizmeti sunmaz, tanı koymaz." (avukat dosyası önerisi; dış dilin konumla aynı olması için).
+1.8. **Ürün adları ve terimler (kullanıcı kararları 9–17 Kasım 2026; `sozlesme/durumlar.md` 5B):** hizmetin adı Moyo; ürünler Moyo Ebeveyn, Moyo Oyun, Moyo Mercek. Aileye dönük tanıtımda (çatı sayfa, Moyo Ebeveyn sayfası) uzman ürünü **Moyo Uzman**; "Moyo Mercek" adı yalnız uzman platformunda. Aile ve uzman metinlerinde iş nesnesi **rutin** (paket) ve **adım** (tek iş), oyunu anlatan yerde **macera** ("Eklediğiniz her rutin oyunda çocuğunuz için bir macera olur."). Tanıtım metninde "danışan" yerine "aile", gözlem anlamında "izlemek" yerine "takip"; "klinik karar" kullanılmaz. Eski adlar (ParentApp, ClinicApp, GameApp, Pofi Adası) dış metinde kullanılmaz.
+1.9. **14 Kasım 2026 tanıtım kararları** (açılışta tanı adı yok, tanı adları yalnız SSS'de; "müdahale" sözcüğü yok; "Takip süreci"; "Tanı koymaz, tedavi yerine geçmez" koruyucu cümlesi kalır; kullanıcının bilerek kabul ettiği iki risk: "4–6 saatlik faturalandırılamayan iş yükü" ve "Ev programlarına uyumu artıran"): `sozlesme/hukuk_notlari.md` M.2. §7.1 kontrolünde bu iki ifade işaretlenir (1.3 ve ortak kural 7 ile çelişir).
 
 ## 2. Çocuklar
 
 2.1. Reklam ve içerik **ebeveyne ve uzmana** yönelir. Çocuğa "hemen indir", "annene/babana aldır" gibi doğrudan çağrı yapılmaz; çocuğun saflığı ya da güveni istismar edilmez.
-2.2. Görselde çocuk kullanılacaksa: veli yazılı izni, yüzün gösterilmesi için ayrıca izin; gerçek kullanıcı çocuğun verisi (ad, ekran görüntüsündeki görevler) reklamda kullanılmaz — örnek veriler uydurma adlarla hazırlanır.
-2.3. Pofi Adası tanıtımında oyun içi coin ve ödüllerin para değeri olmadığı yanıltılmaz; "kazan", "para" gibi ifadelerden kaçınılır.
-2.4. App Store: Pofi Adası "Kids" kategorisinde değil; mağaza metni ve ekran görüntüleri yaş grubuna uygun, doğru ve uygulamanın gerçek görüntüsü olur (Apple 2.3).
+2.2. Görselde çocuk kullanılacaksa: veli yazılı izni, yüzün gösterilmesi için ayrıca izin; gerçek kullanıcı çocuğun verisi (ad, ekran görüntüsündeki rutin ve adımlar) reklamda kullanılmaz — örnek veriler uydurma adlarla hazırlanır.
+2.3. Moyo Oyun tanıtımında oyun içi coin ve ödüllerin para değeri olmadığı yanıltılmaz; "kazan", "para" gibi ifadelerden kaçınılır.
+2.4. App Store: Moyo Oyun "Kids" kategorisinde değil; mağaza metni ve ekran görüntüleri yaş grubuna uygun, doğru ve uygulamanın gerçek görüntüsü olur (Apple 2.3).
 
 ## 3. Kişisel veri ve izleme
 
@@ -52,11 +58,11 @@
 5.2. Kullanıcı yorumu ve "başarı hikâyesi" gerçek olur, yazılı izinle kullanılır, ürünün tipik sonucu gibi sunulmaz; çocuk ya da sağlık bilgisi içermez.
 5.3. Sahte hesap, satın alınmış yorum, uydurma kullanıcı sayısı kullanılmaz.
 
-## 6. Uzmanlar (ClinicApp tanıtımı)
+## 6. Uzmanlar (Moyo Mercek tanıtımı)
 
 6.1. Uzmanlara yönelik tanıtımda uzmanın meslek etiğine uygun dil kullanılır; platform hasta yönlendirmez, uzmana danışan vaat etmez.
 6.2. "Psikologlar öneriyor", "uzman onaylı" gibi ifadeler yalnız belgelenmiş ve izinli bir dayanakla; bir uzmanın adı/görüntüsü ancak yazılı izinle ve kendi meslek kurallarına uygunsa kullanılır.
-6.3. "Belgesi incelendi" rozeti tanıtımda "doğrulanmış uzman", "onaylı terapist" gibi abartılmaz (`22-uzman-hizmet-sozlesmesi.md` A11).
+6.3. Uzman rozeti "Belge yükledi" (aileye "Uzman diploma belgesini yükledi"; 14 Kasım 2026'ya kadar "Belgesi incelendi") yalnız belgenin yüklendiğini söyler; Moyo bir doğrulama ya da yetki beyanı vermez. Tanıtımda "doğrulanmış uzman", "onaylı terapist", "belgesi incelenmiş uzman" gibi ifadeler kullanılmaz (`22-uzman-hizmet-sozlesmesi.md` A11; özellik lansmanda kapalı).
 
 ## 7. Süreç
 
@@ -82,5 +88,5 @@ Akış ve teknik ayrıntı: `sozlesme/paylasim.md`.
 1. Çocuklara yönelik reklam, sağlık beyanı ve karşılaştırmalı reklam için güncel yönetmelik maddeleri ve Reklam Kurulu ilke kararları.
 2. Uzman tanıklığı (testimonial) ve meslek örgütlerinin reklam yasakları.
 3. Kampanya ölçümü için mağaza dışı araç kullanılacaksa (ör. reklam pikseli) gereken onay ve aydınlatma metni.
-4. Ürünü anmayan bilgi içeriği (ör. ebeveynlere yönelik rutin, uyku, davranış konuları) şirket hesabından yayımlanınca ticari reklam sayılır mı; "Your brand" / reklam etiketi gerekir mi.
+4. Ürünü anmayan bilgi içeriği (ör. ebeveynlere yönelik rutin, uyku, davranış konuları) Moyo hesabından (işletmeci gerçek kişi) yayımlanınca ticari reklam sayılır mı; "Your brand" / reklam etiketi gerekir mi.
 5. Yapay zekâ ile üretilmiş görsel/ses için Türkiye'de platform etiketine ek bir yükümlülük var mı; yapay zekâ seslendirmede ses sahibinin izni. (Etiketsiz yayın kararı ve riski: `sozlesme/hukuk_notlari.md` soru 14.)

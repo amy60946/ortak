@@ -1,51 +1,55 @@
 # Uygulama İçi Hukuki Metinler (yazılımcılar için)
 | Anahtar | iç belge | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | Pofi Adası (GameApp), ParentApp ve ClinicApp pencereleri; ekran ekran gösterilecek kısa metinler ve bağlı belge anahtarları | Dayanak | KVKK md. 3, 5, 6, 10, 11; 6502 s. TKHK md. 5; Kurul'un Çerez Uygulamaları Hakkında Rehberi; Apple App Review 3.1.2, 5.1.1 |
+| Nerede | Moyo Oyun (GameApp), Moyo Ebeveyn (ParentApp) ve Moyo Mercek (ClinicApp) pencereleri; ekran ekran gösterilecek kısa metinler ve bağlı belge anahtarları | Dayanak | KVKK md. 3, 5, 6, 10, 11; 6502 s. TKHK md. 5; Kurul'un Çerez Uygulamaları Hakkında Rehberi; Apple App Review 3.1.2, 5.1.1 |
+
+> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ekran metinlerinde ad kuralı: aile uygulaması kendinden "Moyo" diye söz eder, başka uygulamadan anılırken "Moyo Ebeveyn"; çocuğun oyunu "Moyo Oyun"; uzman ürünü uzmana dönük metinde "Moyo Mercek", aileye dönük metinde "Moyo Uzman". Tablolardaki uygulama adları yeni adlarla; "… penceresi" iç addır. Avukat dosyasının kısa metin önerileri §15'te (kullanıcı kararı bekler).
 
 ## Kısaca
 
 - Bu belge, üç uygulamada gösterilecek hukuki kısa metinlerin **tek kaynağıdır**. Her metin için uygulama, ekran, metin ve bağlı belge anahtarı yazılıdır.
 - Uzun metinler (koşullar, aydınlatma, gizlilik) uygulamaya gömülmez; `legal` sunucu işlevinden ya da `legal_documents_for(app)` ile açılır. Burada yalnız ekranın kendi kısa metinleri vardır.
 - Onay kutuları **önceden işaretli gelmez**. Kullanım Koşulları onayı, aydınlatmayı okuma ve açık rızalar **ayrı satırlardır**; birbirine bağlanmaz.
-- Açık rıza metinleri (`saglik-yanit-v1`, `uzman-paylasim-v1`, `uzman-gecis-v1`) kendi akışlarında kalır; bu belge onları tekrar etmez.
+- Açık rıza metinleri (`uzman-paylasim-v1`, `uzman-gecis-v1`) kendi akışlarında kalır; bu belge onları tekrar etmez. Tanışmadaki sağlık yanıtı rızası (`saglik-yanit-v1`) tanı ve ilaç sorularıyla birlikte 14 Kasım 2026'da kalktı.
+- Avukat dosyasının önerdiği kısa metinler §15'te; uygulamaya alınmaları kullanıcı kararıyla (rapor alt satırı uygulandı).
 
 ## 0. Genel kurallar
 
 | Kural | Ayrıntı |
 |---|---|
-| Hitap | ParentApp ve ClinicApp: "sen" (uygulamaların mevcut dili). Pofi Adası: çocuğa kısa ve sade; ebeveyn kapısının arkası ebeveyne "sen" |
+| Hitap | Moyo Ebeveyn ve Moyo Mercek: "sen" (uygulamaların mevcut dili). Moyo Oyun: çocuğa kısa ve sade; ebeveyn kapısının arkası ebeveyne "sen" |
+| Terimler | Aile ve uzman ekranlarında iş nesnesi **rutin** (paket) ve **adım** (tek iş), oyun ekranlarında **macera** (`sozlesme/durumlar.md` 5B). Gözlem anlamında "izle" yerine "takip"; "klinik karar" kullanılmaz; kendi metinlerimizde kayıtlara "sağlık verisi" denmez (`00-olgular.md` §1a). Moyo Mercek ekranlarında "danışan" kalır |
 | Değişkenler | `{süslü parantez}` = uygulamanın doldurduğu değer (ör. `{fiyat}`). `[KÖŞELİ]` = canlıdan önce bir kez doldurulacak yer tutucu |
 | Bağlantılar | Altı çizili metin = ilgili belgeyi açan bağlantı (anahtar tabloda) |
 | Onay kaydı | Onay isteyen metinler `legal_accept(app, [{key, version}])` ile kaydedilir; bekleyenler `legal_pending(app)` (`migrations/20261027200000_legal.sql`, uygulandı 27 Ekim 2026) |
 | Kayıt sırasında | Kayıt anında oturum henüz açık değil (e-posta doğrulaması). İşaretlenen sürümler kayıt bilgisine eklenir; ilk girişte `legal_accept` ile yazılır ya da ilk girişte `legal_pending` ekranı gösterilir |
-| Pofi Adası sesli okuma | Çocuğa gösterilen her yeni metin için ses üretilir (game-app `CLAUDE.md`, `build_voice.py --missing`) |
+| Moyo Oyun sesli okuma | Çocuğa gösterilen her yeni metin için ses üretilir (game-app `CLAUDE.md`, `build_voice.py --missing`) |
 | Değişiklik | Bu belgedeki bir metin değişirse bağlı belgeyle tutarlılığı kontrol edilir; açık rıza metni değişirse rıza sürümü de değişir (`-v2`) |
-| Diğer taslaklar | ClinicApp kısa metinleri `22-uzman-hizmet-sozlesmesi.md` Ek-3'te, çerez bandı `40-cerez-politikasi.md`'de, çocuğa kısa not `11-aydinlatma-cocuk-ve-veli.md` Kısım B'de de yazılı; bu belgedekilerle aynı tutulur |
+| Diğer taslaklar | Moyo Mercek kısa metinleri `22-uzman-hizmet-sozlesmesi.md` Ek-3'te, çerez bandı `40-cerez-politikasi.md`'de, çocuğa kısa not `11-aydinlatma-cocuk-ve-veli.md` Kısım B'de de yazılı; bu belgedekilerle aynı tutulur |
 
 **Belge anahtarları:**
 
 | Anahtar | Belge | Uygulama | Onay ister |
 |---|---|---|---|
-| `kosullar-parentapp` | ParentApp Kullanım Koşulları (abonelik dahil) | parent | Evet |
-| `kosullar-gameapp` | Pofi Adası Koşulları (veli çocuk adına onaylar) | child (onay ParentApp'te) | Evet |
-| `sozlesme-uzman` | ClinicApp Uzman Hizmet Sözleşmesi | clinic | Evet |
+| `kosullar-parentapp` | Moyo Ebeveyn Kullanım Koşulları (abonelik dahil) | parent | Evet |
+| `kosullar-gameapp` | Moyo Oyun Koşulları (veli çocuk adına onaylar) | child (onay Moyo Ebeveyn'de) | Evet |
+| `sozlesme-uzman` | Moyo Mercek Uzman Hizmet Sözleşmesi | clinic | Evet |
 | `veri-isleme-eki` | Veri İşleme Eki (sözleşmenin Ek-1'i) | clinic | Evet |
 | `aydinlatma-ebeveyn` | Ebeveyn Aydınlatma Metni | parent | Gösterildi kaydı (kutu yok) |
 | `aydinlatma-uzman` | Uzman Aydınlatma Metni | clinic | Gösterildi kaydı (kutu yok) |
-| `aydinlatma-cocuk` | Pofi Adası Çocuk ve Veli Aydınlatma Metni | child (ParentApp'te gösterilir) | Gösterildi kaydı (kutu yok) |
+| `aydinlatma-cocuk` | Moyo Oyun Çocuk ve Veli Aydınlatma Metni | child (Moyo Ebeveyn'de gösterilir) | Gösterildi kaydı (kutu yok) |
 | `gizlilik` | Gizlilik Politikası | hepsi + web | Hayır |
 | `alt-isleyenler` | Hizmet Sağlayıcılar Listesi | hepsi + web | Hayır |
 | `kvkk-basvuru` | KVKK Başvuru Usulü | hepsi + web | Hayır |
-| `cerez-clinicapp-web` | ClinicApp Web Çerez Politikası | clinic, web | Hayır |
-| `acik-riza-metinleri` | ParentApp açık rıza metinleri (her rıza kendi sürümüyle: `saglik-yanit-v1`, `uzman-paylasim-v1`, `uzman-gecis-v1`) | parent, web | Ayrı rıza kutuları |
+| `cerez-clinicapp-web` | Web Çerez Politikası (Moyo Mercek web; Moyo Ebeveyn web `/app/`) | clinic, web | Hayır |
+| `acik-riza-metinleri` | Moyo Ebeveyn açık rıza metinleri (her rıza kendi sürümüyle: `uzman-paylasim-v1`, `uzman-gecis-v1`; `saglik-yanit-v1` 14 Kasım 2026'da kalktı) | parent, web | Ayrı rıza kutuları |
 
 ## 1. Kayıt ekranı onay satırları
 
-### 1.1 ParentApp — kayıt
+### 1.1 Moyo Ebeveyn — kayıt
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Kayıt ol (e-posta + şifre), "Hesap oluştur" düğmesinin üstü | `kosullar-parentapp`, `aydinlatma-ebeveyn`, `gizlilik` |
+| Moyo Ebeveyn | Kayıt ol (e-posta + şifre), "Hesap oluştur" düğmesinin üstü | `kosullar-parentapp`, `aydinlatma-ebeveyn`, `gizlilik` |
 
 > ☐ <u>Kullanım Koşulları</u>'nı okudum, kabul ediyorum.
 >
@@ -54,19 +58,20 @@
 > <small><u>Gizlilik Politikası</u></small>
 
 - Koşullar kutusu işaretlenmeden "Hesap oluştur" pasif kalır. Aydınlatma bir onay değil, bilgilendirmedir: kutu konmaz; hesap oluşunca koşulların onayıyla birlikte aydınlatmanın **gösterildiği** de `legal_accept` ile kaydedilir (karar 27 Ekim 2026, avukat teyidi bekler).
-- Bu ekranda **açık rıza kutusu yoktur**. Sağlık soruları ve uzman paylaşımı kendi ekranlarında, isteğe bağlı sorulur. Pazarlama izni bugün istenmez.
+- Bu ekranda **açık rıza kutusu yoktur**. Uzman paylaşımı kendi ekranında, isteğe bağlı sorulur (tanışmadaki sağlık soruları ve rızası 14 Kasım 2026'da kalktı). Pazarlama izni bugün istenmez.
 
 **Güncel (kullanıcı kararı 28 Ekim 2026, parent-app):** "Kayıt ol" düğmesinin üstünde tek küçük satır, tek kutu:
 
 > ☐ <u>Kullanım Koşulları</u>'nı kabul ediyorum. <u>Aydınlatma</u> · <u>Gizlilik</u>
 
 - Kutu işaretlenmeden "Kayıt ol" pasif (etkin eylem). Aydınlatma ve gizlilik yalnız bağlantı; aydınlatmanın gösterildiği hesap açılınca kaydedilir.
+- *Öneri (avukat dosyası, kullanıcı kararı bekler):* aynı kutunun metni §15 satır 1 ile uzar ("Moyo bir takip aracıdır; …").
 
-### 1.2 ClinicApp — kayıt
+### 1.2 Moyo Mercek — kayıt
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü; ekip koduyla katılım ekranı | `sozlesme-uzman`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
+| Moyo Mercek (iPad + web) | Kayıt ol, "Hesap oluştur" düğmesinin üstü; ekip koduyla katılım ekranı | `sozlesme-uzman`, `veri-isleme-eki`, `aydinlatma-uzman`, `gizlilik` |
 
 **Güncel (kullanıcı kararı 28 Ekim 2026, ortak#94):** "Hesap oluştur" düğmesinin hemen üstünde tek küçük satır:
 
@@ -75,40 +80,41 @@
 - Kabul **etkin bir eylemle** olmalı: satırdaki kutu işaretlenmeden ya da düğme "Kabul et ve hesap oluştur" olmadan hesap açılmaz (sessizce "kullanarak kabul" sayılmaz — `03-joon-karsilastirma.md` X4).
 - Aydınlatma bağlantıdır, kutusu yoktur; hesap açılınca gösterildiği kaydedilir.
 - *(Önceki uzun biçim: iki satır — sözleşme kutusu + ayrı aydınlatma satırı. Sözleşme Ek-3 bu kısa biçime göre güncellenecek.)*
+- *Öneri (avukat dosyası, kullanıcı kararı bekler):* §15 satır 5 ("Moyo Mercek bir takip panelidir. …"); 3 Kasım 2026 kararıyla çelişebilir.
 
-### 1.3 ParentApp — Pofi Adası'nı bağlamadan önce (veli onayı)
+### 1.3 Moyo Ebeveyn — Moyo Oyun'u bağlamadan önce (veli onayı)
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Çocuk › "Giriş kodu üret" / QR — yalnız ilk kez ve metin güncellenince | `kosullar-gameapp`, `aydinlatma-cocuk` |
+| Moyo Ebeveyn | Çocuk › "Giriş kodu üret" / QR — yalnız ilk kez ve metin güncellenince | `kosullar-gameapp`, `aydinlatma-cocuk` |
 
-> **Pofi Adası'nı {çocuk_adı}'nın cihazına bağlamadan önce**
+> **Moyo Oyun'u {çocuk_adı}'nın cihazına bağlamadan önce**
 >
-> Pofi Adası'nda reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {çocuk_adı}'nın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
+> Moyo Oyun'da reklam, satın alma ve dışarıdan izleme aracı (reklam ya da analiz takibi) yok. {çocuk_adı}'nın oyundaki ilerlemesi yalnız ailesine, izin verirsen uzmanına da gösterilir. Oyun ondan e-posta, konum, fotoğraf ya da ses almaz.
 >
 > *(27 Ekim'deki "izleme aracı yok" ifadesi kullanıcı sorusu üzerine netleştirildi, 28 Ekim 2026: kastedilen üçüncü taraf takip; oyunun aileye raporladığı ilerleme kaydı değil. Bkz. `sozlesme/hukuk_notlari.md` E.)*
 >
-> ☐ {çocuk_adı}'nın velisi olarak <u>Pofi Adası Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
+> ☐ {çocuk_adı}'nın velisi olarak <u>Moyo Oyun Koşulları</u>'nı okudum, çocuğum adına kabul ediyorum.
 >
-> Çocuğunun verilerinin nasıl işlendiğini <u>Pofi Adası Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
+> Çocuğunun verilerinin nasıl işlendiğini <u>Moyo Oyun Çocuk ve Veli Aydınlatma Metni</u>'nde anlatıyoruz. *(kutu yok)*
 
 - Kayıt: `legal_accept('child', …)` (çocuk cihazı onay veremez; sunucu reddeder).
 
 **Güncel (kullanıcı kararı 28 Ekim 2026: kısa, ayrıntı bağlantıda):** küçük kart; veli onayı ayrı kalır.
 
-> **Pofi Adası'nı bağlamadan önce**
+> **Moyo Oyun'u bağlamadan önce**
 >
 > Oyunda reklam, satın alma ve dışarıdan izleme aracı yok. {çocuk_adı}'nın ilerlemesini yalnız ailesi, izin verirsen uzmanı görür.
 >
-> ☐ Velisi olarak <u>Pofi Adası Koşulları</u>'nı {çocuk_adı} adına kabul ediyorum. <u>Aydınlatma</u>
+> ☐ Velisi olarak <u>Moyo Oyun Koşulları</u>'nı {çocuk_adı} adına kabul ediyorum. <u>Aydınlatma</u>
 
 - "Oyun ondan e-posta, konum, fotoğraf ya da ses almaz" cümlesi karttan çıktı; aydınlatma metninde duruyor.
 
-### 1.4 ParentApp — çocuk ekleme
+### 1.4 Moyo Ebeveyn — çocuk ekleme
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | ~~Çocuk ekle, "Kaydet" düğmesinin altı~~ **3 Kasım 2026'dan beri ekranda yok** (kullanıcı kararı: beyan Kullanım Koşulları'nda) | `kosullar-parentapp` (veli beyanı maddesi) |
+| Moyo Ebeveyn | ~~Çocuk ekle, "Kaydet" düğmesinin altı~~ **3 Kasım 2026'dan beri ekranda yok** (kullanıcı kararı: beyan Kullanım Koşulları'nda) | `kosullar-parentapp` (veli beyanı maddesi) |
 
 > ~~Çocuğu ekleyerek velisi ya da yasal temsilcisi olduğunu beyan edersin. Doğum günü ve cinsiyet isteğe bağlıdır.~~
 
@@ -118,7 +124,7 @@ Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlama
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| Üçü (Pofi Adası metinleri ParentApp'te) | Açılışta `legal_pending(app)` boş değilse tam ekran | Güncellenen belge(ler) |
+| Üçü (Moyo Oyun metinleri Moyo Ebeveyn'de) | Açılışta `legal_pending(app)` boş değilse tam ekran | Güncellenen belge(ler) |
 
 > **Koşullarımız güncellendi**
 >
@@ -134,10 +140,10 @@ Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlama
 > <small>Kabul etmek istemiyorsan <u>hesabını silebilir</u> ya da `destek@moyoapp.com.tr` adresine yazabilirsin.</small>
 
 - Birden çok metin güncellendiyse hepsi aynı ekranda alt alta; her biri ayrı kutu.
-- **ClinicApp (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
-- **ParentApp (28 Ekim 2026):** aynı küçük kart. ParentApp koşulları için bir kutu ("<u>ParentApp Kullanım Koşulları</u> metnini kabul ediyorum."); Pofi Adası metinleri güncellendiyse **ayrı** veli kutusu ("Velisi olarak <u>Pofi Adası Koşulları</u> metnini {çocuklar} adına kabul ediyorum."); aydınlatmalar kutusuz bağlantı satırı ("Verilerinin nasıl işlendiği: …"); altta "hesabını silebilir ya da KVKK başvurusu gönderebilirsin".
+- **Moyo Mercek (28 Ekim 2026):** küçük kart, tek satır; sözleşme ve eki için tek kutu; `summary` yalnız "Kısaca neler değişti?" açılır alanında.
+- **Moyo Ebeveyn (28 Ekim 2026):** aynı küçük kart. Koşullar için bir kutu ("<u>Moyo Ebeveyn Kullanım Koşulları</u> metnini kabul ediyorum."); Moyo Oyun metinleri güncellendiyse **ayrı** veli kutusu ("Velisi olarak <u>Moyo Oyun Koşulları</u> metnini {çocuklar} adına kabul ediyorum."); aydınlatmalar kutusuz bağlantı satırı ("Verilerinin nasıl işlendiği: …"); altta "hesabını silebilir ya da KVKK başvurusu gönderebilirsin".
 - Kutu işaretlenmeden "Devam et" pasif. Bu ekrandayken bile Ayarlar › Hesabımı sil, Yasal metinler ve KVKK başvurusu açılabilir olmalı.
-- **Pofi Adası koşulları güncellenince:** ParentApp'te ebeveyne "Pofi Adası koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
+- **Moyo Oyun koşulları güncellenince:** Moyo Ebeveyn'de ebeveyne "Moyo Oyun koşulları güncellendi — {çocuk_adı} adına onayla". Çocuğun oyunu bu arada kilitlenmez (karar: Avukata notlar 3).
 - **Onay istemeyen metin güncellenince** (Gizlilik Politikası, Hizmet Sağlayıcılar): kapatılabilir üst bant:
   > Gizlilik Politikamızı güncelledik. <u>Neler değişti?</u>
 
@@ -145,20 +151,20 @@ Kalan güvenceler: kayıtta Kullanım Koşulları kutusu (§1.1), oyuna bağlama
 
 | Uygulama | Ekran | Kaynak |
 |---|---|---|
-| Üçü | Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında). **ClinicApp:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026). **ParentApp:** Aile › Hesap › **"Yasal ve gizlilik"** tek satırı (eski "Yasal metinler" ve "KVKK başvurusu" satırları birleşti): metinler, Verdiğin izinler, "KVKK başvurusu ve başvurularım" (28 Ekim 2026) | `legal_documents_for(app)` |
+| Üçü | Ayarlar › Yasal metinler (Moyo Oyun'da ebeveyn kapısının arkasında). **Moyo Mercek:** Ayarlar › **"Yasal ve gizlilik"** tek sayfası — metin listesi ve KVKK başvuru formu aynı sayfada; ana ekran altındaki bağlantılar kaldırıldı (28 Ekim 2026). **Moyo Ebeveyn:** Aile › Hesap › **"Yasal ve gizlilik"** tek satırı (eski "Yasal metinler" ve "KVKK başvurusu" satırları birleşti): metinler, Verdiğin izinler, "KVKK başvurusu ve başvurularım" (28 Ekim 2026) | `legal_documents_for(app)` |
 
 Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}".
 
-| ParentApp | ClinicApp | Pofi Adası (ebeveyn kapısı arkası) |
+| Moyo Ebeveyn | Moyo Mercek | Moyo Oyun (ebeveyn kapısı arkası) |
 |---|---|---|
-| Kullanım Koşulları | Uzman Hizmet Sözleşmesi | Pofi Adası Koşulları |
+| Kullanım Koşulları | Uzman Hizmet Sözleşmesi | Moyo Oyun Koşulları |
 | Aydınlatma Metni | Veri İşleme Eki | Çocuk ve Veli Aydınlatma Metni |
 | Gizlilik Politikası | Aydınlatma Metni | Gizlilik Politikası |
-| Pofi Adası Koşulları | Gizlilik Politikası | KVKK Başvuru Usulü |
-| Pofi Adası Çocuk ve Veli Aydınlatma Metni | Hizmet Sağlayıcılar | |
+| Moyo Oyun Koşulları | Gizlilik Politikası | KVKK Başvuru Usulü |
+| Moyo Oyun Çocuk ve Veli Aydınlatma Metni | Hizmet Sağlayıcılar | |
 | Hizmet Sağlayıcılar | KVKK Başvuru Usulü | |
 | KVKK Başvuru Usulü | Çerez Politikası (yalnız web) | |
-| **Verdiğin izinler** → sağlık yanıtları, uzman paylaşımı, önceki uzman kayıtları: durum + "Geri al" | | |
+| **Verdiğin izinler** → uzman paylaşımı, önceki uzman kayıtları: durum + "Geri al" (sağlık yanıtı izni 14 Kasım 2026'da kalktı) | | |
 
 "Verdiğin izinler" alt başlığı:
 > Bu izinler isteğe bağlıdır. Geri aldığında uygulamayı kullanmaya devam edersin; ilgili paylaşım hemen durur.
@@ -167,14 +173,14 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp, ClinicApp | Ayarlar › KVKK başvurusu (ClinicApp'te "Yasal ve gizlilik" sayfasının içinde; ParentApp'te Aile › Hesap › Yasal ve gizlilik › "KVKK başvurusu ve başvurularım") | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
+| Moyo Ebeveyn, Moyo Mercek | Ayarlar › KVKK başvurusu (Moyo Mercek'te "Yasal ve gizlilik" sayfasının içinde; Moyo Ebeveyn'de Aile › Hesap › Yasal ve gizlilik › "KVKK başvurusu ve başvurularım") | `kvkk-basvuru` | `kvkk_request_create(app, kind, detail[, child])`, `my_kvkk_requests()` |
 
 **Üst metin:**
 > Kişisel verilerinle ilgili taleplerini buradan iletebilirsin. En geç 30 gün içinde, ücretsiz yanıt veririz. Yanıt {e-posta} adresine gelir. <u>Başvuru usulü</u>
 
 **Alanlar:**
 
-1. **Kimin için?** *(yalnız ParentApp)* — "Kendim" / "{çocuk_adı}" (her çocuk için bir seçenek). Çocuk seçilirse `app = 'child'` ve açıklamanın başına "Çocuk: {çocuk_adı}" eklenir.
+1. **Kimin için?** *(yalnız Moyo Ebeveyn)* — "Kendim" / "{çocuk_adı}" (her çocuk için bir seçenek). Çocuk seçilirse `app = 'child'` ve açıklamanın başına "Çocuk: {çocuk_adı}" eklenir.
 2. **Ne istiyorsun?** (tek seçim)
 
 | Seçenek metni | `kind` | Seçenek altı ipucu |
@@ -186,7 +192,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 | Verilerimin kimlere aktarıldığını öğrenmek | `third_parties` | — |
 | Bir işlemeye itiraz etmek | `object` | — |
 | Uğradığım bir zararın giderilmesi | `damages` | — |
-| Başka bir talep | `other` | Uzmanının notlarıyla ilgili talepler uzmanın kliniğine iletilebilir. *(ParentApp)* |
+| Başka bir talep | `other` | Uzmanının notlarıyla ilgili talepler uzmanın kliniğine iletilebilir. *(Moyo Ebeveyn)* |
 
 3. **Açıklama** — çok satırlı, en çok 2000 karakter; düzeltme, itiraz, zarar ve diğer taleplerde zorunlu.
    Yer tutucu: *"Talebini kısaca yaz. Gerekmedikçe sağlık bilgisi ya da başka birinin kişisel bilgisini yazma."*
@@ -198,7 +204,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 **Onay mesajı:**
 > **Başvurun alındı.**
 > Başvuru no: {kısa_no}
-> En geç {son_tarih} tarihine kadar {e-posta} adresine yanıt vereceğiz. Durumunu "Başvurularım"dan izleyebilirsin.
+> En geç {son_tarih} tarihine kadar {e-posta} adresine yanıt vereceğiz. Durumunu "Başvurularım"dan takip edebilirsin.
 
 **Başvurularım — durum adları:** `received` → Alındı · `in_progress` → İnceleniyor · `answered` → Yanıtlandı · `rejected` → Gerekçeli yanıt verildi (e-postana bak)
 
@@ -206,15 +212,15 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 **Bildirim** (`kvkk_answered`): Başlık "KVKK başvurun yanıtlandı" · Metin "Yanıtı e-posta adresine gönderdik."
 
-**Pofi Adası:** form yok; ebeveyn kapısı › Bilgi ekranında "Çocuğun adına başvuru: ParentApp › Ayarlar › KVKK başvurusu" (bkz. 10).
+**Moyo Oyun:** form yok; ebeveyn kapısı › Bilgi ekranında "Çocuğun adına başvuru: Moyo Ebeveyn › Aile › Hesap › Yasal ve gizlilik › KVKK başvurusu" (bkz. 10).
 
 ## 5. Hesap silme
 
-### 5.1 ParentApp
+### 5.1 Moyo Ebeveyn
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ParentApp | Ayarlar › Hesabımı sil | `gizlilik` (13. bölüm) | `delete_account()` |
+| Moyo Ebeveyn | Ayarlar › Hesabımı sil | `gizlilik` (13. bölüm) | `delete_account()` |
 
 **Aktif mağaza aboneliği varsa (en üstte, kırmızı kutu):**
 > **Aboneliğin Apple'da devam ediyor.**
@@ -225,13 +231,13 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - maceralar, onaylar, ödüller, coin ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
+> - rutinler ve adımlar, onaylar, ödüller, coin ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
-> - davranış kayıtları ve tanışma yanıtları,
-> - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
+> - davranış kayıtları, davranış olayları ve tanışma yanıtları,
+> - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler, ebeveyn eğitimleri ve takip planı,
 > - oyun yedekleri.
 >
-> Çocuğunun cihazındaki Pofi Adası'nın aileyle bağlantısı kapanır.
+> Çocuğunun cihazındaki Moyo Oyun'un aileyle bağlantısı kapanır.
 
 **Ailede başka ebeveyn varsa:**
 > **Yalnız senin hesabın silinir.**
@@ -248,16 +254,16 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 **Uygulamaya giremeyenler için** (yardım sayfası ve SSS): "Uygulamaya giremiyorsan moyoapp.com.tr/destek sayfasındaki formdan ya da `kvkk@moyoapp.com.tr` adresinden silme talebinde bulunabilirsin."
 
-### 5.2 ClinicApp
+### 5.2 Moyo Mercek
 
 | Uygulama | Ekran | Bağlı belge | Sunucu |
 |---|---|---|---|
-| ClinicApp (iPad + web) | Profil › Hesabımı sil | `gizlilik`, `sozlesme-uzman` | `delete_account()` |
+| Moyo Mercek (iPad + web) | Profil › Hesabımı sil | `gizlilik`, `sozlesme-uzman` | `delete_account()` |
 
 **Klinik sahibinin aktif mağaza üyeliği varsa:** 5.1'deki kutu, metin "Klinik üyeliğin Apple'da devam ediyor…" (web'de: "Üyeliğini iPhone/iPad'deki App Store ayarlarından iptal et.").
 
 **Tek kişilik klinik:**
-> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, haftalık değerlendirmeler, görev önerileri, takip planları, davetler ve üyelik kaydı. Ailelerin ParentApp'teki kendi verileri silinmez; yalnız seninle paylaşımları biter. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Saklaman gereken kayıtları önce yazdır ya da destekten iste.
+> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo Ebeveyn'deki kendi verileri silinmez; yalnız seninle paylaşımları biter (senin açtığın eğitimlere verdikleri yanıtlar ve hedef davranışlara bildirdikleri olaylar da paylaşımla birlikte silinir). Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Mevzuatın sana yüklediği kayıt saklama yükümlülüğü sende; saklaman gereken kayıtları silmeden önce indir ya da yazdır.
 
 **Ekipte başka uzman varken klinik sahibi:**
 > Klinik kalır; sahiplik ekibin en eski üyesine ({ad}) geçer. Kliniğe ait kayıtlar klinikte kalır. Yalnız senin hesabın silinir.
@@ -267,20 +273,20 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 Alt kısım, onay ve düğme 5.1 ile aynı.
 
-### 5.3 Pofi Adası
+### 5.3 Moyo Oyun
 
-Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi ekranında cihaz bağlantısının kaldırılması ve silme yolu anlatılır (bkz. 10). ParentApp'te tek çocuk profilini silme ekranı bugün yok (`README.md` sorun 5); yapılınca metin "ParentApp › Aile › çocuk › Profili sil" olur.
+Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi ekranında cihaz bağlantısının kaldırılması ve silme yolu anlatılır (bkz. 10). Moyo Ebeveyn'de tek çocuk profilini silme ekranı bugün yok (`README.md` sorun 5); yapılınca metin "Moyo Ebeveyn › Aile › çocuk › Profili sil" olur.
 
 ## 6. Abonelik ekranı (Apple 3.1.2)
 
-### 6.1 ParentApp
+### 6.1 Moyo Ebeveyn
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
+| Moyo Ebeveyn | Aile › Hesap › Üyelik; deneme bitince açılışta | `kosullar-parentapp`, `gizlilik` |
 
 > **[PLAN ADI]**
-> Bütün aile için: birden çok çocuk, sınırsız macera, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
+> Bütün aile için: birden çok çocuk, sınırsız rutin ve adım, ödüller ve Güneş Taşı, mesajlar, davranış kayıtları.
 >
 > ○ **Aylık** — {fiyat_aylık} / ay (KDV dahil)
 > ○ **Yıllık** — {fiyat_yıllık} / yıl (aylık {aylık_karşılık})
@@ -295,18 +301,18 @@ Hesap silme ekranı yoktur (çocuğun hesabı yok). Ebeveyn kapısı › Bilgi e
 
 - Fiyatlar mağazanın yerel fiyatından okunur; ekranda sabit fiyat yazılmaz.
 - Plan adı, süre ve fiyat düğmeden önce ve en az düğme kadar görünür olmalı.
-- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
+- "Şimdilik ücretsiz devam et" altındaki not: "Ücretsiz planda 1 çocuk ve 3 etkin adımla devam edersin; ödüller, mesajlar ve davranış kayıtları kapalıdır."
 
-### 6.2 ClinicApp
+### 6.2 Moyo Mercek
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp (iPad/iPhone) | Üyelik (yalnız klinik sahibi) | `sozlesme-uzman`, `gizlilik` |
+| Moyo Mercek (iPad/iPhone) | Üyelik (yalnız klinik sahibi) | `sozlesme-uzman`, `gizlilik` |
 
 6.1 ile aynı yapı; paketler "Bireysel" ve "Klinik", her biri aylık ve yıllık, içerik listesi `billing_plans`'tan.
 
 - **Ekip üyesine:** fiyat gösterilmez. Metin: "Klinik üyeliğini klinik sahibi ({ad}) yönetir."
-- **Web:** satın alma yok. Metin: "Üyeliği iPhone ya da iPad'deki ClinicApp'ten alabilirsin. Üyelik hesabına bağlıdır; web'de de açılır."
+- **Web:** satın alma yok. Metin: "Üyeliği iPhone ya da iPad'deki Moyo Mercek'ten alabilirsin. Üyelik hesabına bağlıdır; web'de de açılır."
 
 ## 7. Deneme bitişi bildirimi
 
@@ -314,38 +320,40 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ne zaman | Kanal |
 |---|---|---|
-| ParentApp | Bitime 2 gün kala ve bittiği gün *(öneri)* | Anlık bildirim + uygulama içi bildirim; e-posta "deneme bitiyor" (`CANLIYA_ALMA.md` 1.3) |
-| ClinicApp | Bitime 3 gün kala ve bittiği gün *(öneri)* | Aynı |
+| Moyo Ebeveyn (deneme 14 gün; başka bir ailenin davet koduyla 21 gün) | Bitimden **3 gün önce**, tek ve tarafsız hatırlatma (kullanıcı kararı 18 Kasım 2026, `sozlesme/akislar.md` 25); bitince açılışta aşağıdaki not | Anlık bildirim + uygulama içi bildirim; e-posta "deneme bitiyor" sonraki aşamada (`akislar.md` 25 aşama 3; `CANLIYA_ALMA.md` 1.3) |
+| Moyo Mercek (deneme 14 gün) | Bitimden 3 gün önce, tek hatırlatma (aynı karar; cihazda planlanır, hafta sonuna denk gelirse önceki cuma; bayrak `lifecycle_nudges`) | Aynı |
 
-**ParentApp — bitmeden:**
+Gün sayısı metne sabit yazılmaz (`{gün}`); deneme süresi aileye göre değişir (14 ya da 21 gün).
+
+**Moyo Ebeveyn — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
 - Metin: Bittiğinde ücretsiz planla devam edersin; senden kendiliğinden ücret alınmaz. Premium'u sürdürmek istersen üyelik ekranına bak.
 
-**ParentApp — bitince (açılışta, 6.1 ekranının üstünde):**
-> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin macerayla devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
+**Moyo Ebeveyn — bitince (açılışta, 6.1 ekranının üstünde):**
+> **Deneme süren bitti.** Ücretsiz planda 1 çocuk ve 3 etkin adımla devam edebilirsin; ödüller, mesajlar ve davranış kayıtları kapanır. Verilerin silinmez.
 
-**ClinicApp — bitmeden:**
+**Moyo Mercek — bitmeden:**
 - Başlık: Denemenin bitmesine {gün} gün kaldı
 - Metin: Deneme bitince danışan kayıtlarına erişim, üyelik alınana kadar kapanır. Verilerin silinmez; kendiliğinden ücret alınmaz.
 
-**ClinicApp — bitince:**
+**Moyo Mercek — bitince:**
 > **Deneme süren bitti.** Üyelik alana kadar danışanlar, notlar, hedefler, öneriler ve davetler kapalı. Verilerin silinmedi; üyelik alınca kaldığın yerden devam edersin.
 
 ## 8. Coin ve Güneş Taşı bilgi notu
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
+| Moyo Ebeveyn | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
 > **Coin ve Güneş Taşı nedir?**
-> **Coin**, çocuğunun senin onayladığın görevlerle kazandığı oyun parasıdır. Yalnız Pofi Adası'ndaki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
+> **Coin**, çocuğunun senin onayladığın adımlarla kazandığı oyun parasıdır. Yalnız Moyo Oyun'daki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
 > **Güneş Taşı**, çocuğuna verdiğin ödüllerin sayacıdır. Ödülleri ve değiş tokuş oranlarını (ör. "1 taş = 10 dk ekran") sen belirlersin. Taşın parasal değeri yoktur; ödülün sözünü sen verirsin, biz bu ödüllerin tarafı değiliz.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| Pofi Adası | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
+| Moyo Oyun | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
 
-> Coin'ler adanın parasıdır. Görevlerini yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
+> Coin'ler adanın parasıdır. Maceralarını yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
 >
 > Güneş Taşları ailenin ödülleri içindir. Taşın yetince ödül isteyebilirsin. Kararı ailen verir.
 
@@ -353,45 +361,47 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Davranış kaydı ekranının altı (sabit); ~~Uzmanım ekranının altı~~ (3 Kasım 2026 kullanıcı kararıyla kaldırıldı); Yardım ve iletişim | `kosullar-parentapp` |
+| Moyo Ebeveyn | Davranış kaydı ekranının altı (sabit); ~~Uzmanım ekranının altı~~ (3 Kasım 2026 kullanıcı kararıyla kaldırıldı); Yardım ve iletişim | `kosullar-parentapp` |
 
-> ParentApp bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
+> Moyo bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
 
-**ClinicApp:** ekranlarda acil durum notu yok (kullanıcı kararı 3 Kasım 2026: uzman arayüzünde sınır uyarısı tekrarlanmaz). Sınır Uzman Hizmet Sözleşmesi 3.4 ve 3.4-a'da (acil durum ve kriz izleme hizmeti değildir; kayıtlar gecikmeyle ulaşabilir).
+*Öneri (avukat dosyası, kullanıcı kararı bekler):* kısa biçim §15 satır 4 ("Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara."), davranış kaydı ekranında ve Yardım'da aynı metin.
 
-## 10. Pofi Adası — ebeveyn kapısı › Bilgi ekranı
+**Moyo Mercek:** ekranlarda acil durum notu yok (kullanıcı kararı 3 Kasım 2026: uzman arayüzünde sınır uyarısı tekrarlanmaz). Sınır Uzman Hizmet Sözleşmesi 3.4 ve 3.4-a'da (acil durum ve kriz izleme hizmeti değildir; kayıtlar gecikmeyle ulaşabilir).
+
+## 10. Moyo Oyun — ebeveyn kapısı › Bilgi ekranı
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| Pofi Adası | Ebeveyn kapısı geçildikten sonra "Bilgi" | `gizlilik`, `kosullar-gameapp`, `aydinlatma-cocuk`, `kvkk-basvuru` |
+| Moyo Oyun | Ebeveyn kapısı geçildikten sonra "Bilgi" | `gizlilik`, `kosullar-gameapp`, `aydinlatma-cocuk`, `kvkk-basvuru` |
 
 > *(En üstte, büyük yazıyla ve sesli okunarak: `aydinlatma-cocuk` Kısım B — çocuğa kısa not.)*
 >
 > **Ebeveynler için bilgi**
 >
-> - Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
-> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız ParentApp'teki QR kodu okumak için açılır; görüntü kaydedilmez.
+> - Moyo Oyun'da reklam, satın alma ve üçüncü taraf izleme aracı yok.
+> - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız Moyo Ebeveyn'deki QR kodu okumak için açılır; görüntü kaydedilmez.
 > - Çocuğun yalnız seninle ve ailendeki diğer ebeveynle yazışır.
-> - Oyun, ParentApp'te oluşturduğun profile bağlıdır. Profili ParentApp'ten düzenlersin.
-> - Bu cihazın bağlantısını kapatmak için: ParentApp › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da ParentApp'te hesabını silerek aileyle birlikte silebilirsin.
-> - Çocuğun adına KVKK başvurusu: ParentApp › Ayarlar › KVKK başvurusu.
+> - Oyun, Moyo Ebeveyn'de oluşturduğun profile bağlıdır. Profili Moyo Ebeveyn'den düzenlersin.
+> - Bu cihazın bağlantısını kapatmak için: Moyo Ebeveyn › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da Moyo Ebeveyn'de hesabını silerek aileyle birlikte silebilirsin.
+> - Çocuğun adına KVKK başvurusu: Moyo Ebeveyn › Aile › Hesap › Yasal ve gizlilik › KVKK başvurusu.
 > - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
 >
-> <u>Gizlilik Politikası</u> · <u>Pofi Adası Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
+> <u>Gizlilik Politikası</u> · <u>Moyo Oyun Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
 > Destek: `destek@moyoapp.com.tr` · Sürüm {sürüm}
 >
 > [ Bu cihazın bağlantısını kaldır ] *(öneri: oyunun içinden de; `CANLIYA_ALMA.md` 2.2 "ebeveyn kapısı: bağlama")*
 
 - Bağlantılar tarayıcıda açılır; açılmadan önce: "Bu bağlantı tarayıcıda açılacak."
-- Kısım B sesli okunur; ebeveyn bölümü için sesli okuma gerekmez *(Pofi Adası penceresi karar verir)*.
+- Kısım B sesli okunur; ebeveyn bölümü için sesli okuma gerekmez *(Oyun penceresi karar verir)*.
 
-## 11. ClinicApp web — çerez bandı
+## 11. Moyo Mercek web — çerez bandı
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp web | İlk ziyarette alt bant, içeriği kapatmaz; "Anladım" sonrası bir daha gösterilmez (`40-cerez-politikasi.md` ile aynı metin) | `cerez-clinicapp-web`, `gizlilik` |
+| Moyo Mercek web | İlk ziyarette alt bant, içeriği kapatmaz; "Anladım" sonrası bir daha gösterilmez (`40-cerez-politikasi.md` ile aynı metin) | `cerez-clinicapp-web`, `gizlilik` |
 
-> ClinicApp web yalnız oturumunu açık tutmak ve seçimlerini hatırlamak için zorunlu tarayıcı depolaması kullanır. Analiz ya da reklam çerezi yok. <u>Çerez Politikası</u> [ Anladım ]
+> Moyo Mercek web yalnız oturumunu açık tutmak ve seçimlerini hatırlamak için zorunlu tarayıcı depolaması kullanır. Analiz ya da reklam çerezi yok. <u>Çerez Politikası</u> [ Anladım ]
 
 - Yalnız zorunlu kayıtlar varken onay istenmez, bilgilendirme yeterlidir. Analiz aracı eklenirse bant "Kabul et / Reddet" düğmeleri eşit görünürlükte, önceden seçimsiz hâle gelir ve araç onaydan önce yüklenmez.
 
@@ -399,19 +409,23 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › Notlar, not alanının altı | `sozlesme-uzman` (A2–A3), `aydinlatma-uzman` |
+| Moyo Mercek | Danışan › Notlar, not alanının altı | `sozlesme-uzman` (A2–A3), `aydinlatma-uzman` |
 
 > Notlarını aile görmez. Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma.
 
+*Öneri (avukat dosyası, kullanıcı kararı bekler):* not ve hedef alanlarında §15 satır 6 ("Çalışma notu. Tanı, ilaç ve kimlik bilgisi yazmayın; …"); 3 Kasım 2026 kararıyla çelişebilir.
+
+Danışan menüsünde gözlem grubu "İzle" 14 Kasım 2026'dan beri **"Takip"** (uygulandı; Moyo Mercek ekranlarında "danışan" kalır).
+
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Danışan › devralınan kayıtlar başlığı | `uzman-gecis-v1` |
+| Moyo Mercek | Danışan › devralınan kayıtlar başlığı | `uzman-gecis-v1` |
 
 > Önceki uzman {n} · {başlangıç_ay} – {bitiş_ay} · ebeveynin izniyle, yalnız okuma
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Aileyi davet et › "Çocuğun adı" + yaş grubu alanının altı ve "i" | `sozlesme-uzman` (A9, A13) |
+| Moyo Mercek | Aileyi davet et › "Çocuğun adı" + yaş grubu alanının altı ve "i" | `sozlesme-uzman` (A9, A13) |
 
 > Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma.
 
@@ -420,43 +434,51 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Aileyi davet et › ebeveynin e-posta alanının altı | `sozlesme-uzman` (A13) |
+| Moyo Mercek | Aileyi davet et › ebeveynin e-posta alanının altı | `sozlesme-uzman` (A13) |
 
 > Bu adrese senin adına davet e-postası gider; çocuğun adı ve notun e-postada yer almaz. Aile yanıtlarsa yanıt senin e-posta adresine gelir. Daveti yalnız tanıdığın ve hizmet verdiğin aileye gönder.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Belgeni yükle (bayrak `clinician_verification` açıkken) | `aydinlatma-uzman`, `sozlesme-uzman` (A11–A12) |
+| Moyo Mercek | Belgeni yükle (bayrak `clinician_verification` açıkken) | `aydinlatma-uzman`, `sozlesme-uzman` (A11–A12) |
 
-> Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Ailelere yalnız "Belgesi incelendi: <meslek>" görünür; bu bir yetki onayı değildir. <u>Uzman Aydınlatma Metni</u>
+> Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Sana "Belge yüklendi: <meslek>", ailelere "Uzman diploma belgesini yükledi" görünür; Moyo bir doğrulama ya da yetki beyanı vermez. <u>Uzman Aydınlatma Metni</u>
 
-ParentApp davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) ile önceki uzman kayıtları onay metni (`uzman-gecis-v1`) `hukuk_notlari.md` B ve E'deki metinlerdir; burada tekrar edilmez.
+- Rozet adı 14 Kasım 2026 kararıyla "Belgesi incelendi" → "Belge yükledi" (uygulandı: Moyo Mercek "Belge yüklendi: <meslek>", Moyo Ebeveyn "Uzman diploma belgesini yükledi"). Özellik lansmanda kapalı (bayrak `clinician_verification`). Açık: Moyo Ebeveyn'de rozeti olmayan uzmanda "Belgesi incelenmedi" yazısı duruyor; yeni sözcük kullanıcı kararı bekler (`DURUM.md` 14 Kasım 2026).
+
+Moyo Ebeveyn davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) ile önceki uzman kayıtları onay metni (`uzman-gecis-v1`) `hukuk_notlari.md` B ve E'deki metinlerdir; burada tekrar edilmez. *Öneri (kullanıcı kararı bekler):* paylaşım onayına §15 satır 3 ("Paylaşılanlar uygulamada bıraktığın kayıtlardır. …").
 
 ## 13. "Tanı değildir" notu
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Haftalık özet, gösterge ve ilerleme ekranlarının altı | `kosullar-parentapp` |
+| Moyo Ebeveyn | Haftalık özet, gösterge ve ilerleme ekranlarının altı | `kosullar-parentapp` |
 
-> Bu sayılar çocuğunun uygulamadaki maceralarını özetler; tanı, zekâ ya da dikkat puanı değildir.
+> Bu sayılar çocuğunun uygulamadaki rutin ve adımlarını özetler; tanı, zekâ ya da dikkat puanı değildir.
 
 **Ebeveyn dersleri (Gelişim › Ben; öneri 5 Kasım 2026, `sozlesme/akislar.md` 22):** ders sayfasının ve "Yakında" kartının altında:
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ParentApp | Gelişim › Ben › ders sayfası, Yakında kartı | `kosullar-parentapp` |
+| Moyo Ebeveyn | Gelişim › Ben › ders sayfası, Yakında kartı | `kosullar-parentapp` |
 
 > Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez.
 
-Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (ParentApp ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26).
+Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (Moyo Ebeveyn ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26).
 
-**ClinicApp ekranları:** göstergeler ve hedef grafiklerinin altında sınır metni yok (kullanıcı kararı 3 Kasım 2026; sözleşme 3.3 ve 3.4-a). Aşağıdaki çıktı alt bilgisi kalır.
+**Kaynak kütüphanesi (Moyo Ebeveyn ve Moyo Mercek; kullanıcı kararı 14 Kasım 2026, `hukuk_notlari.md` M.5; iki uygulamada uygulandı):** kütüphane ekranının altında bir kez, göze batmadan (her eğitimde değil):
+
+> Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz.
+
+**Moyo Mercek ekranları:** göstergeler ve hedef grafiklerinin altında sınır metni yok (kullanıcı kararı 3 Kasım 2026; sözleşme 3.3 ve 3.4-a). Aşağıdaki dışa aktarma alt satırı kalır.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| ClinicApp | Yazdırma/PDF çıktısının alt bilgisi | `sozlesme-uzman` |
+| Moyo Mercek | Dışa aktarılan belgelerin (rapor, ilerleme notu, bütün CSV'ler) alt satırı; ekranlarda yok | `sozlesme-uzman` |
 
-> Bu çıktı ailenin uygulama kayıtlarından ve uzmanın gözlemlerinden oluşur. Tanı değildir; tek başına klinik karar için kullanılmaz.
+> Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir.
+
+- **Uygulandı** (Moyo Mercek, 14 Kasım 2026; `EXPORT_FOOTER`; CSV'de veriden bir boş satırla ayrılır). Eski alt bilgi ("… tek başına klinik karar için kullanılmaz") ve rapordaki "Sınırlar" bloğu kalktı (`hukuk_notlari.md` M.7).
 
 ## 14. İzin açıklamaları
 
@@ -464,23 +486,45 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 
 | Uygulama | İzin (`Info.plist` anahtarı) | Ne zaman sorulur | Metin |
 |---|---|---|---|
-| Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
-| Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da görevini onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
-| ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
-| ParentApp | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
-| ParentApp | Bildirim | İlk görev oluşturulunca *(öneri)* | Ön açıklama: "Çocuğun bir görevi yaptığında ya da sana yazdığında haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ClinicApp | Bildirim | İlk aile bağlanınca *(öneri)* | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni davranış kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
-| ClinicApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) — *yalnız belge görsel olarak seçilebiliyorsa* | "Belgeni yükle"de | Mezuniyet belgeni yüklemek için seçtiğin dosyaya erişiriz. Belge incelemeden sonra silinir. |
+| Moyo Oyun | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | Moyo Ebeveyn'de gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
+| Moyo Oyun | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da maceranı onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
+| Moyo Ebeveyn | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
+| Moyo Ebeveyn | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
+| Moyo Ebeveyn | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
+| Moyo Ebeveyn | Bildirim | İlk rutin ya da adım oluşturulunca *(öneri)* | Ön açıklama: "Çocuğun bir adımı yaptığında ya da sana yazdığında haber verelim mi?" [İzin ver] [Şimdi değil] |
+| Moyo Mercek | Bildirim | İlk aile daveti gönderildikten sonra (bayrak `lifecycle_nudges` açıkken; `akislar.md` 25 aşama 1; önceki öneri: ilk aile bağlanınca) | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni davranış kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
+| Moyo Mercek | Fotoğraflar (`NSPhotoLibraryUsageDescription`) — *yalnız belge görsel olarak seçilebiliyorsa* | "Belgeni yükle"de | Mezuniyet belgeni yüklemek için seçtiğin dosyaya erişiriz. Belge incelemeden sonra silinir. |
 
 - İzin reddedilirse özellik kibarca kapanır; uygulamanın geri kalanı çalışır. Ayarlara yönlendiren metin: "İzni iPhone Ayarlar › {uygulama} bölümünden açabilirsin."
 
+## 15. Avukat dosyası kısa metin önerileri (20 Kasım 2026; öneri, kullanıcı kararı bekler)
+
+Kaynak: avukat dosyası ("takip platformu" konumu; `sozlesme/hukuk_notlari.md` M). Satır 7 dışında hiçbiri uygulamada değildir; uygulamaya alınmaları kullanıcı kararıyla. Uygulanan satır ilgili bölümdeki metnin yerine geçer ya da yanına eklenir ve burada "uygulandı" olur.
+
+| # | Nerede (bağlı bölüm) | Metin | Neden | Durum |
+|---|---|---|---|---|
+| 1 | Moyo Ebeveyn kayıt onayı: tek satır, kutuyla (§1.1) | "Moyo bir takip aracıdır; sağlık hizmeti, tanı ya da acil durum hizmeti değildir. Koşulları okudum ve kabul ediyorum." | Koruyucu maddelerin açıkça onaylanması | Öneri, kullanıcı kararı bekler |
+| 2 | Moyo Ebeveyn serbest metin alanları: not, davranış kaydı, onay notu, ebeveyn eğitimi yanıtı (alan ipucu) | "Gözlemini yaz. Tanı, ilaç ya da sağlık bilgisi yazma." | Özel nitelikli veri girişini kaynağında azaltır; bugün yok | Öneri, kullanıcı kararı bekler |
+| 3 | Uzmanla paylaşım onayı (Moyo Ebeveyn; §12 sonu, `uzman-paylasim-v1` ekranı) | "Paylaşılanlar uygulamada bıraktığın kayıtlardır. Paylaşımı istediğin an kapatabilirsin." | Kayıtların kullanıcıya ait olduğunu, kararın ebeveynde olduğunu gösterir | Öneri, kullanıcı kararı bekler |
+| 4 | Davranış kaydı ekranı ve Yardım (Moyo Ebeveyn; §9) | "Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara." | Bugün yalnız bir ekranda; Yardım'da da durmalı | Öneri, kullanıcı kararı bekler (§9'daki uzun metnin kısa biçimi) |
+| 5 | Moyo Mercek kayıt onayı (§1.2) | "Moyo Mercek bir takip panelidir. Mesleki değerlendirme ve kayıt tutma yükümlülüğü sizdedir." | Rol ayrımının uzmanca onaylanması | Öneri, kullanıcı kararı bekler; 3 Kasım 2026 kararıyla çelişebilir |
+| 6 | Moyo Mercek not ve hedef alanları (§12) | "Çalışma notu. Tanı, ilaç ve kimlik bilgisi yazmayın; resmî kaydınızı kendi sisteminizde tutun." | Bugün yalnız "kimlik bilgisi yazma" | Öneri, kullanıcı kararı bekler; 3 Kasım 2026 kararıyla çelişebilir |
+| 7 | Dışa aktarılan rapor, ilerleme notu ve CSV'nin alt satırı (Moyo Mercek; §13) | "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." | — | **Uygulandı** (Moyo Mercek, 14 Kasım 2026) |
+| 8 | Mağaza açıklamasının ve tanıtım sayfasının son satırı (Marketing; `45-pazarlama-kurallari.md` 1.7) | "Moyo bir takip aracıdır; sağlık hizmeti sunmaz, tanı koymaz." | Dış dilin konumla aynı olması (Marketing §7.1) | Öneri, kullanıcı kararı bekler |
+
+- **3 Kasım 2026 kararı:** uzman arayüzündeki sınır uyarıları kaldırıldı (karşılıkları Uzman Hizmet Sözleşmesi 3.1–3.4). 5 ve 6 bu kararla çelişebilir; hangisinin uygulanacağı kullanıcı kararıdır.
+- **Hitap:** 5 ve 6 avukat dosyasında "siz" diliyle; Moyo Mercek uygulaması "sen" der (§0). Uygulanırsa: "… yükümlülüğü sende.", "… yazma; resmî kaydını kendi sisteminde tut."
+- **1:** bugünkü kayıt satırı (§1.1 "Güncel") tek kutu; öneri aynı kutunun metnini uzatır, yeni kutu açmaz.
+- 2 ve 6'daki "tanı, ilaç" uyarısı çekirdek madde 5 (içerik sorumluluğu: serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir) ile aynı yöndedir; 2 bugün §4'teki KVKK açıklama alanı yer tutucusuyla da uyumludur.
+
 ## Avukata notlar
 
-1. **Kayıt ekranında aydınlatma (karar önerisi uygulandı 27 Ekim 2026: kutusuz satır + "gösterildi" kaydı; avukat teyit etsin):** "Aydınlatma Metni'ni okudum" kutusu onay (rıza) gibi algılanabilir. Kutu yerine yalnız bağlantı + "gösterildi" kaydı mı yeterli, yoksa kutu ispat için mi tutulmalı? `tools/legal_seed.py` aydınlatmaları "onay ister" (okundu) olarak yüklüyor; `22-uzman-hizmet-sozlesmesi.md` Ek-3 ise ClinicApp'te aydınlatmayı kutusuz bir satır olarak öneriyor. İkisinden biri seçilip iki belge eşitlenmeli.
+1. **Kayıt ekranında aydınlatma (karar önerisi uygulandı 27 Ekim 2026: kutusuz satır + "gösterildi" kaydı; avukat teyit etsin):** "Aydınlatma Metni'ni okudum" kutusu onay (rıza) gibi algılanabilir. Kutu yerine yalnız bağlantı + "gösterildi" kaydı mı yeterli, yoksa kutu ispat için mi tutulmalı? `tools/legal_seed.py` aydınlatmaları "onay ister" (okundu) olarak yüklüyor; `22-uzman-hizmet-sozlesmesi.md` Ek-3 ise Moyo Mercek'te aydınlatmayı kutusuz bir satır olarak öneriyor. İkisinden biri seçilip iki belge eşitlenmeli.
 2. **Abonelik ekranı (6):** Apple'ın yenileme ve iptal bilgisi kendi cümlelerimizle yazıldı; 6502 s. Kanun ve Abonelik Sözleşmeleri Yönetmeliği açısından ekranda ayrıca bulunması gereken bir bilgi (ör. cayma hakkı istisnası, satıcının Apple olduğu) var mı? Deneme sunucu tarafında, kartsız ve ücretsiz bitiyor; ileride App Store "ücretsiz deneme" teklifine geçilirse 6–7. bölüm metinleri değişmeli.
-3. **Pofi Adası koşulları güncellenince oyun kilitlensin mi (2):** Veli yeni sürümü ParentApp'te onaylayana kadar çocuğun oyunu kilitlenmiyor (öneri: çocuğu cezalandırmamak). Bu, eski sürümle kullanımın sürmesi demek; hukuken kabul edilebilir mi?
+3. **Moyo Oyun koşulları güncellenince oyun kilitlensin mi (2):** Veli yeni sürümü Moyo Ebeveyn'de onaylayana kadar çocuğun oyunu kilitlenmiyor (öneri: çocuğu cezalandırmamak). Bu, eski sürümle kullanımın sürmesi demek; hukuken kabul edilebilir mi?
 4. **Hesap silmede kalanlar (5):** "Ödeme kayıtları, ekip işlem kaydı ve deneme e-posta özeti kalır" cümlesi `42-saklama-imha-politikasi.md` süreleriyle birlikte onaylanmalı.
-5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). ParentApp'te tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
+5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). Moyo Ebeveyn'de tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
 6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Uzmanın kayıt saklama yükümlülüğüyle çatışma kararı (`00-olgular.md` §2) değişirse bu satır da değişir.
-4. **Karşılama anketi zorunlu oldu (ClinicApp, 28 Ekim 2026):** "Şimdilik geç" kaldırıldı. Aydınlatma metni ankete "isteğe bağlı" diyor ve dayanağı meşru menfaat (ürün geliştirme). Ürün araştırması için zorunlu veri toplamak ölçülülük ilkesiyle (KVKK md. 4) çelişebilir. Öneri: ekran kalsın ama her soruda "söylemek istemiyorum / diğer" seçeneği olsun (Joon'daki gibi, `03` J2); yoksa aydınlatma "zorunlu" olarak düzeltilip amacı (ör. meslek → şablon önerisi) somut yazılmalı.
+7. **Karşılama anketi zorunlu oldu (Moyo Mercek, 28 Ekim 2026):** "Şimdilik geç" kaldırıldı. Aydınlatma metni ankete "isteğe bağlı" diyor ve dayanağı meşru menfaat (ürün geliştirme). Ürün araştırması için zorunlu veri toplamak ölçülülük ilkesiyle (KVKK md. 4) çelişebilir. Öneri: ekran kalsın ama her soruda "söylemek istemiyorum / diğer" seçeneği olsun (Joon'daki gibi, `03` J2); yoksa aydınlatma "zorunlu" olarak düzeltilip amacı (ör. meslek → şablon önerisi) somut yazılmalı.
+8. **Kısa metin önerileri (§15):** Moyo Mercek'teki iki satır (5 kayıt onayı, 6 not alanı ipucu) 3 Kasım 2026 kullanıcı kararıyla çelişebilir; kayıt onayındaki tek satırın ve alan ipucunun "sınır uyarısı" sayılıp sayılmayacağı kullanıcıya. 1'deki uzun onay satırı koruyucu maddelerin onaylandığını ispat için yeterli mi (kutu tek, metin uzuyor)?
+9. **Klinik silinince ailenin yanıtları (5.2):** Uzmanın açtığı ebeveyn eğitimlerindeki ebeveyn yanıtları ve uygulama kayıtları ile ailenin hedef davranışlara bildirdiği olaylar paylaşım kaydına zincirleme bağlıdır (`parent_trainings`, `behavior_incidents` → `clinic_links` → `clinics`); tek kişilik klinik ya da paylaşım kaydı silinince bunlar da silinir. 5.2 metni buna göre daraltıldı. Ebeveynin kendi girdiği bu kayıtların uzman tarafındaki bir silmeyle gitmesi (ailenin erişim ve kopya hakkı, md. 11) ürün ve avukat kararı bekler.

@@ -2,20 +2,22 @@
 | Anahtar | kvkk-basvuru | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
 | Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı: `https://moyoapp.com.tr/yasal/kvkk-basvuru`); Gizlilik Politikası 14. bölümden ve aydınlatma metinlerinden bağlantı; ParentApp ve ClinicApp'te Ayarlar › KVKK başvurusu ekranındaki "Başvuru usulü" bağlantısı; Pofi Adası'nda ebeveyn kapısının arkasındaki Bilgi ekranı | Dayanak | KVKK md. 11, 13, 14, 28/2; Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ |
 
+> Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+
 ## Kısaca
 
 - Kişisel verilerinizle ilgili her talebi bize iletebilirsiniz: bilgi almak, kopyasını istemek, düzeltmek, silmek, itiraz etmek, kimlere aktarıldığını öğrenmek, zararın giderilmesini istemek.
-- **En kolay yol:** ParentApp ya da ClinicApp › Ayarlar › **KVKK başvurusu**. Hesabınıza bağlıdır; kimliğinizi ayrıca kanıtlamanız gerekmez.
+- **En kolay yol:** uygulamanın içinden **KVKK başvurusu**: Moyo Ebeveyn'de Aile › Hesap › Yasal ve gizlilik, Moyo Mercek (ailelere dönük ekranlarda Moyo Uzman) uygulamasında Ayarlar › Yasal ve gizlilik. Hesabınıza bağlıdır; kimliğinizi ayrıca kanıtlamanız gerekmez.
 - Diğer yollar: `kvkk@moyoapp.com.tr` (kayıtlı e-posta adresinizden), [ADRES] adresine imzalı dilekçe, KEP.
 - En geç **30 gün** içinde, **ücretsiz** yanıt veririz.
 - Çocuğunuz adına veli olarak başvurabilirsiniz.
-- Uzmanın danışan notları gibi kayıtlarda başvurunuzu uzmanın kliniğine yönlendirebiliriz (8. bölüm).
+- Uzmanın aileyle ilgili notları gibi kayıtlarda başvurunuzu uzmanın kliniğine yönlendirebiliriz (8. bölüm).
 
 ## 1. Kimler başvurabilir?
 
-- ParentApp kullanan ebeveynler.
-- ClinicApp kullanan uzmanlar.
-- Pofi Adası'nı oynayan çocuklar adına velileri ya da yasal temsilcileri.
+- Moyo Ebeveyn kullanan ebeveynler.
+- Moyo Mercek kullanan uzmanlar.
+- Moyo Oyun'u oynayan çocuklar adına velileri ya da yasal temsilcileri.
 - Bir uzmanın davet ettiği ama henüz kayıt olmamış ebeveynler.
 - Hesabını silmiş eski kullanıcılar ve bize yazışma yoluyla verisini iletmiş herkes.
 
@@ -25,12 +27,12 @@ Başkası adına başvuru için noter onaylı vekâletname gerekir (velinin çoc
 
 | Yol | Nasıl | Kimlik |
 |---|---|---|
-| **Uygulama içi** (önerilen) | ParentApp ya da ClinicApp › Ayarlar › KVKK başvurusu. Başvurunuzun durumunu aynı ekranda "Başvurularım" altında görürsünüz | Hesabınızla giriş yapmış olmanız yeterlidir |
+| **Uygulama içi** (önerilen) | Moyo Ebeveyn'de Aile › Hesap › Yasal ve gizlilik › KVKK başvurusu; Moyo Mercek'te Ayarlar › Yasal ve gizlilik › KVKK başvurusu. Başvurunuzun durumunu aynı ekranda "Başvurularım" altında görürsünüz | Hesabınızla giriş yapmış olmanız yeterlidir |
 | **E-posta** | `kvkk@moyoapp.com.tr` | Sistemimizde kayıtlı e-posta adresinizden göndermeniz ya da güvenli elektronik imza veya mobil imza kullanmanız gerekir |
 | **Yazılı** | [ADRES] adresine ıslak imzalı dilekçe; elden, posta ya da noter aracılığıyla | İmza ve 3. bölümdeki bilgiler |
 | **KEP** | [KEP ADRESİ] adresine kendi KEP adresinizden | KEP |
 
-Pofi Adası'nda başvuru formu yoktur; çocuk adına başvuruyu veli ParentApp'ten yapar.
+Moyo Oyun'da başvuru formu yoktur; çocuk adına başvuruyu veli Moyo Ebeveyn'den yapar.
 
 ## 3. Başvuruda bulunması gerekenler
 
@@ -39,7 +41,7 @@ Pofi Adası'nda başvuru formu yoktur; çocuk adına başvuruyu veli ParentApp't
 - Tebligata esas yerleşim yeri ya da iş yeri adresiniz.
 - Varsa bildirime esas e-posta adresiniz ve telefonunuz.
 - Talebinizin konusu ve varsa belgeleriniz.
-- Hangi uygulamayla ilgili olduğu (Pofi Adası, ParentApp, ClinicApp) ve çocuk adına başvuruyorsanız hangi çocuk.
+- Hangi uygulamayla ilgili olduğu (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) ve çocuk adına başvuruyorsanız hangi çocuk.
 
 Uygulama içi başvuruda adınız ve e-posta adresiniz hesabınızdan gelir. [T.C. kimlik numarası uygulama içi başvuruda istenecek mi: avukat kararı.]
 
@@ -58,14 +60,14 @@ Amacımız verinizi başkasına vermemektir.
 | Talep (KVKK md. 11) | Ne yaparız | Uygulamada kendiniz hemen yapabilecekleriniz |
 |---|---|---|
 | Verinizin işlenip işlenmediğini öğrenmek; işlenmişse bilgi istemek; amacını ve amaca uygun kullanılıp kullanılmadığını öğrenmek | Hangi verinizi, hangi amaçla, hangi hukuki sebeple işlediğimizi ve ne kadar sakladığımızı yazarız | Gizlilik Politikası ve aydınlatma metinleri |
-| Verinizin bir kopyasını almak | Hesabınıza ait verilerin okunabilir bir dökümünü güvenli bir bağlantıyla göndeririz. Başka kişilere ait veriler (ör. diğer ebeveynin yazdıkları) ayıklanabilir | ParentApp / ClinicApp › Ayarlar › Gizlilik › "Verimi indir" (sunucu hazır: `my_data_export`; uygulama ekranı eklenince) |
+| Verinizin bir kopyasını almak | Hesabınıza ait verilerin okunabilir bir dökümünü güvenli bir bağlantıyla göndeririz. Başka kişilere ait veriler (ör. diğer ebeveynin yazdıkları) ayıklanabilir | Moyo Ebeveyn / Moyo Mercek › Yasal ve gizlilik › "Verimi indir" (sunucu hazır: `my_data_export`; uygulama ekranı eklenince) |
 | Eksik ya da yanlış verinin düzeltilmesi | Düzeltir, sonucunu bildiririz | Profil ve çocuk bilgilerini düzenlemek |
-| Verinin silinmesi ya da yok edilmesi | Şartlar oluşmuşsa siler, sonucunu bildiririz. Kanunen saklamak zorunda olduğumuz kayıtları (ör. ödeme kayıtları) yalnız o amaçla ve süresi kadar tutarız | Hesabımı sil; sağlık yanıtlarını sil; mesaj ve kayıtları silmek; [çocuk profilini sil — ParentApp'e eklenecek] |
+| Verinin silinmesi ya da yok edilmesi | Şartlar oluşmuşsa siler, sonucunu bildiririz. Kanunen saklamak zorunda olduğumuz kayıtları (ör. ödeme kayıtları) yalnız o amaçla ve süresi kadar tutarız | Hesabımı sil; mesaj ve kayıtları silmek; [çocuk profilini sil — Moyo Ebeveyn'e eklenecek] |
 | Verinin yurt içinde ya da yurt dışında aktarıldığı kişileri öğrenmek | Alıcıları ve ülkelerini yazarız | Hizmet Sağlayıcılar Listesi (`alt-isleyenler`) |
 | Düzeltme ve silmenin, verinin aktarıldığı kişilere bildirilmesi | Verinin aktarıldığı hizmet sağlayıcılara ve gerekiyorsa uzmana bildiririz | — |
 | Yalnız otomatik sistemlerle yapılan bir analizin aleyhinize sonucuna itiraz | İtirazınızı inceleriz. Bugün sizin hakkınızda yalnız otomatik sistemlerle sonuç doğuran bir karar vermiyoruz | — |
 | Kanuna aykırı işleme yüzünden uğradığınız zararın giderilmesi | Talebinizi inceler, gerekçeli yanıt veririz | — |
-| Uzmanla paylaşımı durdurmak | Başvuru gerekmez | ParentApp › Uzmanım › paylaşımı durdur; erişim hemen biter |
+| Uzmanla paylaşımı durdurmak | Başvuru gerekmez | Moyo Ebeveyn › Uzmanım › uzmanınız › Uzmanı kaldır; erişim hemen biter |
 
 ## 6. Süre ve ücret
 
@@ -76,20 +78,20 @@ Amacımız verinizi başkasına vermemektir.
 
 ## 7. Çocuğunuz adına başvuru
 
-- Pofi Adası'nda çocuğun ayrı bir hesabı yoktur; profilini veli ParentApp'te oluşturur. Çocuğun verisiyle ilgili talepleri veli yapar.
-- **Ailede kayıtlı ebeveynseniz:** ParentApp › Ayarlar › KVKK başvurusu › "Kimin için?" › çocuğunuzu seçin. Ebeveyn hesabınız ve çocuğu eklerken verdiğiniz veli beyanı yeterlidir.
+- Moyo Oyun'da çocuğun ayrı bir hesabı yoktur; profilini veli Moyo Ebeveyn'de oluşturur. Çocuğun verisiyle ilgili talepleri veli yapar.
+- **Ailede kayıtlı ebeveynseniz:** Moyo Ebeveyn › Aile › Hesap › Yasal ve gizlilik › KVKK başvurusu › "Kimin için?" › çocuğunuzu seçin. Ebeveyn hesabınız ve çocuğu eklerken verdiğiniz veli beyanı yeterlidir.
 - **Ailede kayıtlı olmayan veli ya da vasi iseniz:** `kvkk@moyoapp.com.tr`, yazılı ya da KEP yoluyla başvurun ve velayet ya da vesayetinizi gösteren belgeyi ekleyin.
-- Çocuğun cihazının oyunla bağlantısını başvuru gerekmeden hemen kapatabilirsiniz: ParentApp › Aile › çocuk › Cihaz bağlantısını kaldır. Çocuğun profilinin ve ona bağlı verilerin (görevler, mesajlar, oyun kaydı) silinmesini bu sayfadaki yollarla isteyebilirsiniz; ailenin tamamı için hesabınızı silmeniz yeterlidir.
+- Çocuğun cihazının oyunla bağlantısını başvuru gerekmeden hemen kapatabilirsiniz: Moyo Ebeveyn › Aile › çocuk › Cihaz bağlantısını kaldır. Çocuğun profilinin ve ona bağlı verilerin (rutinler ve adımlar, mesajlar, oyun kaydı) silinmesini bu sayfadaki yollarla isteyebilirsiniz; ailenin tamamı için hesabınızı silmeniz yeterlidir.
 
 ## 8. Uzmanla ilgili kayıtlar: kime başvurursunuz?
 
 | Kayıt | Kime |
 |---|---|
-| Uzmanın danışanı hakkında girdiği notlar, hedefler, haftalık değerlendirmeler, takip planı | [SEÇENEK A: Bu kayıtların veri sorumlusu uzman ya da kliniğidir. Başvurunuzu uzmanınıza ya da kliniğine yapın. Bize gelirse kliniğe iletir ve size bildiririz; kliniğe teknik olarak yardım ederiz.] [SEÇENEK B: Bize ya da kliniğe başvurabilirsiniz; ikimiz de yanıtlarız.] |
-| Uzmanla paylaşımı durdurmak | Başvuru gerekmez: ParentApp › Uzmanım |
+| Uzmanın birlikte çalıştığı aile hakkında girdiği notlar, hedefler, değerlendirmeler, takip planı | [SEÇENEK A: Bu kayıtların veri sorumlusu uzman ya da kliniğidir. Başvurunuzu uzmanınıza ya da kliniğine yapın. Bize gelirse kliniğe iletir ve size bildiririz; kliniğe teknik olarak yardım ederiz.] [SEÇENEK B: Bize ya da kliniğe başvurabilirsiniz; ikimiz de yanıtlarız.] |
+| Uzmanla paylaşımı durdurmak | Başvuru gerekmez: Moyo Ebeveyn › Uzmanım |
 | Uzmanın sizi davet ederken girdiği bilgiler (adınız, e-postanız, çocuğun adı ve yaş grubu) | Davet kaydı kullanılmazsa en geç 3 gün, bağlanıp onaylanmazsa en geç 30 gün içinde kendiliğinden silinir. Daha önce silinmesini isterseniz bize yazın |
-| Uzmanın kendi hesabı ve belge incelemesi (uzmanlar için) | Bize |
-| Ebeveynin girdiği kayıtlar (görevler, davranış kayıtları, takip planı uygulama kayıtları) | Bize |
+| Uzmanın kendi hesabı ve yüklediği belge (uzmanlar için) | Bize |
+| Ebeveynin girdiği kayıtlar (rutinler ve adımlar, davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, takip planı uygulama kayıtları) | Bize |
 
 ## 9. Hangi durumlarda talebi yerine getiremeyiz?
 
@@ -109,7 +111,7 @@ Başvurunuz reddedilirse, yanıtımızı yetersiz bulursanız ya da 30 gün içi
 
 Başvurunuzu, kanalını, türünü, açıklamanızı, durumunu, tarihlerini ve yanıt özetini kayıt altına alırız. Bu kaydı yalnız yetkili ekip üyeleri görür; her işlem denetim kaydına geçer. Başvuru kapandıktan sonra [SÜRE] saklanır.
 
-Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@moyoapp.com.tr`
+Yürürlük: [TARİH] · Sürüm: v1 · [AD SOYAD], [ADRES] · `kvkk@moyoapp.com.tr`
 
 ## Avukata notlar
 
@@ -119,6 +121,8 @@ Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@moyo
 4. **Kimlik doğrulama süresi:** Kimlik doğrulaması beklenirken 30 günlük süre işlemeye devam eder mi?
 5. **Çocuğun kendi başvurusu:** Ayırt etme gücü olan çocuğun (ör. 15+) kendi başına başvurusu nasıl karşılanır (`hukuk_notlari.md` 5/6).
 6. **Tek çocuğu silme:** ParentApp'te tek bir çocuk profilini silme ekranı yok (`README.md` sorun 5); bugün yalnız başvuruyla ya da bütün aileyi silerek yapılabiliyor. Ekran yapılınca 5. ve 7. bölüm güncellenir.
+7. **8. bölümdeki A/B kapsamı:** Uzmanın Kasım 2026'da eklenen kayıt türleri (hedef davranışlar ve stratejileri, ebeveyn eğitimi atamaları ve uzmanın girdiği gözlem verisi; ayrıca seans kayıtları ve notları, `sozlesme/akislar.md` 20, 23, 24) seçenek A/B'nin kapsamına girer mi? Tablo şimdilik eski listeyi koruyor; seçenek metnine yalnız terim değişikliği ("danışanı" → "birlikte çalıştığı aile") yapıldı. Ebeveynin bildirdiği davranış olayları ve eğitim yanıtları "Bize" satırına eklendi.
+8. **20 Kasım 2026 güncellemesi:** Uygulama yolları uygulamalardaki güncel menüye göre yazıldı (Moyo Ebeveyn: Aile › Hesap › Yasal ve gizlilik; Moyo Mercek: Ayarlar › Yasal ve gizlilik; paylaşımı durdurma: Uzmanım › uzman › Uzmanı kaldır). "Verimi indir" ekranı iki uygulamada da henüz yok (sunucu `my_data_export` hazır); yayından önce ekran yapılmalı ya da satır "başvuruyla" diye değişmeli. Tanışmada sağlık sorusu kalmadığı için "sağlık yanıtlarını sil" çıktı. KVKK süreleri (30 gün, Kurul'a 30/60 gün) ve davet süreleri (3 gün, 30 gün) değişmedi; bu metinde deneme süresi geçmiyor.
 
 ### Yanıt şablonları (iç kullanım; avukat gözden geçirir, yayımlanmaz)
 
@@ -143,7 +147,7 @@ Yürürlük: [TARİH] · Sürüm: v1 · [ŞİRKET UNVANI], [ADRES] · `kvkk@moyo
 > Başvurunuzun ([NO]) bir kısmını yerine getirdik: [yapılan]. [Yapılmayan] ise [gerekçe ve dayanak] nedeniyle yerine getirilemedi. Bu karara katılmıyorsanız Kişisel Verileri Koruma Kurulu'na şikâyette bulunabilirsiniz.
 
 **Ş7 — Kliniğe yönlendirme**
-> Başvurunuz ([NO]) uzmanınızın ClinicApp'e girdiği kayıtlarla ilgili. Bu kayıtların veri sorumlusu uzmanınız ya da kliniğidir. Başvurunuzu bugün [KLİNİK ADI] kliniğine ilettik; kliniğin yanıt vermesi için gereken teknik desteği sağlayacağız. Uzmanla paylaşımı istediğiniz an ParentApp › Uzmanım'dan durdurabilirsiniz.
+> Başvurunuz ([NO]) uzmanınızın Moyo Uzman'a girdiği kayıtlarla ilgili. Bu kayıtların veri sorumlusu uzmanınız ya da kliniğidir. Başvurunuzu bugün [KLİNİK ADI] kliniğine ilettik; kliniğin yanıt vermesi için gereken teknik desteği sağlayacağız. Uzmanla paylaşımı istediğiniz an Moyo Ebeveyn › Uzmanım'dan durdurabilirsiniz.
 
 **Ş8 — Aktarılan kişiler**
 > Verileriniz şu alıcılara aktarılmaktadır: [liste ve ülkeler]. Güncel liste: moyoapp.com.tr/yasal/alt-isleyenler.
