@@ -4,6 +4,12 @@
 -- (admin_benchmark_set, gerekçeli). Değeri olmayan satır da eklenir (panel "kıyas yok" der). Ad, yön (better) ve birim
 -- tetikleyiciyle anahtardan gelir. Tekrar çalıştırılabilir: var olan satır güncellenir.
 -- Önkoşul: proposed/20261120220000_funnel_analytics.sql
+do $$ begin
+  if to_regclass('public.kpi_benchmarks') is null then
+    raise exception 'Önce 20261120220000_funnel_analytics.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
+  end if;
+end $$;
+
 insert into public.kpi_benchmarks (key, product, value, low, high, source, source_url, as_of, note) values
   ('store_tap_through', 'parent', null, 6.0, 12.0, 'Adapty, App Store conversion rate benchmarks', 'https://adapty.io/blog/app-store-conversion-rate/', '2026-01', 'Arama özetinden alındı, kaynak sayfa bu ortamdan açılamadı (doğrulanmadı). Kaynak sayfası bu oturumda açılamadı (ağ izni); sayı arama özetinden alındı. Arama sonuçlarında gösterim → ürün sayfası (CTR) aralığı, genel değer; medyan verilmemiş, low/high kaynaktaki aralık (çeyrek değil). Apple App Analytics''te ürün sayfası görüntüleme / tekil cihaz gösterimi olarak hesaplanır; göz atma (browse) gösterimleri de sayıldığı için oran düşebilir. Education / Lifestyle / Health & Fitness için ayrı değer bu'),
   ('store_tap_through', 'clinic', null, 6.0, 12.0, 'Adapty, App Store conversion rate benchmarks', 'https://adapty.io/blog/app-store-conversion-rate/', '2026-01', 'Arama özetinden alındı, kaynak sayfa bu ortamdan açılamadı (doğrulanmadı). Kaynak sayfası bu oturumda açılamadı (ağ izni); sayı arama özetinden alındı. Arama sonuçlarında gösterim → ürün sayfası (CTR) aralığı, genel değer; medyan verilmemiş, low/high kaynaktaki aralık (çeyrek değil). Apple App Analytics''te ürün sayfası görüntüleme / tekil cihaz gösterimi olarak hesaplanır; göz atma (browse) gösterimleri de sayıldığı için oran düşebilir. Business / Medical için ayrı değer bulunamadı; Mercek''in ka'),

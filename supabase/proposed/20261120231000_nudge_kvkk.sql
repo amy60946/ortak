@@ -4,6 +4,16 @@
 -- Gece imha işi (retention_run) canlıya alınana kadar ("live" kapalı) bu adım da yalnız sayar, silmez.
 -- Tekrar çalıştırılabilir.
 
+-- Sıra denetimi: önkoşul dosyalar çalışmadıysa hiçbir şey yazmadan anlaşılır bir hatayla durur (KVKK dökümü bozulmasın).
+do $$ begin
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'parent_trainings' and column_name = 'family_id') then
+    raise exception 'Önce 20261120200000_family_keeps_records.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
+  end if;
+  if to_regclass('public.nudge_log') is null then
+    raise exception 'Önce 20261120230000_nudge_engine.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
+  end if;
+end $$;
+
 -- 1. Silme adımı (retention_run'ın kurallarıyla: live değilse yalnız sayar)
 create or replace function public.nudge_log_prune()
 returns jsonb language plpgsql security definer set search_path = '' as $$
