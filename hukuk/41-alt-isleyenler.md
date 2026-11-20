@@ -47,7 +47,7 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 |---|---|
 | Rol | **App Store satışı ve aboneliği:** satıcı Apple'dır, ödeme ve Apple Kimliği bilgileri bakımından bağımsız veri sorumlusudur (Apple'ın gizlilik politikası geçerlidir). **Anlık bildirim (APNs):** bizim talimatımızla bildirimi cihaza iletir |
 | Amaç | Abonelik satışı, yenileme, iade; Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'e anlık bildirim iletmek |
-| Veri | Bize gelen: işlem kimliği, ürün, dönem sonu, yenileme durumu (kart bilgisi bize gelmez). Apple'a giden: cihazın bildirim anahtarı ve bildirim başlığı ile metni (ör. "Elif macerayı tamamladı" — çocuğun adı geçebilir) |
+| Veri | Bize gelen: işlem kimliği, ürün, dönem sonu, yenileme durumu (kart bilgisi bize gelmez). Apple'a giden: cihazın bildirim anahtarı ve bildirim başlığı ile metni (ör. "Elif adımı tamamladı" — çocuğun adı geçebilir) |
 | İlgili kişiler | Ebeveynler, uzmanlar (satış); ebeveynler, çocuklar, uzmanlar (bildirim) |
 | Konum | ABD / AB |
 | Aktarım güvencesi | Bildirim için: [standart sözleşme imzalanacak] + Kurul'a bildirim. Satış için: Apple'ın kendi koşulları |

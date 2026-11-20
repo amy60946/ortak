@@ -126,7 +126,7 @@ Davranış kayıtları, davranış olayları ve serbest metin alanlarına yazdı
 ## 5. Üç uygulamada ortak kayıtlar
 
 - **Kullanım kayıtları:** Uygulamayı açtığınız günler, oturum sayısı, uygulama sürümü, platform ve hangi ekranın ya da özelliğin kullanıldığını gösteren olay adları. Bu kayıtlarda serbest metin, mesaj içeriği ya da sağlık bilgisi yoktur. Kendi sunucumuzda tutulur; üçüncü taraf analiz aracına gitmez. Amaç: hizmetin çalıştığını ölçmek, hataları bulmak, ürünü geliştirmek.
-- **Bildirim kayıtları:** Size giden uygulama içi bildirimler ve okunup okunmadığı. Anlık bildirimin başlığında ya da metninde çocuğunuzun adı geçebilir (ör. "Efe macerayı tamamladı"); bu metin Apple'ın bildirim hizmetiyle (yedek yolda Expo üzerinden) telefona iletilir. Bildirim metnine sağlık bilgisi konmaz.
+- **Bildirim kayıtları:** Size giden uygulama içi bildirimler ve okunup okunmadığı. Anlık bildirimin başlığında ya da metninde çocuğunuzun adı geçebilir (ör. "Efe adımı tamamladı"); bu metin Apple'ın bildirim hizmetiyle (yedek yolda Expo üzerinden) telefona iletilir. Bildirim metnine sağlık bilgisi konmaz.
 - **Giriş kodu deneme kayıtları:** Kod tahminiyle kötüye kullanımı önlemek için hatalı denemeler IP adresiyle birlikte kısa süre (15 dakika ile 1 gün arası) tutulur.
 - **Onay kayıtları:** Hangi metni (Kullanım Koşulları, aydınlatma metni, açık rızalar) hangi sürümüyle ve ne zaman onayladığınız.
 - **Ekip işlemleri kaydı:** Ekibimizin hesabınızda yaptığı her işlem gerekçesiyle, değiştirilemez bir kayda yazılır.
