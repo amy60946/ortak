@@ -26,6 +26,16 @@
 -- ---------------------------------------------------------------------
 -- 1. Tercih: "Hatırlatmalar ve ipuçları" (tips)
 -- ---------------------------------------------------------------------
+-- Sıra denetimi: önkoşul dosyalar çalışmadıysa hiçbir şey yazmadan anlaşılır bir hatayla durur.
+do $$ begin
+  if to_regclass('public.parent_notification_prefs') is null then
+    raise exception 'Önce 20261120210000_parent_notification_prefs.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
+  end if;
+  if to_regclass('public.store_funnel_daily') is null then
+    raise exception 'Önce 20261120220000_funnel_analytics.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
+  end if;
+end $$;
+
 -- Moyo: parent_notification_prefs'e üçüncü anahtar. Son tanım burada (önceki: proposed/20261120210000).
 alter table public.parent_notification_prefs add column if not exists tips boolean not null default true;
 
