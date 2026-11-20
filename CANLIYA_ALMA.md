@@ -96,7 +96,7 @@ Karar: ParentApp ve ClinicApp ödemesi RevenueCat (22 Ekim; klinik sahibi birey 
 A. App Store Connect
 - (Siz) 1. Business › Agreements › **Paid Apps** sözleşmesi + banka + vergi (etkin olmadan abonelikler TestFlight'ta da yüklenmez; onayı günler sürebilir, ilk iş)
 - (Siz) 2. Users and Access › Integrations › **In-App Purchase** anahtarı (.p8 + Key ID + Issuer ID; bir kez indirilir, sohbete değil RevenueCat paneline)
-- (Siz) 3. ParentApp › Subscriptions: grup "Moyo Premium", `parentapp.premium.monthly` (1 ay), `parentapp.premium.yearly` (1 yıl); TR fiyatı, Türkçe ad/açıklama, inceleme ekran görüntüsü (ilk abonelikler sürümle birlikte incelemeye gider)
+- (Siz) 3. ParentApp › Subscriptions: grup "Moyo Premium", `parentapp.premium.monthly` (1 ay) **349,99 TL**, `parentapp.premium.yearly` (1 yıl) **3.499,99 TL** (kullanıcı kararı 20 Kasım 2026, `sozlesme/ekonomi.md` 9); TR fiyatı, Türkçe ad/açıklama, inceleme ekran görüntüsü (ilk abonelikler sürümle birlikte incelemeye gider)
 - (Siz) 4. ClinicApp › Subscriptions: `com.clinicapp.uzman.solo.{monthly,yearly}`, `com.clinicapp.uzman.clinic.{monthly,yearly}` (ayrıntı Klinik penceresi)
 B. RevenueCat
 - (Siz) 5. Hesap + proje **"Moyo"**; iki App Store uygulaması (`com.parentapp.ios`, `com.clinicapp.uzman`), ikisine 2. adımdaki .p8 + Key ID + Issuer ID
@@ -111,7 +111,7 @@ D. Uygulamalar ve deneme
 - ✓ (ParentApp penceresi) `react-native-purchases` 10.16.x (`parent-app/src/lib/purchases.ts`): `configure(appUserID)`, `logIn` / `logOut`, üyelik ekranı, geri yükle, "Aboneliği yönet", fiyat mağazadan; anahtar yoksa ödeme "bağlı değil" (2 Kasım 2026)
 - ✓ (ClinicApp penceresi, 11 Kasım 2026) `expo-iap` / `clinic-billing` yerine `react-native-purchases` 10.16.x (`clinic-app/src/lib/store.ios.ts`): yalnız klinik sahibine paketler + fiyat (mağazadan), geri yükle, "Aboneliği yönet"; web'de "iPhone/iPad'den alın"; CI anahtarı `.env`'e verir ve pakette denetler. Çalışma alanları: satın almadan önce RevenueCat abone niteliği `clinic_id`, `billing-webhook` onu okur — webhook'un yeni sürümü yayında (11 Kasım 2026; `supabase/functions/_tek-dosya/billing-webhook.ts`, Verify JWT kapalı). ClinicApp TestFlight 132
 - (Claude, iki pencere) 12. TestFlight'ta satın al, geri yükle, iptal, iade, grace period (TestFlight alışverişi ücretsiz deneme ortamıdır)
-- (Siz) Gerçek fiyatlar
+- (Siz) Gerçek fiyatlar: **karar verildi 20 Kasım 2026** (`sozlesme/ekonomi.md` 9; altı ürün yukarıda 3. ve 4. adımda). App Store Connect'e girmek + `proposed/20261120130000_billing_prices.sql` (Moyo Mercek web panelindeki fiyat)
 - En son (yayından önce): `BILLING_ALLOW_SANDBOX` silinir; yönetim panelinde `billing.enforce = true`
 - ✓ (Claude) KVKK aydınlatma metnine RevenueCat (yurt dışı veri işleyen) (`hukuk/10-aydinlatma-ebeveyn.md`, `hukuk/41-alt-isleyenler.md` 3.4; Resend 3.5)
 - ✓ iyzico: **gerekmiyor** (22 Ekim: klinik de birey olarak App Store'dan öder; web'de satış yok)
@@ -181,7 +181,7 @@ D. Uygulamalar ve deneme
 - (Siz + Hukuk) Uzman sözleşmesi + veri işleme eki onay akışı
 - (Claude) Çerez bandı, `EXPO_PUBLIC_PRIVACY_URL`
 - (Claude) Web oturum zaman aşımı, çıktıda "tanı değildir"
-- **Abonelikler nasıl kurulur (1.8 A 4. adımın ayrıntısı; kullanıcı kararları 10 Kasım 2026):** App Store Connect › ClinicApp › Subscriptions › tek grup **"Moyo Mercek Üyelik"**, dört ürün: `com.clinicapp.uzman.solo.monthly` (1 ay), `com.clinicapp.uzman.solo.yearly` (1 yıl), `com.clinicapp.uzman.clinic.monthly`, `com.clinicapp.uzman.clinic.yearly`. Grup içi sıra (yükseltme): Klinik üstte, Bireysel altta. Fiyat: uygulamadaki taslak 749,99 / 7.499,99 / 2.999,99 / 29.999,99 TL; App Store'daki en yakın fiyat noktası seçilir, son fiyat kullanıcının kararı. **Introductory Offer (ücretsiz deneme) eklenmez:** deneme sunucuda, kartsız, **14 gün** (`migrations/20261110130000_clinic_trial_14.sql`). RevenueCat'te entitlement `clinic` (dört ürün bağlanır) ve offering `clinic` (dört paket); ClinicApp genel anahtarı (`appl_…`) → clinic-app GitHub Secrets `EXPO_PUBLIC_REVENUECAT_IOS_KEY`.
+- **Abonelikler nasıl kurulur (1.8 A 4. adımın ayrıntısı; kullanıcı kararları 10 Kasım 2026):** App Store Connect › ClinicApp › Subscriptions › tek grup **"Moyo Mercek Üyelik"**, dört ürün: `com.clinicapp.uzman.solo.monthly` (1 ay), `com.clinicapp.uzman.solo.yearly` (1 yıl), `com.clinicapp.uzman.clinic.monthly`, `com.clinicapp.uzman.clinic.yearly`. Grup içi sıra (yükseltme): Klinik üstte, Bireysel altta. Fiyat (kullanıcı kararı 20 Kasım 2026, `sozlesme/ekonomi.md` 9): Bireysel **1.199,99 TL / ay**, **11.999,99 TL / yıl**; Klinik **3.999,99 TL / ay**, **39.999,99 TL / yıl** (Subscription › Subscription Prices › Türkiye fiyatını seç; App Store öteki ülkeleri kendisi hesaplar). **Introductory Offer (ücretsiz deneme) eklenmez:** deneme sunucuda, kartsız, **14 gün** (`migrations/20261110130000_clinic_trial_14.sql`). RevenueCat'te entitlement `clinic` (dört ürün bağlanır) ve offering `clinic` (dört paket); ClinicApp genel anahtarı (`appl_…`) → clinic-app GitHub Secrets `EXPO_PUBLIC_REVENUECAT_IOS_KEY`.
 
 ## 3. Admin paneli (Faz 1 canlıdan önce)
 - ✓ (ortak) Sunucu tarafı yazıldı ve testli: `proposed/20261023000000_admin.sql`, `sozlesme/admin.md` (destek/KVKK talep tabloları Faz 2)
