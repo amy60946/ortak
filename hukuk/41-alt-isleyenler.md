@@ -1,6 +1,6 @@
 # Hizmet Sağlayıcılar (Alt İşleyenler) Listesi
 | Anahtar | alt-isleyenler | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı alınınca `https://[ALAN ADI]/alt-isleyenler`); Gizlilik Politikası 10. bölümden ve aydınlatma metinlerinden bağlantı; Uzman Hizmet Sözleşmesi Veri İşleme Eki'nden atıf; üç uygulamada Ayarlar › Yasal metinler | Dayanak | KVKK md. 9 (7499 s. Kanun ile 2024 değişikliği), md. 10, md. 11/1-ç, md. 12/2; Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar Hakkında Yönetmelik (2024) |
+| Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı: `https://moyoapp.com.tr/yasal/alt-isleyenler`); Gizlilik Politikası 10. bölümden ve aydınlatma metinlerinden bağlantı; Uzman Hizmet Sözleşmesi Veri İşleme Eki'nden atıf; üç uygulamada Ayarlar › Yasal metinler | Dayanak | KVKK md. 9 (7499 s. Kanun ile 2024 değişikliği), md. 10, md. 11/1-ç, md. 12/2; Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar Hakkında Yönetmelik (2024) |
 
 ## Kısaca
 
@@ -16,7 +16,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 
 | # | Sağlayıcı | Rol | Ne için | Hangi uygulama | Konum | Durum |
 |---|---|---|---|---|---|---|
-| 1 | Supabase | Alt işleyen | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Üçü + ekip paneli | [SUPABASE BÖLGESİ] | Kullanımda |
+| 1 | Supabase | Alt işleyen | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Üçü + ekip paneli | Frankfurt, Almanya; AB bölgesi | Kullanımda |
 | 2 | Apple | Satışta bağımsız veri sorumlusu; bildirimde alt işleyen | App Store satışı ve aboneliği; anlık bildirim (APNs) | Üçü | ABD / AB | Kullanımda |
 | 3 | Expo | Alt işleyen | Yedek bildirim yolu | ParentApp, ClinicApp (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
 | 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | ParentApp, ClinicApp | ABD | Kurulum aşamasında |
@@ -34,7 +34,7 @@ Pofi Adası, ParentApp ve ClinicApp'i çalıştırmak için bizim adımıza ve t
 | Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar, davranış kayıtlarındaki ses kayıtları ve uzman belgeleri için özel dosya depolama; bildirim, e-posta ve belge ön kontrolü gibi sunucu işlevleri; zamanlanmış işler |
 | Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; görevler, mesajlar, oyun kaydı; davranış kayıtları, tanışma ve isteğe bağlı sağlık yanıtları, uzman notları (özel nitelikli veri dahil); kullanım ve güvenlik kayıtları |
 | İlgili kişiler | Ebeveynler, çocuklar, uzmanlar, ekip üyeleri |
-| Konum | [SUPABASE BÖLGESİ] |
+| Konum | Frankfurt, Almanya; AB bölgesi |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + imzadan sonra 5 iş günü içinde Kurul'a bildirim |
 | Sağlayıcının alt işleyenleri | Bulut altyapısı ve destek hizmetleri — [Supabase'in güncel listesinden eklenecek] |
 
@@ -139,7 +139,7 @@ Her alt işleyenle yazılı bir veri işleme sözleşmesi yapar ya da sağlayıc
 
 Her güncellemede bu sayfanın sürümü (v1, v2 …) ve tarihi değişir; eski sürümler saklanır. Liste yılda en az bir kez gözden geçirilir.
 
-Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `kvkk@[ALAN ADI]`
+Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `kvkk@moyoapp.com.tr`
 
 ## Avukata notlar
 

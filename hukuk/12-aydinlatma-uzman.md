@@ -1,6 +1,6 @@
 # ClinicApp Uzman Aydınlatma Metni
 | Anahtar | aydinlatma-uzman | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ClinicApp (iPad + web): kayıt ekranında onay düğmesinden önce bağlantı; ekip koduyla katılım ekranı; "Belgeni yükle" sayfasında kısa özet + bağlantı; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | KVKK md. 3, 4, 5, 8, 9, 10, 11, 12, 13, 14; Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ; Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ; Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik |
+| Nerede | ClinicApp (iPad + web): kayıt ekranında onay düğmesinden önce bağlantı; ekip koduyla katılım ekranı; "Belgeni yükle" sayfasında kısa özet + bağlantı; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı: `moyoapp.com.tr`) | Dayanak | KVKK md. 3, 4, 5, 8, 9, 10, 11, 12, 13, 14; Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ; Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ; Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik |
 
 ## Kısaca
 
@@ -11,13 +11,13 @@
 - **Yapmadıklarımız:** verinizi satmayız; reklam göstermeyiz; üçüncü taraf analiz ya da izleme aracı kullanmayız; verinizi yapay zekâ hizmetine göndermeyiz.
 - **Belgeniz:** yalnız inceleme için okunur, karar verilince silinir; T.C. kimlik numaranız saklanmaz.
 - **Sunucular:** verileriniz yurt dışındaki sunucularda tutulabilir; aktarım KVKK md. 9'daki usulle yapılır.
-- **Haklarınız:** KVKK md. 11'deki haklarınızı uygulama içinden ya da `kvkk@[ALAN ADI]` adresinden kullanabilirsiniz; en geç 30 gün içinde ücretsiz yanıt veririz. Hesabınızı uygulama içinden silebilirsiniz.
+- **Haklarınız:** KVKK md. 11'deki haklarınızı uygulama içinden ya da `kvkk@moyoapp.com.tr` adresinden kullanabilirsiniz; en geç 30 gün içinde ücretsiz yanıt veririz. Hesabınızı uygulama içinden silebilirsiniz.
 
 ---
 
 ## 1. Veri sorumlusu ve bu metnin kapsamı
 
-1.1. Kişisel verileriniz, veri sorumlusu sıfatıyla `[ŞİRKET UNVANI]` ("Platform", "biz") tarafından işlenir. Adres: `[ADRES]`. MERSİS/VKN: `[MERSİS/VKN]`. İletişim: `kvkk@[ALAN ADI]` (kişisel veri başvuruları), `destek@[ALAN ADI]` (destek).
+1.1. Kişisel verileriniz, veri sorumlusu sıfatıyla `[ŞİRKET UNVANI]` ("Platform", "biz") tarafından işlenir. Adres: `[ADRES]`. MERSİS/VKN: `[MERSİS/VKN]`. İletişim: `kvkk@moyoapp.com.tr` (kişisel veri başvuruları), `destek@moyoapp.com.tr` (destek).
 
 1.2. Platform; çocuklar için Pofi Adası (GameApp), ebeveynler için ParentApp ve uzmanlar için ClinicApp uygulamalarını işletir. Bu metin, **ClinicApp hesabı açan uzmanların ve klinik ekip üyelerinin kendi kişisel verilerini** kapsar.
 
@@ -76,7 +76,7 @@
 
 | Sağlayıcı | Ne için | Hangi verileriniz | Konum |
 |---|---|---|---|
-| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | `[SUPABASE BÖLGESİ]` |
+| Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | Frankfurt, Almanya; AB bölgesi |
 | Apple | App Store (üyelik satışı; satıcı Apple'dır), bildirim gönderimi (APNs) | Üyelik işlemleri, bildirim jetonu ve bildirim metni | ABD / AB |
 | RevenueCat | Üyelik durumunun doğrulanması | Rastgele kullanıcı kimliği, satın alma kayıtları | ABD |
 | Resend | İşlem e-postaları (e-posta doğrulama, şifre sıfırlama, sizin adınıza aile daveti) | E-posta adresiniz, adınız, unvanınız, klinik adınız, e-posta içeriği | ABD / AB |
@@ -93,7 +93,7 @@ Bu sağlayıcılar verilerinizi yalnız bu hizmetler için işler, kendi amaçla
 
 ## 5. Yurt dışına aktarım
 
-5.1. Hizmet sağlayıcılarımızın sunucuları yurt dışında bulunabilir (madde 4.5'teki "Konum" sütunu). Veritabanımızın bulunduğu bölge: `[SUPABASE BÖLGESİ]`.
+5.1. Hizmet sağlayıcılarımızın sunucuları yurt dışında bulunabilir (madde 4.5'teki "Konum" sütunu). Veritabanımızın bulunduğu bölge: Frankfurt, Almanya; AB bölgesi.
 
 5.2. Yurt dışına aktarım KVKK md. 9'a uygun yapılır: aktarılan ülke için Kurul'un yeterlilik kararı varsa ona dayanılır; yoksa Kurul'un ilan ettiği **standart sözleşme** imzalanır ve imzadan itibaren **5 iş günü** içinde Kurul'a bildirilir. Yalnız arızi ve md. 9/6'da sayılan istisnai hâllerde başka dayanaklar kullanılabilir.
 
@@ -103,7 +103,7 @@ Bu sağlayıcılar verilerinizi yalnız bu hizmetler için işler, kendi amaçla
 
 6.2. **Nasıl:** Yüklediğiniz belge önce kendi sunucumuzda otomatik bir ön kontrolden geçer (belgenin okunabilirliği, e-Devlet izi, mezuniyet, barkod, adınızın, bölümün ve derecenin beyanınızla uyumu). Yalnız kesin durumlar (okunamayan belge, öğrenci belgesi, başka bir hesapta onaylı ya da askıdaki barkod) kendiliğinden reddedilir; diğer başvuruları yetkili ekip üyemiz inceler, barkodu e-Devlet'in belge doğrulama hizmetinde (BCBA için BACB'nin herkese açık sicilinde) sorgular, gerekirse sizi kısaca arar.
 
-6.3. **Otomatik karara itiraz:** Ön kontrolün kendiliğinden verdiği ret kararına itiraz edebilir (md. 11/1-g), yeni belgeyle yeniden başvurabilir ya da `destek@[ALAN ADI]` üzerinden ekip incelemesi isteyebilirsiniz.
+6.3. **Otomatik karara itiraz:** Ön kontrolün kendiliğinden verdiği ret kararına itiraz edebilir (md. 11/1-g), yeni belgeyle yeniden başvurabilir ya da `destek@moyoapp.com.tr` üzerinden ekip incelemesi isteyebilirsiniz.
 
 6.4. **Saklama:** Belge dosyası; karar verilince, başvuru kendiliğinden reddedilince, yeni belgeyle değiştirilince ya da hesabınız silinince silinir. Yalnız **özet** (üniversite, bölüm, derece, mezuniyet yılı), **karar kaydı** ve aynı belgenin iki hesapta kullanılmasını önlemek için **belge barkodu** hesabınız süresince saklanır. Adınız ve T.C. kimlik numaranız özette saklanmaz.
 
@@ -144,7 +144,7 @@ haklarına sahipsiniz.
 
 9.1. Başvurunuzu şu yollardan biriyle yapabilirsiniz:
 - ClinicApp içinden: Ayarlar › Yasal metinler › "Kişisel veri başvurusu";
-- ClinicApp'te kayıtlı e-posta adresinizden `kvkk@[ALAN ADI]` adresine;
+- ClinicApp'te kayıtlı e-posta adresinizden `kvkk@moyoapp.com.tr` adresine;
 - kayıtlı elektronik posta (KEP), güvenli elektronik imza ya da mobil imzayla;
 - yazılı olarak `[ADRES]` adresine.
 
@@ -168,7 +168,7 @@ Bu metin değişirse yeni sürümü ClinicApp'te ve herkese açık adreste yayı
 2. **Otomatik ret (md. 11/1-g):** Ön kontrol bazı başvuruları insan bakmadan reddediyor (okunamayan belge, öğrenci belgesi, onaylı barkod çakışması). İtiraz yolu madde 6.3'te yazıldı; yazılımda ayrı bir "itiraz" düğmesi yok (yeniden başvuru ve destek e-postası var). Yeterli mi?
 3. **Uzmanın e-postasının aileye görünmesi:** Davet e-postasında yanıt adresi uzmanın e-postası (`akislar.md` 10). Sözleşmenin ifası dayanağı yeterli mi, yoksa davet formunda ayrıca kısa bir uyarı ("Aile yanıtlarsa e-posta adresini görür") gerekir mi?
 4. **Klinik sahibi ile ekip üyesi ilişkisi:** Sahip, üyelerin davetlerini ve istatistiklerini görüyor. Sahip ile üye arasında işveren–çalışan ilişkisi varsa, üyelerin bu verileri için klinik de ayrı bir veri sorumlusu sayılabilir mi; üyeye ayrıca bilgi verilmeli mi?
-5. **Yurt dışı aktarım:** Supabase bölgesi (`[SUPABASE BÖLGESİ]`) netleşmeli; her sağlayıcıyla md. 9 standart sözleşmesi + 5 iş günü içinde Kurul'a bildirim (`CANLIYA_ALMA.md` 1.6).
+5. **Yurt dışı aktarım:** Supabase bölgesi (Frankfurt, Almanya; AB bölgesi; 10 Kasım 2026'da dolduruldu); her sağlayıcıyla md. 9 standart sözleşmesi + 5 iş günü içinde Kurul'a bildirim (`CANLIYA_ALMA.md` 1.6).
 6. **Saklama süreleri** (`[SÜRE]` alanları) ve zamanlanmış imha işi: imha işi yazılımda henüz yok (`CANLIYA_ALMA.md` 1.6). Bildirim kayıtlarının süresi olgu dosyasında yok.
 7. **Uygulama içi başvuru:** "Kişisel veri başvurusu" ekranı ve başvuru kaydı (`kvkk_requests`) yazılımda henüz yok; yapılmazsa 9.1'deki ilk yol çıkarılmalı. Ayrıca `kvkk@` ve `destek@` posta kutuları henüz açılmadı (alan adı yok).
 8. **Deneme geçmişi:** Olgu dosyası e-posta özetiyle tutulan deneme geçmişini "herkes" altında sayıyor; bugünkü sistemde yalnız aile (ParentApp) denemesinde kullanılıyor. ClinicApp'e eklenirse bu metne satır eklenmeli.

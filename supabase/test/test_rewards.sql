@@ -158,7 +158,7 @@ select tst.fails($$select public.sun_stones_spendable('00000000-0000-0000-0000-0
 -- ücretsiz plan (anahtar açık + deneme bitti): ödül ekleme, verme, düşme kapalı; karar açık
 reset role;
 update public.app_config set value = value || '{"enforce": true}' where key = 'billing';
-update public.families set trial_started_at = now() - interval '10 days' where id = tst.v('fid')::uuid;
+update public.families set trial_started_at = now() - interval '20 days' where id = tst.v('fid')::uuid;
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(tst.err($$insert into public.rewards (family_id, title, cost) values (public.my_family_id(), 'Yeni', 1)$$) like 'Bu özellik Premium%', 'ücretsiz planda ödül eklenmez');

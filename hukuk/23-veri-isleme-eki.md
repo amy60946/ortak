@@ -1,6 +1,6 @@
 # Veri İşleme Eki (ClinicApp Uzman Hizmet Sözleşmesi, Ek-1)
 | Anahtar | veri-isleme-eki | Sürüm | v1 | Durum | TASLAK — avukat onayı bekler |
-| Nerede | ClinicApp (iPad + web): Uzman Hizmet Sözleşmesi'yle aynı onay kutusunda, sürümlü onay kaydıyla; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı gelince `[ALAN ADI]`) | Dayanak | KVKK md. 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13; Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar Hakkında Yönetmelik (2024) ve Kurul'un standart sözleşmeleri; Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik; Kurul'un kişisel veri ihlali bildirim kararı (72 saat) ve Kişisel Veri Güvenliği Rehberi (teknik ve idari tedbirler); TBK md. 116 |
+| Nerede | ClinicApp (iPad + web): Uzman Hizmet Sözleşmesi'yle aynı onay kutusunda, sürümlü onay kaydıyla; Ayarlar › Yasal metinler; herkese açık adres (`legal` sunucu işlevi, alan adı: `moyoapp.com.tr`) | Dayanak | KVKK md. 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13; Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar Hakkında Yönetmelik (2024) ve Kurul'un standart sözleşmeleri; Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik; Kurul'un kişisel veri ihlali bildirim kararı (72 saat) ve Kişisel Veri Güvenliği Rehberi (teknik ve idari tedbirler); TBK md. 116 |
 
 ## Kısaca
 
@@ -93,7 +93,7 @@
    - f) **Destek:** Uzmanın talebi üzerine, yalnız o talebi çözmek için ve kayıt altında hesap ve klinik bilgilerine bakmak. Not metinleri yönetim ekranlarında gösterilmez.
    - g) **Üyelik bitince:** Sözleşme md. 10.7 ve 14.4'e göre erişimi kapatmak, kayıtları saklama süresi boyunca tutmak ve süre sonunda silmek.
 
-6.2. **Ek talimatlar.** Uzman ek talimatlarını ClinicApp'teki ayarlar ve araçlarla ya da yazılı olarak (`destek@[ALAN ADI]`, `kvkk@[ALAN ADI]`) verir. Platform, bir talimatın mevzuata aykırı olduğunu düşünürse bunu Uzmana derhal bildirir ve aykırılık giderilene kadar o talimatı uygulamayabilir.
+6.2. **Ek talimatlar.** Uzman ek talimatlarını ClinicApp'teki ayarlar ve araçlarla ya da yazılı olarak (`destek@moyoapp.com.tr`, `kvkk@moyoapp.com.tr`) verir. Platform, bir talimatın mevzuata aykırı olduğunu düşünürse bunu Uzmana derhal bildirir ve aykırılık giderilene kadar o talimatı uygulamayabilir.
 
 ## 7. Platformun (veri işleyenin) yükümlülükleri
 
@@ -115,7 +115,7 @@
 
 | Alt işleyen | Danışan kayıtlarıyla ilişkisi | Konum |
 |---|---|---|
-| Supabase | Veritabanı, kimlik doğrulama, dosya depolama ve sunucu işlevleri; bütün danışan kayıtları burada barındırılır | `[SUPABASE BÖLGESİ]` |
+| Supabase | Veritabanı, kimlik doğrulama, dosya depolama ve sunucu işlevleri; bütün danışan kayıtları burada barındırılır | Frankfurt, Almanya; AB bölgesi |
 | Resend | Uzman adına davet e-postası: ebeveynin e-posta adresi ve e-posta içeriği (içerikte çocuğun adı ve Uzmanın notu yoktur) | ABD / AB |
 | Apple (APNs) | Uzmana ve ebeveyne gönderilen bildirimlerin iletilmesi; bildirim metni | ABD / AB |
 | Cloudflare | Yönetim panelinin barındırılması; danışan kayıtlarının içeriği panelde gösterilmez, yalnız sayılar | Küresel |
@@ -239,7 +239,7 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 4. **Takip planı uygulama kayıtları (4.2):** Ebeveynin girdiği "bugün uyguladım", zorluk ve neden kayıtları uzmanın planına bağlı; bu Ek'e danışan kaydı olarak alındı ve aktarılabilir kayıtlar arasında (`hukuk_notlari.md` 1. bölüm). Ebeveynin girdiği veri olduğu için aile verisi mi sayılmalı?
 5. **İhlal bildirim süresi (10.1):** `[SÜRE]` için 24 saat önerildi (uzmanın 72 saatlik süresine pay bırakmak için). Ayrıca ihlal Platformun kendi verisini de etkiliyorsa iki ayrı Kurul bildirimi mi gerekir?
 6. **Alt işleyen itirazı ve fesih (8.3):** İtiraz eden uzmanın feshinde ödenmiş üyelik bedelinin iadesi Apple üzerinden olduğu için Platformun elinde değil; doğrudan iade mi taahhüt edilmeli?
-7. **Yurt dışı aktarım (9.2):** Platform veri işleyen olarak alt işleyenle "veri işleyenden veri işleyene" standart sözleşmesini mi imzalamalı, yoksa her klinik veri sorumlusu olarak mı? Kurul'a bildirimi kim yapar? Sağlık verisi için ek şart var mı? Supabase bölgesi seçimi (`[SUPABASE BÖLGESİ]`) bu soruyu doğrudan etkiler.
+7. **Yurt dışı aktarım (9.2):** Platform veri işleyen olarak alt işleyenle "veri işleyenden veri işleyene" standart sözleşmesini mi imzalamalı, yoksa her klinik veri sorumlusu olarak mı? Kurul'a bildirimi kim yapar? Sağlık verisi için ek şart var mı? Supabase bölgesi seçimi (Frankfurt, Almanya; AB bölgesi) bu soruyu doğrudan etkiler.
 8. **Bildirim metinlerinde çocuk adı (8.1, Apple APNs):** Uzmana giden bazı bildirimler çocuğun adını içerebilir (ör. "Ebeveyn çocuk bilgisini düzeltti: Efe → Efecan"). Bildirim metni Apple sunucularından geçer. Yazılımda teyit edilmeli; gerekirse bildirim metni adsız yapılmalı ("Bir davette çocuk bilgisi düzeltildi"). Ayrıca `akislar.md` 7: bildirim anahtarı Expo biçimindeyse bildirim **Expo Push API** üzerinden gider (yedek yol); Expo olgu dosyasının alt işleyen listesinde yok — kullanılıyorsa listeye eklenmeli, kullanılmıyorsa yedek yol kapatılmalı.
 9. **Denetim hakkı (12.2):** Yılda bir, 30 gün önceden, masrafı uzmana ait — tek kişilik Platform için ölçülü mü?
 10. **Yedeklerden silme (13.2):** Supabase yedekleme süresi teyit edilip `[SÜRE]` buna göre yazılmalı.

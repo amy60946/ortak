@@ -32,5 +32,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Testler
         run: set -o pipefail; bash supabase/test/run.sh 2>&1 | grep -v 'NOTICE'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Paylaşım takvimi testleri
         run: node --test tools/paylasim/*.test.mjs
+      - name: Ödeme webhook'u testleri; panel için tek dosya güncel mi
+        run: |
+          node --experimental-strip-types --test supabase/functions/billing-webhook/state.test.ts
+          python3 tools/tek_dosya.py billing-webhook
+          git diff --exit-code supabase/functions/_tek-dosya/ || { echo "::error::_tek-dosya/billing-webhook.ts kaynağın gerisinde: python3 tools/tek_dosya.py billing-webhook"; exit 1; }

@@ -36,9 +36,9 @@
 > - **Ne:** [Çocuğun adı] için konmuş ya da düşündüğün tanı ve düzenli kullandığı ilaç hakkındaki yanıtların.
 > - **Neden:** ParentApp'i [çocuğun adı]'nın ihtiyacına göre düzenlemek.
 > - **Kim görür:** sen ve ailendeki diğer ebeveyn. Ekibimiz yalnız destek için, gerekçe yazarak ve ayrıca açarak görebilir; her açılış kayda geçer. Bu yanıtlar uzmanla paylaşılan kayıtların arasında değildir. Kimliksiz toplam raporlarda kullanılmaz.
-> - **Nerede:** hizmet sağlayıcımızın sunucularında (`[SUPABASE BÖLGESİ]`); bu sunucular yurt dışında olabilir.
+> - **Nerede:** hizmet sağlayıcımızın sunucularında (Frankfurt, Almanya; AB bölgesi); bu sunucular yurt dışında olabilir.
 > - **Ne kadar:** sen silene ya da iznini geri alana kadar; en geç hesabın silinene kadar.
-> - **Haklar:** düzeltme, silme, bilgi isteme. Başvuru: `kvkk@[ALAN ADI]`. [Aydınlatma Metni'nin tamamı]
+> - **Haklar:** düzeltme, silme, bilgi isteme. Başvuru: `kvkk@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
 
 ### 1.2 Ekranda gösterilecek tam metin
 
@@ -87,7 +87,7 @@
 > - **Ne paylaşılmaz:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı.
 > - **Kim görür:** davet eden uzman, kliniğin sahibi ve sahibin bu paylaşımı atadığı ekip üyeleri. Uzman kayıtları yalnız okur, değiştiremez.
 > - **Ne kadar:** sen durdurana kadar. Durdurunca uzmanın erişimi hemen biter; uzmanın o güne kadar yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır.
-> - **Haklar:** `kvkk@[ALAN ADI]`. [Aydınlatma Metni'nin tamamı]
+> - **Haklar:** `kvkk@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
 
 ### 2.2 Ekranda gösterilecek tam metin
 
@@ -138,7 +138,7 @@ Rıza cümlesi (yeni):
 > - **Nasıl:** yalnız okunur, uygulamanın içinden. Yeni uzman bu kayıtları değiştiremez ve silemez.
 > - **Ne gizlenir:** önceki uzmanın adı, unvanı, kliniği ve iletişim bilgileri. Yeni uzman yalnız "Önceki uzman 1" ve dönemi (ay) görür. Metinlerde geçen uzman ve klinik adları otomatik gizlenir.
 > - **Ne kadar:** sen izni geri alana kadar.
-> - **Haklar:** `kvkk@[ALAN ADI]`. [Aydınlatma Metni'nin tamamı]
+> - **Haklar:** `kvkk@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
 
 ### 3.2 Ekranda gösterilecek tam metin (`hukuk_notlari.md` B, aynen)
 
