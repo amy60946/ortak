@@ -66,7 +66,7 @@
 | Hedefler ve değerlendirmeler | Alan, gözlenebilir davranış, ölçüm biçimi, başlangıç ve hedef düzey, süre, evde destek, aileye not, aileye görünürlük; değerlendirme (−2 … +2) ve kısa not (değerlendirmeler aileye görünmez) | Çocuk |
 | Rutin ve adım önerileri | Başlık, açıklama, tekrar, hatırlatma saati, ödül, inceleme gerekliliği, ebeveyne not, rutin paketi, bağlı hedef; ailenin kararı ve oluşan rutin ya da adımla bağı | Çocuk, ebeveyn |
 | Takip planı (aile programı) | Modüllerin amacı, evde uygulama, kontrol listesi, durumu; aileye gönderim bilgisi; ebeveynin bu modüller için girdiği uygulama kayıtları (bugün uyguladım, zorluk 1–5, uygulayamama nedeni) | Çocuk, ebeveyn |
-| Ebeveyn eğitimi | Eğitimin hedefi, kimin için olduğu ve durumu (Taslak, Etkin, Ustalaştı); seçilen modüller, uygulama görevleri ve yapılacaklar; ustalık ölçütü ve Uzmanın girdiği gözlem verisi (gözlem verisi aileye görünmez); incelendi bilgisi | Ebeveyn, çocuk |
+| Ebeveyn eğitimi | Eğitimin hedefi, kimin için olduğu ve durumu (Taslak, Etkin, Ustalaştı); seçilen modüller, uygulama görevleri ve yapılacaklar; ustalık ölçütü ve Uzmanın girdiği gözlem verisi (gözlem verisi aileye görünmez); uzmanın inceleme bilgisi | Ebeveyn, çocuk |
 | Hedef davranışlar | Hedef davranış, açıklama, stratejiler, durum, kayıt türü, ebeveyn kaydının açık olup olmadığı | Çocuk |
 | Seanslar | Randevu (zaman, süre, tür, yer, oda, durum, aileye görünürlük, paket); seans kaydı (katılanlar, gözlem, çalışılan, sonraki adım, gündem; aile görmez); bekleme listesi notu | Çocuk, ebeveyn |
 | Klinik içi atamalar | Ailenin sorumlu uzmanı ve erişim açılan ekip üyeleri | Uzman, çocuk |
