@@ -816,5 +816,5 @@ RLS: dört yeni tabloda açık; `nudge_rules`, `nudge_log`, `nudge_pauses` polit
 | `admin_nudge_stats`, `admin_nudge_rules`, `admin_nudge_rule_set` | panel | `admin.md` |
 | İç: `nudge_candidates(an, moyo, mercek)`, `nudge_try(kişi, kural, ref, ek veri, an)`, `nudge_skip`, `nudge_paused`, `nudge_goal_at`, `nudge_convert`, `nudge_hash` / `nudge_holdout` (FNV-1a % 10 = 0, Mercek `nudgeCore.ts` ile aynı), `nudge_flag_on` / `nudge_flag_any`, `nudge_tips_on`, `family_primary_parent(aile)`, `nudge_clinic_trial_day(bitiş)`, tetikleyici `notifications_nudge_read` (okundu → `opened_at`) | — | İstemci çağıramaz |
 
-- KVKK dökümüne (`data_export_of`) ve gece imha işine (`retention_run`) eklenmedi: `nudge_log` kullanım kaydıdır (K12, `hukuk/46`); saklama süresi koordinatör / avukat kararıyla `42` §4'e ve imha işine eklenir.
+- KVKK ve saklama (`proposed/20261120231000_nudge_kvkk.sql`, koordinatör 20 Kasım 2026): `nudge_log` KVKK dökümünde `hatirlatmalar` bölümünde (kural, sonuç, zaman, açılma, hedefe geçiş; metnin kendisi `bildirimler`de). Saklama **12 ay** (bildirimlerle aynı; `hukuk/42` satır 19a): `nudge_log_prune()` her gece 03:41 UTC (pg_cron), `app_config.retention.nudge_log_days` (varsayılan 365, en az 30); imha işi canlı değilken (`retention.live` kapalı) yalnız sayar.
 

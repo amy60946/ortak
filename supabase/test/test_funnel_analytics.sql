@@ -44,6 +44,8 @@ grant execute on all functions in schema tst to anon, authenticated, service_rol
 
 -- f1 owner, f2 destek, f3 izleyici, f4 finans; a1, a2, a3, a5 aileler A, B, C, D (kohort); a6, a7, a8 aileler E, F, G (abonelik);
 -- d1, d2 uzman; c1 A ailesinin çocuk cihazı
+-- kıyas seed'i (20261120221000) yüklüyse boşaltılır: kıyas bölümü tetikleyiciyi ve yazma kurallarını boş tabloda dener
+delete from public.kpi_benchmarks;
 insert into auth.users (id, is_anonymous, email, email_confirmed_at, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000f1', false, 'owner@example.com', now(), '{"nickname":"Owner"}'),
   ('00000000-0000-0000-0000-0000000000f2', false, 'destek@example.com', now(), '{"nickname":"Destek"}'),
