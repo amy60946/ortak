@@ -5,6 +5,7 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md` §1–2, §5–7. Ebeveyn tarafı: `10-aydinlatma-ebeveyn.md`. Hukuki görüş değildir.
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Oyun metninde iş nesnesi "macera" (ebeveynin Moyo Ebeveyn'de verdiği adımlar). Kısım B'nin metni değişti (oyun adı, "maceraları"): sesli okuma dosyası Oyun penceresinde yeniden üretilmeli.
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): çocuğun hak ve yükümlülükleri (1.4), genel ilke (1.5), Moyo/Platform tanımı (2), kullanım kayıtları süresi (9). Kısım B değişmedi.
 
 ## Kısaca
 
@@ -14,7 +15,7 @@
 - Çocuğunuz yalnız kendi ailesiyle mesajlaşır. Yabancılarla iletişim yoktur.
 - Kamera yalnız QR okumak için açılır. Görüntü kaydedilmez, gönderilmez.
 - Çocuğunuzdan konum, fotoğraf, ses ya da iletişim bilgisi almayız.
-- Çocuğunuzun haklarını veli olarak siz kullanırsınız: `kvkk@moyoapp.com.tr`.
+- Çocuğunuzun haklarını veli olarak siz kullanırsınız: `destek@moyoapp.com.tr`.
 
 ## Kısım A — Velilere tam metin
 
@@ -26,9 +27,15 @@
 
 1.3. Kısım B'deki kısa notu çocuğunuzla birlikte okumanızı öneririz.
 
+1.4. **Çocuk.** 18 yaşından küçük çocuğun bu hizmetle ilgili hak ve yükümlülüklerini velisi ya da yasal temsilcisi olan ebeveyn kullanır ve üstlenir. Çocuğun hesabını veli açar ve yönetir; çocuğun kullanımından, çocuk adına verilen onaylardan ve girilen kayıtlardan ebeveyn sorumludur.
+
+1.5. **Genel ilke.** Moyo, kullanıcıların kendi kayıtlarını tutması ve isterse paylaşması için bir araç sunar. Moyo; ebeveyn, çocuk ve uzman arasındaki ilişkinin, kullanıcıların girdiği kayıtların ve bu kayıtlara dayanarak verilen kararların tarafı değildir ve bunlar için bir sorumluluk ya da yükümlülük üstlenmez. Bu ilke yasanın izin verdiği en geniş ölçüde geçerlidir; kast, ağır kusur, tüketicinin vazgeçilemez hakları ve kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır. Her kullanıcı kendi girdiği kayıttan sorumludur.
+
 ### 2. Veri sorumlusu
 
-Moyo'yu işleten `[AD SOYAD]`, `[ADRES]`, `[MERSİS/VKN]`. KVKK başvuruları: `kvkk@moyoapp.com.tr`. Destek: `destek@moyoapp.com.tr`.
+Moyo'yu işleten `[AD SOYAD]`, `[ADRES]`, `[MERSİS/VKN]`. İletişim (KVKK başvuruları dahil): `destek@moyoapp.com.tr`.
+
+"Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
 
 ### 3. Oyun çocuğunuzu nasıl tanır
 
@@ -106,7 +113,7 @@ Moyo'yu işleten `[AD SOYAD]`, `[ADRES]`, `[MERSİS/VKN]`. KVKK başvuruları: `
 | Çocuk profili, maceralar, mesajlar, coin ve Güneş Taşı hareketleri, sunucudaki oyun yedeği | Ailenin hesabı silinene kadar |
 | Cihazdaki oyun kaydı | Oyun cihazdan kaldırılana kadar (bağlantıyı kaldırmak cihazdaki kaydı silmez) |
 | Kod deneme kayıtları (IP dahil) | 15 dakika – 1 gün |
-| Kullanım kayıtları | `[SÜRE]`, sonra yalnız kimliksiz toplamlar |
+| Kullanım kayıtları | 25 ay, sonra yalnız kimliksiz toplamlar |
 
 **Bağlantıyı kaldırmak:** Moyo Ebeveyn'de çocuğun "Cihaz bağlantısını kaldır" seçeneğiyle oyunun hesaba erişimi biter. Oyun "Bağlantın kapatıldı" der. Cihazdaki oyun kaydı silinmez; silmek için oyunu cihazdan kaldırın.
 
@@ -114,7 +121,7 @@ Moyo'yu işleten `[AD SOYAD]`, `[ADRES]`, `[MERSİS/VKN]`. KVKK başvuruları: `
 
 ### 10. Haklarınız ve başvuru
 
-Çocuğunuz adına KVKK md. 11'deki hakları veli olarak siz kullanırsınız: verinin işlenip işlenmediğini öğrenmek, bilgi istemek, düzeltme, silme, aktarılan kişileri öğrenmek, itiraz ve zararın giderilmesini istemek. Başvuru yolları ve süreler Moyo Ebeveyn Aydınlatma Metni'nin 9. ve 10. maddelerindedir: uygulama içinden, kayıtlı e-postanızdan `kvkk@moyoapp.com.tr` adresine ya da yazılı olarak `[ADRES]` adresine. En geç 30 gün içinde ücretsiz yanıt veririz.
+Çocuğunuz adına KVKK md. 11'deki hakları veli olarak siz kullanırsınız: verinin işlenip işlenmediğini öğrenmek, bilgi istemek, düzeltme, silme, aktarılan kişileri öğrenmek, itiraz ve zararın giderilmesini istemek. Başvuru yolları ve süreler Moyo Ebeveyn Aydınlatma Metni'nin 9. ve 10. maddelerindedir: uygulama içinden, kayıtlı e-postanızdan `destek@moyoapp.com.tr` adresine (konu: "KVKK başvurusu") ya da yazılı olarak `[ADRES]` adresine. En geç 30 gün içinde ücretsiz yanıt veririz.
 
 Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 
@@ -139,3 +146,5 @@ Gösterim: büyük yazı, kısa satırlar, oyunun sesli okumasıyla (ses dosyas�
 4. **Anonim oturum kimliği ve IP adresi** kişisel veri sayılır; çocuk için md. 5/2-f (kullanım ölçümü, güvenlik) dayanağı uygun mu? Oyundaki kullanım ölçümü (`track_events('child')`) henüz yazılmadı.
 5. **Bildirim:** oyunda anlık bildirim kapalı tutuldu (DURUM 22 Ekim 2026: oyun içi haberler, push kapalı) ama olgularda bildirim jetonu var. Hangisinin canlıda olacağı teyit edilmeli; 7.3 buna göre kalır ya da çıkar.
 6. "Aile aboneliği bitince çocuk cezalandırılmaz (oyun ve birikimler kalır)" kuralı karar bekliyor (`CANLIYA_ALMA.md` 2.2). Kabul edilirse 8. maddeye bir cümle eklenir.
+7. **Çocuğun hak ve yükümlülükleri (1.4; kullanıcı 20 Kasım 2026, C.12b):** "18 yaş altı çocuğun hak ve yükümlülükleri ebeveyndedir" yönergesi, çocuğun kendi hakkının sahibi olduğu ve velinin bunları yasal temsilci olarak kullandığı biçimde yazıldı (TMK md. 342, KVKK md. 11). Ayırt etme gücü olan büyük çocuk (not 1) için ayrı bir not gerekip gerekmediği avukatta.
+8. **Genel ilke (1.5)** ve **kullanım kayıtları süresi** (25 ay; `42` satır 20, sistem `usage_days` 760): kullanıcı 20 Kasım 2026'da onayladı; sınır cümlesi TBK md. 115 ve TKHK md. 5 karşısında maddeyi ayakta tutmak için korundu.

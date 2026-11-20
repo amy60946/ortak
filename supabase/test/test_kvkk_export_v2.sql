@@ -48,8 +48,8 @@ insert into public.parent_lesson_practice (user_id, lesson_key, family_id, day) 
   ('00000000-0000-0000-0000-0000000000a1', 'sakin_kal', tst.fam(), current_date),
   ('00000000-0000-0000-0000-0000000000a2', 'sakin_kal', tst.fam(), current_date);
 
-insert into public.parent_trainings (id, clinic_id, link_id, parent_id, title, status)
-select t.id, m.clinic_id, '00000000-0000-0000-0000-0000000011a1', t.parent_id, t.title, 'active'
+insert into public.parent_trainings (id, clinic_id, link_id, family_id, child_id, parent_id, title, status)   -- family_id, child_id: 20261120200000
+select t.id, m.clinic_id, '00000000-0000-0000-0000-0000000011a1', tst.fam(), '00000000-0000-0000-0000-00000000c001', t.parent_id, t.title, 'active'
   from public.clinicians m,
        (values ('00000000-0000-0000-0000-0000000070a1'::uuid, '00000000-0000-0000-0000-0000000000a1'::uuid, 'Annenin eğitimi'),
                ('00000000-0000-0000-0000-0000000070a2'::uuid, '00000000-0000-0000-0000-0000000000a2'::uuid, 'Babanın eğitimi')) t(id, parent_id, title)

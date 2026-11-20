@@ -5,6 +5,7 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md` §3. Kaynak maddeler: `sozlesme/hukuk_notlari.md` B (ürün adı ve iş nesnesi adı dışında aynen korundu), E, F, I4–I5; akışlar `sozlesme/akislar.md` 5.3, 10, 11. Ekran metinleri uygulamanın diliyle ("sen"), rıza cümleleri birinci tekil şahısla (B'deki gibi) yazıldı. Hukuki görüş değildir.
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Eski 1. bölüm "Sağlık yanıtları" (`saglik-yanit-v1`, tanı ve ilaç soruları) 14 Kasım 2026'da kaldırıldı (`migrations/20261114200000_intake_observation_owner.sql`; eski yanıtlar silindi, `intake_answers.consent_version` doldurulmuyor); bölümler yeniden numaralandı (2 → 1, 3 → 2). Ekibin tanışma yanıtlarını görmesi bu metinden çıktı (o anlatım yalnız eski 1. bölümdeydi; kişi bazında yalnız panel sahibi görür, `hukuk_notlari.md` M4). Paylaşım kapsamı "uygulamada bıraktığın kayıtlar" diye yazıldı ve davranış olayları, ebeveyn eğitimi yanıtları, ders uygulama günleri, randevu yanıtları eklendi (`akislar.md` 20, 22–24). Rıza metinlerinde (E uyarısı, B metni) yalnız ürün adı ve iş nesnesi adı güncellendi; sürüm adları değişmedi (`hukuk_notlari.md` 27a).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): `uzman-paylasim-v1` ile devam (C.12); 1.1 "ne paylaşılır / paylaşılmaz" listesi ve rıza cümlesi Ebeveyn Aydınlatma Metni 5.3 ile aynı kapsama getirildi; 1.2'deki belge rozeti çıktı (belge yükleme kaldırıldı); "Haklar" adresi `destek@` (tek iletişim adresi).
 
 ## Kısaca
 
@@ -14,6 +15,8 @@
 - **Önceki uzman kayıtları:** yeni uzmana yalnız okunur açılır; önceki uzmanın adı gizlenir.
 - Her onayı **istediğin an geri alırsın;** erişim hemen biter.
 - Hangi metni ne zaman onayladığın, metnin sürümüyle birlikte kaydedilir.
+
+"Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
 
 ## Bütün rıza ekranları için ortak kurallar
 
@@ -35,15 +38,15 @@
 > **Uzmanla paylaşım hakkında kısa bilgi**
 > - **Kim işler:** Moyo'yu işleten `[AD SOYAD]`; paylaşınca çocuğunun kayıtları seçtiğin uzmanın kliniğinde (Moyo Uzman) de görünür.
 > - **Neden:** uzmanın çocuğunun takibini yapabilmesi.
-> - **Ne paylaşılır:** uygulamada bıraktığın kayıtlar: çocuğun profil bilgileri; rutinleri, adımları ve "Yaptım" kayıtları, onay ve ret kararların (geçmiş kayıtlar dahil); davranış kayıtları ve ses kayıtları; uzmanın tanımladığı hedef davranışlar için bildirdiğin davranış olayları; uzmanın atadığı ebeveyn eğitimindeki yanıtların ve uygulama kayıtların; uzmanın önerdiği derslerde, öneriden sonra uyguladığın günler; randevulara verdiğin yanıtlar; takip planı uygulama kayıtların; uzmanın önerilerine kararların.
+> - **Ne paylaşılır:** uygulamada bıraktığın kayıtlar: çocuğun profil bilgileri; rutinleri, adımları ve atamaları; "Yaptım" kayıtları ve onay ve ret kararların; davranış kayıtları ve ses kayıtları; uzmanın tanımladığı hedef davranışlar için bildirdiğin davranış olayları; uzmanın atadığı ebeveyn eğitimindeki yanıtların (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtların ve düşüncen, yapılacak işaretlerin ve "Nasıl geçti?" yanıtın); uzmanın önerdiği derslerde, öneriden sonra uyguladığın günler; randevulara verdiğin yanıt ve notun; takip planı uygulama kayıtların; rutin ve adım önerilerine kararların. Paylaşımdan önceki rutin ve davranış kayıtlarının geçmişi de görünür.
 > - **Ne paylaşılmaz:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı, tanışma yanıtların, kendi seçtiğin dersler.
 > - **Kim görür:** davet eden uzman, kliniğin sahibi ve sahibin bu paylaşımı atadığı ekip üyeleri. Uzman kayıtları yalnız okur, değiştiremez.
 > - **Ne kadar:** sen durdurana kadar. Durdurunca uzmanın erişimi hemen biter; o uzmanla yürüttüğün ebeveyn eğitimi, olay bildirimi ve randevular da kapanır. Uzmanın o güne kadar yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır.
-> - **Haklar:** `kvkk@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
+> - **Haklar:** `destek@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
 
 ### 1.2 Ekranda gösterilecek tam metin
 
-Üst bölüm (bugünkü ekran): **"[Unvan] [Uzman adı] ([Klinik adı]), [çocuğun adı] ([yaş grubu]) için seni davet etti. Bilgiler doğru mu?"** Ad ve yaş grubu düzenlenebilir; ailede başka çocuk varsa onlar da işaretlenebilir. Uzman belgesini yüklediyse "Uzman diploma belgesini yükledi" ve "i" düğmesinde: "Bu yalnız belgenin yüklendiğini gösterir. Moyo bir doğrulama ya da yetki beyanı vermez; kimlik doğrulaması ya da hizmet kalitesi taahhüdü değildir."
+Üst bölüm (bugünkü ekran): **"[Unvan] [Uzman adı] ([Klinik adı]), [çocuğun adı] ([yaş grubu]) için seni davet etti. Bilgiler doğru mu?"** Ad ve yaş grubu düzenlenebilir; ailede başka çocuk varsa onlar da işaretlenebilir. Uzman hakkında doğrulama ya da rozet bilgisi gösterilmez.
 
 Uyarı (`hukuk_notlari.md` E; yalnız ürün adı güncellendi):
 
@@ -51,7 +54,7 @@ Uyarı (`hukuk_notlari.md` E; yalnız ürün adı güncellendi):
 
 Rıza cümlesi (yeni):
 
-> *Çocuğum [seçilen çocukların adları] ile ilgili, uygulamada bıraktığım ve yukarıda yazan kayıtların, takibini yapabilmesi için [unvan] [uzman adı] ve onun kliniğinde bu paylaşımı görmeye yetkili kişilerle (klinik sahibi ve onun görevlendirdiği ekip üyeleri) yalnız okunur olarak paylaşılmasına açık rıza veriyorum. Mesajlarımız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı ve tanışma yanıtlarım paylaşılmaz. Paylaşımı Uzmanım bölümünden istediğim an durdurabilirim; durdurduğumda erişim hemen sona erer.*
+> *Çocuğum [seçilen çocukların adları] ile ilgili, uygulamada bıraktığım ve yukarıda yazan kayıtların, takibini yapabilmesi için [unvan] [uzman adı] ve onun kliniğinde bu paylaşımı görmeye yetkili kişilerle (klinik sahibi ve onun görevlendirdiği ekip üyeleri) yalnız okunur olarak paylaşılmasına açık rıza veriyorum. Mesajlarımız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı, tanışma yanıtlarım ve kendi seçtiğim dersler paylaşılmaz. Paylaşımı Uzmanım bölümünden istediğim an durdurabilirim; durdurduğumda erişim hemen sona erer.*
 
 ### 1.3 Onay kutusu ve düğmeler
 
@@ -73,7 +76,7 @@ Rıza cümlesi (yeni):
 
 ### 1.6 Kayıt ve sürüm
 
-`clinic_links.consent_version`, `consent_by`, `consent_at`. Bugün `uzman-paylasim-v1` adıyla yalnız uyarı (E) ve onay kutusu kaydediliyor. Bu taslak ekrana rıza cümlesini ve kısa aydınlatmayı ekliyor; ekrandaki metin değişeceği için yayına **`uzman-paylasim-v2`** olarak girmelidir (ortak kural 5).
+`clinic_links.consent_version`, `consent_by`, `consent_at`. Bugün `uzman-paylasim-v1` adıyla yalnız uyarı (E) ve onay kutusu kaydediliyor. Bu taslak ekrana rıza cümlesini ve kısa aydınlatmayı ekliyor. Sürüm `uzman-paylasim-v1` kalır; bu metin v1'in kapsamıdır ve 1.1'deki liste Ebeveyn Aydınlatma Metni 5.3 ile aynıdır.
 
 ---
 
@@ -90,7 +93,7 @@ Rıza cümlesi (yeni):
 > - **Nasıl:** yalnız okunur, uygulamanın içinden. Yeni uzman bu kayıtları değiştiremez ve silemez.
 > - **Ne gizlenir:** önceki uzmanın adı, unvanı, kliniği ve iletişim bilgileri. Yeni uzman yalnız "Önceki uzman 1" ve dönemi (ay) görür. Metinlerde geçen uzman ve klinik adları otomatik gizlenir.
 > - **Ne kadar:** sen izni geri alana kadar.
-> - **Haklar:** `kvkk@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
+> - **Haklar:** `destek@moyoapp.com.tr`. [Aydınlatma Metni'nin tamamı]
 
 ### 2.2 Ekranda gösterilecek tam metin (`hukuk_notlari.md` B; yalnız ürün adı ve iş nesnesi adı güncellendi)
 
@@ -118,13 +121,14 @@ Kutu boş bırakılırsa yeni uzmanla paylaşım yine olur (1. bölüm), ama ön
 
 ## Avukata notlar
 
-1. **`uzman-paylasim-v1` sürümü:** bugün bu adla alınan onaylar yalnız uyarı (E) + "Bu uzmanı tanıyorum ve çocuğun velisiyim" beyanını içeriyor; neyin, kimle paylaşıldığını söyleyen bir rıza cümlesi ve kısa aydınlatma ekranda yok. Bu onaylar açık rıza için yeterli mi, yoksa canlıdan önce `uzman-paylasim-v2` ile **yeniden onay** mı alınmalı? Ayrıca veli beyanı ile rızanın tek kutu + tek düğmede birleşmesi uygun mu, yoksa ayrı bir "açık rıza veriyorum" kutusu mu gerekir?
+1. **`uzman-paylasim-v1` sürümü (kullanıcı kararı 20 Kasım 2026, C.12: v1 ile devam; metin bu kapsamı karşılayacak biçimde yazıldı, 1.6):** bugün bu adla alınan onaylar yalnız uyarı (E) + "Bu uzmanı tanıyorum ve çocuğun velisiyim" beyanını içeriyor; neyin, kimle paylaşıldığını söyleyen bir rıza cümlesi ve kısa aydınlatma ekranda yok. Bu onaylar açık rıza için yeterli mi, yoksa canlıdan önce `uzman-paylasim-v2` ile **yeniden onay** mı alınmalı? Ayrıca veli beyanı ile rızanın tek kutu + tek düğmede birleşmesi uygun mu, yoksa ayrı bir "açık rıza veriyorum" kutusu mu gerekir?
 2. **Önceden işaretli seçenek:** `akislar.md` 11 #2'ye göre "Önceki uzmanın kayıtlarını da paylaş" seçeneği bugün **varsayılan açık**. Açık rızanın "özgür irade ve açık beyan" şartıyla çelişir; bu taslakta işaretsiz yazıldı (ParentApp'te yazılım değişikliği gerekir).
 3. **Klinik premium teşviki:** çocuğu ücretli bir klinikle paylaşan aile tam özellikleri ücretsiz alıyor (`family_premium`). Bu, özel nitelikli veri içerebilecek kayıtları paylaşma rızasının özgürlüğünü zedeler mi?
-4. **Paylaşım kapsamındaki yeni kalemler:** davranış olayları, ebeveyn eğitimi yanıtları (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar), uzmanın önerdiği derslerdeki uygulama günleri ve randevu yanıtları uzmanla paylaşım içinde oluşur ve uzmana görünür (`akislar.md` 20, 22–24). Bu taslakta 1.1'deki listeye yazıldı. Bunlar `uzman-paylasim-v1` ile verilmiş onayların kapsamında mı, yoksa ekrandaki metinle birlikte yeni sürüm ve yeniden onay mı gerekir (`hukuk_notlari.md` 26a)? ParentApp'teki "Paylaşılır" listesi (ⓘ) bu listeyle eşitlenmeli.
+4. **Paylaşım kapsamındaki yeni kalemler:** davranış olayları, ebeveyn eğitimi yanıtları (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar), uzmanın önerdiği derslerdeki uygulama günleri ve randevu yanıtları uzmanla paylaşım içinde oluşur ve uzmana görünür (`akislar.md` 20, 22–24). Bu taslakta 1.1'deki listeye yazıldı. Bunlar `uzman-paylasim-v1` ile verilmiş onayların kapsamında mı, yoksa ekrandaki metinle birlikte yeni sürüm ve yeniden onay mı gerekir (`hukuk_notlari.md` 26a)? ParentApp'teki "Paylaşılır" listesi (ⓘ) bu listeyle eşitlenmeli. 20 Kasım 2026: 1.1 listesi ve rıza cümlesi Ebeveyn Aydınlatma Metni 5.3 ile madde madde karşılaştırıldı ve eşitlendi (eklenenler: atamalar, eğitim yanıtlarının ayrıntısı, randevu notu, önceki kayıt geçmişi; rıza cümlesindeki "paylaşılmaz" listesine "kendi seçtiğim dersler").
 5. **Tanışma sorularının sınırı:** tanı ve ilaç soruları 14 Kasım 2026'da kalktı. Kalan "Çocuk bir psikolog, psikiyatrist ya da terapistle çalışıyor mu?" ve davranış sıklığı soruları (öfke nöbeti, endişe, dikkat isteyen işlerden kaçınma; 14 Kasım'da eklenen iki günlük davranış maddesi) rızasız alınıyor ve uzmana gitmiyor. Özel nitelikli veri sayılırlarsa ayrı açık rıza gerekir mi? Davranış kayıtları için de ayrı rıza gerekip gerekmediği (`10-aydinlatma-ebeveyn.md` not 1).
 6. **Yurt dışında saklama:** özel nitelikli veri içerebilecek kayıtlar yurt dışındaki sunucuda tutulacak; bu taslakta yurt dışı aktarım rızası işleme rızasıyla birleştirilmedi, yalnız bilgi olarak yazıldı. 2024 sonrası md. 9'da standart sözleşme yeterli mi, yoksa özel nitelikli veri için ayrı açık rıza mı gerekir (`hukuk_notlari.md` I2)?
 7. **`uzman-gecis-v1` (B) metni:** (a) "Önceki uzmanın adı ve bilgileri yeni uzmana gösterilmez" kesin bir ifade; metindeki adların gizlenmesi "en iyi çaba" (yazım hatalı ya da kısaltılmış ad yakalanmayabilir) — ifade yumuşatılmalı mı (sürüm v2 olur)? (b) Ebeveyn, hiç görmediği notların aktarımına rıza veriyor; rıza "bilgilendirmeye dayalı" sayılır mı? (c) Önceki uzmana aktarım anında bildirim gerekir mi (`hukuk_notlari.md` 5. bölüm soru 2)?
-8. **Geri almanın sonucu:** paylaşım durdurulunca uzmanın kendi notları klinikte kalıyor. Rıza geri alınınca bu notların silinmesi ya da anonimleştirilmesi gerekir mi (KVKK md. 7), yoksa uzmanın mesleki kayıt saklama yükümlülüğü mü önce gelir? Veri sorumlusunun kim olduğuna bağlı.
+8. **Geri almanın sonucu:** paylaşım durdurulunca uzmanın kendi notları klinikte kalıyor. Rıza geri alınınca bu notların silinmesi ya da anonimleştirilmesi gerekir mi (KVKK md. 7), yoksa uzmanın mesleki kayıt saklama yükümlülüğü mü önce gelir? Veri sorumlusunun kim olduğuna bağlı (kullanıcı kararı 20 Kasım 2026: uzman kayıtlarında uzman veri sorumlusu, Moyo veri işleyen; silme talebi bu kayıtlar için uzmana yönelir).
 9. **Kimin rızası:** rızalar onaylayan tek ebeveynle kaydediliyor; diğer velinin bilgisi F5 beyanına dayanıyor. Ayrıca 13 yaş ve üstü çocuğun (yaş grubu C) kendi görüşü alınmalı mı?
 10. **Madde numarası:** 7499 sayılı Kanun (1 Haziran 2024) sonrası özel nitelikli veride açık rıza md. 6/3-a; önceki taslaktaki "md. 6/2" atıfları buna çevrildi. Avukat teyidi.
+11. **Açık rıza sözleşmeye gömülmez (kullanıcı, C.11):** Moyo Ebeveyn Kullanım Koşulları 6.3 bu ekranın varlığını ve kapsamını bildirir, rızanın kendisi bağlanma anında bu ekranda ayrıca alınır (ortak kural 4). Uzman Hizmet Sözleşmesi 7.4: uzman ailenin açık rızası olmadan hiçbir kaydı göremez.

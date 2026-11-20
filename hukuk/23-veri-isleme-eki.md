@@ -4,10 +4,11 @@
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Sözleşme: `22-uzman-hizmet-sozlesmesi.md`. Hukuki görüş değildir.
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): roller kesinleşti (Kısaca, 1.2, 2.1; "öneri" kalktı), Moyo/Platform tanımı (1.2-b), uzmanın beyanı ve sorumluluğu (2.1), konum cümlesi (4.3), belge incelemesi çıktı (2.2-a, Ek-A), 3A (6.1-e), üyelik bitince süresiz saklama (6.1-g, 13.2), yedek süresi (13.2), genel ilke (14).
 
 ## Kısaca
 
-- **Roller (öneri):** Ailelerle çalışırken Moyo Mercek'e girdiğiniz kayıtlarda (notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, seans kayıtları, takip planı, davet bilgileri) **kliniğiniz veri sorumlusu**, **Platform veri işleyen**dir.
+- **Roller:** Ailelerle çalışırken Moyo Mercek'e girdiğiniz kayıtlarda (notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, seans kayıtları, takip planı, davet bilgileri) **kliniğiniz veri sorumlusu**, **Platform veri işleyen**dir. Bu kayıtları kendi beyanınızla ve kendi sorumluluğunuzda girersiniz; Moyo içeriği denetlemez, doğrulamaz, sorumluluk ve yükümlülük üstlenmez.
 - **Yalnız talimatla:** Platform bu kayıtları yalnız sizin talimatınızla ve hizmeti sunmak için işler; satmaz, reklamda ya da yapay zekâ eğitiminde kullanmaz.
 - **Önceden verdiğiniz talimatlar:** aileye gönderdiğiniz kısmı aileye göstermek, sizin adınıza davet e-postası göndermek, ebeveyn açıkça izin verirse kayıtlarınızı adınız gizlenerek sonraki uzmana salt okunur açmak, ebeveyn hesabını silince ilgili kayıtları silmek.
 - **Özel nitelikli veri içerebilecek alanlar korunur:** serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir.
@@ -15,7 +16,7 @@
 - **Alt işleyenler:** güncel liste yayımlanır; değişiklikten önce bildirilir, itiraz edebilirsiniz.
 - **Yurt dışı:** KVKK md. 9'a uygun standart sözleşme ve Kurul'a bildirim.
 - **İhlal:** öğrendiğimizde gecikmeksizin, en geç `[SÜRE]` saat içinde size bildiririz; Kurul'a 72 saat içindeki bildiriminizde size yardım ederiz.
-- **Sona erince:** kayıtlarınızın çıktısını Moyo Mercek'in araçlarıyla alabilirsiniz; saklama süresi dolunca kayıtlar silinir. Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez.
+- **Sona erince:** kayıtlarınızın çıktısını Moyo Mercek'in araçlarıyla alabilirsiniz; hesabınız ya da sözleşme sona erince kayıtlar silinir. Üyelik ya da deneme bitince kayıtlar silinmez, erişim kapanır. Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez.
 
 ---
 
@@ -25,16 +26,16 @@
 
 1.2. Taraflar:
    - a) **Veri sorumlusu:** Uzmanın çalıştığı klinik. Kliniğin tüzel kişiliği ya da ayrı bir işletmesi varsa o; yoksa klinik sahibi uzman. Tek kişilik klinikte ve uzmanın bireysel hesabında uzmanın kendisi. Ekip üyeleri, veri sorumlusunun yetkisiyle ve onun adına hareket eden kişilerdir. Bu Ek'te kısaca "**Uzman**" denir.
-   - b) **Veri işleyen:** Moyo'yu işleten `[AD SOYAD]` ("**Platform**"), `[ADRES]`.
+   - b) **Veri işleyen:** Moyo'yu işleten `[AD SOYAD]`, `[ADRES]`. "Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Bu Ek'te Platforma yüklenen hak ve yükümlülükler, veri işleyen olarak onu işleten kişiye aittir.
 
 1.3. Kişisel verilere ilişkin konularda bu Ek ile Sözleşme arasında çelişki olursa bu Ek uygulanır.
 
 ## 2. Roller ve kapsam
 
-2.1. **Uzman kayıtları.** Uzmanın Moyo Mercek'e girdiği uzman kayıtları (madde 4.2) bakımından Uzman veri sorumlusu, Platform veri işleyendir. Platform bu kayıtları Uzman adına, bu Ek'teki talimatlar çerçevesinde işler.
+2.1. **Uzman kayıtları.** Uzmanın Moyo Mercek'e girdiği uzman kayıtları (madde 4.2) bakımından Uzman veri sorumlusu, Platform veri işleyendir. Platform bu kayıtları Uzman adına, bu Ek'teki talimatlar çerçevesinde işler. Uzman girdiği her kaydı kendi beyanıyla ve kendi sorumluluğunda girer; Moyo bu içeriği denetlemez, doğrulamaz ve bunun için bir sorumluluk ya da yükümlülük üstlenmez (Sözleşme md. 6.1).
 
 2.2. **Kapsam dışında kalanlar.** Bu Ek aşağıdakileri kapsamaz:
-   - a) **Uzmanın kendi hesap verisi** (ad, unvan, e-posta, çalıştığı klinikler, üyelik, belge incelemesi, anket, takvim ayarları, kullanım kayıtları): Platform veri sorumlusudur; Uzman Aydınlatma Metni'ne tabidir.
+   - a) **Uzmanın kendi hesap verisi** (ad, unvan, e-posta, çalıştığı klinikler, üyelik, anket, takvim ayarları, kullanım kayıtları): Platform veri sorumlusudur; Uzman Aydınlatma Metni'ne tabidir.
    - b) **Aile verisi** (ebeveynin ve çocuğun Moyo Ebeveyn ve Moyo Oyun'da oluşturduğu rutinler ve adımlar, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, davranış kayıtları ve ses kayıtları, bildirilen davranış olayları, ebeveyn eğitimi yanıtları (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar), randevulara verilen yanıtlar, çocuğun profil bilgileri, ebeveyn adları): Platform Moyo Ebeveyn ve Moyo Oyun için veri sorumlusudur. Uzman bu verileri ebeveynin açık rızasıyla ve paylaşım sürdükçe görür; gördüğü veriyi kendi mesleki kaydına geçirmesi ya da rapor ve CSV olarak alması bakımından kendisi ayrı veri sorumlusudur.
 
 2.3. **Platformun kendi amaçlarıyla sınırlı işleme.** Platform, uzman kayıtlarının içeriğine bakmadan yalnız sayısal bilgileri (ör. bir klinikte son 30 günde yazılan not, gönderilen öneri sayısı) hizmetin işleyişini ölçmek, destek vermek ve kötüye kullanımı önlemek için kendi meşru menfaatine dayanarak işler; güvenlik ve denetim kayıtlarını ve kanunen tutması gereken kayıtları kendi veri sorumluluğu altında tutar. Bu işleme kimliksizdir ya da uzman kayıtlarının içeriğini kapsamaz.
@@ -72,7 +73,7 @@
 | Klinik içi atamalar | Ailenin sorumlu uzmanı ve erişim açılan ekip üyeleri | Uzman, çocuk |
 | Yazar ve zaman bilgisi | Kaydı hangi uzmanın, ne zaman yazdığı | Uzman |
 
-4.3. **Özel nitelikli veri içerebilecek alanlar korunur.** Notlar, hedefler, değerlendirmeler, seans kayıtları ve diğer serbest metin alanları özel nitelikli veri içerebilir. Taraflar bu kayıtların tamamına özel nitelikli veri düzeyinde koruma uygular. Girilen kaydın doğruluğu ve içeriği girene aittir. Serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir; yazılan bilginin sorumluluğu yazandadır. Uzman davet bilgilerine hiçbir sağlık bilgisi yazmaz.
+4.3. **Özel nitelikli veri içerebilecek alanlar korunur.** Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Notlar, hedefler, değerlendirmeler, seans kayıtları ve diğer serbest metin alanlarına yine de böyle bir bilgi yazılabileceği için taraflar bu kayıtların tamamına özel nitelikli veri düzeyinde koruma uygular. Girilen kaydın doğruluğu ve içeriği girene aittir. Serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir; yazılan bilginin sorumluluğu yazandadır. Uzman davet bilgilerine hiçbir sağlık bilgisi yazmaz.
 
 ## 5. Uzmanın (veri sorumlusunun) yükümlülükleri
 
@@ -96,12 +97,12 @@
    - c) **Davet:** Uzmanın girdiği ebeveyn e-posta adresine Uzman adına davet e-postası göndermek (sınırlı sayıda yeniden gönderimle); ebeveyn aynı adresle kayıt olup adresini doğruladığında daveti eşleştirmek; çocuk bilgisini yalnız daveti kendi ailesine bağlamış ebeveyne göstermek; ebeveynin düzelttiği bilgiyi Uzmana bildirmek; davet kullanıldığında, iptal edildiğinde, reddedildiğinde ya da süresi dolduğunda çocuk bilgisini silmek (bağlanmamış davette 3 gün, bağlanmış ama onaylanmamış davette en geç 30 gün); kabul edilmeyen davetin taslak planını silmek.
    - ç) **Sonraki uzmana aktarım:** Ebeveyn çocuğun takibini başka bir uzmana taşıdığında ve açık rıza verdiğinde (`uzman-gecis-v1`), sona ermiş paylaşımlara ait ve paylaşımın bittiği tarihe kadarki uzman kayıtlarını (notlar, hedefler, değerlendirmeler, rutin ve adım önerileri ve ailenin kararı, takip planı ve uygulama kayıtları) sonraki uzmana **salt okunur** açmak. Bu aktarımda Uzmanın adı, unvanı, kliniği, iletişim ve kimlik bilgileri aktarılmaz; sonraki uzmana yalnız "Önceki uzman n" sıra adı ve dönem (ay) gösterilir; kayıt metinlerinde geçen klinik ve uzman adları ile e-posta ve telefon bilgileri en iyi çabayla gizlenir. Sonraki uzman tablolara doğrudan erişemez, kayıtları değiştiremez ve silemez. Ebeveyn rızasını geri aldığında erişim derhal kapatılır.
    - d) **Ebeveynin kararlarına uyum:** Ebeveyn paylaşımı durdurduğunda Uzmanın o çocuğun aile verisine erişimini derhal kapatmak; ebeveyn hesabını ya da çocuğun profilini sildiğinde o çocuğa bağlı paylaşımı ve uzman kayıtlarını silmek.
-   - e) **Hesap silme ve ekipten ayrılma:** Uzman hesabını sildiğinde tek kişilik klinikte bütün uzman kayıtlarını silmek; ekipte başka uzman varsa kayıtları klinikte bırakmak, klinik sahibi hesabını siliyorsa sahipliği en eski üyeye devretmek, ekip üyesi hesabını siliyorsa onun sorumlu olduğu aileleri klinik sahibine bırakmak. Bir ekip üyesi klinikten ayrıldığında ya da çıkarıldığında kayıtları klinikte bırakmak ve onun o klinikteki erişimini derhal kapatmak.
+   - e) **Hesap silme ve ekipten ayrılma:** Uzman hesabını sildiğinde tek kişilik klinikte bütün uzman kayıtlarını silmek; ekipte başka uzman varsa kayıtları klinikte bırakmak, klinik sahibi hesabını siliyorsa sahipliği en eski üyeye devretmek, ekip üyesi hesabını siliyorsa onun sorumlu olduğu aileleri klinik sahibine bırakmak. Klinik silindiğinde aileye açılmış ebeveyn eğitimlerinin içeriğini (adı, modüller, uygulama görevleri, yapılacaklar) ailenin yanıtları ve davranış olaylarıyla birlikte ailede salt okunur bırakmak; taslak eğitimleri, gözlem verisini, ustalık ölçütünü ve hedef davranış tanımını silmek (olayda yalnız davranışın adı kalır). Bir ekip üyesi klinikten ayrıldığında ya da çıkarıldığında kayıtları klinikte bırakmak ve onun o klinikteki erişimini derhal kapatmak.
    - f) **Destek:** Uzmanın talebi üzerine, yalnız o talebi çözmek için ve kayıt altında hesap ve klinik bilgilerine bakmak. Not metinleri yönetim ekranlarında gösterilmez.
-   - g) **Üyelik bitince:** Sözleşme md. 10.7 ve 14.4'e göre erişimi kapatmak, kayıtları saklama süresi boyunca tutmak ve süre sonunda silmek.
+   - g) **Üyelik bitince:** Sözleşme md. 10.7 ve 14.4'e göre erişimi kapatmak; kayıtları silmeden, klinik ya da Uzmanın hesabı silinene kadar tutmak; üyelik yenilenince erişimi yeniden açmak.
    - ğ) **Takvim aboneliği:** Uzman takvim aboneliği bağlantısı oluşturursa, seanslarının zamanını ve türünü (Uzman seçerse ailenin baş harfini de) bu bağlantıyı kullanan takvim hizmetine iletmek; Uzman bağlantıyı yenilediğinde ya da kapattığında eski bağlantıdan iletimi durdurmak. Ailenin adı bu bağlantıdan iletilmez.
 
-6.2. **Ek talimatlar.** Uzman ek talimatlarını Moyo Mercek'teki ayarlar ve araçlarla ya da yazılı olarak (`destek@moyoapp.com.tr`, `kvkk@moyoapp.com.tr`) verir. Platform, bir talimatın mevzuata aykırı olduğunu düşünürse bunu Uzmana derhal bildirir ve aykırılık giderilene kadar o talimatı uygulamayabilir.
+6.2. **Ek talimatlar.** Uzman ek talimatlarını Moyo Mercek'teki ayarlar ve araçlarla ya da yazılı olarak (`destek@moyoapp.com.tr`) verir. Platform, bir talimatın mevzuata aykırı olduğunu düşünürse bunu Uzmana derhal bildirir ve aykırılık giderilene kadar o talimatı uygulamayabilir.
 
 ## 7. Platformun (veri işleyenin) yükümlülükleri
 
@@ -179,15 +180,16 @@ Apple (App Store) ve RevenueCat yalnız üyelik bilgisini işler; uzman kayıtla
 
 13.2. Platform uzman kayıtlarını:
    - a) Uzman hesabını sildiğinde Sözleşme md. 4.5'e ve madde 6.1-e'ye göre derhal;
-   - b) üyelik ya da deneme sona erdikten sonra Sözleşme md. 14.4'teki saklama süresi (`[SÜRE]`) dolduğunda;
-   - c) Sözleşme feshedildiğinde, fesih bildirim süresinin sonunda (derhal fesihte fesihten sonra `[SÜRE]` içinde)
-   siler. Yedeklerdeki kopyalar en geç `[SÜRE]` (öneri: 30 gün) içinde, yedekleme döngüsüyle silinir; bu sürede yedekler yalnız felaket kurtarma için kullanılır.
+   - b) Sözleşme feshedildiğinde, fesih bildirim süresinin sonunda (derhal fesihte fesihten sonra `[SÜRE]` içinde)
+   siler. Üyelik ya da deneme sona erdiğinde kayıtlar silinmez; klinik ya da Uzmanın hesabı silinene kadar saklanır (Sözleşme md. 14.4). Yedeklerdeki kopyalar en geç 30 gün içinde, yedekleme döngüsüyle silinir; bu sürede yedekler yalnız felaket kurtarma için kullanılır.
 
 13.3. Silme, yok etme ya da anonim hâle getirme, Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik'e uygun yapılır. Uzmanın yazılı talebi üzerine Platform silmenin yapıldığını yazılı olarak teyit eder. Kanunen saklanması gerekenler dışında Platform uzman kayıtlarının kopyasını tutmaz.
 
 13.4. Sonraki uzmana salt okunur açılmış kayıtlar, önceki kliniğin kayıtlarının bir görünümüdür; önceki klinik silindiğinde bu kayıtlar da silinir ve sonraki uzmanın erişimi sona erer.
 
 ## 14. Sorumluluk
+
+**Genel ilke.** Moyo, kullanıcıların kendi kayıtlarını tutması ve isterse paylaşması için bir araç sunar. Moyo; ebeveyn, çocuk ve uzman arasındaki ilişkinin, kullanıcıların girdiği kayıtların ve bu kayıtlara dayanarak verilen kararların tarafı değildir ve bunlar için bir sorumluluk ya da yükümlülük üstlenmez. Bu ilke yasanın izin verdiği en geniş ölçüde geçerlidir; kast, ağır kusur, tüketicinin vazgeçilemez hakları ve kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır. Her kullanıcı kendi girdiği kayıttan sorumludur.
 
 Bu Ek'ten doğan sorumluluk Sözleşme md. 15'e tabidir. KVKK md. 12/2'deki birlikte sorumluluk ve kanunen sınırlanamayan sorumluluklar saklıdır. Her taraf kendi yükümlülüklerine aykırılıktan doğan zarardan sorumludur.
 
@@ -212,8 +214,7 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 | Girişsiz erişimin engellenmesi | Giriş yapmamış rol hiçbir veritabanı işlevini çağıramaz | var |
 | Çocuk cihazının sınırlanması | Çocuk cihazı yalnız kendi profilini görür; klinik tablolarına erişimi yoktur | var |
 | Devralınan kayıtların korunması | Sonraki uzman tablolara doğrudan erişemez; yalnız kimlik gizleyen ve salt okuyan bir sunucu işlevi kullanılır | var |
-| Özel dosyalar | Mesaj medyası, davranış kayıtlarındaki ses kayıtları ve uzman belgeleri özel kovalarda; yalnız imzalı, kısa süreli bağlantıyla açılır | var |
-| Uzman belgesi | Belgeye yalnız sunucu işlevi, denetim kaydı yazarak 2 dakikalık bağlantı verir; karar sonrası dosya silinir | var |
+| Özel dosyalar | Mesaj medyası ve davranış kayıtlarındaki ses kayıtları özel kovalarda; yalnız imzalı, kısa süreli bağlantıyla açılır | var |
 | Kimlik doğrulama | Şifreler kimlik doğrulama sağlayıcısında geri çevrilemez biçimde özetlenmiş; yönetim panelinde iki adımlı doğrulama zorunlu | var |
 | Kötüye kullanım sınırları | Kod deneme sınırı (IP dahil), davet e-postası gönderim sınırları, olay kaydı sınırları | var |
 | Gizli anahtar yönetimi | Gizli anahtarlar yalnız sunucu sırlarında; uygulamalara yalnız herkese açık (publishable) anahtar girer | var |
@@ -227,7 +228,7 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 
 | Tedbir | Nasıl | Durum |
 |---|---|---|
-| Rol ve yetki | Yönetim panelinde roller (sahip, finans, destek, izleyici); her değişiklik gerekçeli; belge incelemesi yalnız yetkili rollerde | var |
+| Rol ve yetki | Yönetim panelinde roller (sahip, finans, destek, izleyici); her değişiklik gerekçeli | var |
 | İçerik gizliliği | Not metni, mesaj içeriği, fotoğraf ve ses kaydı yönetim ekranlarında yok; ebeveynin tanışma yanıtlarını kişi bazında yalnız sahip rolü gerekçe yazarak görür, öteki roller yalnız kimliksiz toplamları | var |
 | Gizlilik taahhütnamesi | Yetkili ekip üyeleri ve çalışanlardan yazılı taahhüt | yapılacak |
 | Farkındalık eğitimi | Yetkili ekip için KVKK ve güvenlik eğitimi | yapılacak |
@@ -241,7 +242,7 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 
 ## Avukata notlar
 
-1. **Rol modeli:** Öneri: uzman kayıtlarında klinik/uzman veri sorumlusu, Platform veri işleyen. **Alternatifler:** (a) Platform ile klinik **ortak veri sorumlusu** (Platform aktarım kurallarını, gizleme yöntemini ve saklama süresini kendisi belirlediği için bu daha gerçekçi olabilir); (b) her biri kendi işlemesi için **ayrı veri sorumlusu**. Seçimi etkileyen olgular: Platform, ebeveynin kararlarına (hesap silme, rızayı geri alma) göre uzman kayıtlarını uzmanın o andaki talimatı olmadan siliyor ya da kapatıyor (6.1-d); sonraki uzmana aktarımı Platformun kurduğu kurallarla yapıyor (6.1-ç); sayısal özetleri kendi amacıyla işliyor (2.3). Bunlar "önceden verilmiş talimat" olarak yazıldı; veri işleyen rolüyle uyumlu mu?
+1. **Rol modeli:** kullanıcı kararı (20 Kasım 2026, A.4): uzman kayıtlarında klinik/uzman veri sorumlusu, Platform veri işleyen; "öneri" ibaresi kalktı, Gizlilik Politikası 4. bölümdeki A/B seçeneği kapandı (A). Uzman kaydı kendi beyanıyla ve sorumluluğunda girer, Moyo içeriği denetlemez (2.1). Avukat teyidi; eski alternatifler kayıt için: (a) Platform ile klinik **ortak veri sorumlusu** (Platform aktarım kurallarını, gizleme yöntemini ve saklama süresini kendisi belirlediği için bu daha gerçekçi olabilir); (b) her biri kendi işlemesi için **ayrı veri sorumlusu**. Seçimi etkileyen olgular: Platform, ebeveynin kararlarına (hesap silme, rızayı geri alma) göre uzman kayıtlarını uzmanın o andaki talimatı olmadan siliyor ya da kapatıyor (6.1-d); sonraki uzmana aktarımı Platformun kurduğu kurallarla yapıyor (6.1-ç); sayısal özetleri kendi amacıyla işliyor (2.3). Bunlar "önceden verilmiş talimat" olarak yazıldı; veri işleyen rolüyle uyumlu mu?
 2. **Veri sorumlusu kim (1.2-a):** Kliniklerin çoğunda ayrı tüzel kişilik yok ve üyeliği sahip birey olarak ödüyor. "Kliniğin işletmesi yoksa klinik sahibi uzman" önerildi. 5 Kasım 2026'dan beri bir uzman birden çok klinikte ve kendi bireysel hesabında çalışabiliyor; aile davetin gönderildiği alana ait (`akislar.md` 21; öneri: klinik alanında klinik, bireysel hesapta uzman, `hukuk_notlari.md` 23). Ekip üyeleri sahibin çalışanı değil de bağımsız uzmansa her biri kendi aileleri için ayrı veri sorumlusu mu sayılmalı?
 3. **Özel nitelikli veri içerebilecek kayıtların hukuki sebebi (5.1, 4.3):** 14 Kasım 2026 kararıyla (`hukuk_notlari.md` M) metin kayıtları "sağlık verisi sayılabilir" diye nitelemiyor; koruma düzeyi aynı kaldı ve uzmandan serbest metne tanı ya da ilaç yazmaması isteniyor (çekirdek madde 5; eski "uzman tanı, ilaç ve benzeri bilgileri yalnız mesleki gereklilik ölçüsünde yazar" cümlesi kalktı). Uzmanın mesleki kaydı bunları gerektirirse uzman o kaydı kendi sisteminde tutar (Sözleşme 6.4). KVKK md. 6/3 (2024): sağlık verisi, sır saklama yükümlülüğü altındaki kişilerce tıbbi teşhis, tedavi ve bakım amacıyla açık rıza olmadan işlenebilir. Bu istisna psikolog, PDR, ergoterapist, dil ve konuşma terapisti, özel eğitim ve çocuk gelişimi uzmanları için de geçerli mi? Değilse uzman velinin açık rızasını kendisi mi almalı, yoksa Platformun aldığı rıza (`uzman-paylasim-v1`) bu amacı da kapsayacak biçimde genişletilmeli mi?
 4. **Ebeveynin girdiği ama uzmanın kurduğu yapıya bağlı kayıtlar (4.2, 2.2-b):** Takip planı uygulama kayıtları ("bugün uyguladım", zorluk, neden) bu Ek'te uzman kaydı sayıldı ve aktarılabilir kayıtlar arasında (`hukuk_notlari.md` 1. bölüm). 20 Kasım 2026'da eklenen ebeveyn eğitimi yanıtları (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar) ve bildirilen davranış olayları ise ebeveyn aydınlatmasıyla uyumlu olarak aile verisi sayıldı (2.2-b). İki tür aynı nitelikte; hangisi seçilmeli?
@@ -250,9 +251,13 @@ Bu Ek, Sözleşme ile birlikte yürürlüğe girer ve madde 13'teki süreçler t
 7. **Yurt dışı aktarım (9.2):** Platform veri işleyen olarak alt işleyenle "veri işleyenden veri işleyene" standart sözleşmesini mi imzalamalı, yoksa her klinik veri sorumlusu olarak mı? Kurul'a bildirimi kim yapar? Özel nitelikli veri için ek şart var mı? Supabase bölgesi seçimi (Frankfurt, Almanya; AB bölgesi) bu soruyu doğrudan etkiler.
 8. **Bildirim metinlerinde çocuk adı (8.1, Apple APNs):** Uzmana giden bazı bildirimler çocuğun adını içerebilir (ör. "Ebeveyn çocuk bilgisini düzeltti: Efe → Efecan"). Bildirim metni Apple sunucularından geçer. Yazılımda teyit edilmeli; gerekirse bildirim metni adsız yapılmalı ("Bir davette çocuk bilgisi düzeltildi"). Ayrıca `akislar.md` 7: bildirim anahtarı Expo biçimindeyse bildirim **Expo Push API** üzerinden gider (yedek yol); Expo olgu dosyasının alt işleyen listesinde var, bu Ek'in 8.1 özetinde yok — kullanılıyorsa eklenmeli, kullanılmıyorsa yedek yol kapatılmalı.
 9. **Denetim hakkı (12.2):** Yılda bir, 30 gün önceden, masrafı uzmana ait — tek kişinin işlettiği Platform için ölçülü mü?
-10. **Yedeklerden silme (13.2):** Supabase yedekleme süresi teyit edilip `[SÜRE]` buna göre yazılmalı.
+10. **Yedeklerden silme (13.2):** 20 Kasım 2026'da `42` önerisiyle "en geç 30 gün" yazıldı (kullanıcı: saklama süreleri uygun). Supabase planındaki yedek ve zamana dönük geri yükleme süresiyle teyit edilmeli.
 11. **Önceki klinik silinince aktarılan kayıtların da silinmesi (13.4):** Bugünkü sistem böyle; ebeveynin rızasıyla süreklilik amacı açısından kayıtların kalması mı tercih edilmeli? (`hukuk_notlari.md` 5. bölüm soru 3.)
 12. **Önceki uzmana bildirim:** Ebeveyn kayıtları yeni uzmana açtığında önceki uzmana bugün bildirim gitmiyor; önceden verilen talimat (6.1-ç) yeterli mi? (`hukuk_notlari.md` 5. bölüm soru 2.)
-13. **Kayıtların çıktısı ve fesih sonrası silme (13.1, 13.2-c; 20 Kasım 2026):** Sözleşme 14.5 daraltıldığı için (Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez; uzmanın elinde rapor, ilerleme notu ve CSV var) eski "dışa aktarma süresinin sonunda" ölçütü kalktı. Derhal fesihte uzmanın erişimi hemen kapanır ve çıktı alamaz; bu nedenle fesihten sonra `[SÜRE]` içinde silme önerildi. Veri işleyenin sözleşme sonunda iade yükümlülüğü bakımından yeterli mi; derhal fesihte kısa bir salt okunur çıktı süresi mi tanınmalı?
+13. **Kayıtların çıktısı ve fesih sonrası silme (13.1, 13.2-b, eski 13.2-c; 20 Kasım 2026):** Sözleşme 14.5 daraltıldığı için (Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez; uzmanın elinde rapor, ilerleme notu ve CSV var) eski "dışa aktarma süresinin sonunda" ölçütü kalktı. Derhal fesihte uzmanın erişimi hemen kapanır ve çıktı alamaz; bu nedenle fesihten sonra `[SÜRE]` içinde silme önerildi. Veri işleyenin sözleşme sonunda iade yükümlülüğü bakımından yeterli mi; derhal fesihte kısa bir salt okunur çıktı süresi mi tanınmalı?
 14. **Takvim aboneliği (6.1-ğ):** Bağlantıyı bilen herkes o takvimi açabilir (belirteçli adres; uzman yenileyip kapatabilir); ailenin adı gitmez, baş harf isteğe bağlı (`akislar.md` 20, `veritabani.md` 29). Uzmanın seçtiği takvim hizmeti (Google, Apple, Microsoft) alt işleyen değil, uzmanın talimatıyla verinin iletildiği alıcı sayıldı. Uygun mu?
 15. **Cloudflare (8.1):** 6 Kasım 2026'dan beri Moyo Mercek web sürümü de Cloudflare'da (Worker `moyo-uzman`); sayfa dosyaları oradan gelir, kayıtlar tarayıcı ile Supabase arasında gider. `41-alt-isleyenler.md`'deki satır da buna göre güncellenmeli (başka pencere).
+16. **Üyelik bitince süresiz saklama (6.1-g, 13.2; kullanıcı kararı 20 Kasım 2026):** üyeliği ya da denemesi biten kliniğin kayıtları silinmez (`42` satır 9a); eski 13.2-b (saklama süresi dolunca silme) kalktı, eski 13.2-c b oldu. Derhal fesihten sonraki silme süresi için `42`'de öneri yok: `[SÜRE]` kaldı. Veri işleyenin süresiz saklaması KVKK md. 4/2-d bakımından uygun mu?
+17. **Konum cümlesi (4.3; kullanıcı, A.2):** kayıtları niteleyen "özel nitelikli veri içerebilir" cümlesi konum cümlesine çevrildi; koruma düzeyi (özel nitelikli veri düzeyinde koruma, serbest metne tanı/ilaç yazılmaması) aynen kaldı. Konumumuz bu; md. 6 kapsamının teyidi avukatta (not 3).
+18. **3A (6.1-e):** uzman hesabı silinince aileye açılmış eğitimin içeriği ailenin yanıtlarıyla ailede kalır; bu, uzmanın yazdığı içeriğin (uzman kaydı) Uzmanın silme talimatından sonra ailede kalması demektir ve önceden verilmiş talimat olarak yazıldı. Sunucu önerisi `supabase/proposed/20261120200000_family_keeps_records.sql` uygulanmadı; uygulanmazsa cümle çıkar.
+19. **Genel ilke (14)** ve belge incelemesinin kaldırılması (2.2-a, Ek-A; kullanıcı, B.7): `clinician_verifications` tablosu ve `verify` kovası durur, metinden çıktı.
