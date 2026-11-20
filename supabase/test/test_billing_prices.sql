@@ -1,4 +1,4 @@
--- 20261120130000_billing_prices: Moyo Mercek fiyatları (kullanıcı kararı 20 Kasım 2026; ekonomi.md 9)
+-- migrations/20261120130000_billing_prices (uygulandı 20 Kasım 2026): Moyo Mercek fiyatları (kullanıcı kararı 20 Kasım 2026; ekonomi.md 9)
 \set ON_ERROR_STOP on
 do $$
 declare r record;
