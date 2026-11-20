@@ -231,7 +231,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - rutinler ve adımlar, onaylar, ödüller, coin ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
+> - rutinler ve adımlar, onaylar, ödüller, inci ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları, davranış olayları ve tanışma yanıtları,
 > - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler, ebeveyn eğitimleri ve takip planı,
@@ -339,21 +339,21 @@ Gün sayısı metne sabit yazılmaz (`{gün}`); deneme süresi aileye göre değ
 **Moyo Mercek — bitince:**
 > **Deneme süren bitti.** Üyelik alana kadar danışanlar, notlar, hedefler, öneriler ve davetler kapalı. Verilerin silinmedi; üyelik alınca kaldığın yerden devam edersin.
 
-## 8. Coin ve Güneş Taşı bilgi notu
+## 8. İnci ve Güneş Taşı bilgi notu (görünen ad İnci: 3 Kasım 2026; teknik ad coin)
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | Moyo Ebeveyn | Ödüller › ilk açılışta 3 kartlık tur, son kart (3 Kasım 2026); "i" düğmesi turu yeniden açar. Ekranda kısaltılmış hâli: "Coin ve Güneş Taşı'nın parasal değeri yoktur: satın alınamaz, paraya çevrilemez. Ödülün sözünü sen verirsin; biz ödüllerin tarafı değiliz." | `kosullar-parentapp` |
 
-> **Coin ve Güneş Taşı nedir?**
-> **Coin**, çocuğunun senin onayladığın adımlarla kazandığı oyun parasıdır. Yalnız Moyo Oyun'daki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
+> **İnci ve Güneş Taşı nedir?**
+> **İnci**, çocuğunun senin onayladığın adımlarla kazandığı oyun içi puandır. Yalnız Moyo Oyun'daki eşyalara harcanır. Satın alınamaz, gerçek paraya çevrilemez, başkasına aktarılamaz; hesap silinince kaybolur.
 > **Güneş Taşı**, çocuğuna verdiğin ödüllerin sayacıdır. Ödülleri ve değiş tokuş oranlarını (ör. "1 taş = 10 dk ekran") sen belirlersin. Taşın parasal değeri yoktur; ödülün sözünü sen verirsin, biz bu ödüllerin tarafı değiliz.
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
 | Moyo Oyun | Dükkân ve ödül dükkânı › "i" (çocuğa; sesli okunur) | `kosullar-gameapp` |
 
-> Coin'ler adanın parasıdır. Maceralarını yapınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
+> İnciler adanın hazinesidir. Sorumluluklarını tamamlayınca kazanırsın, adadaki eşyalara harcarsın. Gerçek para değildir.
 >
 > Güneş Taşları ailenin ödülleri içindir. Taşın yetince ödül isteyebilirsin. Kararı ailen verir.
 
@@ -385,9 +385,9 @@ Gün sayısı metne sabit yazılmaz (`{gün}`); deneme süresi aileye göre değ
 > - Oyun, Moyo Ebeveyn'de oluşturduğun profile bağlıdır. Profili Moyo Ebeveyn'den düzenlersin.
 > - Bu cihazın bağlantısını kapatmak için: Moyo Ebeveyn › Aile › {çocuk_adı} › Cihaz bağlantısını kaldır. Çocuğunun verilerinin silinmesini KVKK başvurusuyla isteyebilir ya da Moyo Ebeveyn'de hesabını silerek aileyle birlikte silebilirsin.
 > - Çocuğun adına KVKK başvurusu: Moyo Ebeveyn › Aile › Hesap › Yasal ve gizlilik › KVKK başvurusu.
-> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://uhelhxqgpcjemadhsifx.supabase.co/functions/v1/support` (alan adı gelince kendiliğinden yeni yere yönlenir; adrese çocuk ya da cihaz kimliği eklenmez).
+> - Yardım ve iletişim: **Destek** (Safari'de açılır; yetişkinler için form). Adres: `https://moyoapp.com.tr/destek` (oyun 10 Kasım 2026'dan beri doğrudan bunu açar; adrese çocuk ya da cihaz kimliği eklenmez). Oyunda düğme "Yardım ve iletişim", yanında: "Soru, sorun ya da önerin için destek sayfasına yaz. Sayfa tarayıcıda açılır."
 >
-> <u>Gizlilik Politikası</u> · <u>Moyo Oyun Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u>
+> <u>Gizlilik Politikası</u> · <u>Oyun Koşulları</u> · <u>Çocuk ve Veli Aydınlatma Metni</u> · <u>KVKK Başvuru Usulü</u> *(oyundaki düğme adı; belgenin adı Moyo Oyun Koşulları)*
 > Destek: `destek@moyoapp.com.tr` · Sürüm {sürüm}
 >
 > [ Bu cihazın bağlantısını kaldır ] *(öneri: oyunun içinden de; `CANLIYA_ALMA.md` 2.2 "ebeveyn kapısı: bağlama")*

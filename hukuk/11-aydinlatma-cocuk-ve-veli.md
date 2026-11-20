@@ -122,7 +122,7 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 
 > **Merhaba!**
 >
-> Moyo Oyun'da oynarken oyun bazı şeyleri hatırlar: seviyeni, eşyalarını ve ailenin verdiği maceraları.
+> Moyo Oyun'da oynarken oyun bazı şeyleri hatırlar: seviyeni, eşyalarını ve ailenin verdiği sorumlulukları.
 > Bunları sadece oyun çalışsın diye saklarız; kimseye satmayız.
 > Bu oyunda sadece ailen seninle konuşabilir; başka kimse sana yazamaz.
 > Oyunda reklam yok ve oyun senden hiç para istemez.

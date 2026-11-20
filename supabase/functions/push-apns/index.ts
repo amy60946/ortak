@@ -68,11 +68,21 @@ Deno.serve(async (req) => {
 
   const { data: tokens } = await db.from('push_tokens').select('token')
     .eq('user_id', n.user_id).eq('app', n.app).eq('platform', 'ios').not('token', 'like', 'ExponentPushToken[%');
+  // Çocuk (K7 B, proposed/20261102200000_child_push.sql): yalnız ebeveyn açtıysa, sessiz saat dışında, günde en çok 1.
+  // İşlev yoksa (SQL uygulanmadı) ya da izin yoksa gönderilmez; haber oyunda Mavi / posta kutusuyla görünür.
+  const child = n.app === 'child';
+  if (child) {
+    if (!tokens?.length) return Response.json({ skipped: 'çocuk cihaz anahtarı yok' });
+    const { data: ok, error } = await db.rpc('child_push_claim', { p_user: n.user_id });
+    if (error || ok !== true) return Response.json({ skipped: 'çocuk bildirimi kapalı, sessiz saat ya da bugün gönderildi' });
+  }
   const { count } = await db.from('notifications').select('id', { count: 'exact', head: true })
     .eq('user_id', n.user_id).is('read_at', null);
-  const data = { ...(n.data ?? {}), kind: n.kind, notification_id: n.id };
+  // Çocuğa metin genel ve sakin: görev başlığı, ad, not gibi içerik bildirimde yer almaz (Apple HIG; Radesky 2022)
+  const data = child ? { kind: n.kind, notification_id: n.id } : { ...(n.data ?? {}), kind: n.kind, notification_id: n.id };
+  const alert = child ? { title: 'Pofi Adası', body: 'Adada yeni bir haber var!' } : { title: n.title, body: n.body };
   // expo-notifications veriyi "body" alanından okur; Unity için üst düzeyde de var
-  const payload = { aps: { alert: { title: n.title, body: n.body }, sound: 'default', badge: count ?? 0 }, body: data, ...data };
+  const payload = { aps: { alert, sound: 'default', badge: child ? 1 : (count ?? 0) }, body: data, ...data };
 
   const first = Deno.env.get('APNS_SANDBOX') === '1' ? SANDBOX : PROD;
   const results = [];
