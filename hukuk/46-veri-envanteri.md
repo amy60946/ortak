@@ -93,14 +93,14 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `care_modules` | K7 | takip planı modülleri |
 | `care_module_goals` | K7 | |
 | `care_module_logs` | K7 | ebeveynin ev programı kayıtları |
-| `parent_trainings` | K7 | uzmanın ebeveyne verdiği eğitim (9 Kasım 2026 önerisi; ebeveyn adı, ustalık ölçütü) |
+| `parent_trainings` | K7 | uzmanın ebeveyne verdiği eğitim (9 Kasım 2026 önerisi; ebeveyn adı, ustalık ölçütü); aile ve çocuk kimliği (`family_id`, `child_id`) ve `detached_at`: paylaşım ya da klinik silinince aileye açılmış eğitim ailenin salt okunur kopyası olur, ölçüt ve uzman alanları silinir (öneri `20261120200000`, karar 3A; saklama `42` satır 9) |
 | `parent_training_modules` | K7 | ebeveynin modül tamamlaması, test yanıtları ve açık uçlu yanıtları (çocuğuna dair metin olabilir) |
 | `parent_training_tasks` | K7 | uzmanın yazdığı uygulama görevi |
 | `parent_training_logs` | K7 | ebeveynin uygulama kaydı ve düşüncesi |
 | `parent_training_todos` | K7 | hızlı yapılacaklar, ebeveynin işareti |
-| `parent_training_data` | K7 | uzmanın gözlem verisi (aile görmez) |
+| `parent_training_data` | K7 | uzmanın gözlem verisi (aile görmez; paylaşım ya da klinik silinince silinir) |
 | `clinic_target_behaviors` | K7 | uzmanın tanımladığı hedef davranış ve stratejiler (9 Kasım 2026 önerisi) |
-| `behavior_incidents` | K6 | ebeveynin bildirdiği davranış olayı: zaman, süre/sayı, öncesi-sonrası, strateji, çocuğun tepkisi (özel nitelikli veri içerebilir; paylaşım kaydına bağlı, saklama `42` satır 9) |
+| `behavior_incidents` | K6 | ebeveynin bildirdiği davranış olayı: zaman, süre/sayı, öncesi-sonrası, strateji, çocuğun tepkisi (özel nitelikli veri içerebilir; paylaşım kaydına bağlı, saklama `42` satır 9); `behavior_title` hedef davranışın adı; paylaşım ya da klinik silinince olay ailede kalır, `link_id` boşalır (öneri `20261120200000`, karar 3A) |
 | `clinic_sessions` | K7 | seans randevusu (tarih, saat, tür, yer, durum, ailenin yanıtı); aile yalnız "aileye göster" açıkken tarih/saat/yer görür |
 | `clinic_session_records` | K7 | seans kaydı: katılanlar, gözlem, çalışılan, sonraki adım, gündem; aile görmez |
 | `clinic_session_packages` | K7 | seans paketi (seans sayısı; ödeme yok) |
