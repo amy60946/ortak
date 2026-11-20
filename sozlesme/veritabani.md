@@ -778,4 +778,43 @@ Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanların
 
 - **Push:** satır her durumda yazılır (uygulama içi liste ve rozet aynı). `notifications_push` `push = false` satırda pg_net'i hiç çağırmaz (Apple da Expo da). Edge Function `push-apns` da `push = false` satırı atlar (elle çağrıya karşı; sütun yokken eskisi gibi çalışır).
 - **`day_complete`:** `completions` tetikleyicisi `completions_notify_day` (`completions_notify`'dan sonra). Koşullar: durum `pending` ya da `approved` oldu (önceden işaretli değildi), işareti çocuğun cihazı yaptı (`children.user_id = auth.uid()`), gün Türkiye günü bugün (`tr_today()`; dünün geç işareti tetiklemez), çocuğun o gün planlı bütün adımları (`task_assignments` + `task_occurs_on`, `child_tasks` ile aynı) `pending` ya da `approved`, `children.day_complete_on` bu gün değil. Çocuk satırı kilitlenerek sayılır (eşzamanlı son işaretlerden biri bildirimi üretir, ikisi birden üretmez). Alıcı ailenin ebeveynleri (`notify_parents`); başlık "<ad> bugünün adımlarını tamamladı", metin onay bekleyen varsa "Onayını bekleyen n adım var.", yoksa boş; `data` `{child_id, date, steps, pending}`.
+- **`tips` ("Hatırlatmalar ve ipuçları"):** üçüncü anahtar `proposed/20261120230000_nudge_engine.sql`'de (bölüm 36; varsayılan **true**); `parent_notification_prefs()` ve `_set` o öneriyle `{step_done, day_complete, tips}` döner, `_set` `tips`'i de kabul eder (son tanım orada).
 - KVKK dökümüne (`data_export_of`) eklenmedi: aynı işlevi `proposed/20261120200000_family_keeps_records.sql` de yeniden tanımlıyor; ikisi uygulandıktan sonra küçük bir ekle (`children.day_complete_on` çocuk satırıyla zaten gelir).
+
+## 35. Huni analitiği, abonelik sağlığı, kıyas (ÖNERİ `proposed/20261120220000_funnel_analytics.sql`, 20 Kasım 2026; uygulanmadı; panel `admin.md` "Huni, abonelik sağlığı ve kıyas"; test `test_funnel_analytics.sql`)
+
+| Tablo | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `store_funnel_daily` | App Store Connect günlük toplamları (kişi yok) | PK (`product` parent / clinic, `day`), `impressions`, `page_views`, `downloads` (≥ 0, boş olabilir), `source` (`manual` / `import`), `updated_by`, `updated_at` | `admin_store_funnel_set` (owner) | `admin_funnel` |
+| `kpi_benchmarks` | Kıyas değerleri (yalnız iç karşılaştırma) | PK (`key`, `product`), `label`, `value`, `low`, `high` (alt ≤ üst), `unit` (`%` / `TRY` / `days` / `hours` / `count`), `better` (`high` / `low`), `source`, `source_url` (`https://`), `as_of` (metin, ≤ 40), `note`, `updated_at`. Verilmeyen ad / birim / yön tetikleyici `kpi_benchmarks_fill` ile anahtarın sabit eşlemesinden | `admin_benchmark_set` (owner) ya da seed (SQL Editor) | `admin_benchmarks` |
+
+İkisi de RLS açık, politika yok (istemci okuyamaz / yazamaz). Moyo Premium fiyatı ayrı tabloda değil `app_config.kpi`'de (`parent_monthly_try` / `parent_yearly_try`; öneri 0 ise 349,99 / 3.499,99 yazar).
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `admin_funnel`, `admin_funnel_people`, `admin_subscription_health`, `admin_benchmarks`, `admin_benchmark_set`, `admin_store_funnel_set` | panel (`admin.md`) | JSON biçimleri `admin.md` |
+| İç: `funnel_step_defs(ürün)` (sıra, anahtar, ad), `funnel_parent_steps(aile, an)` / `funnel_clinic_steps(uzman, an)` (`{adım: ilk zaman}`; anlık değerden sonrası yok), `funnel_depth(ürün, adımlar)` (art arda ulaşılan son adımın sırası), `funnel_cohort(ürün, başlangıç, bitiş, an)`, `funnel_person_trace(ürün, kimlik)` (son olay, son `screen.*`, son görülme), `clinic_billing_state(klinik)` (`paid` / `manual` / `trial` / `expired`), `funnel_kpi(pay, payda)` (`{value, n}`), `funnel_check_args`, `kpi_benchmark_keys()`, `kpi_benchmark_meta(anahtar)`, tetikleyici `kpi_benchmarks_fill` | — | İstemci çağıramaz (bildirim motoru da adım işlevlerini kullanır) |
+
+## 36. Sunucu bildirim motoru (ÖNERİ `proposed/20261120230000_nudge_engine.sql`, 20 Kasım 2026; uygulanmadı; akış `akislar.md` 25 "Sunucu motoru", panel `admin.md` "Otomatik bildirim motoru", durumlar `durumlar.md` 8; test `test_nudge_engine.sql`)
+
+| Tablo / alan | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `nudge_rules` | Kural ve sabit metin (kişiye bağ yok) | `key` (PK), `product`, `label`, `trigger` (`step` / `review_waiting` / `inactive` / `trial_ending` / `invite_expiring` / `training_none` / `training_draft`), `from_step`, `requires[]`, `stops[]`, `target_step`, `wait_hours`, `max_age_hours`, `local_from` (en erken saat), `category` (`tip` / `account`), `title` (≤ 120), `body` (≤ 300), `route` (`data.nudge`), `sort`, `enabled`, `updated_at` | Öneri (seed; yeniden çalışınca metin güncellenir, `enabled` korunur), `admin_nudge_rule_set` (yalnız aç / kapat) | motor, panel |
+| `nudge_log` | Karar kaydı (kişi kendi kaydını da okumaz) | `user_id` (hesapla silinir), `product`, `rule_key`, `ref` (davet kodu / paylaşım / eğitim / bekleyen "Yaptım" kimliği, gün; boş olabilir), `result` (`sent` / `skipped_limit` / `skipped_quiet` / `skipped_pref` / `holdout`), `detail` (`opened_today` / `daily` / `weekly` / `pause`), `day` (Türkiye günü), `at`, `notification_id`, `opened_at`, `converted_at`. Gönderim ve karşılaştırma kaydı kural + kişi + ref başına tek (benzersiz dizin); atlama kaydı aynı gün tek | yalnız motor (`nudge_run`) ve okundu tetikleyicisi | `admin_nudge_stats` |
+| `nudge_pauses` | 14 günlük ara | `user_id` (PK, hesapla silinir), `paused_until`, `started_at` | motor | motor |
+| `clinician_notification_prefs` | Moyo Mercek uzman tercihi | `user_id` (PK → `clinicians`, hesapla silinir), `tips` (varsayılan **true**), `updated_at` | yalnız RPC | kendi satırı (K) |
+| `parent_notification_prefs.tips` | Moyo "Hatırlatmalar ve ipuçları" | boolean, varsayılan **true** | `parent_notification_prefs_set('tips', …)` | kendi satırı (P) |
+| `notifications` (`kind = 'nudge'`) | Motorun bildirimi | `data` `{nudge, rule, ref, id}` (+ `code`, `link_id`, `training_id`; Mercek'te `clinic_id` kendiliğinden) | motor | P, K (kendi satırı) |
+
+RLS: dört yeni tabloda açık; `nudge_rules`, `nudge_log`, `nudge_pauses` politikasız (istemciye kapalı), `clinician_notification_prefs` yalnız kendi satırını okur, yazma yalnız RPC.
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinician_notification_prefs()` | K | `{tips}` (satır yoksa varsayılan). Uzman hesabı değilse 42501 |
+| `clinician_notification_prefs_set(p_key, p_on)` | K | `p_key` yalnız `tips`; bilinmeyen anahtar ya da boş değer 22023 |
+| `nudge_run(p_now default null)` | zamanlayıcı (pg_cron `nudge-run`), `service_role` | Bayrak yoksa `{"ran": false, "reason": "flag_off"}`; varsa son 72 saatin dönüşümünü yazar, adayları sınırlarla değerlendirir: `{"ran": true, "at", "converted", "results": {"sent", "holdout", "skipped_*", "done", "wait", "flag_off"}}`. `p_now` yalnız test içindir. anon / authenticated çağıramaz |
+| `admin_nudge_stats`, `admin_nudge_rules`, `admin_nudge_rule_set` | panel | `admin.md` |
+| İç: `nudge_candidates(an, moyo, mercek)`, `nudge_try(kişi, kural, ref, ek veri, an)`, `nudge_skip`, `nudge_paused`, `nudge_goal_at`, `nudge_convert`, `nudge_hash` / `nudge_holdout` (FNV-1a % 10 = 0, Mercek `nudgeCore.ts` ile aynı), `nudge_flag_on` / `nudge_flag_any`, `nudge_tips_on`, `family_primary_parent(aile)`, `nudge_clinic_trial_day(bitiş)`, tetikleyici `notifications_nudge_read` (okundu → `opened_at`) | — | İstemci çağıramaz |
+
+- KVKK ve saklama (`proposed/20261120231000_nudge_kvkk.sql`, koordinatör 20 Kasım 2026): `nudge_log` KVKK dökümünde `hatirlatmalar` bölümünde (kural, sonuç, zaman, açılma, hedefe geçiş; metnin kendisi `bildirimler`de). Saklama **12 ay** (bildirimlerle aynı; `hukuk/42` satır 19a): `nudge_log_prune()` her gece 03:41 UTC (pg_cron), `app_config.retention.nudge_log_days` (varsayılan 365, en az 30); imha işi canlı değilken (`retention.live` kapalı) yalnız sayar.
+

@@ -47,6 +47,8 @@ insert into public.admin_users (user_id, role) values
   ('00000000-0000-0000-0000-0000000000f1', 'owner'),
   ('00000000-0000-0000-0000-0000000000f2', 'support'),
   ('00000000-0000-0000-0000-0000000000f3', 'viewer');
+-- "fiyat yokken" durumu da denenir: öneri 20261120220000_funnel_analytics.sql Moyo Premium fiyatını (349,99 / 3.499,99) yazar
+update public.app_config set value = value || '{"parent_monthly_try": 0, "parent_yearly_try": 0}'::jsonb where key = 'kpi';
 insert into tst.kv select 'fa', family_id::text from public.profiles where id = '00000000-0000-0000-0000-0000000000a1';
 insert into tst.kv select 'fb', family_id::text from public.profiles where id = '00000000-0000-0000-0000-0000000000a2';
 insert into tst.kv select 'k1', clinic_id::text from public.clinicians where id = '00000000-0000-0000-0000-0000000000d1';

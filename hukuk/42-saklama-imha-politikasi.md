@@ -69,6 +69,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 17 | Giriş kodu deneme kayıtları (IP dahil) | `code_attempts` | 15 dakika – 1 gün | Silme | Gece imha işi (ayrıca giriş kodu işlevi) | ⚙️ |
 | 18 | Bildirim anahtarları | `push_tokens` | Çıkışta, anahtar geçersiz olunca ya da hesap silinince | Silme | Otomatik | ✅ |
 | 19 | Uygulama içi bildirimler | `notifications` | 12 ay; kullanıcı istediği an siler | Silme | Gece imha işi | ⚙️ |
+| 19a | Otomatik hatırlatma kaydı (hangi hatırlatmanın gönderildiği ya da atlandığı, açılıp açılmadığı) | `nudge_log` | 12 ay | Silme | Gece işi `nudge_log_prune` (imha işi canlıya alınınca siler; öneri `20261120231000_nudge_kvkk.sql`) | ⚙️ |
 | 20 | Kullanım kayıtları | `app_events`, `activity_days`, `user_activity` | 25 ay | Anonim hâle getirme (günlük toplamlara indirme), sonra kişi bazlı satırların silinmesi | Gece imha işi: önce `usage_daily_totals`'a günlük toplam, sonra kişi bazlı satırlar silinir | ⚙️ |
 | 21 | Çocuk cihazlarının kimliği belirsiz oturumları | `auth.users` (anonim) | Çocuk profili ya da aile silinene, cihaz bağlantısı kapanana kadar | Silme | Gece imha işi: çocuğa bağlı olmayan ve 30 gün girişsiz anonim oturum | ⚙️ |
 | 22 | Ekip işlemleri denetim kaydı | `admin_audit` | 5 yıl; silinen kullanıcının e-postası yazılmaz | Silme | Gece imha işi (yalnız bu işle ve en az 1 yıl eski kesimle silinebilir) | ⚙️ |
