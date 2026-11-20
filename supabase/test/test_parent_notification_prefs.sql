@@ -110,11 +110,11 @@ select tst.check(tst.pushed((tst.last('00000000-0000-0000-0000-0000000000a1', 'd
 
 -- ---------------------------------------------------------------- varsayılanlar, aç / kapat, yetki
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
-select tst.check(public.parent_notification_prefs()::jsonb = '{"step_done": false, "day_complete": true}', 'varsayılan: adım bildirimi kapalı, gün bildirimi açık');
+select tst.check(public.parent_notification_prefs()::jsonb = '{"step_done": false, "day_complete": true, "tips": true}', 'varsayılan: adım bildirimi kapalı, gün bildirimi açık');
 select tst.check((select count(*) from public.parent_notification_prefs) = 0, 'okumak satır açmaz');
 
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
-select tst.check(public.parent_notification_prefs_set('step_done', true)::jsonb = '{"step_done": true, "day_complete": true}', 'Baba adım bildirimini açar (öteki anahtar varsayılanda kalır)');
+select tst.check(public.parent_notification_prefs_set('step_done', true)::jsonb = '{"step_done": true, "day_complete": true, "tips": true}', 'Baba adım bildirimini açar (öteki anahtar varsayılanda kalır)');
 select tst.check(public.parent_notification_prefs()::jsonb ->> 'step_done' = 'true', 'açık kalır');
 select tst.check((select count(*) from public.parent_notification_prefs where user_id = auth.uid()) = 1, 'kendi satırını görür');
 select tst.fails($$select public.parent_notification_prefs_set('weekly_goal', false)$$, 'bilinmeyen anahtar reddedilir');
@@ -191,7 +191,7 @@ select tst.check((select count(*) from public.notifications where kind in ('day_
 
 -- ---------------------------------------------------------------- gün bildirimi kapalı: satır var, push yok
 select tst.as_user('00000000-0000-0000-0000-0000000000a1');
-select tst.check(public.parent_notification_prefs_set('day_complete', false)::jsonb = '{"step_done": false, "day_complete": false}', 'Anne gün bildirimini kapatır');
+select tst.check(public.parent_notification_prefs_set('day_complete', false)::jsonb = '{"step_done": false, "day_complete": false, "tips": true}', 'Anne gün bildirimini kapatır');
 select tst.as_user('00000000-0000-0000-0000-0000000000c2');
 select public.child_set_status('00000000-0000-0000-0000-000000007a04', tst.day() - 1, 'pending');   -- dünün geç işareti
 select tst.check(tst.n('00000000-0000-0000-0000-0000000000a2', 'day_complete', '00000000-0000-0000-0000-00000000c002') = 0, 'geçmiş günün işareti gün bildirimi üretmez');

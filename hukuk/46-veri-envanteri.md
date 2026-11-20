@@ -132,6 +132,9 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `push_tokens` | K12 | |
 | `notifications` | K12 | |
 | `parent_notification_prefs` | K12 | ebeveynin anlık bildirim tercihi (adım bildirimi, gün tamam); ÖNERİ `proposed/20261120210000` |
+| `clinician_notification_prefs` | K12 | uzmanın "Hatırlatmalar ve ipuçları" tercihi (`tips`); ÖNERİ `proposed/20261120230000` |
+| `nudge_log` | K12 | otomatik hatırlatma kararı: kime, hangi kural, ne zaman, sonuç (gönderildi / atlandı / karşılaştırma grubu), açıldı mı, 72 saatte hedef adıma geçti mi; metin ve içerik yok. Saklama kullanım kaydıyla aynı olmalı (`42` §4; imha işine eklenmedi). ÖNERİ `proposed/20261120230000` |
+| `nudge_pauses` | K12 | üç yanıtsız hatırlatmadan sonraki 14 günlük ara (kişi, bitiş); ÖNERİ `proposed/20261120230000` |
 | `code_attempts` | K13 | |
 | `admin_audit` | K13 | |
 | `user_flags` | K13 | |
@@ -144,6 +147,9 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `storage_trash` | — | silinecek dosya yolları (geçici; yol aile kimliği içerir) |
 | `app_config` | — | ayarlar |
 | `feature_flags` | — | |
+| `nudge_rules` | — | otomatik hatırlatma kuralları ve sabit metinleri (kişiye bağ yok); ÖNERİ `proposed/20261120230000` |
+| `store_funnel_daily` | — | App Store Connect günlük toplamları (gösterim, ürün sayfası, indirme; kişi yok); ÖNERİ `proposed/20261120220000` |
+| `kpi_benchmarks` | — | iç karşılaştırma için kıyas değerleri ve kaynakları; ÖNERİ `proposed/20261120220000` |
 | `legal_documents` | — | yasal metinler |
 | `billing_plans` | — | |
 | `task_templates` | — | |

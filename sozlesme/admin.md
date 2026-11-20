@@ -70,6 +70,8 @@ Bayrak `cancel_flow` (ClinicApp, 18 Kasım 2026; tanım gerekmez, yoksa **kapal�
 
 Bayrak `lifecycle_nudges` (ClinicApp, 18 Kasım 2026; tanım gerekmez, yoksa **kapalı**): cihazda planlanan hatırlatmaları (ilk davet, süresi dolan davet, ilk eğitim, taslak eğitim, deneme bitişinden 3 gün önce), davet sonrası izin açıklamasını ve Ayarlar › Bildirimler anahtarını açar (`akislar.md` 25 aşama 1). Açıkken iOS bildirim izni girişte değil, ilk davetten sonra sorulur. Kapatılınca cihazdaki planlı hatırlatmalar bir sonraki açılışta silinir. Sınırlar (hafta içi 08:30–19:00, günde 1, 7 günde 2, üç yanıtsız hatırlatmadan sonra 14 gün ara, %10 karşılaştırma grubu) şimdilik uygulamada sabit; kullanıcı kararı bekliyor.
 
+Bayrak `nudges_server` (sunucu bildirim motoru, ÖNERİ `proposed/20261120230000_nudge_engine.sql`, 20 Kasım 2026; tanım gerekmez, yoksa **kapalı**): otomatik, kişiye göre seçilen hatırlatmaları (`nudge_run`, aşağıda "Otomatik bildirim motoru"; kurallar `akislar.md` 25 "Sunucu motoru") açar. Kişi başına değerlendirilir (`flag_on`: kişiye istisna → genel bayrak + yüzde). Ürüne özel anahtar `nudges_server_parent` / `nudges_server_clinic` genel bayrak ya da kişiye istisna olarak **tanımlıysa** o ürün için `nudges_server`'ın yerine geçer (ör. yalnız Moyo Mercek: `admin_set_flag('nudges_server_clinic', true, 100, …)`; yalnız Moyo: `nudges_server_parent`). Kapalıyken motor hiçbir şey yazmaz. Önce tek kişiye: `admin_set_user_flag(kullanıcı, 'nudges_server', true, …)`. Moyo Mercek bu bayrağı `client_config('clinic')` ile okur: `flags.nudges_server_clinic ?? flags.nudges_server` açıksa cihaz içi planlamayı (`lifecycle_nudges`) kapatır (Mercek penceresinin işi). Açmadan önce: kural metinleri Marketing §7.1 / hukuk_notlari N gözden geçirmesi, ParentApp'in `nudge` bildirimini açması (`data.nudge`).
+
 ## KVKK işletme ve izleme (`migrations/20261102200000_kvkk_ops.sql`, 2 Kasım 2026, **uygulandı**: canlıda doğrulandı 10 Kasım 2026)
 
 | Fonksiyon | Rol | Ne yapar |
@@ -140,6 +142,67 @@ Kaynak: `activity_days` (her gün `track_session` bir satır yazar; geçmiş ser
 | Günlük seri | Gün × uygulama: aktif ve yeni kullanıcı (en çok 1 yıl) | `admin_kpi_daily(from, to)` |
 | Elde tutma | İlk görülme haftası kohortu; G1/G7/G30 = ilk günden 1/7/30 gün sonra yeniden aktif olanların oranı (henüz dolmamışsa boş) | `admin_kpi_retention(hafta)` |
 | Huniler | **parent:** kayıt → e-posta onayı → çocuk eklendi → cihaz bağlandı → ilk görev → ilk onay → ücretli. **child:** eklendi → bağlandı → oyunu açtı → ilk "Yaptım" → ilk onay → 7. gün aktif. **clinic:** açıldı → ilk aile → ilk öneri → ilk not → ücretli | `admin_kpi_funnel(app, from, to)` |
+| Huni (App Store → yenileme; ÖNERİ `20261120220000`) | Kümülatif adımlar, ilk adıma ve öncekine göre %, önceki adımdan medyan saat, adımda kalanların son ekranı, iptal nedeni, kpis `{value, n}`; adım tanımları aşağıda "Huni, abonelik sağlığı ve kıyas" | `admin_funnel(ürün, from, to)`, `admin_funnel_people` |
+| Abonelik sağlığı (ÖNERİ `20261120220000`) | Aktif ücretli, denemede, deneme → ücretli, yeni, kayıp, 30 günlük kayıp, yenileme, iade, ödeme sorunu, MRR (aylık eşdeğer), ARPU, plan ve hafta kırılımı | `admin_subscription_health(ürün, from, to)` |
+| Kıyas (ÖNERİ `20261120220000`) | Anahtar başına dış kaynaklı değer ve aralık (`low`–`high`), iyi yönü (`better`); yalnız iç karşılaştırma | `admin_benchmarks()` |
+| Otomatik bildirim (ÖNERİ `20261120230000`) | Kural başına gönderilen, açılan, 72 saatte hedefe geçen; karşılaştırma grubu ve fark (yüzde puanı) | `admin_nudge_stats(ürün, from, to)` |
 | Özellik kullanımı | En sık olaylar ve kullanıcı sayısı (`track_events`) | `admin_kpi_events(app, gün, limit)` |
 
 Klinik sınırı: KPI'lar ürün kullanımını ölçer; hiçbir gösterge çocuk için tanı, zekâ ya da dikkat puanı değildir ve panelde çocuk bazında puan gösterilmez.
+
+## Huni, abonelik sağlığı ve kıyas (ÖNERİ `proposed/20261120220000_funnel_analytics.sql`, 20 Kasım 2026; uygulanmadı; test `test_funnel_analytics.sql`)
+
+Kullanıcı isteği (20 Kasım 2026): App Store'u görmekten ödemeye kadar nerede düşüldüğü, kim hangi ekranda kaldı, abonelik sağlığı, global kıyaslar. Bütün yüzdeler **0–100**. Her `kpis` alanı `{"value", "n"}` (`n` payda; `n` = 0 ise `value` null; panel küçük örneği `n`'den anlar). Eski `admin_kpi_funnel` kalır.
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_funnel(ürün, başlangıç, bitiş)` | okur | `{product, from, to, cohort_size, store {impressions, page_views, downloads} \| null, steps [{key, label, count, pct_of_first, pct_of_prev, median_hours_from_prev, note?}], drops [{after, lost, top_exits [{screen, count}]}], cancel_reasons [{reason, count}], kpis {store_tap_through, store_page_conversion, download_to_signup, signup_to_activation}}`. Ürün `parent` / `clinic`, aralık en çok 1 yıl |
+| `admin_funnel_people(ürün, adım, başlangıç, bitiş, limit=50)` | support (owner) | O adımda kalanlar (art arda ulaştığı son adım = `adım`; `drops[].after` ile aynı anahtar): `[{id, id_short, kind, joined_at, reached, last_event, last_screen, last_seen, state}]`. `kind` `family` (id = aile kimliği → `admin_family`) / `user` (id = uzmanın kimliği → `admin_user`). `state` müşteri ekranının adları: aile `trial` / `premium` / `clinic` / `pending` / `expired`, uzman (varsayılan kliniği) `paid` / `manual` / `trial` / `expired`. E-posta, ad, çocuk adı **yok**. App Store adımları kişi bazında değildir (`[]`). En çok 500 |
+| `admin_subscription_health(ürün, başlangıç, bitiş)` | okur | `{active_paid, in_trial, trials_started, trials_ended, trial_to_paid_pct, new_paid, churned, churn_pct_30d, renewals, refunds, billing_issues, mrr_try, arpu_try, prices_set, by_plan [{plan, active, mrr_try}], weekly [{week, trials, paid, churned}], kpis {trial_to_paid, monthly_churn, monthly_renewal_m1, annual_renewal, annual_share, refund_rate, billing_issue_rate}, notes}`. `active_paid`, `in_trial`, `mrr_try` bugüne göre; ötekiler aralığa göre. `week` = haftanın pazartesisi (`YYYY-MM-DD`, Türkiye saati) |
+| `admin_benchmarks()` | okur | `[{key, product, label, value, unit, better, low, high, source, source_url, as_of, note, updated_at}]` (tablo `kpi_benchmarks`). `low` / `high` sayısal alt / üst sınır (iyi / kötü değil); `better` `high` (büyük iyi) / `low` (küçük iyi: kayıp, iade, ödeme sorunu). Yalnız iç karşılaştırma; pazarlamada kullanılmaz (`hukuk/45`) |
+| `admin_benchmark_set(anahtar, ürün, değer, alt, üst, kaynak, kaynak_url, tarih, gerekçe, not=null)` | owner | Aynı anahtar + ürün üzerine yazar; değer, alt, üst üçü de boşsa siler. Ad, birim, yön anahtarın sabit eşlemesinden (`kpi_benchmark_meta`; seed'de verilmezse tetikleyici doldurur). Yüzde 0–100, alt ≤ üst, bağlantı `https://`. Denetim `benchmark.set` / `benchmark.delete`, hedef `config` / `benchmark:<ürün>:<anahtar>` |
+| `admin_store_funnel_set(ürün, gün, gösterim, ürün_sayfası, indirme, gerekçe)` | owner | App Store Connect › Analytics günlük değerleri (elle; ileride içe aktarma `source = 'import'`). Aynı gün üzerine yazar; üçü de boşsa siler. Gün bugünden ileri ya da 2 yıldan eski olamaz. Denetim `store_funnel.set` |
+
+**Adımlar (anahtarlar sabit; sözleşme koordinatör 20 Kasım 2026).** Kümülatif: bir adım ancak öncekilerin hepsine ulaşanlar içinden sayılır (sayı hiç artmaz). Kohort: Moyo = aralıkta açılan **aile** (`families.created_at`), Moyo Mercek = aralıkta kayıt olan **uzman** (`clinicians.created_at`). `median_hours_from_prev` = önceki adımdan bu adıma geçen saatlerin ortancası (iki adıma da ulaşanlar). Tahmin olan zamanlar işaretli.
+
+| Ürün | Adım | Kaynak |
+|---|---|---|
+| ikisi | `store_impression`, `store_page_view`, `store_download` | `store_funnel_daily` (aralıktaki günlerin toplamı; veri yoksa `count` null + `note`) |
+| parent | `signup` | `families.created_at` |
+| parent | `email_verified` | aileyi açanın `auth.users.email_confirmed_at` (yoksa ailedeki ilk onay, yoksa `trial_started_at`) |
+| parent | `child_added` | ilk `children.created_at` |
+| parent | `game_linked` | `children.user_id` dolu; zaman **tahmin**: çocuk satırı ile oyunun anonim hesabından geç olanı (bağlanma anı tutulmuyor) |
+| parent | `first_routine` | ilk `tasks.created_at` |
+| parent | `first_done` | ilk `completions.child_done_at` ("Yapamam" sayılmaz) |
+| parent | `first_approved` | ilk ebeveyn onayı (`status = approved`, `reviewed_by` dolu; `reviewed_at`) |
+| parent | `active_d7` | ebeveynlerden birinin kayıttan 7–13 gün sonra etkin günü (`activity_days`) |
+| parent | `trial_end` | deneme sonu geçti (`trial_started_at` + `trial_days` / `billing.trial_days`, davet ödülü `bonus_until`; `family_access_of` ile aynı) |
+| parent | `paid` | `family_subscriptions.started_at` (kaynak `store` / `web`; elle verilen sayılmaz) |
+| parent | `renewed` | **tahmin**: aile aboneliğinin geçmişi tutulmuyor; dönem sonu başlangıç + 2 dönem − 3 günü aştıysa yenilenmiş (zaman = başlangıç + 1 dönem) |
+| clinic | `signup` | `clinicians.created_at` |
+| clinic | `survey_done` | atlanmamış `clinician_surveys` satırı |
+| clinic | `first_invite` | ilk aile daveti (`clinic_invites`, `kind = family`, `clinician_id`) |
+| clinic | `family_linked` | sorumlusu olduğu ya da kendi açtığı klinikteki ilk paylaşım (`clinic_links.created_at`) |
+| clinic | `first_training` | ilk Etkin eğitim (`parent_trainings.activated_at`) |
+| clinic | `active_w2` | kayıttan 7–13 gün sonra etkin gün |
+| clinic | `trial_end` | kendi açtığı alanların en geç `trial_ends_at`'i geçti |
+| clinic | `paid` | kendi kliniğinde ilk mağaza üyeliği (`billing_subscriptions`, `source <> manual`) |
+| clinic | `renewed` | RevenueCat `RENEWAL` olayı (`billing_events.payload.type`) ya da dönem sonu ilk dönemi aştı |
+
+Çıkış noktası (`top_exits`): o adımda kalanların ParentApp / ClinicApp'teki son `screen.*` olayı (yoksa `app.open` dışındaki son olay, o da yoksa `(olay yok)`), en sık 5. İptal nedeni: `membership.cancel_reason` olayının `reason`'ı, aralıkta kişi başına (`akislar.md` 9).
+
+**Kıyas anahtarları (kpis ve `kpi_benchmarks.key`):** `store_tap_through` (pv / gösterim), `store_page_conversion` (indirme / pv), `download_to_signup` (kohort / indirme; Mercek web kaydı indirmesiz olabildiği için %100'ü aşabilir), `signup_to_activation` (parent: kayıttan 7 gün içinde ilk ebeveyn onayı, payda kaydının üzerinden 7 gün geçenler; clinic: 14 gün içinde ilk aile bağlandı), `trial_to_paid` (aralıkta denemesi bitenlerden ücretli olan), `monthly_churn` (aralığın sonundaki 30 günde: pencere başında ücretli olanlardan biten), `monthly_renewal_m1` / `annual_renewal` (ilk dönemi aralıkta biten aylık / yıllık aboneliklerden yenilenen; sonuç 3 gün sonra kesinleşir), `annual_share` (aktif ücretlilerde yıllık payı), `refund_rate` (iade / (yeni + yenileme)), `billing_issue_rate` (ödeme sorunu / aktif ücretli), `d1_retention`, `d7_retention`, `d30_retention` (`admin_kpi_retention`).
+
+**Abonelik verisi notları:** Moyo'da `family_subscriptions` aile başına tek satırdır (geçmiş yok): kayıp ve iade son güncellemeden (`status` expired / refunded, `updated_at`), ödeme sorunu `status = grace`, yenileme dönem sonundan tahmin. Moyo Mercek'te `billing_events` (her webhook'ta `apply:<durum>`, `payload.type` RevenueCat olay türü): bitiş = son etkin olaydan sonraki ilk `apply:expired|refunded`, yenileme `RENEWAL`, ödeme sorunu `BILLING_ISSUE`. MRR KDV dahil brüt, aylık eşdeğer (yıllık / 12); fiyatlar Moyo `app_config.kpi` (`parent_monthly_try` 349,99, `parent_yearly_try` 3.499,99; öneri bu değerleri 0 ise yazar, `admin_set_kpi_config` ile değişir), Moyo Mercek `billing_plans.price_try` (`ekonomi.md` 9). Elle verilen premium / üyelik ücretli sayılmaz.
+
+## Otomatik bildirim motoru (ÖNERİ `proposed/20261120230000_nudge_engine.sql`, 20 Kasım 2026; uygulanmadı; test `test_nudge_engine.sql`; akış `akislar.md` 25 "Sunucu motoru")
+
+| Fonksiyon | Rol | Ne yapar |
+|---|---|---|
+| `admin_nudge_stats(ürün, başlangıç, bitiş)` | okur | Kural başına `[{rule, label, enabled, category, sent, opened, converted, holdout, holdout_converted, lift_pct, skipped {limit, quiet, pref}}]`. `converted` = 72 saatte kuralın hedef adımına geçen; `lift_pct` = gönderilenlerin dönüşüm yüzdesi − karşılaştırma grubunun dönüşüm yüzdesi (**yüzde puanı**; ikisinden birinde kayıt yoksa null). `skipped` atlanan kişi + ref sayısı (aynı gün tekrarları sayılmaz). Hesap bilgisi kuralları (deneme bitişi) karşılaştırma grubuna girmez: `holdout` 0, `lift_pct` null |
+| `admin_nudge_rules()` | okur | Kurallar: anahtar, ürün, ad, tetik, adımlar, bekleme, tür, başlık, metin, `route`, sıra, açık mı |
+| `admin_nudge_rule_set(anahtar, açık, gerekçe)` | owner | Kuralı aç / kapat (metin değişmez; metin yalnız SQL ile). Denetim `nudge.rule`, hedef `config` / `nudge:<anahtar>`. Öneri yeniden çalıştırılınca owner'ın seçimi korunur |
+| Bayrak `nudges_server` | owner | Yukarıda "Bayrak `nudges_server`" |
+
+Zamanlama: `nudge_run()` (istemciye kapalı; `service_role` ve zamanlayıcı). pg_cron açıksa iş `nudge-run` her 15 dakikada (`7,22,37,52 * * * *`); `ops_health` "Zamanlayıcı" satırı bu işi de denetler.
+
