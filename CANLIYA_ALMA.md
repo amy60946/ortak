@@ -56,7 +56,8 @@ Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `mo
 - (Claude) İşlem e-postaları: hoş geldin, deneme bitiyor, ödeme + fatura, hesap silindi (sonra; Resend Edge Function'dan)
 
 ### 1.4 Destek
-- (Siz) `destek@` posta kutusu (tek adres, 20 Kasım 2026)
+- (Siz) `destek@` posta kutusu (tek adres, 20 Kasım 2026). **Almak:** Cloudflare › Email Routing, `destek@moyoapp.com.tr` → kendi Gmail'iniz (1.3 adım 7). **Göndermek** (paneldeki "Yanıtla" taslağı da bu adresten çıksın): Gmail › Ayarlar › Hesaplar ve İçe Aktarma › "Farklı bir adresten posta gönder" › `destek@moyoapp.com.tr` ("Takma ad olarak değerlendir" işaretli) › SMTP `smtp.resend.com`, bağlantı noktası 465 (SSL), kullanıcı adı `resend`, şifre = Resend'de yeni bir yalnız gönderme anahtarı (sohbete yazılmaz) → Gmail'in gönderdiği doğrulama kodu Email Routing ile gelir → aynı sayfada "Varsayılan yap". Panelde "Yanıtla" Gmail'de açılır, Kimden: `destek@` (kullanıcı kararı 20 Kasım 2026: "Destek formu kalsın")
+- (Siz) Ekip bildirimi: her yeni talepte `destek@`'e tek satırlık e-posta (talep no, uygulama, konu, "Panelde aç"; kişinin e-postası ve mesajı girmez). Supabase › Edge Functions › `support` › yeni kodu yayınla (Verify JWT kapalı) + Secrets: `ADMIN_PANEL_URL` = panelin adresi ("Panelde aç" için; isteğe bağlı). Gönderim mevcut `RESEND_API_KEY` + `MAIL_FROM` ile (`noreply@moyoapp.com.tr`, ad "Moyo Destek")
 - (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - (Claude) SSS
 - (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
