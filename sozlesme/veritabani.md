@@ -198,7 +198,7 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 
 | Tablo | Ne | Alanlar | Yazar | Okur |
 |---|---|---|---|---|
-| `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at` | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
+| `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at`, `push` (ÖNERİ `proposed/20261120210000`, bölüm 34: varsayılan true; false = yalnız uygulama içi, telefona gönderilmez) | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
 | `push_tokens` | Cihaz push anahtarı | `token` (PK), `user_id`, `app`, `platform`, `updated_at` | Yalnız RPC | Kendi satırları |
 
 | Fonksiyon | Kim | Ne |
@@ -761,3 +761,21 @@ Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustala
 | `family_incident_report(paylaşım, hedef?, zaman?, sayı?, dakika?, öncül?, sonuç?, strateji?, tepki?, diğer_davranış?)` | P | Olay bildirir; hedefe bağlıysa türe göre zorunlu alan (sıklık → sayı, ABC → öncül + sonuç, süre → dakika), değilse davranışın adı zorunlu; zaman ileri değil, en çok 30 gün geri |
 
 Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanlarına `behavior_incident`. ÖNERİ `proposed/20261120200000`: `behavior_incidents_fill` (yeni olayda `behavior_title`), `clinic_target_behaviors_title_sync` (ad değişince olaylarda da). Paylaşım kaydı ya da klinik silinince olay silinmez, `link_id` boşalır; hedef davranış (uzmanın kaydı) silinir, adı olayda kalır; aile okur, uzman okuyamaz; aile ya da çocuk silinince olay da silinir (32'deki not).
+
+## 34. Ebeveyn bildirim tercihleri ve "günün adımları tamamlandı" (ÖNERİ `proposed/20261120210000_parent_notification_prefs.sql`, 20 Kasım 2026; uygulanmadı; kullanıcı kararı bildirim sınırı 5a; akış `akislar.md` 7 ve 25, durumlar `durumlar.md` 8; test `test_parent_notification_prefs.sql`)
+
+| Tablo / alan | Ne | Alanlar | Yazar | Okur |
+|---|---|---|---|---|
+| `parent_notification_prefs` | Ebeveyn başına anlık bildirim tercihi; satır yoksa varsayılan | `user_id` (PK → `profiles`, hesapla silinir), `step_done` (varsayılan **false**), `day_complete` (varsayılan **true**), `updated_at` | Yalnız RPC | Kendi satırı (P); aynı ailedeki öteki ebeveyn de göremez |
+| `notifications.push` | Telefona gönderilsin mi | boolean, varsayılan true. Tetikleyici `notifications_push_pref` (insert öncesi): app `parent` ve kind `task_done` / `task_declined` → `step_done`, kind `day_complete` → `day_complete`; öteki türler true kalır | sunucu | P, O, K (kendi satırı) |
+| `children.day_complete_on` | Çocuk için son gönderilen "günün adımları tamamlandı" günü (günde bir kez) | date | sunucu (istemciye yazma yetkisi yok) | aile, çocuk, bağlı klinik (satırın öteki alanları gibi) |
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `parent_notification_prefs()` | P | `{step_done, day_complete}` (satır yoksa varsayılanlar; okumak satır açmaz). Ebeveyn hesabı değilse 42501 |
+| `parent_notification_prefs_set(p_key, p_on)` | P | `p_key` `step_done` / `day_complete`, `p_on` true / false; güncel `{step_done, day_complete}` döner. Bilinmeyen anahtar ya da boş değer 22023 |
+| İç: `parent_notification_prefs_of(kullanıcı)`, `notifications_push_pref` (tetikleyici), `completions_notify_day` (tetikleyici) | — | İstemci çağıramaz |
+
+- **Push:** satır her durumda yazılır (uygulama içi liste ve rozet aynı). `notifications_push` `push = false` satırda pg_net'i hiç çağırmaz (Apple da Expo da). Edge Function `push-apns` da `push = false` satırı atlar (elle çağrıya karşı; sütun yokken eskisi gibi çalışır).
+- **`day_complete`:** `completions` tetikleyicisi `completions_notify_day` (`completions_notify`'dan sonra). Koşullar: durum `pending` ya da `approved` oldu (önceden işaretli değildi), işareti çocuğun cihazı yaptı (`children.user_id = auth.uid()`), gün Türkiye günü bugün (`tr_today()`; dünün geç işareti tetiklemez), çocuğun o gün planlı bütün adımları (`task_assignments` + `task_occurs_on`, `child_tasks` ile aynı) `pending` ya da `approved`, `children.day_complete_on` bu gün değil. Çocuk satırı kilitlenerek sayılır (eşzamanlı son işaretlerden biri bildirimi üretir, ikisi birden üretmez). Alıcı ailenin ebeveynleri (`notify_parents`); başlık "<ad> bugünün adımlarını tamamladı", metin onay bekleyen varsa "Onayını bekleyen n adım var.", yoksa boş; `data` `{child_id, date, steps, pending}`.
+- KVKK dökümüne (`data_export_of`) eklenmedi: aynı işlevi `proposed/20261120200000_family_keeps_records.sql` de yeniden tanımlıyor; ikisi uygulandıktan sonra küçük bir ekle (`children.day_complete_on` çocuk satırıyla zaten gelir).

@@ -11,7 +11,7 @@
 3. Uygulamalar metni herkese açık adresten gösterir: Edge Function `legal` (`…/functions/v1/legal?doc=<anahtar>`). Supabase kendi alan adında HTML'i düz metin gönderdiği için tarayıcı isteği, secret `LEGAL_PUBLIC_URL` tanımlıysa yönetim panelinin Cloudflare Worker'ındaki **`/yasal/<anahtar>`** sayfasına yönlendirilir (sayfa metni `legal?format=json`'dan okur; admin-panel `worker/`). Mağaza "Gizlilik Politikası" adresi: `<panel adresi>/yasal/gizlilik`. Alan adı alınınca kendi adresimize taşınır. Taslakların üstünde "TASLAK" bandı çıkar.
 4. Onay isteyen metinler (koşullar, sözleşme, aydınlatma okundu) kayıtta ve sürüm değişince uygulama açılışında onaylatılır: `legal_pending(app)` → `legal_accept(app, [{key, version}])`; kayıt `legal_acceptances`.
 5. Avukat onayı gelince yönetim paneli › Hukuk › Yayımla (yalnız sahip). Yayındaki metin değişmez; düzeltme = yeni sürüm (dosyada `Sürüm` artırılır, seed yeniden üretilir).
-6. KVKK başvuruları: uygulama içi `kvkk_request_create` ya da `kvkk@` e-postası → panel › Hukuk › KVKK başvuruları (30 gün sayacı).
+6. KVKK başvuruları: uygulama içi `kvkk_request_create` ya da `destek@` e-postası (tek iletişim adresi, kullanıcı kararı 20 Kasım 2026; konu "KVKK başvurusu") → panel › Hukuk › KVKK başvuruları (30 gün sayacı).
 
 ## Dizin
 

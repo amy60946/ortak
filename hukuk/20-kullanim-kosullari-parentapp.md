@@ -5,6 +5,7 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Taslak maddeler: `sozlesme/hukuk_notlari.md` D, F, G, I (bu metne "siz" diliyle yerleştirildi). Sürüm adları korunmuştur: `uzman-paylasim-v1`, `uzman-gecis-v1` (`saglik-yanit-v1` 14 Kasım 2026'da kalktı). Hukuki görüş değildir.
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Çekirdek maddelerin yeri: 2 → 3.3; 3 → 3.2; 4 → 3.5; 5 → 11.2; 6 → 15.3; 8 → 13.2; 9 → 15.4; 10 → 1.1. Moyo'nun içeriği maddesi 3.4; davet kodu ve davet ödülü 4.5, 8.2, 8.10 (`hukuk_notlari.md` J3, O). Deneme değişikliği kullanıcının lehine; metin yayımlanmadığı için sürüm artırılmadı (`hukuk_notlari.md` O soru 1).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı 1.1; tıbbi cihaz cümlesi 3.2; konum cümlesi 3.3; içerik sorumluluğu 3.4; genel ilke 3.6 (yeni); çocuğun hak ve yükümlülükleri 5.2; açık rıza ekranı 6.3 (eski rozet maddesinin yerine; belge yükleme kaldırıldı); uzman–aile ilişkisi 6.7; indirim teklifleri 8.11 (yeni); hesap silmede uzman kayıtları 14.1; tanıtım iletisi izni 16.10 (yeni).
 
 ## Kısaca
 
@@ -15,13 +16,15 @@
 - 14 günlük deneme ücretsizdir (başka bir ailenin davet koduyla katılırsanız 21 gün); ödeme bilgisi istenmez ve kendiliğinden ücretli aboneliğe dönmez. Sonra ücretsiz planda, sınırlı özellikle devam edebilirsiniz.
 - **Coin ve Güneş Taşı para değildir.** Ödülleri siz belirler ve siz verirsiniz; biz bu ödüllerin tarafı değiliz.
 - Hesabınızı istediğiniz an uygulamanın içinden silebilirsiniz.
+- **Moyo ilişkilerinizin tarafı değildir:** uzmanla aranızdaki ilişki ve girdiğiniz kayıtlar size aittir; Moyo bunlar için sorumluluk üstlenmez (kanunun saklı tuttuğu haklarınız dışında).
+- Tanıtım ve kampanya iletileri yalnız ayrı izninizle gelir; izin kapalı başlar.
 - Koşullar değişirse size bildiririz; esaslı değişiklikte yeniden onayınızı isteriz.
 
 ## Tam metin
 
 ### 1. Taraflar ve kapsam
 
-1.1. Bu koşullar, Moyo'yu işleten `[AD SOYAD]` ("biz") ile Moyo Ebeveyn'i kullanan ebeveyn ("siz") arasındaki sözleşmedir. **Hizmet sağlayıcı.** "Moyo", `[AD SOYAD]` tarafından işletilen uygulamaları ifade eder. Adresimiz `[ADRES]`, MERSİS/VKN `[MERSİS/VKN]`.
+1.1. Bu koşullar, Moyo'yu işleten `[AD SOYAD]` ("biz") ile Moyo Ebeveyn'i kullanan ebeveyn ("siz") arasındaki sözleşmedir. **Hizmet sağlayıcı.** "Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Adresimiz `[ADRES]`, MERSİS/VKN `[MERSİS/VKN]`.
 
 1.2. Kişisel verilerinizin nasıl işlendiği **Moyo Ebeveyn Aydınlatma Metni**'nde (`aydinlatma-ebeveyn`) anlatılır. Aydınlatma metni bu sözleşmenin parçası değildir; bilgi verir.
 
@@ -45,13 +48,15 @@
 
 3.1. Moyo Ebeveyn ile rutin ve adım oluşturur, çocuğunuzun "Yaptım"larını onaylar, ödülleri yönetir, çocuğunuzla mesajlaşır, davranış kaydı tutarsınız. İsterseniz kayıtlarınızı bir uzmanla paylaşır, uzmanınızın atadığı ebeveyn eğitimini kullanır ve tanımladığı davranışlar için olay bildirirsiniz.
 
-3.2. **Tanı, tedavi ve acil durum.** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda 112 aranır. Kayıtlar ve olay bildirimleri bir uzmana anında ulaşmaz. Moyo uzman istihdam etmez; uzman ile aile arasında aracılık ya da yönlendirme yapmaz. Uzmanların kendi programlarını kurması için şablon sunar.
+3.2. **Tanı, tedavi ve acil durum.** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda 112 aranır. Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır. Kayıtlar ve olay bildirimleri bir uzmana anında ulaşmaz. Moyo uzman istihdam etmez; uzman ile aile arasında aracılık ya da yönlendirme yapmaz. Uzmanların kendi programlarını kurması için şablon sunar.
 
-3.3. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Davranış kaydındaki şiddet derecesi, olay bildirimindeki çocuğun tepkisi ve takip planındaki zorluk bildirimi sizin gözleminizdir. Ebeveyn eğitimindeki test sonucu sizin bilgi yoklamanızdır, çocuğa ait bir puan değildir.
+3.3. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Davranış kaydındaki şiddet derecesi, olay bildirimindeki çocuğun tepkisi ve takip planındaki zorluk bildirimi sizin gözleminizdir. Ebeveyn eğitimindeki test sonucu sizin bilgi yoklamanızdır, çocuğa ait bir puan değildir.
 
-3.4. **Moyo'nun içeriği.** Ebeveyn eğitimi kütüphanesi, kısa ebeveyn dersleri, hazır rutinler, öneriler ve ipuçları Moyo'nun hazırladığı içeriktir. Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Uzmanınızın kendi yazdığı uygulama görevleri, yapılacaklar ve önerilerin içeriği uzmana aittir.
+3.4. **Moyo'nun içeriği.** Ebeveyn eğitimi kütüphanesi, kısa ebeveyn dersleri, hazır rutinler, öneriler ve ipuçları Moyo'nun hazırladığı içeriktir. Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Bu içeriğe dayanılarak verilen kararlardan ve bunların sonuçlarından, yasanın izin verdiği en geniş ölçüde, Moyo sorumlu değildir; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Uzmanınızın kendi yazdığı uygulama görevleri, yapılacaklar ve önerilerin içeriği uzmana aittir.
 
 3.5. **Sonuç taahhüdü.** Moyo belirli bir sonuç, gelişme ya da davranış değişikliği taahhüt etmez.
+
+3.6. **Genel ilke.** Moyo, kullanıcıların kendi kayıtlarını tutması ve isterse paylaşması için bir araç sunar. Moyo; ebeveyn, çocuk ve uzman arasındaki ilişkinin, kullanıcıların girdiği kayıtların ve bu kayıtlara dayanarak verilen kararların tarafı değildir ve bunlar için bir sorumluluk ya da yükümlülük üstlenmez. Bu ilke yasanın izin verdiği en geniş ölçüde geçerlidir; kast, ağır kusur, tüketicinin vazgeçilemez hakları ve kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır. Her kullanıcı kendi girdiği kayıttan sorumludur.
 
 ### 4. Hesap ve güvenlik
 
@@ -69,7 +74,7 @@
 
 5.1. **Veli beyanı.** Moyo Ebeveyn'e eklediğiniz ve paylaştığınız çocukların velisi ya da yasal temsilcisi olduğunuzu, paylaşım kararını verme yetkisine sahip olduğunuzu beyan edersiniz.
 
-5.2. **Çocuğun hesabı.** Çocuğunuzun Moyo Oyun profilini siz açar, siz yönetirsiniz. Çocuğun e-postası ya da şifresi yoktur; oyun sizin ürettiğiniz kod ya da QR ile bağlanır. Kodu yalnız çocuğunuzun cihazında kullanın. Çocuğunuzun oyunu ve Moyo Ebeveyn'deki kayıtları nasıl kullandığını gözetmek size aittir.
+5.2. **Çocuğun hesabı.** 18 yaşından küçük çocuğun bu hizmetle ilgili hak ve yükümlülüklerini velisi ya da yasal temsilcisi olan ebeveyn kullanır ve üstlenir. Çocuğun hesabını veli açar ve yönetir; çocuğun kullanımından, çocuk adına verilen onaylardan ve girilen kayıtlardan ebeveyn sorumludur. Çocuğunuzun Moyo Oyun profilini siz açar, siz yönetirsiniz. Çocuğun e-postası ya da şifresi yoktur; oyun sizin ürettiğiniz kod ya da QR ile bağlanır. Kodu yalnız çocuğunuzun cihazında kullanın. Çocuğunuzun oyunu ve Moyo Ebeveyn'deki kayıtları nasıl kullandığını gözetmek size aittir.
 
 5.3. **Bağlantıyı kaldırma.** Bir cihazın çocuğunuzun hesabına erişimini Moyo Ebeveyn'den "Cihaz bağlantısını kaldır" ile istediğiniz an kapatırsınız.
 
@@ -85,7 +90,7 @@
 
 6.2. **Uzmanı tanıma yükümlülüğü.** Platform uzmanların kimliğini ve mesleki belgelerini doğrulamaz. Çocuğunuzun verisini paylaşmadan önce uzmanı gerçek hayatta tanıdığınızı ve davetin ondan geldiğini kendiniz teyit edersiniz. Paylaşım kararı ve uzman seçimi tamamen sizindir. Emin değilseniz paylaşmayın; uzmanınızı bildiğiniz bir yoldan arayıp sorun.
 
-6.3. **"Uzman diploma belgesini yükledi" ifadesi.** Bazı uzmanların yanında "Uzman diploma belgesini yükledi" yazabilir. Bu yalnız uzmanın kendi isteğiyle mezuniyet belgesini yüklediğini gösterir. Moyo bir doğrulama ya da yetki beyanı vermez; bu ifade kimlik doğrulaması, meslek yetkisi onayı ya da hizmet kalitesi taahhüdü değildir.
+6.3. **Açık rıza ekranı.** Bir uzmana bağlanırken uygulama ayrı bir açık rıza ekranı gösterir (`uzman-paylasim-v1`); ekranda neyin, kiminle paylaşılacağı yazar. Bu koşulları kabul ederek bu ekranın varlığını ve kapsamını bildiğinizi kabul edersiniz. Açık rıza bu koşulların parçası değildir ve hizmetin şartı yapılmaz: uzmana bağlandığınız anda ayrıca alınır ve istediğiniz an geri alınır (6.5). Rıza vermezseniz uzman çocuğunuzun hiçbir kaydını göremez.
 
 6.4. **Uzmanın davetindeki çocuk bilgisi.** Uzman sizi davet ederken çocuğunuzun adını ve yaş grubunu girmiş olabilir. Bu bilgi siz kontrol edip onaylayana kadar yalnız davet kaydında tutulur; onaylamazsanız ya da davet süresi dolarsa silinir. Davet size ait değilse "Bu davet bana ait değil" deyin.
 
@@ -93,7 +98,7 @@
 
 6.6. **Uzmanın önerileri.** Uzman size rutin ve adım önerebilir, ebeveyn eğitimi atayabilir, hedef davranış tanımlayabilir, randevu açabilir ve takip planı gönderebilir. Bunları kabul etmek, değiştirmek, uygulamak ya da reddetmek size kalmıştır.
 
-6.7. **Uzmanın hizmeti.** Uzman ile aileniz arasındaki mesleki ilişki, ücret ve tedavi kararları platformun dışındadır. Uzmanın açtığı randevular uygulamada görünebilir; randevunun yapılması, ücreti ve içeriği sizinle uzman arasındadır. Biz bu ilişkinin tarafı değiliz ve uzmanın mesleki tutum ve kararlarından sorumlu değiliz.
+6.7. **Uzman ile aile arasındaki ilişki.** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur. Uzmanın açtığı randevular uygulamada görünebilir; randevunun yapılması, ücreti ve içeriği sizinle uzman arasındadır. Uzmanın mesleki tutum ve kararlarından, yasanın izin verdiği en geniş ölçüde, sorumlu değiliz; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır.
 
 6.8. **Kötüye kullanım bildirimi.** Tanımadığınız birinden davet alırsanız ya da bir uzmandan şüphelenirseniz paylaşmayın ve `destek@moyoapp.com.tr` adresine bildirin. Hesabı inceler, gerekirse kapatırız.
 
@@ -136,6 +141,8 @@
 - Sahte hesaplarla ya da kendi hesabınıza davet ve öteki kötüye kullanımlarda ödül iptal edilir (10. madde).
 - İki aile birbirinin kimliğini görmez; size yalnız kaç ailenin katıldığı ve kaç ay kazandığınız gösterilir.
 - Davet programını değiştirebilir ya da sonlandırabiliriz; kazanılmış ödüller korunur.
+
+8.11. **İndirim teklifleri.** Zaman zaman indirim teklif edebiliriz (ör. aboneliğinizi iptal etmek istediğinizde). Teklifin koşulları (fiyat, süre, süre sonundaki fiyat ve kendiliğinden yenilenme) teklif ekranında birlikte yazılır; teklifi kabul etmek zorunda değilsiniz ve iptal yolu her zaman açıktır (8.7).
 
 ### 9. Coin, Güneş Taşı ve ödüller
 
@@ -190,7 +197,7 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Uzman'ın yazılımı, tasarımı, karakterleri,
 ### 14. Hesabın kapatılması ve silinmesi
 
 14.1. **Sizin silmeniz.** Hesabınızı istediğiniz an Moyo Ebeveyn içinden (`[EKRAN YOLU: Aile › Hesap › Hesabımı sil]`) silebilirsiniz. Silme geri alınamaz:
-- Ailede başka ebeveyn yoksa aile ve ona bağlı her şey (çocuk profilleri, rutinler, mesajlar, coin ve Güneş Taşı hareketleri, oyun yedekleri, uzman paylaşımları) silinir. Çocuğunuzun oyunu bağlantının kapandığını görür.
+- Ailede başka ebeveyn yoksa aile ve ona bağlı her şey (çocuk profilleri, rutinler, mesajlar, coin ve Güneş Taşı hareketleri, oyun yedekleri, uzman paylaşımları ve uzmanın bu çocuklar için tuttuğu kayıtlar) silinir. Çocuğunuzun oyunu bağlantının kapandığını görür.
 - Ailede başka ebeveyn varsa aile ve veriler onun hesabında kalır; yalnız sizin hesabınız silinir.
 - App Store aboneliğiniz kendiliğinden iptal olmaz; Apple'dan ayrıca kapatın (8.7).
 - Kanunen saklamamız gereken kayıtlar Aydınlatma Metni 7. maddedeki sürelerle tutulur.
@@ -199,7 +206,7 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Uzman'ın yazılımı, tasarımı, karakterleri,
 
 ### 15. Sorumluluk
 
-15.1. **Platformun rolü.** Moyo Ebeveyn, ailenin kendi kayıtlarını tutmasını ve isterse bunları uzmanıyla paylaşmasını sağlayan bir teknoloji hizmetidir; uzmanları istihdam etmez, aracılık ya da yönlendirme yapmaz (3.2).
+15.1. **Platformun rolü.** Moyo Ebeveyn, ailenin kendi kayıtlarını tutmasını ve isterse bunları uzmanıyla paylaşmasını sağlayan bir teknoloji hizmetidir; uzmanları istihdam etmez, aracılık ya da yönlendirme yapmaz (3.2). Genel ilke 3.6'dadır.
 
 15.2. **Uzman ve paylaşım kararı.** Uzmanın kimliği, yeterliliği ve davranışından, sizin paylaşım kararınızdan doğan sonuçlardan, kanunun izin verdiği ölçüde sorumlu değiliz.
 
@@ -236,6 +243,8 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 
 16.9. **Hesap silindikten sonra.** Kişisel verileriniz silinir. Yalnız kanunen saklanması gereken kayıtlar (ör. ödeme kayıtları) ve değiştirilemez denetim kaydı, sizi doğrudan tanıtan bilgi (e-posta) çıkarılarak saklama süresince tutulur.
 
+16.10. **Bildirimler ve tanıtım iletileri.** Tanıtım ve kampanya bildirimi ya da e-postası yalnız ayrı izninizle gönderilir; bu izin Ayarlar'da ayrı bir anahtardır, kapalı başlar ve istediğiniz an kapatılır. İzin verirseniz iletiler kanunun öngördüğü kayıt sistemi (İYS) üzerinden ve her birinde ücretsiz ret yoluyla gönderilir. Hizmetle ilgili bildirimler ve e-postalar (hesap, abonelik, güvenlik, uzman paylaşımı) bu izne bağlı değildir; hangi bildirimlerin geleceğini Ayarlar'dan seçersiniz. Telefonla (SMS) doğrulama bugün yoktur; açılırsa telefon numaranızın nasıl işleneceği önceden ayrıca bildirilir.
+
 ### 17. Onay kaydı, koşulların değişmesi ve yeniden onay
 
 17.1. Bu koşulları kayıt ekranında, önceden işaretlenmemiş kutuyu işaretleyerek kabul edersiniz. Hangi metni (Kullanım Koşulları, aydınlatma okundu bilgisi, açık rızalar) hangi sürümle ve ne zaman onayladığınız kaydedilir.
@@ -259,7 +268,7 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 
 ### 19. İletişim
 
-`[AD SOYAD]`, `[ADRES]`. Destek: `destek@moyoapp.com.tr`. Kişisel veriler: `kvkk@moyoapp.com.tr`.
+`[AD SOYAD]`, `[ADRES]`. İletişim (kişisel veri başvuruları dahil): `destek@moyoapp.com.tr`; KVKK başvurusunda konu satırına "KVKK başvurusu" yazmanızı rica ederiz.
 
 ### 20. Son hükümler
 
@@ -281,3 +290,9 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 8. **İkinci ebeveyn (7):** boşanmış/ayrı yaşayan velilerde, bir velinin çocuğu diğerinin bilgisi olmadan uzmanla paylaşması (F5 beyanı) ya da aileden çıkarma talebi nasıl ele alınmalı? Bugün ebeveyni aileden çıkarma akışı olgularda yok.
 9. **Davet ödülü (8.10, `hukuk_notlari.md` J3):** kampanya maddesi kullanıcı kararıyla (3 Kasım 2026) yazıldı; tüketici mevzuatında kampanya koşulları (değiştirme ve sonlandırma hakkı, kazanılmış ödülün korunması) ve Apple 3.2.2(x) / 5.6.3 açısından yeterli mi? Ödülün App Store aboneliğinde teklif koduyla verilmesi ve iade sonrası geri alınmaması kullanıcı kararıdır.
 10. **Ebeveyn eğitimi ve olay bildirimi:** uzmanın atadığı içerik (3.4) ile uzmanın kendi yazdığı uygulama görevleri ve yapılacakların sorumluluk ayrımı yeterli mi?
+11. **Genel ilke (3.6) ve sorumsuzluk cümleleri (kullanıcı isteği 20 Kasım 2026):** "sorumluluğun Moyo'da olmadığı, hiçbir yükümlülük altına girmediği" ana fikri bütün sözleşme ve aydınlatma metinlerinde aynı sözlerle yazıldı. Her sorumsuzluk cümlesinde "yasanın izin verdiği en geniş ölçüde" ve "kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır" sınırı bilerek kaldı: TBK md. 115 (ağır kusurdan sorumsuzluk kaydı kesin hükümsüz) ve TKHK md. 5 (haksız şart) karşısında sınırsız bir sorumsuzluk maddesi bütünüyle geçersiz sayılabilir; sınırı korumak maddeyi ayakta tutar. KVKK yükümlülükleri (md. 12) ayrıca saklı (15.5). Yeterli mi?
+12. **Uzman ile aile arasındaki ilişki (6.7; kullanıcı, B.6):** "Uzman, ebeveyn ve çocuk arasındaki hiçbir ilişki Moyo'nun yükümlülüğünde değil; her kullanıcı kendi kaydından, çocuğun sorumluluğu ebeveyndedir" yanıtı 6.7, 5.2 ve 3.6'ya işlendi. Platform uzmanı kötüye kullanımda kapatabildiği için (6.8) "güvencesi değildir" sözü bu yetkiyle çelişir mi?
+13. **Açık rıza ekranı (6.3; kullanıcı, C.11):** koşullar açık rıza ekranının varlığını ve kapsamını bildirir; rızanın kendisi koşullara gömülmedi (KVKK: açık rıza hizmet şartına bağlanamaz), bağlanma anında ayrı ekranda alınır. Eski 6.3 (rozet) belge yükleme kaldırıldığı için (B.7) bu maddeyle değişti; madde numaraları korunmak için.
+14. **Tanıtım iletisi izni (16.10; kullanıcı, D.16):** ayrı anahtar, kapalı başlar, İYS, her iletide ret yolu. Ayarlar'daki anahtar bildirim tercihleri işinde yapılıyor (başka pencere); yapılmadan yayımlanırsa cümle "bugün tanıtım iletisi göndermiyoruz" olur. SMS doğrulaması (bayrak `parent_sms_verify`, kapalı) açılırsa aydınlatma ve alt işleyen listesi önce güncellenir (`README.md` sorun 14).
+15. **İndirim teklifi (8.11; kullanıcı kararı 5f):** iptal anında aylık planda %50 indirim (Moyo Ebeveyn 2 ay), yıllıkta yok. Metin genel tutuldu (rakam yazılmadı); koşullar teklif ekranında. Apple'ın teklif kodu ya da tanıtım teklifi kurallarına ve Ticari Reklam ve Haksız Ticari Uygulamalar Yönetmeliği'ne (iptali zorlaştırmama) uygun mu?
+16. **Çocuğun hak ve yükümlülükleri (5.2; kullanıcı, C.12b):** veli yasal temsilci olarak kullanır ve üstlenir (TMK md. 342); çocuğun kendi KVKK hakları veli eliyle kullanılır. Çocuğun haksız fiilinden velinin sorumluluğu (TMK md. 369, TBK md. 66) bu maddeyle karışmamalı mı?

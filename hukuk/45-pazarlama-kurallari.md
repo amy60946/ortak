@@ -6,7 +6,8 @@
 
 > 28 Ekim 2026, kullanıcı isteği (Marketing penceresi açılırken). Pazarlama metni, reklam, sosyal medya içeriği, mağaza sayfası ve kampanya hazırlanırken bu liste uygulanır. Ürünle ilgili her iddia `hukuk/00-olgular.md` ve `sozlesme/`'deki gerçeğe dayanır; olmayan özellik vaat edilmez. Madde numaraları avukat tarafından doğrulanacak.
 >
-> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ürün adları: Moyo Ebeveyn (eski ParentApp), Moyo Oyun (eski Pofi Adası / GameApp), Moyo Mercek (eski ClinicApp; aileye dönük tanıtımda Moyo Uzman).
+> İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+> 20 Kasım 2026 (ikinci tur): tanıtım dili riski kapandı (1.10), tanıtım izni (4.3), belge yükleme kullanılmıyor (6.3). Ürün adları: Moyo Ebeveyn (eski ParentApp), Moyo Oyun (eski Pofi Adası / GameApp), Moyo Mercek (eski ClinicApp; aileye dönük tanıtımda Moyo Uzman).
 
 ## Kısaca
 
@@ -31,6 +32,7 @@
 1.7. **Konum ve son satır (öneri, kullanıcı kararı bekler; `50-uygulama-ici-metinler.md` §15):** Moyo bir takip aracıdır. Mağaza açıklamasının ve tanıtım sayfasının son satırı: "Moyo bir takip aracıdır; sağlık hizmeti sunmaz, tanı koymaz." (avukat dosyası önerisi; dış dilin konumla aynı olması için).
 1.8. **Ürün adları ve terimler (kullanıcı kararları 9–17 Kasım 2026; `sozlesme/durumlar.md` 5B):** hizmetin adı Moyo; ürünler Moyo Ebeveyn, Moyo Oyun, Moyo Mercek. Aileye dönük tanıtımda (çatı sayfa, Moyo Ebeveyn sayfası) uzman ürünü **Moyo Uzman**; "Moyo Mercek" adı yalnız uzman platformunda. Aile ve uzman metinlerinde iş nesnesi **rutin** (paket) ve **adım** (tek iş), oyunu anlatan yerde **macera** ("Eklediğiniz her rutin oyunda çocuğunuz için bir macera olur."). Tanıtım metninde "danışan" yerine "aile", gözlem anlamında "izlemek" yerine "takip"; "klinik karar" kullanılmaz. Eski adlar (ParentApp, ClinicApp, GameApp, Pofi Adası) dış metinde kullanılmaz.
 1.9. **14 Kasım 2026 tanıtım kararları** (açılışta tanı adı yok, tanı adları yalnız SSS'de; "müdahale" sözcüğü yok; "Takip süreci"; "Tanı koymaz, tedavi yerine geçmez" koruyucu cümlesi kalır; kullanıcının bilerek kabul ettiği iki risk: "4–6 saatlik faturalandırılamayan iş yükü" ve "Ev programlarına uyumu artıran"): `sozlesme/hukuk_notlari.md` M.2. §7.1 kontrolünde bu iki ifade işaretlenir (1.3 ve ortak kural 7 ile çelişir).
+1.10. **Tanıtım dili (kullanıcı, 20 Kasım 2026; avukat dosyası D.14):** "Risk yok; DEHB, otizm vb. son sürümde tanıtımdan kaldırıldı." Tanı adları tanıtım sayfalarında artık kullanılmıyor; `hukuk_notlari.md` M.2'deki tanı adı riski kullanıcıca kapatıldı. Yeni tanıtım metninde de tanı adı kullanılmaz; kullanılması gerekirse önce kullanıcıya ve avukata sorulur. Konum cümlesi: Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır; Moyo'daki kayıtlar kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır.
 
 ## 2. Çocuklar
 
@@ -50,7 +52,7 @@
 
 4.1. Tanıtım e-postası/SMS/bildirim yalnız ayrı onay alınmış kişiye; onay İYS'ye kaydedilir; her iletide ücretsiz ret yolu (6563 s. Kanun).
 4.2. Hizmet iletileri (doğrulama, davet, şifre, abonelik bilgisi) tanıtım içermez; içine kampanya eklenirse ticari ileti olur.
-4.3. Uygulama içi bildirimle tanıtım yapılacaksa ayrı açma/kapama ayarı olur.
+4.3. Uygulama içi bildirimle tanıtım yapılacaksa ayrı açma/kapama ayarı olur. **Kullanıcı kararı (20 Kasım 2026, D.16):** tanıtım ve kampanya bildirimi ya da e-postası yalnız ayrı izinle; izin Ayarlar'da ayrı anahtardır, kapalı başlar, her an kapatılır; sözleşmelerde yazılı (Moyo Ebeveyn Kullanım Koşulları 16.10, Uzman Hizmet Sözleşmesi 17; ekran `50-uygulama-ici-metinler.md` §14.1). Tek iletişim adresi `destek@moyoapp.com.tr`.
 
 ## 5. Sosyal medya, etkileyici ve yorumlar
 
@@ -62,7 +64,7 @@
 
 6.1. Uzmanlara yönelik tanıtımda uzmanın meslek etiğine uygun dil kullanılır; platform hasta yönlendirmez, uzmana danışan vaat etmez.
 6.2. "Psikologlar öneriyor", "uzman onaylı" gibi ifadeler yalnız belgelenmiş ve izinli bir dayanakla; bir uzmanın adı/görüntüsü ancak yazılı izinle ve kendi meslek kurallarına uygunsa kullanılır.
-6.3. Uzman rozeti "Belge yükledi" (aileye "Uzman diploma belgesini yükledi"; 14 Kasım 2026'ya kadar "Belgesi incelendi") yalnız belgenin yüklendiğini söyler; Moyo bir doğrulama ya da yetki beyanı vermez. Tanıtımda "doğrulanmış uzman", "onaylı terapist", "belgesi incelenmiş uzman" gibi ifadeler kullanılmaz (`22-uzman-hizmet-sozlesmesi.md` A11; özellik lansmanda kapalı).
+6.3. **Belge yükleme özelliği kullanılmıyor** (kullanıcı kararı 20 Kasım 2026); tanıtımda uzman rozeti, belge ya da doğrulama anlatımı yer almaz. Önceki kural: uzman rozeti "Belge yükledi" (aileye "Uzman diploma belgesini yükledi"; 14 Kasım 2026'ya kadar "Belgesi incelendi") yalnız belgenin yüklendiğini söyler; Moyo bir doğrulama ya da yetki beyanı vermez. Tanıtımda "doğrulanmış uzman", "onaylı terapist", "belgesi incelenmiş uzman" gibi ifadeler kullanılmaz (`22-uzman-hizmet-sozlesmesi.md` A11; özellik lansmanda kapalı).
 
 ## 7. Süreç
 

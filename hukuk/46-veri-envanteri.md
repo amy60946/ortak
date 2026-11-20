@@ -3,6 +3,7 @@
 | Nerede | İşletme içi. VERBİS kaydı gerekirse kayıt bu tablodan doldurulur (veri kategorisi, amaç, hukuki sebep, kişi grubu, alıcı grubu, yurt dışı aktarım, süre, tedbir) | Dayanak | KVKK md. 4, 5, 6, 8, 9, 10, 12, 16; Veri Sorumluları Sicili Hakkında Yönetmelik; benzeri GDPR md. 30 (işleme faaliyetleri kaydı) |
 
 > İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ürün adları: Moyo Ebeveyn (ParentApp), Moyo Oyun (GameApp / Pofi Adası), Moyo Mercek (ClinicApp). Veri sorumlusu gerçek kişi `[AD SOYAD]` (`00-olgular.md` §1). Terim: "özel nitelikli veri içerebilecek kayıtlar" (`hukuk_notlari.md` M.2); kesin "sağlık verisi" nitelendirmesi yapılmaz.
+> 20 Kasım 2026 (ikinci tur): kullanıcının konumu (A.2): kayıtlar ebeveynin uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır, Moyo özel nitelikli veri toplamaz; K6/K7 başlıklarındaki terim koruma ağını (ek koruma, uzmanla paylaşımda açık rıza) gösterdiği için kaldı. K7 veri sorumlusu kararı (A.4) ve K9 (belge yükleme kullanılmıyor, B.7) işlendi; saklama süreleri `42`'de dolduruldu. Tablo listesi değişmedi.
 
 ## Kısaca
 
@@ -25,9 +26,9 @@ Yurt dışı: Supabase Frankfurt, Almanya (AB; Türkiye dışı); A, X, R, M ABD
 | K4 | Oyun kaydı | Ç | seviye, XP, eşyalar, ada düzeni | Oyunun sürmesi, cihaz değişince geri yükleme | md. 5/2-c | — | 2, 30 |
 | K5 | Aile içi iletişim içeriği | E, Ç | mesaj yazısı, fotoğraf, sesli mesaj, çıkartma, okundu | Ebeveyn ile çocuk arasında mesajlaşma | md. 5/2-c | — | 3 |
 | K6 | Davranış kayıtları ve davranış olayları (özel nitelikli veri içerebilecek kayıtlar) | E, Ç | davranış kaydı: öncül–davranış–sonuç, şiddet, ses kaydı, zaman; davranış olayı (uzmanın hedef davranışına ebeveynin bildirimi): zaman, sayı/süre, öncesi–sonrası, denenen strateji, çocuğun tepkisi (1–5, ebeveyn gözlemi) | Ebeveynin gözlem günlüğü; rızayla uzmanla paylaşım | md. 5/2-c; uzmanla paylaşım **açık rıza** `uzman-paylasim-v1`; kayıt md. 6 kapsamına girerse ebeveynin kendi kaydının dayanağı avukatta (`hukuk_notlari.md`) | Uz (rızayla) | 4 (davranış kaydı), 9 (davranış olayı) |
-| K7 | Uzmanla paylaşım ve uzmanın aile kayıtları (özel nitelikli veri içerebilecek kayıtlar) | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, değerlendirmeler, rutin ve adım önerileri, takip planı ve ev programı kayıtları (takip planı lansmanda bayrakla kapalı), uzmanın önerdiği ebeveyn dersi ve ebeveynin o dersteki uygulama günleri (öneriden sonrası), ebeveyn eğitimi (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar; uzmanın gözlem verisi aile görmez), hedef davranışlar ve stratejiler, seans randevuları ve seans kayıtları (psikolog/terapistle randevunun varlığı özel nitelikli veri içerebilir, md. 6) | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu (klinik mi platform mu) avukatta | Uz, C | 7, 9, 9a |
+| K7 | Uzmanla paylaşım ve uzmanın aile kayıtları (özel nitelikli veri içerebilecek kayıtlar) | Ç, E, U | paylaşım ve rıza sürümü, uzman notları (aile görmez), hedefler, değerlendirmeler, rutin ve adım önerileri, takip planı ve ev programı kayıtları (takip planı lansmanda bayrakla kapalı), uzmanın önerdiği ebeveyn dersi ve ebeveynin o dersteki uygulama günleri (öneriden sonrası), ebeveyn eğitimi (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar; uzmanın gözlem verisi aile görmez), hedef davranışlar ve stratejiler, seans randevuları ve seans kayıtları (psikolog/terapistle randevunun varlığı özel nitelikli veri içerebilir, md. 6) | Uzmanın aileyle çalışması | Paylaşım: **açık rıza** `uzman-paylasim-v1`, geçiş `uzman-gecis-v1`; uzman kayıtlarında veri sorumlusu uzman (klinik), Moyo veri işleyen (kullanıcı kararı 20 Kasım 2026; avukat teyidi) | Uz, C | 7, 9, 9a |
 | K8 | Klinik, ekip ve davet | U, D | klinik adı, ekip rolü, koltuk; davette ebeveyn adı/e-postası, çocuğun adı ve yaş grubu, davet kanalı; uzmanın rutin ve şablon kütüphanesi | Klinik hesabı ve aile daveti | md. 5/2-c (uzman); D için uzmanın beyanı + md. 5/2-f — avukat | M (davet e-postası) | 8, 10 |
-| K9 | Mesleki belge incelemesi | U | belge dosyası (karar anında silinir), özet (üniversite, bölüm, derece, yıl), barkod, BACB no, karar | Rozet: ailelere "Uzman diploma belgesini yükledi", uzmana "Belge yüklendi: <meslek>" (Moyo doğrulama ya da yetki beyanı vermez; özellik lansmanda kapalı, bayrak `clinician_verification`) | md. 5/2-c (uzmanın talebi); T.C. kimlik no saklanmaz | — | 11, 12 |
+| K9 | Mesleki belge incelemesi (**özellik kullanılmıyor**, kullanıcı 20 Kasım 2026; `clinician_verifications` tablosu durur, yeniden açılırsa önce metinler) | U | belge dosyası (karar anında silinir), özet (üniversite, bölüm, derece, yıl), barkod, BACB no, karar | Rozet: ailelere "Uzman diploma belgesini yükledi", uzmana "Belge yüklendi: <meslek>" (Moyo doğrulama ya da yetki beyanı vermez; özellik lansmanda kapalı, bayrak `clinician_verification`) | md. 5/2-c (uzmanın talebi); T.C. kimlik no saklanmaz | — | 11, 12 |
 | K10 | Uzman karşılama anketi | U | meslek, zorluklar, yararlı özellikler, geliş nedeni | Ürün geliştirme | md. 5/2-f meşru menfaat (28 Ekim 2026'dan beri atlanamaz; ölçülülük sorusu `README.md` sorun 16) | — | 13 |
 | K11 | Abonelik ve ödeme | E, U | plan, durum, bitiş, mağaza işlem kimliği, ödeme olayları, deneme geçmişi (e-posta özeti SHA-256) | Aboneliğin yürütülmesi, deneme suistimalini önleme | md. 5/2-c; vergi kaydı md. 5/2-ç; deneme geçmişi md. 5/2-f | A, R | 14, 15, 16 |
 | K12 | Kullanım, cihaz ve bildirim | E, Ç, U | uygulama açma günleri, oturum sayısı, sürüm, platform, ekran/olay adları (içerik yok), bildirim jetonu, uygulama içi bildirimler | Hizmetin işletilmesi, ürün ölçümü, bildirim gönderimi | md. 5/2-f meşru menfaat (üçüncü taraf analiz yok); bildirim md. 5/2-c | A, X (bildirim metni) | 18, 19, 20 |
@@ -118,7 +119,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `clinic_availability` | K8 | uzmanın çalışma saatleri |
 | `clinic_calendar_feeds` | K8 | takvim aboneliği belirteci (uzmanın kendisi) |
 | `clinic_calendar_sources` | K8 | uzmanın dış takvim adresi (gizli iCal bağlantısı) |
-| `clinician_verifications` | K9 | dosya `verify` kovasında, karar anında silinir |
+| `clinician_verifications` | K9 | dosya `verify` kovasında, karar anında silinir; özellik kullanılmıyor (kullanıcı 20 Kasım 2026), tablo durur |
 | `clinician_surveys` | K10 | |
 | `family_subscriptions` | K11 | |
 | `billing_subscriptions` | K11 | |
@@ -130,6 +131,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `user_activity` | K12 | |
 | `push_tokens` | K12 | |
 | `notifications` | K12 | |
+| `parent_notification_prefs` | K12 | ebeveynin anlık bildirim tercihi (adım bildirimi, gün tamam); ÖNERİ `proposed/20261120210000` |
 | `code_attempts` | K13 | |
 | `admin_audit` | K13 | |
 | `user_flags` | K13 | |
@@ -152,7 +154,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 
 ## Avukata notlar
 
-1. **K6 davranış kayıtları / olayları ve K7 uzman kayıtları** metinlerde "özel nitelikli veri içerebilecek kayıtlar" olarak anlatılıyor (14 Kasım 2026 kararı); md. 6 kapsamına girip girmedikleri, ebeveynin kendi kaydı için dayanak, açık rıza metni ve VERBİS beyanı avukatta. K2/K6 tanışma yanıtlarındaki "çocuk bir uzmanla çalışıyor mu" ve davranış sıklığı soruları için de aynı soru (`README.md` sorun 2).
+1. **K6 davranış kayıtları / olayları ve K7 uzman kayıtları** metinlerde "özel nitelikli veri içerebilecek kayıtlar" olarak anlatılıyor (14 Kasım 2026 kararı); md. 6 kapsamına girip girmedikleri, ebeveynin kendi kaydı için dayanak, açık rıza metni ve VERBİS beyanı avukatta. Kullanıcının konumu (20 Kasım 2026, A.2): özel nitelik barındırmazlar, ebeveynin uygulamayı kullanma alışkanlığına ilişkin kayıtlardır; public metinlerde bu konum cümlesi yazıldı. Konumumuz bu; md. 6 kapsamının teyidi avukatta. K2/K6 tanışma yanıtlarındaki "çocuk bir uzmanla çalışıyor mu" ve davranış sıklığı soruları için de aynı soru (`README.md` sorun 2).
 2. **K8 davet edilen ebeveyn (D):** hesabı olmayan kişinin adı/e-postası uzmanın beyanıyla işleniyor; hukuki sebep ve aydınlatmanın davet e-postasında yapılması yeterli mi.
 3. **Yurt dışı aktarım:** Supabase bölgesi Frankfurt (AB; Türkiye dışı); KVKK md. 9 (standart sözleşme + Kurul'a bildirim) avukatta; bölge değişirse bu tablo ve `41` güncellenir.
-4. **VERBİS:** kayıt gerekiyorsa bu tablo kayıt formunun kaynağıdır.
+4. **VERBİS:** kayıt gerekiyorsa bu tablo kayıt formunun kaynağıdır. Kullanıcı görüşü (20 Kasım 2026, A.5): gerekmez (veri sorumlusu gerçek kişi; ana faaliyet özel nitelikli veri işleme değil); avukat teyidi.

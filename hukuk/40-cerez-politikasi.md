@@ -4,6 +4,7 @@
 
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Hukuki görüş değildir.
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+> 20 Kasım 2026 (ikinci tur): Moyo/Platform tanımı (1.1); iletişim adresi `destek@` (tek adres).
 
 ## Kısaca
 
@@ -19,7 +20,7 @@
 
 ## 1. Kapsam ve veri sorumlusu
 
-1.1. Bu politika, Moyo'yu işleten `[AD SOYAD]` ("Platform", "biz"; `[ADRES]`) tarafından işletilen **Moyo Mercek'in web sürümünde** kullanılan çerezleri ve benzeri tarayıcı depolama teknolojilerini anlatır.
+1.1. Bu politika, Moyo'yu işleten `[AD SOYAD]` ("biz"; `[ADRES]`) tarafından sunulan **Moyo Mercek'in web sürümünde** kullanılan çerezleri ve benzeri tarayıcı depolama teknolojilerini anlatır. "Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
 
 1.2. Moyo Mercek'in iPhone ve iPad uygulaması tarayıcı çerezi kullanmaz; uygulama içindeki veri saklama Uzman Aydınlatma Metni'nde (`aydinlatma-uzman`) anlatılmıştır. Aile davet bağlantısının açılış sayfası (ebeveynlere yönelik) bu politikanın kapsamında değildir; bugünkü hâliyle çerez ya da tarayıcı depolaması kullanmaz.
 
@@ -75,7 +76,7 @@ Bu depolamada aile adı, not, mesaj ya da başka kişisel içerik tutulmaz; işa
 
 ## 8. Haklarınız ve başvuru
 
-KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'nde bulabilirsiniz. Sorularınız için: `kvkk@moyoapp.com.tr`.
+KVKK md. 11'deki haklarınızı ve başvuru yollarını Uzman Aydınlatma Metni'nde bulabilirsiniz. Sorularınız için: `destek@moyoapp.com.tr`.
 
 ## 9. Değişiklikler
 

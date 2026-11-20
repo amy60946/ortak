@@ -252,6 +252,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 |---|---|---|---|
 | Çocuk "Yaptım" (inceleme bekliyor ya da incelemesiz onay) | Oyun → ailenin bütün ebeveynleri | `task_done` | parent |
 | Çocuk "Yapamam" | Oyun → ebeveynler | `task_declined` | parent |
+| Çocuğun bugün planlı bütün adımları işaretlendi (son "Yaptım"la, onay beklemeden; çocuk başına günde en çok bir; ÖNERİ `proposed/20261120210000`, 25 "5a") | Oyun → ebeveynler | `day_complete` ("<ad> bugünün adımlarını tamamladı" · "Onayını bekleyen n adım var.") | parent |
 | Ebeveyn onayladı / reddetti / tekrar dene dedi | ParentApp → çocuk cihazı | `task_approved` / `task_rejected` ("… onaylanmadı") / `task_retry` ("…: bir daha dener misin?", 27 Ekim 2026) | child |
 | Yeni görev atandı (yalnız yeni atama; düzenleme bildirim üretmez) | ParentApp → çocuk | `task_assigned` | child |
 | Posta | çocuk → ebeveynler / ebeveyn → çocuk | `message` | parent / child |
@@ -267,7 +268,7 @@ ClinicApp olay adları (`track_events`, bölüm 9'a ek): `screen.membership{stat
 
 Teslim yolları:
 - **Uygulama içi (üçü de):** `notifications` tablosu + Realtime (`user_id=eq.<kendi id>`); açılışta son 100 satır.
-- **Telefona push (iOS, ParentApp ve GameApp):** cihaz Apple (APNs) cihaz anahtarını `register_push_token(token, 'parent'|'child', 'ios')` ile kaydeder. Her yeni bildirimde tetikleyici pg_net ile Edge Function `push-apns`'e yalnız bildirim kimliğini yollar; fonksiyon .p8 anahtarıyla Apple'a gönderir (konu: parent → `com.parentapp.ios`, child → `com.gameapp.ios`, clinic → `com.clinicapp.uzman`), geçersiz anahtarı siler, bildirimi `apns_sent_at` ile işaretler. Çıkışta `unregister_push_token`. Kod: `supabase/functions/push-apns/index.ts`; secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (Supabase'de). Expo anahtarı (`ExponentPushToken[...]`) gelirse Expo Push API'ye gider (yedek yol).
+- **Telefona push (iOS, ParentApp ve GameApp):** cihaz Apple (APNs) cihaz anahtarını `register_push_token(token, 'parent'|'child', 'ios')` ile kaydeder. Her yeni bildirimde tetikleyici pg_net ile Edge Function `push-apns`'e yalnız bildirim kimliğini yollar; fonksiyon .p8 anahtarıyla Apple'a gönderir (konu: parent → `com.parentapp.ios`, child → `com.gameapp.ios`, clinic → `com.clinicapp.uzman`), geçersiz anahtarı siler, bildirimi `apns_sent_at` ile işaretler. Çıkışta `unregister_push_token`. Kod: `supabase/functions/push-apns/index.ts`; secret'lar `APNS_KEY_P8`, `APNS_KEY_ID`, `APNS_TEAM_ID` (Supabase'de). Expo anahtarı (`ExponentPushToken[...]`) gelirse Expo Push API'ye gider (yedek yol). **Ebeveyn tercihi (ÖNERİ `proposed/20261120210000`, 25 "5a"):** satırın `push` alanı false ise (ebeveyn `task_done` / `task_declined` için adım bildirimini, `day_complete` için gün bildirimini kapattı; adım bildirimi varsayılanda kapalı) telefona hiçbir yoldan gitmez, uygulama içi listede ve rozette yine görünür.
 - **GameApp (Unity):** uygulama içi liste + Realtime/yoklama; push için iOS cihaz anahtarını `app='child'` ile kaydetmesi yeterli.
 - **ClinicApp (iPad/iPhone + web):** uygulama içi liste + Realtime; danışan listesinde çocuk başına okunmamış rozeti; dokununca ilgili danışan sekmesi (`abc_event` → Zor anlar, `suggestion_decided` → Öneriler, `clinic_shared` → danışan, `team_joined` → Ekip). iOS push: `register_push_token(token, 'clinic', 'ios')`, konu `com.clinicapp.uzman` (`push-apns` güncellemesi 21 Ekim 2026 — Edge Function yeniden yayınlanmalı). Web push sonra.
 - `data` alanı: ilgili kimlikler (`task_id`, `child_id`, `date`, `message_id`, `suggestion_id`, `links` …) + push'ta `kind`, `notification_id`. Uygulama dokununca ekranı buna göre açar.
@@ -743,6 +744,15 @@ Belge (benchmark, iki ürünün mesaj tabloları, sınırlar, hukuk, plan): http
 **Durma:** üç `L` karşılıksız → 14 gün ara; 7 gün oturum yok → tek "hatırlatmaları durduruyoruz" mesajı; uzmanın atadığı açılmamış modül için en çok 1 bildirim + 1 e-posta.
 
 **Kararlaşan (kullanıcı, 18 Kasım 2026):** deneme bitiş hatırlatması iyi özellik: iki üründe de bitmeden **3 gün önce** tek, tarafsız hatırlatma; satın alma ekranı bunu takvimle söyler ("bugün ödeme yok · 3 gün kala hatırlatırız · şu tarihte yenilenir"), ekrandaki gün sayıları ve tarihler birbirini tutar.
+
+**Kararlaşan (kullanıcı, 20 Kasım 2026, bildirim sınırı 5a; ÖNERİ `proposed/20261120210000_parent_notification_prefs.sql` + `test_parent_notification_prefs.sql`, uygulanmadı; şema `veritabani.md` 34):** Moyo Ebeveyn'de günde bir bildirimi geçmemeye çalışılır. Sistem her bildirimi üretir, ebeveyn uygulama içinden ayarlar; ayar ebeveyn başınadır (aynı ailedeki iki ebeveyn ayrı seçer) ve yalnız telefona giden anlık bildirimi etkiler, uygulama içi liste ve rozet aynı kalır.
+
+| Anahtar | Ne | Varsayılan |
+|---|---|---|
+| `step_done` | Çocuk oyunda bir adımı işaretleyince ("Yaptım" `task_done`, "Yapamam" `task_declined`) her seferinde anlık bildirim | **kapalı** |
+| `day_complete` | Çocuğun bugün planlı bütün adımları işaretlenince (son adımla, onay beklemeden) tek bildirim `day_complete`: "<ad> bugünün adımlarını tamamladı" · "Onayını bekleyen n adım var." (hepsi onaylıysa metin boş); çocuk başına günde en çok bir; geri alıp yeniden işaretlemek, sonradan eklenen adım ya da onay ikinci kez göndermez; "Yapamam" denen adım varsa o gün gitmez; dünün geç işareti göndermez | **açık** |
+
+Yer: **Moyo Ebeveyn › Ayarlar › Bildirimler** (bugün Aile › Hesap › Bildirimler bildirim listesini açar; iki anahtar o ekranda ya da onun ayar sayfasında). Okuma `parent_notification_prefs()`, yazma `parent_notification_prefs_set(anahtar, açık)`; `day_complete` bildirimine dokununca İnceleme açılır (`task_done` gibi). Öteki türler (haftalık hedef, posta, ödül isteği, uzman, üyelik) bu ayardan etkilenmez; sınırları yukarıdaki öneride. Başlıkta çocuğun adı var (`task_done` ile aynı; `hukuk/00` "Bildirim metinleri"); aşağıdaki N.2 kuralı bütün türlere uygulanırsa bu başlık da değişir.
 
 **Kurallar (hukuk_notlari N):** bildirim metninde çocuk adı, ebeveyn adı ve davranış ayrıntısı yok; kampanya izni ayrı anahtar, varsayılanı kapalı, hizmetin koşulu değil; pazarlama mesajı yalnız hesap ve üyelik durumuna göre kişiselleştirilir (çocuğun rutinine, davranış kaydına, uzman içeriğine göre asla); her hesap dışı e-postada tür bazında tek tıkla çıkış.
 

@@ -63,6 +63,9 @@ Deno.serve(async (req) => {
   const { data: n } = await db.from('notifications').update({ apns_sent_at: new Date().toISOString() })
     .eq('id', notification_id).is('apns_sent_at', null).gte('created_at', recent).select('*').maybeSingle();
   if (!n) return Response.json({ skipped: true });
+  // Yalnız uygulama içi satır (ebeveynin bildirim tercihi; proposed/20261120210000_parent_notification_prefs.sql): tetikleyici zaten
+  // çağırmaz, bu satır elle yapılan çağrıya karşı. Sütun yoksa (SQL uygulanmadı) undefined döner, gönderim eskisi gibi sürer.
+  if (n.push === false) return Response.json({ skipped: 'yalnız uygulama içi' });
   const topic = TOPIC[n.app];
   if (!topic) return Response.json({ skipped: 'uygulama için iOS kimliği yok' });
 

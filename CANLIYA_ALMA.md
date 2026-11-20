@@ -49,14 +49,14 @@ Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `mo
 - (Siz) 4. Supabase › Authentication › Emails › SMTP Settings: `smtp.resend.com`, port 465, kullanıcı `resend`, şifre = 1. anahtar, gönderen `noreply@moyoapp.com.tr`, ad **Moyo**; Rate Limits'te saatlik e-posta sınırını yükselt
 - (ParentApp penceresi) 5. Türkçe Auth şablonları (onay, şifre sıfırlama, e-posta değişikliği, sihirli bağlantı, davet): nötr metin, uygulamaya göre fark dönüş adresinden (`parentapp://`, `ebeveyn.moyoapp.com.tr`, `clinicapp://`, `uzman.moyoapp.com.tr`) → (Siz) Authentication › Email Templates'e yapıştır
 - (Siz) 6. Edge Functions › Secrets: `RESEND_API_KEY` = 2. anahtar, `MAIL_FROM` = `davet@moyoapp.com.tr`, `BRAND_NAME` = `Moyo`
-- (Siz) 7. Gelen posta `destek@`, `kvkk@`, `fatura@`: Cloudflare › Email › Email Routing (ücretsiz, kökte MX; Resend'in MX'i `send` alt alanında, çakışmaz) → kendi posta kutunuza yönlendir
+- (Siz) 7. Gelen posta: **yalnız `destek@moyoapp.com.tr`** (kullanıcı kararı 20 Kasım 2026: her iletişim konusu için tek adres; eski liste `destek@`, `kvkk@`, `fatura@`): Cloudflare › Email › Email Routing (ücretsiz, kökte MX; Resend'in MX'i `send` alt alanında, çakışmaz) → kendi posta kutunuza yönlendir
 - (Claude, iki pencere) 8. Gmail / Outlook / iCloud uçtan uca deneme (kayıt onayı, şifremi unuttum: ParentApp + ClinicApp; davet e-postası)
 - (Siz + iki pencere, birlikte seçilen an) 9. Authentication › Providers › Email › **Confirm email açık** — iki uygulamayı birden etkiler; App Review deneme hesapları önceden onaylı olmalı
 - (Claude) Şifremi unuttum akışı (ParentApp, ClinicApp; `parentapp://`, `clinicapp://`) — ekranlar var, 8. adımda denenir
 - (Claude) İşlem e-postaları: hoş geldin, deneme bitiyor, ödeme + fatura, hesap silindi (sonra; Resend Edge Function'dan)
 
 ### 1.4 Destek
-- (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
+- (Siz) `destek@` posta kutusu (tek adres, 20 Kasım 2026)
 - (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - (Claude) SSS
 - (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
