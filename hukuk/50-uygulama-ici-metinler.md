@@ -369,7 +369,7 @@ Deneme App Store denemesi değildir: kart istenmez, süre bitince **kendiliğind
 >
 > **Ebeveynler için bilgi**
 >
-> - Moyo Pofi Adası'nda reklam, satın alma ve üçüncü taraf izleme aracı yok.
+> - Moyo Oyun'da reklam, satın alma ve üçüncü taraf izleme aracı yok.
 > - Çocuğundan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Kamera yalnız Moyo'daki QR kodu okumak için açılır; görüntü kaydedilmez.
 > - Çocuğun yalnız seninle ve ailendeki diğer ebeveynle yazışır.
 > - Oyun, Moyo'da oluşturduğun profile bağlıdır. Profili Moyo'dan düzenlersin.
@@ -464,7 +464,7 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 
 | Uygulama | İzin (`Info.plist` anahtarı) | Ne zaman sorulur | Metin |
 |---|---|---|---|
-| Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | ParentApp'te gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
+| Pofi Adası | Kamera (`NSCameraUsageDescription`) | Giriş ekranında "QR okut"a ilk basıldığında, ebeveyn kapısından sonra | Moyo'da gösterilen QR kodu okumak için kamerayı kullanırız. Görüntü kaydedilmez, gönderilmez. |
 | Pofi Adası | Bildirim (sistem; amaç metni yok) | İlk gereken anda *(öneri: ebeveyn kapısının arkasında)* | Ön açıklama: "Ailen sana yazınca ya da maceranı onaylayınca haber verelim mi?" [İzin ver] [Şimdi değil] |
 | ParentApp | Mikrofon (`NSMicrophoneUsageDescription`) | Sesli mesaj ya da davranış kaydındaki ses kaydına ilk basıldığında | Sesli mesaj ve davranış kaydındaki ses kaydı için mikrofonu yalnız sen kayda bastığında kullanırız. |
 | ParentApp | Fotoğraflar (`NSPhotoLibraryUsageDescription`) | Mesaja ilk fotoğraf eklenirken | Çocuğuna mesajla göndermek için seçtiğin fotoğrafa erişiriz. |
