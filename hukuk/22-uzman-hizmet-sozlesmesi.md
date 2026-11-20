@@ -33,7 +33,7 @@
 
 | Terim | Anlamı |
 |---|---|
-| Moyo | "Moyo", `[AD SOYAD]` tarafından işletilen uygulamaları ifade eder: Moyo Mercek, Moyo Ebeveyn ve Moyo Oyun |
+| Moyo | `[AD SOYAD]` tarafından işletilen uygulamalar (madde 1.1): Moyo Mercek, Moyo Ebeveyn ve Moyo Oyun |
 | Platform | Moyo'yu işleten `[AD SOYAD]`. Bu sözleşmede Moyo'ya ilişkin hak, yükümlülük ve sorumluluklar Platformundur |
 | Moyo Mercek | Platformun uzmanlar için sunduğu iPhone ve iPad uygulaması ve web sürümü (ailelere dönük ekranlarda adı Moyo Uzman) |
 | Moyo Ebeveyn | Platformun ebeveynler için sunduğu uygulama |
@@ -328,7 +328,7 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 | Davet formu (e-posta) | "Bu adrese senin adına davet e-postası gider; çocuğun adı ve notun e-postada yer almaz. Aile yanıtlarsa yanıt senin e-posta adresine gelir. Daveti yalnız tanıdığın ve hizmet verdiğin aileye gönder." |
 | Belgeni yükle | "Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Ailelere yalnız 'Uzman diploma belgesini yükledi' görünür; bu bir doğrulama ya da yetki onayı değildir. Ayrıntı: Uzman Aydınlatma Metni." |
 | Üyelik ekranı (satın alma düğmesinin yakınında) | Paket adı, dönem, KDV dahil fiyat; "Üyelik, dönem bitiminden en az 24 saat önce iptal edilmezse aynı süre için otomatik yenilenir ve ücret Apple hesabına yansıtılır. İptal: Ayarlar › Apple hesabı › Abonelikler." + Uzman Hizmet Sözleşmesi ve Uzman Aydınlatma Metni bağlantıları. |
-| Hesabı sil (onaydan önce; tek kişilik klinik) | "Kliniğin ve içindeki her şey silinir: aile paylaşımları, notlar, davranış hedefleri, değerlendirmeler, rutin ve adım önerileri, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo'daki kendi verileri silinmez; yalnız seninle paylaşımları biter. Saklaman gereken kayıtları önce yazdır. App Store üyeliğin varsa Apple Ayarlar'dan ayrıca kapat." (Ekipte sahip ve ekip üyesi için kısa metinler: klinik ve kayıtları klinikte kalır.) |
+| Hesabı sil (onaydan önce) | Tek kişilik klinikte: kliniğin ve içindeki her şeyin (paylaşımlar, notlar, davranış hedefleri, değerlendirmeler, rutin ve adım önerileri, takip planları, davetler, üyelik kaydı) silineceği; ailelerin Moyo'daki kendi verilerinin silinmeyeceği, yalnız uzmanla paylaşımlarının biteceği; "Saklaman gereken kayıtları önce yazdır."; App Store üyeliğinin Apple Ayarlar'dan ayrıca kapatılacağı. Ekipte sahip ya da üye için: klinik ve kayıtları klinikte kalır, yalnız kendi hesabı silinir. |
 
 ---
 

@@ -1,6 +1,8 @@
-# Hukuk arşivi (Pofi Adası · ParentApp · ClinicApp)
+# Hukuk arşivi (Moyo: Moyo Ebeveyn · Moyo Oyun · Moyo Mercek)
 
 > **Canlıya almadan önce kullanıcıya hatırlat** (kullanıcı isteği 27 Ekim 2026; `CLAUDE.md`, `CANLIYA_ALMA.md` 1.5). Bu klasördeki bütün metinler **TASLAK**tır: hukuki görüş değildir, avukat onayından geçmeden yayımlanmaz. Karar notları ve avukata sorular: `sozlesme/hukuk_notlari.md`.
+
+> **Adlar (20 Kasım 2026):** hizmetin adı **Moyo**; ürünler **Moyo Ebeveyn** (eski ParentApp), **Moyo Oyun** (eski Pofi Adası / GameApp), **Moyo Mercek** (eski ClinicApp; aileye dönük metinlerde **Moyo Uzman**). İşletmeci gerçek kişidir (`[AD SOYAD]`). Dosya adları, belge anahtarları (`kosullar-parentapp`, `cerez-clinicapp-web` …), rıza sürüm adları ve uygulama kodları (`parent`, `clinic`, `child`) değişmedi. 20 Kasım 2026 güncellemesi (14 Kasım kararları, avukat dosyasındaki çekirdek maddeler, Moyo adları, deneme 14 gün) metinlerin içeriğini değiştirdi; sürümler **v1 kaldı** (metinler yayımlanmadı, yeniden onay ekranı çıkmaz).
 
 ## Nasıl çalışır
 
@@ -19,40 +21,42 @@
 | `02-ornekler-ve-turk-hukuku.md` | — | örnek alınan ilkeler + Türk hukuku eşlemesi | — | iç |
 | `03-joon-karsilastirma.md` | — | Joon'un gizlilik ve kullanım koşullarıyla madde madde karşılaştırma; alınan/alınmayan ilkeler, gelecek özellik kuralları (K1–K5) | — | iç |
 | `01-gizlilik-politikasi.md` | `gizlilik` | herkes; mağaza bağlantısı | — | taslak |
-| `10-aydinlatma-ebeveyn.md` | `aydinlatma-ebeveyn` | ParentApp | okundu | taslak |
-| `11-aydinlatma-cocuk-ve-veli.md` | `aydinlatma-cocuk` | veli (ParentApp, çocuk bağlarken) + oyun içi kısa not | okundu (veli) | taslak |
-| `12-aydinlatma-uzman.md` | `aydinlatma-uzman` | ClinicApp | okundu | taslak |
-| `20-kullanim-kosullari-parentapp.md` | `kosullar-parentapp` | ParentApp | kabul | taslak |
-| `21-kullanim-kosullari-gameapp.md` | `kosullar-gameapp` | veli (çocuk bağlarken) | kabul (veli) | taslak |
-| `22-uzman-hizmet-sozlesmesi.md` | `sozlesme-uzman` | ClinicApp | kabul | taslak |
-| `23-veri-isleme-eki.md` | `veri-isleme-eki` | ClinicApp | kabul | taslak |
-| `30-acik-riza-metinleri.md` | `acik-riza-metinleri` (+ her rızanın sürümü) | ParentApp ilgili ekranlar | ayrı rıza kutuları | taslak |
-| `40-cerez-politikasi.md` | `cerez-clinicapp-web` | ClinicApp web | — | taslak |
+| `10-aydinlatma-ebeveyn.md` | `aydinlatma-ebeveyn` | Moyo Ebeveyn | okundu | taslak |
+| `11-aydinlatma-cocuk-ve-veli.md` | `aydinlatma-cocuk` | veli (Moyo Ebeveyn, çocuk bağlarken) + Moyo Oyun içi kısa not | okundu (veli) | taslak |
+| `12-aydinlatma-uzman.md` | `aydinlatma-uzman` | Moyo Mercek | okundu | taslak |
+| `20-kullanim-kosullari-parentapp.md` | `kosullar-parentapp` | Moyo Ebeveyn | kabul | taslak |
+| `21-kullanim-kosullari-gameapp.md` | `kosullar-gameapp` | Moyo Oyun; veli onaylar (Moyo Ebeveyn'de, çocuk bağlarken) | kabul (veli) | taslak |
+| `22-uzman-hizmet-sozlesmesi.md` | `sozlesme-uzman` | Moyo Mercek | kabul | taslak |
+| `23-veri-isleme-eki.md` | `veri-isleme-eki` | Moyo Mercek | kabul | taslak |
+| `30-acik-riza-metinleri.md` | `acik-riza-metinleri` (+ her rızanın sürümü: `uzman-paylasim-v1`, `uzman-gecis-v1`; `saglik-yanit-v1` 14 Kasım 2026'da kalktı) | Moyo Ebeveyn ilgili ekranlar | ayrı rıza kutuları | taslak |
+| `40-cerez-politikasi.md` | `cerez-clinicapp-web` | Moyo Mercek web (+ Moyo Ebeveyn web `/app/`) | — | taslak |
 | `41-alt-isleyenler.md` | `alt-isleyenler` | herkes | — | taslak |
 | `42-saklama-imha-politikasi.md` | — | iç politika | — | taslak |
 | `43-veri-ihlali-proseduru.md` | — | iç prosedür | — | taslak |
 | `46-veri-envanteri.md` | — | Kişisel veri envanteri (VERBİS biçimi: kategori, kişi, amaç, hukuki sebep, alıcı, yurt dışı, süre) + tablo → kategori eki; `tools/veri_envanteri_kontrol.py` her yeni tabloyu denetler | — | iç |
-| `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
+| `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, deneme süreleri, ürün adları, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
 | `44-kvkk-basvuru-usulu.md` | `kvkk-basvuru` | herkes | — | taslak |
-| `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler | — | taslak |
+| `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler (§15: avukat dosyasının kısa metin önerileri, kullanıcı kararı bekler) | — | taslak |
 
 ## Fonksiyon → hukuki dokunuş haritası
 
 | Fonksiyon (uygulama) | Hukuki konu | Metin | Sistem |
 |---|---|---|---|
-| Ebeveyn kaydı (ParentApp) | Aydınlatma, koşulların kabulü, veli beyanı | aydinlatma-ebeveyn, kosullar-parentapp | `legal_accept('parent', …)` |
-| Çocuk profili, oyunu bağlama (ParentApp → GameApp) | Çocuk verisi veli adına; GameApp koşulları veli kabulü | aydinlatma-cocuk, kosullar-gameapp | `legal_accept('child', …)` QR/kod göstermeden önce |
-| Görev, onay, coin, Güneş Taşı, ödüller | Sanal değer para değildir; ödül ebeveyn–çocuk arasında | kosullar-parentapp, kosullar-gameapp | — |
+| Ebeveyn kaydı (Moyo Ebeveyn) | Aydınlatma, koşulların kabulü, veli beyanı; "takip aracı" konumu (öneri: `50` §15) | aydinlatma-ebeveyn, kosullar-parentapp | `legal_accept('parent', …)` |
+| Çocuk profili, oyunu bağlama (Moyo Ebeveyn → Moyo Oyun) | Çocuk verisi veli adına; Moyo Oyun koşulları veli kabulü | aydinlatma-cocuk, kosullar-gameapp | `legal_accept('child', …)` QR/kod göstermeden önce |
+| Rutin ve adım (oyunda macera), onay, coin, Güneş Taşı, ödüller | Sanal değer para değildir; ödül ebeveyn–çocuk arasında | kosullar-parentapp, kosullar-gameapp | — |
 | Ebeveyn ↔ çocuk mesajları (foto, ses) | Aile içi içerik; saklama; mikrofon/foto izin metni | aydinlatma-ebeveyn, uygulama içi metinler | `mail` kovası |
-| Davranış kaydı (ABC) kaydı, ses | Davranış verisi → sağlık verisi olabilir (md. 6) | aydinlatma-ebeveyn, avukat sorusu | `abc` kovası |
-| Tanışma soruları (sağlık: tanı, ilaç) | Özel nitelikli veri, açık rıza `saglik-yanit-v1`; ekip erişimi gerekçeli | acik-riza (saglik), aydinlatma-ebeveyn | `intake_answers`, `admin_intake` |
+| Davranış kaydı (ABC), ses; davranış olayı (uzmanın hedef davranışına) | Özel nitelikli veri içerebilecek kayıt (md. 6 nitelendirmesi avukatta); uzmanla paylaşım açık rızayla; serbest metne tanı/ilaç yazılmaması istenir | aydinlatma-ebeveyn, kosullar-parentapp, acik-riza (paylaşım) | `abc_events`, `abc` kovası, `behavior_incidents` |
+| Tanışma soruları | Tanı ve ilaç soruları ile sağlık yanıtı rızası `saglik-yanit-v1` **14 Kasım 2026'da kalktı** (eski yanıtlar silindi; yerine iki günlük davranış maddesi); kişi bazlı yanıtları panelde **yalnız sahip (owner)** gerekçeyle görür, toplamlar kimliksiz | aydinlatma-ebeveyn | `intake_answers`, `admin_intake` (owner), `admin_intake_summary` |
 | Uzman daveti (e-posta, çocuk adı önerisi) | Uzmanın beyanı, ilk iletişimde aydınlatma, ticari ileti değil | sozlesme-uzman, aydinlatma-ebeveyn | `invite-email` |
 | Uzmanla paylaşım | Açık rıza `uzman-paylasim-v1`, "uzmanı tanıyorum, veliyim" | acik-riza (paylaşım), kosullar-parentapp | `clinic_links.consent_version` |
 | Uzman değişiminde kayıt aktarımı | Açık rıza `uzman-gecis-v1` + uzmanın önceden izni; kimlik gizleme | acik-riza (geçiş), sozlesme-uzman | `clinic_link_history` |
-| Uzman notları, hedefler, takip planı | Veri sorumlusu/işleyen rolleri, gizlilik, sona ermede silme | sozlesme-uzman, veri-isleme-eki | — |
-| Uzman belge incelemesi | Kimlik no içeren belge; yalnız inceleme; karar sonrası silme; "Belgesi incelendi" ifadesinin sınırı | aydinlatma-uzman, sozlesme-uzman | `verify-doc` |
+| Uzman notları, hedefler, takip planı (lansmanda bayrakla kapalı), seans kayıtları | Veri sorumlusu/işleyen rolleri, gizlilik, sona ermede silme; uzmanın kayıt tutma ve saklama yükümlülüğü uzmanda (çekirdek madde 7) | sozlesme-uzman, veri-isleme-eki | — |
+| Ebeveyn eğitimi (uzman atar, ebeveyn yanıtlar; kaynak kütüphanesi) | Moyo'nun içeriği genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz; ebeveynin yanıtları uzmanla paylaşımın parçası, özel nitelikli veri içerebilir | kosullar-parentapp, sozlesme-uzman, aydinlatma-ebeveyn | `parent_training_*` |
+| Dışa aktarılan belgeler (rapor, ilerleme notu, CSV) | Alt satır: "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." (uygulandı 14 Kasım 2026) | sozlesme-uzman, uygulama içi metinler | `EXPORT_FOOTER` (Moyo Mercek) |
+| Uzman belge incelemesi | Kimlik no içeren belge; yalnız inceleme; karar sonrası silme. Rozet 14 Kasım 2026'dan beri "Belge yükledi" (aileye "Uzman diploma belgesini yükledi", uzmana "Belge yüklendi: <meslek>"); Moyo doğrulama ya da yetki beyanı vermez; özellik lansmanda kapalı (bayrak `clinician_verification`) | aydinlatma-uzman, sozlesme-uzman, 45 §6.3 | `verify-doc` |
 | Uzman karşılama anketi | Ürün geliştirme, kimliksiz toplam | aydinlatma-uzman | `admin_kpi_clinician_survey` |
-| Abonelik (ParentApp, ClinicApp) | Otomatik yenileme, iptal, cayma istisnası, Apple satıcı | kosullar-parentapp, sozlesme-uzman, uygulama içi metinler | RevenueCat |
+| Abonelik ve deneme (Moyo Ebeveyn 14 gün, davet koduyla 21; Moyo Mercek 14 gün) | Otomatik yenileme, iptal, cayma istisnası, Apple satıcı; kartsız deneme kendiliğinden ücrete dönmez | kosullar-parentapp, sozlesme-uzman, uygulama içi metinler | RevenueCat |
 | Bildirimler | İzin, içerikte hassas veri yok | uygulama içi metinler | `push-apns` |
 | Kullanım ölçümü | Meşru menfaat; içerik yok; üçüncü taraf yok | gizlilik, aydinlatmalar | `track_session`, `track_events` |
 | Yönetim paneli erişimi | Yetkili ekip erişimi, gerekçe, kayıt | gizlilik, hukuk_notlari 3I3 | `admin_audit` |
@@ -60,7 +64,7 @@
 | KVKK başvurusu | md. 11, 13, 30 gün | kvkk-basvuru | `kvkk_requests` |
 | Veri ihlali | md. 12/5, 72 saat | ihlal prosedürü (iç) | panel acil işlemleri |
 | Saklama ve imha | Yönetmelik, periyodik imha | saklama-imha (iç), veri envanteri (46) | `retention_run` (gece, kuru başlar) + `retention_runs`; panel Hukuk › Saklama ve imha (öneri `kvkk_ops`, 2 Kasım 2026) |
-| ClinicApp web | Çerez/yerel depolama | cerez-clinicapp-web | — |
+| Moyo Mercek web, Moyo Ebeveyn web | Çerez/yerel depolama | cerez-clinicapp-web | — |
 | Sosyal medya paylaşımı (Marketing → panel onayı → Zernio) | Reklam/sağlık iddiası, YZ etiketi, telif, hesap güvenliği, insan onayı | 45-pazarlama-kurallari §8 | `social`, `admin_social_check` |
 
 ## Yazım sırasında bulunan sorunlar (27 Ekim 2026; ürün ya da avukat kararı bekler)
@@ -68,25 +72,25 @@
 | # | Sorun | Kimin işi |
 |---|---|---|
 | 1 | ~~ParentApp'te "Önceki uzmanın kayıtlarını da paylaş" seçeneği varsayılan açık~~ **Düzeltildi 27 Ekim 2026** (parent-app c33ebad): varsayılan kapalı. | ParentApp penceresi |
-| 2 | Tanışma sorularında "çocuk bir uzmanla (psikolog vb.) çalışıyor mu" ve davranış sıklığı soruları (öfke nöbeti, endişe…) sağlık sorusu olarak işaretli değil; rızasız alınıyor. Sağlık verisi sayılırsa `saglik-yanit` kapsamına alınmalı. | Avukat → ParentApp |
+| 2 | Tanışma sorularında "çocuk bir uzmanla (psikolog vb.) çalışıyor mu" ve davranış sıklığı soruları (öfke nöbeti, endişe…) sağlık sorusu olarak işaretli değil; rızasız alınıyor. **Durum (14 Kasım 2026):** tanı ve ilaç soruları ile `saglik-yanit` rızası kalktı; kalan sorular (ve yeni iki günlük davranış maddesi) metinlerde "özel nitelikli veri içerebilecek kayıt" olarak korunuyor, ayrı rıza yok. Bu soruların md. 6 kapsamına girip girmediği avukata açık. | Avukat → Moyo Ebeveyn |
 | 3 | `uzman-paylasim-v1` bugün yalnız uyarı + veli beyanını kayıt ediyor; taslak rıza cümlesi ve kısa aydınlatma eklendiği için yayında `uzman-paylasim-v2` olmalı; v1 onaylarının yeterliliği avukata. | Avukat → ParentApp |
 | 4 | Aile ya da çocuk silinince uzmanın o danışana ait notları ve hedefleri de siliniyor; uzmanın kayıt saklama yükümlülüğüyle çatışabilir. | Avukat + ürün (ortak) |
 | 5 | Tek bir çocuk profilini ya da yalnız oyun kaydını silmenin yolu yok (KVKK md. 7, Apple 5.1.1(v)). | Avukat → ParentApp/GameApp |
 | 6 | `CANLIYA_ALMA.md` 4'te ParentApp için Sentry/PostHog planı var; eklenirse "üçüncü taraf analiz yok" cümleleri, aydınlatmalar ve alt işleyenler değişir. | Kullanıcı kararı |
-| 7 | Tanı/ilaç yanıtlarının uygulamada somut amacı yazılı değil (KVKK md. 4 amaçla sınırlılık); kullanılmıyorsa soru kaldırılmalı. | Ürün + avukat |
+| 7 | ~~Tanı/ilaç yanıtlarının uygulamada somut amacı yazılı değil (KVKK md. 4 amaçla sınırlılık); kullanılmıyorsa soru kaldırılmalı.~~ **Çözüldü 14 Kasım 2026** (kullanıcı kararı, `hukuk_notlari.md` M.1): sorular kaldırıldı, eski yanıtlar silindi (`migrations/20261114200000_intake_observation_owner.sql`). | — |
 | 8 | Ön kontrolün kendiliğinden reddettiği belge başvurularına itiraz yolu yok (md. 11/1-g). | ClinicApp + panel |
 | 9 | ClinicApp üyeliği bitince erişim tümüyle kapanıyor ve veri süresiz kalıyor; sözleşme sona erme/dışa aktarma süresi öneriyor (`[SÜRE]`). | Avukat + ürün |
 | 10 | Uzmanlar için toplu dışa aktarma ve KVKK "kopya" talebi için veri dışa aktarma yok (bugün yalnız yazdırılabilir rapor). | ortak + uygulamalar |
 | 11 | `akislar.md` 1.1 ve 2'de kod süresi "24 saat" yazıyor; sistem 15 dakika. | ortak (belge düzeltmesi) |
 | 12 | ~~ClinicApp ödeme yolları (iyzico)~~ **Geri alındı (27 Ekim 2026, kullanıcı):** Klinik penceresinin "web'de iyzico metinlerde yok" bulgusu hatalıydı. Karar (22 Ekim 2026, `DURUM.md`): ClinicApp üyeliği yalnız iPhone/iPad'den App Store ile, RevenueCat üzerinden alınır; web'de satış yok, iyzico kullanılmaz (`clinic-billing`'deki iyzico kodu ileride kendi sisteme geçiş için durur, yayınlanmaz). Metinler o karara döndürüldü (ortak#78'deki iyzico eklemeleri geri alındı; deneme süresi 7 gün düzeltmesi korundu). | — |
-| 13 | Tanışma sorularında yalnız sağlık sorularında "söylemek istemiyorum" var; Joon'da olduğu gibi **bütün** sorular atlanabilir olmalı (KVKK md. 4 ölçülülük; `03-joon-karsilastirma.md` J2). Yanıtların neyi değiştirdiği aydınlatmada somut yazılmalı (J3). | ParentApp (ürün) |
+| 13 | Tanışma sorularında yalnız sağlık sorularında "söylemek istemiyorum" var; Joon'da olduğu gibi **bütün** sorular atlanabilir olmalı (KVKK md. 4 ölçülülük; `03-joon-karsilastirma.md` J2). Yanıtların neyi değiştirdiği aydınlatmada somut yazılmalı (J3). **Durum (14 Kasım 2026):** sağlık soruları kalktı, "söylemek istemiyorum" seçeneği olan soru kalmadı; kalan soruların atlanabilir olması ve J3 açık. | Moyo Ebeveyn (ürün) |
 | 14 | **SMS doğrulama** (bayrak `parent_sms_verify`, ParentApp, varsayılan kapalı; 28 Ekim 2026): açılırsa ebeveynin **telefon numarası** işlenir ve SMS, Supabase Auth'un SMS sağlayıcısı üzerinden gider. Açmadan önce: aydınlatma (ebeveyn) ve gizlilik politikasına telefon numarası + amaç (hesap güvenliği), alt işleyen listesine SMS sağlayıcısı (ad, konum, yurt dışı aktarım), saklama süresi. SMS ticari ileti değildir (hizmet/doğrulama). | Kullanıcı kararı + hukuk metni güncellemesi |
-| 15 | **Hediye kartı / misafir geçişi → Aile davet et** (öneri `guest_pass`, ParentApp, 28 Ekim 2026; 3 Kasım 2026: davet edilen 14 gün, davet eden ödeme olunca 1 ay, yılda en çok 12; `hukuk_notlari` J3): bir ailenin oluşturduğu kodla başka bir aile uzatılmış deneme alır. Kullanım koşullarına kısa madde: kart paraya çevrilemez, satılamaz, son kullanma tarihi, kötüye kullanımda iptal; kartı kullanan ailenin kimliği oluşturan aileye gösterilmiyor (bildirimde yalnız "bir aile kullandı"; ParentApp, 28 Ekim) — bu yüzden ek aydınlatma gerekmiyor; gösterilmeye başlanırsa eklenmeli. Deneme süresi ailenin `trial_days`'iyle değişebilir: koşullardaki "7 gün deneme" cümlesi "en az 7 gün" olarak düzeltilmeli. | Hukuk metni (uygulanınca) |
+| 15 | **Hediye kartı / misafir geçişi → Aile davet et** (öneri `guest_pass`, ParentApp, 28 Ekim 2026; 3 Kasım 2026: davet edilen 14 gün, davet eden ödeme olunca 1 ay, yılda en çok 12; `hukuk_notlari` J3): bir ailenin oluşturduğu kodla başka bir aile uzatılmış deneme alır. Kullanım koşullarına kısa madde: kart paraya çevrilemez, satılamaz, son kullanma tarihi, kötüye kullanımda iptal; kartı kullanan ailenin kimliği oluşturan aileye gösterilmiyor (bildirimde yalnız "bir aile kullandı"; ParentApp, 28 Ekim) — bu yüzden ek aydınlatma gerekmiyor; gösterilmeye başlanırsa eklenmeli. Deneme süresi ailenin `trial_days`'iyle değişebilir: ~~koşullardaki "7 gün deneme" cümlesi "en az 7 gün" olarak düzeltilmeli.~~ **Durum (20 Kasım 2026):** deneme 14 gün, davet koduyla katılan aile 21 gün (kullanıcı kararı 18 Kasım 2026, `migrations/20261118200000_parent_trial_14.sql` uygulandı 19 Kasım 2026; `hukuk_notlari.md` O); metinler bu güncellemede 14 / 21 güne çekildi (`00` §1, `45` 1.5, `50` §7; koşullar `20` madde 8.2). Koşullardaki kısa kart maddesi (yukarıda) yerinde kalır. | Hukuk metni |
 | 16 | **ClinicApp karşılama anketi zorunlu oldu** (28 Ekim 2026, kullanıcı kararı): uzman aydınlatma metni anketi "isteğe bağlı" ve meşru menfaate dayalı yazıyor. Ya her soruya "söylemek istemiyorum / diğer" seçeneği eklenmeli (öneri), ya da aydınlatma "zorunlu" olarak düzeltilip her sorunun amacı somut yazılmalı (KVKK md. 4 ölçülülük). | Kullanıcı kararı → ClinicApp + hukuk |
 
 ## Canlıdan önce yapılacaklar (hukuk)
 
-1. Avukatla bu klasör + `sozlesme/hukuk_notlari.md` 5. bölüm (sorular) gözden geçirilir; yer tutucular doldurulur: `[ALAN ADI]` = `moyoapp.com.tr` ve `[SUPABASE BÖLGESİ]` = Frankfurt 10 Kasım 2026'da dolduruldu; kalan `[ŞİRKET UNVANI]` (gerçek kişi: kullanıcı kararı 10 Kasım 2026, şirket kurulmayacak), `[ADRES]`, `[MERSİS/VKN]`, `[KEP ADRESİ]`, `[SÜRE]`, `[TARİH]`.
+1. Avukatla bu klasör + `sozlesme/hukuk_notlari.md` 5. bölüm (sorular) gözden geçirilir; yer tutucular doldurulur: `[ALAN ADI]` = `moyoapp.com.tr` ve `[SUPABASE BÖLGESİ]` = Frankfurt 10 Kasım 2026'da dolduruldu; kalan `[AD SOYAD]` (eski `[ŞİRKET UNVANI]`; işletmeci gerçek kişi: kullanıcı kararı 10 Kasım 2026, şirket kurulmayacak; yayımlanacak ad ve adres lansmandan önceki son iş, `hukuk_notlari.md` soru 28 ve M 8–9), `[ADRES]`, `[MERSİS/VKN]`, `[KEP ADRESİ]`, `[SÜRE]`, `[TARİH]`.
 2. VERBİS, yurt dışı aktarım (standart sözleşme + Kurul bildirimi), saklama süreleri kararları.
 3. Onaylanan metinler panelden yayımlanır; mağaza sayfalarına `gizlilik` adresi girilir.
 4. Uygulamalarda: kayıt/yeniden onay ekranı, Ayarlar › Yasal metinler, KVKK başvurusu, hesap silme uyarıları (`50-uygulama-ici-metinler.md`).
