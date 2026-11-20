@@ -1,6 +1,6 @@
 -- Sunucu metinleri ad kuralına göre (sozlesme/durumlar.md 5B):
 --   5 Kasım 2026: eski "görev" metinleri kalmadı (migrations/20261105210000_macera_server_texts.sql);
---   14 Kasım 2026: aile ve uzman tarafında "rutin / adım", oyunda "macera" (proposed/20261120100000_rutin_server_texts.sql);
+--   14 Kasım 2026: aile ve uzman tarafında "rutin / adım", oyunda "macera" (migrations/20261120100000_rutin_server_texts.sql, uygulandı 20 Kasım 2026);
 --   rozet bildirimi "Belge yüklendi" (hukuk_notlari M.3); eski ürün adları sunucu metninde yok.
 \set ON_ERROR_STOP on
 do $$

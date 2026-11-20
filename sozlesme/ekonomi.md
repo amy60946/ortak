@@ -342,3 +342,19 @@ Adaya yerleştirme kazanılan toplamla sürer; ödül harcaması ve ceza adadaki
 - Ödül, çocuğun zorlandığı işlere bağlanır; zaten severek yaptığı işlere bağlanmaz.
 - Taş düşürme yalnız önceden konuşulmuş kurallar için ve seyrek: ParentApp, bir çocuk için son 7 günde düşürülen taş (yeni düşürme dahil) × 4 > kazanılan görev taşı olursa taş düşürme sayfasında uyarı gösterir (engellemez). Düşürme Ödüller ekranının üstünde değildir (kullanıcı kararı 3 Kasım 2026; benchmark Greenlight / ClassDojo): çocuğun bakiyesine dokununca o çocuğun Güneş Taşı hesabı açılır (hareketler), altta küçük "Güneş Taşı düşür" bağlantısı. Ebeveyn ekranlarında "taş" yerine **"Güneş Taşı"** yazılır (yalnız dar rozet ve tablo başlıklarında kısa "taş").
 - İlk kullanımda kısa ipuçları (ödül oluşturma, ödül verme, taş düşürme, istek kararı) bir kez gösterilir; metinler `parent-app/src/data/rewardTips.ts`.
+
+## 9. Abonelik fiyatları (gerçek para; kullanıcı kararı 20 Kasım 2026)
+
+Coin, XP ve Güneş Taşı paraya bağlı değildir; bu bölüm yalnız App Store aboneliklerinin fiyatıdır. Fiyatlar **KDV dahil**, Türkiye mağazası. Yıllık = aylığın 10 katı (12 ay kullanılır, 10 ay ödenir; **indirim %16,67**, tanıtımda "2 ay ücretsiz").
+
+| Ürün | App Store ürün kimliği | Aylık | Yıllık | Yıllığın aylık karşılığı |
+|---|---|---|---|---|
+| Moyo Premium (Moyo Ebeveyn, bütün aile) | `parentapp.premium.monthly` / `parentapp.premium.yearly` | 349,99 TL | 3.499,99 TL | 291,67 TL |
+| Moyo Mercek Bireysel (1 uzman) | `com.clinicapp.uzman.solo.monthly` / `.solo.yearly` | 1.199,99 TL | 11.999,99 TL | 1.000,00 TL |
+| Moyo Mercek Klinik (10 uzmana kadar) | `com.clinicapp.uzman.clinic.monthly` / `.clinic.yearly` | 3.999,99 TL | 39.999,99 TL | 3.333,33 TL |
+| Moyo Oyun | — | Ücretsiz | — | — |
+
+- **Nerede yazılı:** App Store Connect (asıl satış fiyatı; iOS uygulamaları fiyatı mağazadan okur, sabit yazmaz) · `billing_plans.price_try` (yalnız Moyo Mercek web panelinin gösterdiği fiyat; `migrations/20261120130000_billing_prices.sql`, uygulandı 20 Kasım 2026) · tanıtım sayfaları (Moyo Mercek `site/assets/site.js` `MERCEK_PRICES`, Moyo Ebeveyn fiyat sayfası `clinic-app/tools/cati-sayfa/f-metin.json` → `parent-app/site/moyo`). Fiyat değişirse bu dört yer birlikte değişir.
+- **Deneme:** Moyo 14 gün, Moyo Mercek 14 gün. Başka bir ailenin davet koduyla gelen Moyo ailesi **+7 gün** (21 gün) alır: bu ayrı bir deneme kuralı değil, "Aile davet et" programının davet edilene ödülüdür (davet eden, o aile ödeyince 1 ay kazanır; `hukuk_notlari.md` J3). Kullanıcı kararı 20 Kasım 2026: +7 gün kalır, herkese 14 güne eşitlenmez (eşitlenirse davet edilenin kodu girmek için sebebi kalmaz, davet edenin ödülü de işlemez). Dil: "Deneme 14 gün; bir ailenin davet koduyla +7 gün." Denemelerin ikisi de kartsız ve sunucuda; App Store ürününe ayrıca ücretsiz deneme (Introductory Offer) eklenmez.
+- **Açık (lansmandan önceki son iş, `DURUM.md` HATIRLATMA):** uzmana bağlı ailenin ne ödeyeceği (bugün uzman ödüyorsa aile ücretsiz, `family_access_of` durum `clinic`).
+- Önceki taslak (22 Ekim 2026): Moyo Mercek 749,99 / 7.499,99 / 2.999,99 / 29.999,99; Moyo için 249,99 / 1.499,99 önerisi ve tanıtım sayfasındaki 349 TL yer tutucusu bu kararla kapandı.

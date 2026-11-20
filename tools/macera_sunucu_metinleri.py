@@ -9,14 +9,15 @@ Aynı dosyada iki metin düzeltmesi daha: uzman rozeti "Belgen incelendi" → "B
 eski ürün adları (ClinicApp, ParentApp, GameApp → Moyo Mercek, Moyo, Moyo Oyun).
 
 Her işlevin EN SON tanımını (migrations/ + proposed/, dosya sırasıyla) alır, yalnız aşağıdaki metin parçalarını değiştirir
-(mantık, imza ve yetkiler aynı kalır) ve proposed/20261120100000_rutin_server_texts.sql dosyasını üretir. Bu dosya
+(mantık, imza ve yetkiler aynı kalır) ve migrations/20261120100000_rutin_server_texts.sql dosyasını üretir
+(UYGULANDI 20 Kasım 2026: öneri proposed/'dan migrations/'a taşındı; araç kayıt için durur, yeniden üretmek aynı dosyayı verir). Bu dosya
 20261105210000_macera_server_texts'in yerine geçer (aynı işlevlerin yeni tanımı); eski göç uygulanmış geçmiş olarak kalır.
 En son tanımı proposed/ içinde başka bir önerideyse araç durur (metni orada düzelt).
 Çalıştır: python3 tools/macera_sunucu_metinleri.py   (yeniden üretmek güvenlidir)"""
 import pathlib, re, sys
 
 root = pathlib.Path(__file__).resolve().parent.parent / 'supabase'
-OUT = root / 'proposed' / '20261120100000_rutin_server_texts.sql'
+OUT = root / 'migrations' / '20261120100000_rutin_server_texts.sql'
 
 # işlev → [(eski, yeni)]: tırnak içindeki metin parçaları. Uygulama kodu bu metinlere göre dal ayırmaz (ipucu kodları değişmez).
 SUBS = {
@@ -72,7 +73,7 @@ for name, subs in SUBS.items():
     if name not in latest:
         sys.exit(f'{name}: işlev bulunamadı')
     f, text = latest[name]
-    if f.parent.name == 'proposed':
+    if f.parent.name == 'proposed':   # başka bir uygulanmamış öneri bu işlevi yeniden tanımlıyor
         sys.exit(f'{name}: en son tanımı uygulanmamış öneride ({f.name}); metni orada düzelt')
     new = text
     for a, b in subs:
@@ -80,7 +81,7 @@ for name, subs in SUBS.items():
             missing.append(f'{name}: {a}')
         new = new.replace(a, b)
     new = re.sub(r'^create\s+function', 'create or replace function', new, flags=re.I)
-    parts.append(f'-- {name} (önceki tanım: migrations/{f.name})\n{new}\n')
+    parts.append(f'-- {name} (önceki tanım: {f.parent.name}/{f.name})\n{new}\n')
 if missing:
     sys.exit('Bulunamayan metin:\n' + '\n'.join(missing))
 
