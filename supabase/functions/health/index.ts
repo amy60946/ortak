@@ -37,26 +37,39 @@ export function summarize(h: Health | null): { http: number; body: { status: Lev
 }
 
 export async function handle(req: Request, env: (k: string) => string,
-                             health: () => Promise<Health | null>): Promise<Response> {
+                             health: (fresh: boolean) => Promise<Health | null>): Promise<Response> {
   if (req.method !== 'GET' && req.method !== 'HEAD') return new Response('GET', { status: 405 });
   const given = req.headers.get('x-health-key');
   if (given !== null && !authorized(env('HEALTH_KEY'), given)) {
     return new Response(JSON.stringify({ error: 'yetkisiz' }), { status: 401, headers: HEADERS });
   }
   let h: Health | null = null;
-  try { h = await health(); } catch { h = null; }
+  try { h = await health(given !== null); } catch { h = null; }
   const s = summarize(h);
   const body = given !== null ? s.body : { status: s.body.status };
   return new Response(req.method === 'HEAD' ? null : JSON.stringify(body), { status: s.http, headers: HEADERS });
 }
 
+// Anahtarsız (herkese açık) çağrıda sorgu sonucu ttl kadar bellekte tutulur: dışarıdan sık çağrı veritabanını yormasın.
+// Anahtarlı çağrı (fresh) her zaman yeniden sorar. Hata (null) önbelleğe alınmaz.
+export function memo(fn: () => Promise<Health | null>, ttlMs = 60_000, now: () => number = Date.now) {
+  let last: { at: number; h: Health } | null = null;
+  return async (fresh: boolean): Promise<Health | null> => {
+    if (!fresh && last && now() - last.at < ttlMs) return last.h;
+    const h = await fn();
+    if (h) last = { at: now(), h };
+    return h;
+  };
+}
+
 if (typeof Deno !== 'undefined') {
   const env = (k: string) => Deno!.env.get(k) ?? '';
-  Deno.serve(async (req) => handle(req, env, async () => {
+  const cached = memo(async () => {
     const { createClient } = await import('jsr:@supabase/supabase-js@2');
     const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } });
     const { data, error } = await db.rpc('ops_health');
     if (error) { console.error('ops_health', error.code); return null; }
     return data as Health;
-  }));
+  });
+  Deno.serve(async (req) => handle(req, env, cached));
 }
