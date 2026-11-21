@@ -136,6 +136,8 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `nudge_log` | K12 | otomatik hatırlatma kararı: kime, hangi kural, ne zaman, sonuç (gönderildi / atlandı / karşılaştırma grubu), açıldı mı, 72 saatte hedef adıma geçti mi; metin ve içerik yok. Saklama kullanım kaydıyla aynı olmalı (`42` §4; imha işine eklenmedi). ÖNERİ `proposed/20261120230000` |
 | `nudge_pauses` | K12 | üç yanıtsız hatırlatmadan sonraki 14 günlük ara (kişi, bitiş); ÖNERİ `proposed/20261120230000` |
 | `notification_push_log` | K12 | anlık bildirim sınırı için gönderim kaydı: gönderen, alıcı, bildirim türü, zaman; içerik yok. Gönderen her yeni bildirimde 1 günden eski satırlarını siler; hesap silinince zincirleme silinir. ÖNERİ `proposed/20261121100000` |
+| `support_source_salts` | — | destek formu kaynak sınırı için günlük rastgele tuz; kişisel veri yok. 2 gün sonra silinir. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
+| `invite_email_sends` | K12 | davet e-postası gönderim sınırı kaydı: gönderen uzman, klinik, alıcı adresin özeti (adresin kendisi yok), zaman; içerik yok. Gönderilemeyen e-posta kayıttan düşer; 8 günden eski satırlar her gönderimde silinir. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
 | `code_attempts` | K13 | |
 | `admin_audit` | K13 | |
 | `user_flags` | K13 | |
