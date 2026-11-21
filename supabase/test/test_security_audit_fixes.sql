@@ -637,3 +637,16 @@ select tst.check(public.email_hash('a.b@gmail.com') = public.email_hash('ab@gmai
 select tst.check(position('''used'', ''expired''' in pg_get_functiondef('public.redeem_guest_pass(text)'::regprocedure)) > 0, '10: kullanılmış / süresi dolmuş kod denemesi sayılır');
 -- ops_health push yalnız push = true satırlarını sayar
 select tst.check(position('x.push' in pg_get_functiondef('public.ops_health()'::regprocedure)) > 0, '10: ops_health push yalnız gönderilecek bildirimleri sayar');
+
+-- finite_time_guard_attach: değişmeyen tabloya dokunmaz, yeni tarih sütununu bir sonraki çağrıda listeye alır
+select tst.check(public.finite_time_guard_attach() = 0, '10a: yardımcı ikinci çağrıda hiçbir tabloyu yeniden kurmaz');
+create table public.r2_guard_probe (id int primary key, at timestamptz);
+alter table public.r2_guard_probe enable row level security;
+select tst.check(public.finite_time_guard_attach() = 1, '10a: yeni tablo tetikleyiciyi alır');
+select tst.fails($$insert into public.r2_guard_probe values (1, 'infinity')$$, '10a: yeni tabloda sonsuz tarih reddedilir');
+alter table public.r2_guard_probe add column until date;
+select tst.check(public.finite_time_guard_attach() = 1, '10a: eklenen tarih sütunu için tetikleyici yenilenir');
+select tst.fails($$insert into public.r2_guard_probe values (2, now(), '-infinity')$$, '10a: eklenen sütunda da reddedilir');
+insert into public.r2_guard_probe values (3, now(), current_date);
+select tst.check(public.finite_time_guard_attach() = 0, '10a: yeniden çağrı yine dokunmaz');
+drop table public.r2_guard_probe;

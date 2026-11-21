@@ -804,13 +804,15 @@ end $$;
 revoke execute on function public.finite_time_guard() from public, anon, authenticated;
 
 -- public şemasındaki her temel tabloya (bölüntü değil, eklenti tablosu değil) tarih sütunlarının listesiyle tetikleyiciyi kurar.
--- Tekrar çalıştırılabilir; eklenen sütun bir sonraki çağrıda listeye girer. Yanıt: tetikleyici kurulan tablo sayısı.
+-- Tekrar çalıştırılabilir; eklenen sütun bir sonraki çağrıda listeye girer. Tetikleyicisi zaten aynı sütun listesiyle kurulu
+-- tabloya dokunulmaz (her göçte bütün tablolar yeniden kilitlenmesin). Yanıt: tetikleyicisi kurulan ya da yenilenen tablo sayısı.
 create or replace function public.finite_time_guard_attach() returns integer
 language plpgsql security invoker set search_path = '' as $$
 declare r record; n integer := 0;
 begin
   for r in
-    select c.relname, string_agg(quote_literal(a.attname), ', ' order by a.attnum) as cols
+    select c.oid as relid, c.relname, string_agg(quote_literal(a.attname), ', ' order by a.attnum) as cols,
+           array_agg(a.attname::text order by a.attnum) as names
       from pg_catalog.pg_class c
       join pg_catalog.pg_namespace s on s.oid = c.relnamespace
       join pg_catalog.pg_attribute a on a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
@@ -819,8 +821,13 @@ begin
        and coalesce(nullif(ty.typbasetype, 0), ty.oid) in ('timestamptz'::regtype, 'timestamp'::regtype, 'date'::regtype)
        and not exists (select 1 from pg_catalog.pg_depend d where d.classid = 'pg_catalog.pg_class'::regclass
                          and d.objid = c.oid and d.deptype = 'e')
-     group by c.relname
+     group by c.oid, c.relname
   loop
+    continue when exists (
+      select 1 from pg_catalog.pg_trigger t
+       where t.tgrelid = r.relid and t.tgname = 'finite_time_guard' and not t.tgisinternal and t.tgenabled <> 'D'
+         and t.tgfoid = 'public.finite_time_guard()'::regprocedure
+         and array_remove(string_to_array(encode(t.tgargs, 'escape'), E'\\000'), '') = r.names);
     execute format('drop trigger if exists finite_time_guard on public.%I', r.relname);
     execute format('create trigger finite_time_guard before insert or update on public.%I for each row execute function public.finite_time_guard(%s)',
                    r.relname, r.cols);

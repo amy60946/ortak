@@ -840,3 +840,15 @@ Bağımsız doğrulanmış bulgular. İmza değişmedi; uygulamalardaki çağrı
 | Bitmiş paylaşımda ders listesi | `clinic_parent_lessons` | Paylaşım etkin değilse `[]` (tablo politikası gibi `clinic_link_open`); görünmeyen bağda hata aynı (`link_not_visible`). |
 | Davet ödülü | tablo `referral_paid_transactions` (RLS açık, politika yok), `referral_on_paid` | Ödül yalnız mağaza işlem kimliği (`store_transaction_id`) olan, başka bir aileye bağlı olmayan ve daha önce ödül üretmemiş aboneliğe; kimlik yoksa davet ödülsüz bekler. Yıllık 12 sınırı aynı. |
 | Çocuk fotoğrafı | tetikleyici `children_avatar_path_check`, `mail_object_readable` | `photo:<yol>` yalnız `<aile_id>/<dosya>` biçiminde (`..` yok; `invalid_avatar`); eski satırlara dokunulmaz. Çocuk cihazı yalnız kendi ailesinin önekindeki avatarını okur. |
+
+## 38. Destek formu ve davet e-postası sınırları (ÖNERİ `proposed/20261121110000_support_invite_limits.sql`, 21 Kasım 2026; uygulanmadı; test `test_support_invite_limits.sql`; panel `admin.md` Destek)
+
+| Nesne | Ne |
+|---|---|
+| `support_requests.source_hash` | Gönderen kaynağın günlük tuzlu SHA-256 özeti (adres düz yazılmaz; 2 gün sonra boşaltılır). |
+| `support_source_salts` | Günlük rastgele tuz; yalnız sunucu, RLS açık, kimse okuyamaz; en çok 2 gün. |
+| `support_source_net(adres)` · `support_source_hashes(adres)` · `support_source_hash(adres)` | Adres `inet` ile ayrıştırılır (IPv4'e eşlenmiş IPv6 → IPv4, IPv6 /64, adres olmayan her değer tek ortak kova); özetler bugünün ve dünün tuzuyla (sayım ikisine bakar). Yalnız sunucu. |
+| `support_request_create(…, p_source)` | Kaynak 5/saat, 15/24 saat (`too_many_source`) → e-posta 3/24 saat (`too_many`; kaynak biliniyorsa aynı kaynaktan; `privacy` muaf) → KVKK payı 100/saat, genel pay 300/saat (`busy`; doluyken son saatte yazmamış bilinen kaynak 600'e kadar bir talep). Danışma kilitleri: kaynak → e-posta → pay. Eski 5 parametreli imza kaynaksız. |
+| `invite_email_sends` | Gönderim kaydı: uzman (`on delete set null`), davet kodu, alıcı özeti `to_hash`, `pool` (`main` / `new`), zaman; RLS açık, kimse okuyamaz; 8 gün. |
+| `invite_email_key(e-posta)` · `invite_email_to_hash(e-posta)` | Alıcı anahtarı: küçük harf, `+etiket` atılır; gmail.com / googlemail.com'da nokta atılır, googlemail → gmail (yalnız tek `@`). |
+| `clinic_invite_email_take(kod, uzman)` | Sistem payı: yerleşik hesap (uzman 7 günden eski ya da davetin kliniği ücretli pakette) `main` 200/saat, öteki `new` 60/saat (`rate_global`); alıcı 2/24 saat, 4/7 gün (`rate_recipient`, uzmandan bağımsız, silinen uzmanın satırları dahil); uzman 20/24 saat, ilk 24 saatte 5 (`rate_clinician`). Danışma kilitleri: davet satırı → alıcı → uzman → pay. |

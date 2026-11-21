@@ -74,6 +74,22 @@ test('kaynak: anahtar eşleşince Worker\'ın ilettiği adres; eşleşmezse işl
   assert.equal(sourceOf(req({ ...own, 'x-moyo-client-ip': 'evil<script>', 'x-moyo-forward-key': KEY }), withKey), '198.51.100.1');
   assert.equal(sourceOf(req({}), withKey), 'unknown');
   assert.equal(sourceOf(req({ ...own, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': KEY }), () => ''), null);
+  // yayın sırası hatası: Worker'dan (cf-worker) anahtarsız ya da yanlış anahtarla gelen istek kaynak bilinmiyor (null),
+  // Worker'ın tek adresine kovalanmaz; anahtar eşleşince yine iletilen adres
+  const wk = { 'cf-worker': 'moyoapp.com.tr', 'cf-connecting-ip': '104.16.0.1' };
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5' }), withKey), null);
+  assert.equal(sourceOf(req({ ...wk }), withKey), null);
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': 'yanlis'.repeat(4) }), withKey), null);
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': KEY }), withKey), '203.0.113.5');
+  // adres gerçek ayrıştırıcıyla: eşlenmiş IPv6 → IPv4, IPv6 küçük harf kısa biçim, geçersiz değer düşer
+  assert.equal(sourceOf(req({ 'x-moyo-client-ip': '::ffff:203.0.113.5', 'x-moyo-forward-key': KEY }), withKey), '203.0.113.5');
+  assert.equal(sourceOf(req({ 'cf-connecting-ip': '::FFFF:198.51.100.2' }), withKey), '198.51.100.2');
+  assert.equal(sourceOf(req({ 'x-moyo-client-ip': '2001:DB8:0:0::1', 'x-moyo-forward-key': KEY }), withKey), '2001:db8::1');
+  assert.equal(sourceOf(req({ ...own, 'x-moyo-client-ip': '999.1.1.1', 'x-moyo-forward-key': KEY }), withKey), '198.51.100.1');
+  assert.equal(sourceOf(req({ 'x-forwarded-for': '1.2.3' }), withKey), 'unknown');
+  const { normIp } = await import('./index.ts');
+  assert.equal(normIp('01.2.3.4'), null); assert.equal(normIp('::1'), '::1'); assert.equal(normIp('1:2:3'), null);
+  assert.equal(normIp('fe80::1%eth0'), null); assert.equal(normIp('0.0.0.0'), '0.0.0.0');
   assert.equal(same('abc', 'abc'), true); assert.equal(same('abc', 'abd'), false); assert.equal(same('abc', 'abcd'), false);
   // handle kaynağı create'e iletir; kaynak sınırı Türkçe 429
   let got: string | null = 'yok';
@@ -82,6 +98,12 @@ test('kaynak: anahtar eşleşince Worker\'ın ilettiği adres; eşleşmezse işl
   assert.equal(got, '203.0.113.9');
   const lim = await handle(post(good), env, async () => ({ error: 'too_many_source' }));
   assert.equal(lim.status, 429); assert.match((await lim.json()).error, /bağlantıdan/);
+  // sınır iletileri e-posta yolunu önerir; tire yok
+  for (const k of ['busy', 'too_many', 'too_many_source']) {
+    const r = await handle(post(good), env, async () => ({ error: k }));
+    const t = (await r.json()).error as string;
+    assert.ok(t.endsWith('ya da destek@moyoapp.com.tr adresine yazın.'), t); assert.ok(!/[–—]| - /.test(t), t);
+  }
 });
 
 test('gövde sınırı: Content-Length olmadan da 20 000 karakterde kesilir', async () => {
