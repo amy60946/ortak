@@ -62,4 +62,11 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(not public.family_premium((select v::uuid from tst.kv where k = 'fid')), 'bağlantısız uzman soramaz');
 
 reset role;
+-- anon rolünün hiçbir public tabloda (görünüm dahil) ve dizide yetkisi yok (proposed/20261121100000_security_audit_fixes.sql)
+select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee = 'anon' and table_schema = 'public'),
+  'anon hiçbir public tabloda yetkili değil: ' || coalesce((select string_agg(distinct table_name, ', ') from information_schema.role_table_grants
+                                                            where grantee = 'anon' and table_schema = 'public'), ''));
+select tst.check(not exists (select 1 from pg_sequences q where q.schemaname = 'public'
+                               and has_sequence_privilege('anon', format('%I.%I', q.schemaname, q.sequencename), 'usage,select,update')),
+  'anon hiçbir public diziye yetkili değil');
 select 'TÜM GÜVENLİK TESTLERİ GEÇTİ' as sonuc;

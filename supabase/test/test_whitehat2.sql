@@ -163,7 +163,8 @@ select tst.fails($$update public.clinics set plan = 'business'$$, 'uzman klinik 
 reset role;
 set role anon;
 select tst.fails($$select public.redeem_child_code('ABCDEF')$$, 'girişsiz kod deneyemez');
-select tst.check((select count(*) from public.children) + (select count(*) from public.messages) + (select count(*) from public.completions) = 0, 'girişsiz satır göremez (RLS)');
+select tst.fails($$select count(*) from public.children$$, 'girişsiz tabloya yetkisi yok (20261121100000)');
+select tst.check(not has_table_privilege('anon', 'public.messages', 'select') and not has_table_privilege('anon', 'public.completions', 'select'), 'girişsiz satır göremez');
 reset role;
 
 select 'BEYAZ ŞAPKA 2 TESTLERİ GEÇTİ' as sonuc;
