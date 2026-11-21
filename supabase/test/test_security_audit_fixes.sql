@@ -177,15 +177,27 @@ insert into public.completions (family_id, task_id, child_id, date, status, chil
 select tst.check(tst.rows($$update public.completions set status = 'approved', reviewed_at = now(), reviewed_by = auth.uid()
   where task_id = '00000000-0000-0000-0000-0000000088a1'$$) = 1, '3: ebeveyn adımı onaylar');
 select tst.fails($$update public.completions set reviewed_at = '-infinity' where task_id = '00000000-0000-0000-0000-0000000088a1'$$, '3: reviewed_at = -infinity yazılamaz');
-select tst.fails($$update public.completions set child_done_at = now() + interval '3 days' where task_id = '00000000-0000-0000-0000-0000000088a1'$$, '3: gelecekteki olay zamanı yazılamaz');
+-- saati ileri telefon: olay zamanı reddedilmez, şimdiye çekilir
+select tst.check(tst.rows($$update public.completions set child_done_at = now() + interval '3 days' where task_id = '00000000-0000-0000-0000-0000000088a1'$$) = 1,
+  '3: saati 3 gün ileri cihazın olay zamanı kabul edilir');
+select tst.check((select child_done_at <= now() from public.completions where task_id = '00000000-0000-0000-0000-0000000088a1'), '3: ileri olay zamanı şimdiye çekildi');
+select tst.check(tst.rows($$update public.completions set child_done_at = now() - interval '2 days' where task_id = '00000000-0000-0000-0000-0000000088a1'$$) = 1, '3: geçmiş olay zamanı yazılır');
+select tst.check((select child_done_at < now() - interval '1 day' from public.completions where task_id = '00000000-0000-0000-0000-0000000088a1'), '3: geçmiş olay zamanı olduğu gibi kalır (çevrimdışı eşitleme)');
+select tst.fails($$update public.tasks set end_date = current_date + 4000 where id = '00000000-0000-0000-0000-0000000088a1'$$, '3: plan tarihi 10 yıldan ileri yazılamaz');
 select tst.fails($$update public.tasks set end_date = 'infinity' where id = '00000000-0000-0000-0000-0000000088a1'$$, '3: tasks.end_date = infinity yazılamaz');
 select tst.check(tst.rows($$update public.tasks set end_date = current_date + 365 where id = '00000000-0000-0000-0000-0000000088a1'$$) = 1, '3: bir yıl sonraki bitiş tarihi yazılır');
 update public.tasks set end_date = null where id = '00000000-0000-0000-0000-0000000088a1';
 select tst.fails($$update public.clinic_task_suggestions set decided_at = 'infinity' where id = '00000000-0000-0000-0000-0000000005b1'$$, '3: öneri decided_at = infinity yazılamaz');
 reset role;
--- eski bozuk satır (sunucu yazmış gibi) KPI'yı bozmaz
+-- sunucu da sonsuz değer yazamaz (finite_time_guard)
+select tst.fails($$insert into public.completions (family_id, task_id, child_id, date, status, reviewed_at)
+  values (tst.u('F'), '00000000-0000-0000-0000-0000000088a1', '00000000-0000-0000-0000-00000000c002', current_date, 'approved', 'infinity')$$,
+  '3: sunucu işlevi / service_role da sonsuz değer yazamaz');
+-- eski bozuk satır (denetimden önce yazılmış gibi) KPI'yı bozmaz
+alter table public.completions disable trigger finite_time_guard;
 insert into public.completions (family_id, task_id, child_id, date, status, reviewed_at)
   values (tst.u('F'), '00000000-0000-0000-0000-0000000088a1', '00000000-0000-0000-0000-00000000c002', current_date, 'approved', 'infinity');
+alter table public.completions enable trigger finite_time_guard;
 set role authenticated;
 select tst.as_mfa('00000000-0000-0000-0000-0000000000f1');
 select tst.check(public.admin_kpi_summary(30) is not null, '3: admin_kpi_summary sonsuz değerle çalışır');
@@ -211,11 +223,18 @@ insert into public.tasks (family_id, title, start_date, recurring, end_date)
   select public.my_family_id(), 'Z' || x, current_date - 3, false, current_date - 1 from generate_series(1, 4) x;
 insert into public.tasks (family_id, title, start_date, recurring) select public.my_family_id(), 'A' || x, current_date, true from generate_series(1, 3) x;
 select tst.fails($$insert into public.tasks (family_id, title, start_date, recurring) values (public.my_family_id(), 'A4', current_date, true)$$, '4: 4. etkin adım eklenmez');
+select tst.check(tst.rows($$insert into public.tasks (family_id, title, start_date, recurring, end_date)
+  values (public.my_family_id(), 'Z5', current_date - 5, false, current_date - 2)$$) = 1, '4: sınırdayken biten (etkin olmayan) adım eklenir');
+select tst.check(tst.rows($$insert into public.tasks (family_id, title, start_date, recurring, end_date)
+  values (public.my_family_id(), 'infinity', current_date - 5, false, current_date - 2)$$) = 1, '10a: "infinity" adlı adım yazılır (metin sütunu denetlenmez)');
 select tst.fails($$update public.tasks set start_date = current_date + 1, end_date = null where title = 'Z1'$$, '4: biten adım ileri tarihle etkinleşmez');
 select tst.fails($$update public.tasks set recurring = true, end_date = null where title = 'Z3'$$, '4: biten adım tekrarlı yapılarak etkinleşmez');
 select tst.check(tst.rows($$update public.tasks set title = 'A1 yeni', start_date = current_date where title = 'A1'$$) = 1, '4: etkin adım düzenlenir');
 select tst.check(tst.rows($$update public.tasks set end_date = current_date - 1, recurring = false, start_date = current_date - 2 where title = 'A1 yeni'$$) = 1, '4: etkin adım bitirilir');
 select tst.check(tst.rows($$update public.tasks set recurring = true, end_date = null where title = 'Z3'$$) = 1, '4: yer açılınca biten adım yeniden etkinleşir');
+select tst.check(position('pg_advisory_xact_lock' in pg_get_functiondef('public.tasks_free_limit()'::regprocedure)) > 0
+             and position('pg_advisory_xact_lock' in pg_get_functiondef('public.children_free_limit()'::regprocedure)) > 0,
+  '4: adım ve çocuk sınırı aile başına kilitle sayılır (eşzamanlılık: scratchpad r2a/race.sh)');
 select tst.check((select count(*) from public.tasks t where t.family_id = public.my_family_id()
    and (t.end_date is null or t.end_date >= current_date) and (t.recurring or t.start_date >= current_date)) = 3, '4: etkin adım 3');
 select tst.as_user('00000000-0000-0000-0000-0000000000b8');
@@ -303,16 +322,27 @@ select tst.as_user('00000000-0000-0000-0000-0000000000a1');
 select tst.check(public.kvkk_request_create('parent', 'access', 'verilerimi istiyorum') ->> 'status' = 'received', '6: e-postalı ebeveyn başvurur');
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(public.kvkk_request_create('clinic', 'info', '') ->> 'status' = 'received', '6: uzman başvurur');
+-- başka hesapların seli (son 1 saatte 500 başvuru) bu hesabı engellemez: sistem geneli sayaç yok
 reset role;
-insert into public.kvkk_requests (user_id, app, kind, detail) select null, 'parent', 'info', 'sel' from generate_series(1, 120);
+insert into public.kvkk_requests (user_id, app, kind, detail) select null, 'parent', 'info', 'sel' from generate_series(1, 500);
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
-select tst.fails($$select public.kvkk_request_create('parent', 'access', 'verilerimi istiyorum')$$, '6: saatlik genel üst sınır seli keser');
+select tst.check(public.kvkk_request_create('parent', 'access', 'verilerimi istiyorum') ->> 'status' = 'received', '6: başkalarının seli başvuruyu engellemez');
+-- hesap başına kayan 24 saatte en çok 3 (durum fark etmez)
+select tst.check(public.kvkk_request_create('parent', 'info', '') ->> 'status' = 'received', '6: ikinci başvuru');
 reset role;
-update public.kvkk_requests set received_at = now() - interval '2 hours' where detail = 'sel';
+update public.kvkk_requests set status = 'answered' where user_id = '00000000-0000-0000-0000-0000000000a2';
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000a2');
-select tst.check(public.kvkk_request_create('parent', 'access', 'verilerimi istiyorum') ->> 'status' = 'received', '6: sel geçince başvuru alınır');
+select tst.check(public.kvkk_request_create('parent', 'info', '') ->> 'status' = 'received', '6: üçüncü başvuru');
+select tst.fails($$select public.kvkk_request_create('parent', 'info', '')$$, '6: 24 saatte dördüncü başvuru alınmaz (kapanmış başvurular da sayılır)');
+reset role;
+update public.kvkk_requests set received_at = now() - interval '25 hours' where user_id = '00000000-0000-0000-0000-0000000000a2';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a2');
+select tst.check(public.kvkk_request_create('parent', 'info', '') ->> 'status' = 'received', '6: 24 saat geçince yeniden başvurulur');
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.check(public.kvkk_request_create('parent', 'info', '') ->> 'status' = 'received', '6: öteki ebeveyn etkilenmez');
 reset role;
 delete from public.kvkk_requests where detail = 'sel';
 
@@ -399,16 +429,24 @@ select public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'abc_even
 select public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'abc_event', 'Yeni kayıt', '', '{"abc_id":"2"}');
 select tst.check((select array_agg(push order by id) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'abc_event')
                  = array[true, false, true], '9: aynı kayıt için yinelenen bildirim push''suz, başka kayıt gider');
--- hesap / güvenlik türü ve sunucu kaynaklı bildirim sınırsız
+-- kişinin tetiklediği ekip türü de sınıra tabi (istek / geri çekme döngüsü); yalnız yönetici ve sunucu türleri sınırsız
 do $$ begin for i in 1..8 loop
-  perform public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'team_request', 'İstek ' || i, '', jsonb_build_object('i', i));
+  perform public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'team_request', 'İstek ' || i, '', jsonb_build_object('request_id', i));
+  perform public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'admin_message', 'Duyuru ' || i, '', jsonb_build_object('i', i));
 end loop; end $$;
 select tst.as_user(null);
 do $$ begin for i in 1..8 loop
   perform public.notify('00000000-0000-0000-0000-000000000089', 'clinic', 'abc_event', 'Sunucu ' || i, '', jsonb_build_object('s', i));
 end loop; end $$;
-select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'team_request' and push) = 8,
-  '9: hesap / ekip türü sınırın dışında');
+select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'team_request') = 8
+             and (select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'team_request' and push) = 6,
+  '9: ekip isteği döngüsü: 8 satır, saatte en çok 6 anlık bildirim');
+select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'admin_message' and push) = 8,
+  '9: yönetici duyurusu sınırın dışında');
+select tst.check(not public.notification_push_exempt('team_request') and not public.notification_push_exempt('clinic_shared')
+             and not public.notification_push_exempt('clinic_revoked') and not public.notification_push_exempt('invite_claimed')
+             and not public.notification_push_exempt('device_linked') and public.notification_push_exempt('trial_ending'),
+  '9: kişinin tetiklediği türler muaf değil, sunucu türleri muaf');
 select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'abc_event' and push and title like 'Sunucu%') = 8,
   '9: sunucu kaynaklı bildirim sınırın dışında');
 -- günlük tablo istemciye kapalı
@@ -416,3 +454,186 @@ set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-000000000089');
 select tst.fails($$select count(*) from public.notification_push_log$$, '9: gönderim günlüğü istemciye kapalı');
 reset role;
+
+-- =====================================================================
+-- 10. İkinci tur
+-- =====================================================================
+-- (9 devamı) paylaş / sonlandır döngüsü: her turda yeni link_id (aynı kayıt değil), yine saatte en çok 6 anlık bildirim
+insert into public.children (id, family_id, name, avatar) values ('00000000-0000-0000-0000-00000000c0df', tst.u('H'), 'Can', 'x');
+insert into tst.kv select 'HC', clinic_id::text from public.clinicians where id = '00000000-0000-0000-0000-000000000089';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+do $$ declare l uuid; begin for i in 1..10 loop
+  l := (public.clinic_share_child(tst.u('HC'), '00000000-0000-0000-0000-00000000c0df') ->> 'link_id')::uuid;
+  perform public.revoke_clinic_link(l);
+end loop; end $$;
+reset role;
+select tst.check((select count(distinct id) from public.clinic_links where child_id = '00000000-0000-0000-0000-00000000c0df') = 10, '10: 10 tur paylaş / sonlandır');
+select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_shared'
+                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) = 6
+             and (select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_revoked'
+                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) = 6
+             and (select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_shared'
+                    and child_id = '00000000-0000-0000-0000-00000000c0df') = 10,
+  '10: paylaş / sonlandır döngüsü: satırlar yazılır, her türde saatte en çok 6 anlık bildirim');
+select tst.check(position('pg_advisory_xact_lock' in pg_get_functiondef('public.notifications_push_throttle()'::regprocedure)) > 0,
+  '10: bildirim sınırı gönderen-alıcı-tür başına kilitle sayılır (eşzamanlılık: scratchpad r2a/race.sh)');
+
+-- (a) sonsuz tarih: eğitim etkinleşme zamanı (uzmanın doğrudan yazması) ve yönetici hunisi
+insert into public.parent_trainings (id, clinic_id, link_id, title, status, created_by)
+  select '00000000-0000-0000-0000-0000000077a1', tst.u('HC'), '00000000-0000-0000-0000-0000000033a1', 'Eğitim', 'draft', '00000000-0000-0000-0000-000000000089';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000089');
+select tst.fails($$update public.parent_trainings set activated_at = '-infinity' where id = '00000000-0000-0000-0000-0000000077a1'$$, '10a: activated_at = -infinity yazılamaz');
+select tst.fails($$insert into public.parent_trainings (clinic_id, link_id, title, status, activated_at)
+  values (tst.u('HC'), '00000000-0000-0000-0000-0000000033a1', 'X', 'draft', '-infinity')$$, '10a: taslak eğitim -infinity ile eklenemez');
+select tst.check(tst.rows($$update public.parent_trainings set title = 'Eğitim 2' where id = '00000000-0000-0000-0000-0000000077a1'$$) = 1, '10a: eğitim düzenlenir');
+reset role;
+select tst.fails($$insert into public.notifications (user_id, app, kind, title, created_at) values ('00000000-0000-0000-0000-000000000089', 'clinic', 'x', 'x', 'infinity')$$,
+  '10a: sunucu da sonsuz değer yazamaz (bildirim)');
+select tst.fails($$update public.children set created_at = '-infinity' where id = '00000000-0000-0000-0000-00000000c0df'$$, '10a: çocuk kaydında da');
+-- denetimden önce kalmış bozuk satır hunide çalışır, satırın başka alanı düzeltilebilir
+alter table public.parent_trainings disable trigger finite_time_guard;
+alter table public.parent_trainings disable trigger parent_trainings_client_time;
+update public.parent_trainings set activated_at = '-infinity' where id = '00000000-0000-0000-0000-0000000077a1';
+alter table public.parent_trainings enable trigger finite_time_guard;
+alter table public.parent_trainings enable trigger parent_trainings_client_time;
+select tst.check(public.funnel_clinic_steps('00000000-0000-0000-0000-000000000089') ? 'signup'
+             and not (public.funnel_clinic_steps('00000000-0000-0000-0000-000000000089') ? 'first_training'), '10b: huni adımı sonsuz zamanı almaz');
+set role authenticated;
+select tst.as_mfa('00000000-0000-0000-0000-0000000000f1');
+select tst.check(public.admin_funnel('clinic', current_date - 30, current_date) is not null, '10b: admin_funnel(clinic) sonsuz değerle çalışır');
+select tst.check(public.admin_funnel('parent', current_date - 30, current_date) is not null, '10b: admin_funnel(parent) çalışır');
+reset role;
+update public.parent_trainings set title = 'Eğitim 3' where id = '00000000-0000-0000-0000-0000000077a1';
+select tst.check((select title from public.parent_trainings where id = '00000000-0000-0000-0000-0000000077a1') = 'Eğitim 3', '10a: eski bozuk satırın başka alanı düzeltilir');
+delete from public.parent_trainings where id = '00000000-0000-0000-0000-0000000077a1';
+
+-- (c) saati 3 gün ileri telefonla öneri karara bağlanır; zaman şimdiye çekilir
+insert into public.clinic_task_suggestions (id, clinic_id, link_id, child_id, family_id, title, status, created_by) values
+  ('00000000-0000-0000-0000-0000000066b1', tst.u('HC'), '00000000-0000-0000-0000-0000000033a1', '00000000-0000-0000-0000-00000000c0de', tst.u('H'), 'Öneri', 'pending',
+   '00000000-0000-0000-0000-000000000089');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+select tst.check(tst.rows($$update public.clinic_task_suggestions set status = 'accepted', decided_at = now() + interval '3 days'
+  where id = '00000000-0000-0000-0000-0000000066b1'$$) = 1, '10c: saati 3 gün ileri telefon öneriyi kabul eder');
+reset role;
+select tst.check((select decided_at between now() - interval '1 minute' and now() from public.clinic_task_suggestions
+                  where id = '00000000-0000-0000-0000-0000000066b1'), '10c: decided_at şimdiye çekildi');
+
+-- (e) haftalık ders taşı: olağan kullanım çalışır, kilit send_gift ile aynı
+insert into public.parent_lessons (key, title, summary, minutes, body_md, try_text, status, position) values
+  ('r2ders', 'Ders', 'Özet', 3, '## Ders', 'Dene', 'published', 1) on conflict do nothing;
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+select public.parent_lesson_start('r2ders');
+select tst.check((public.parent_lesson_practice('r2ders') ->> 'stone_given')::int = 1, '10e: ilk uygulama günü taş verir');
+select tst.check((public.parent_lesson_practice('r2ders') ->> 'stone_given')::int = 0, '10e: aynı gün ikinci kez taş yok');
+select tst.check((public.parent_lesson_practice('r2ders', public.tr_today() - 1) ->> 'stone_given')::int = 1, '10e: başka gün taş verir');
+reset role;
+select tst.check(position('parent_stones:' in pg_get_functiondef('public.parent_lesson_practice(text, date, boolean)'::regprocedure)) > 0
+             and position('parent_stones:' in pg_get_functiondef('public.parent_lesson_week_stones(uuid, uuid, date)'::regprocedure)) > 0,
+  '10e: ders taşı send_gift kilidiyle (eşzamanlılık: scratchpad r2a/race.sh)');
+
+-- (f) bitmiş paylaşımda uzmanın ders listesi boş
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000089');
+select public.clinic_assign_lesson('00000000-0000-0000-0000-0000000033a1', 'r2ders', 'not');
+select tst.check(jsonb_array_length(public.clinic_parent_lessons('00000000-0000-0000-0000-0000000033a1')) = 1, '10f: etkin paylaşımda ders listesi');
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+select public.revoke_clinic_link('00000000-0000-0000-0000-0000000033a1');
+select tst.as_user('00000000-0000-0000-0000-000000000089');
+select tst.check(public.clinic_parent_lessons('00000000-0000-0000-0000-0000000033a1') = '[]'::jsonb, '10f: bitmiş paylaşımda ders listesi boş');
+reset role;
+
+-- (h) çocuk fotoğrafı yalnız ailenin önekinde
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+select tst.fails($$update public.children set avatar = 'photo:' || tst.v('F') || '/avatars/x.jpg' where id = '00000000-0000-0000-0000-00000000c0de'$$,
+  '10h: başka ailenin dosyası avatar yapılamaz');
+select tst.fails($$update public.children set avatar = 'photo:' || tst.v('H') || '/../' || tst.v('F') || '/x.jpg' where id = '00000000-0000-0000-0000-00000000c0de'$$,
+  '10h: ".." ile önekten çıkılamaz');
+select tst.fails($$update public.children set avatar = 'photo:' || tst.v('H') where id = '00000000-0000-0000-0000-00000000c0de'$$, '10h: dosyasız önek yazılamaz');
+select tst.check(tst.rows($$update public.children set avatar = 'photo:' || tst.v('H') || '/avatars/' || gen_random_uuid() || '.jpg'
+  where id = '00000000-0000-0000-0000-00000000c0de'$$) = 1, '10h: kendi ailesinin fotoğrafı avatar olur');
+select tst.check(tst.rows($$update public.children set avatar = 'tavşan' where id = '00000000-0000-0000-0000-00000000c0de'$$) = 1, '10h: hazır simge yazılır');
+reset role;
+-- eski satır (denetimden önce) başka alanda düzenlenebilir
+alter table public.children disable trigger children_avatar_path_check;
+update public.children set avatar = 'photo:' || tst.v('F') || '/avatars/eski.jpg' where id = '00000000-0000-0000-0000-00000000c0df';
+alter table public.children enable trigger children_avatar_path_check;
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-000000000081');
+select tst.check(tst.rows($$update public.children set name = 'Can 2' where id = '00000000-0000-0000-0000-00000000c0df'$$) = 1, '10h: eski avatarlı satırın adı düzenlenir');
+reset role;
+-- eski satırda başka ailenin yolu kalmışsa çocuk cihazı o dosyayı yine okuyamaz (mail_object_readable aile önekine bakar)
+alter table public.children disable trigger children_avatar_path_check;
+update public.children set avatar = 'photo:' || tst.v('H') || '/avatars/baska.jpg' where id = '00000000-0000-0000-0000-00000000c002';
+alter table public.children enable trigger children_avatar_path_check;
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000c2');
+select tst.check(not public.mail_object_readable(tst.v('H') || '/avatars/baska.jpg'), '10h: çocuk cihazı başka ailenin dosyasını avatar yoluyla okuyamaz');
+reset role;
+
+-- (g) davet ödülü yalnız ayrı ve başka aileye bağlı olmayan mağaza işlemine
+insert into auth.users (id, is_anonymous, email, email_confirmed_at, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000009a1', false, 'veren@example.com', now(), '{"nickname":"Veren"}'),
+  ('00000000-0000-0000-0000-0000000009b1', false, 'al1@example.com', now(), '{"nickname":"Al1"}'),
+  ('00000000-0000-0000-0000-0000000009b2', false, 'al2@example.com', now(), '{"nickname":"Al2"}'),
+  ('00000000-0000-0000-0000-0000000009b3', false, 'al3@example.com', now(), '{"nickname":"Al3"}');
+create or replace function tst.fam(u uuid) returns uuid language sql as $$ select family_id from public.profiles where id = u $$;
+create or replace function tst.redeem(taker uuid) returns void language plpgsql as $$
+declare c text;
+begin
+  perform set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-0000000009a1', false);
+  c := public.create_guest_pass() ->> 'code';
+  perform set_config('request.jwt.claim.sub', taker::text, false);
+  if not (public.redeem_guest_pass(c) ->> 'ok')::boolean then raise exception 'davet kodu kullanılamadı'; end if;
+end $$;
+select tst.redeem('00000000-0000-0000-0000-0000000009b1');
+select tst.redeem('00000000-0000-0000-0000-0000000009b2');
+select tst.redeem('00000000-0000-0000-0000-0000000009b3');
+select tst.as_user(null);
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b1'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', 'tx-ortak');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 1, '10g: ilk ödenen işlem ödül verir');
+-- aynı mağaza işlemi başka aileye (geri yükleme / taşıma)
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b2'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', 'tx-ortak');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 1, '10g: başka aileye bağlı işlem ödül vermez');
+-- ilk aile işlemi bıraksa da (satırı silindi) aynı işlem ikinci kez ödül vermez
+delete from public.family_subscriptions where family_id = tst.fam('00000000-0000-0000-0000-0000000009b1');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b2'), 'premium', 'monthly', 'expired', now() - interval '1 day', false,
+                                      'parentapp.premium.monthly', 'tx-ortak');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b2'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', 'tx-ortak');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 1, '10g: ödül üretmiş işlem yeniden ödül vermez');
+-- işlem kimliği yok: ödül bekler; kimlikli olayda verilir
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b3'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', null);
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 1, '10g: işlem kimliği yoksa ödül yok');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b3'), 'premium', 'monthly', 'expired', now() - interval '1 day', false,
+                                      'parentapp.premium.monthly', null);
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b3'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', 'tx-ayri');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 2, '10g: ayrı işlem ödül verir');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000009a1');
+select tst.fails($$select count(*) from public.referral_paid_transactions$$, '10g: işlem tablosu istemciye kapalı');
+reset role;
+
+-- (9) varsayılan işlev yetkisi; e-posta özeti
+create function public.r2_future_fn() returns int language sql as $$ select 1 $$;
+select tst.check(not exists (select 1 from pg_default_acl d join pg_namespace n on n.oid = d.defaclnamespace
+                              where n.nspname = 'public' and d.defaclobjtype = 'f' and array_to_string(d.defaclacl, ',') like '%anon=%'),
+  '10: anon için varsayılan işlev yetkisi yok');
+drop function public.r2_future_fn();
+select tst.check(public.email_hash('a.b@x@gmail.com') <> public.email_hash('abx@gmail.com')
+             and public.email_hash('a.b@x@gmail.com') = encode(extensions.digest('a.b@x@gmail.com', 'sha256'), 'hex'),
+  '10: iki @ içeren adreste Gmail kuralı uygulanmaz');
+select tst.check(public.email_hash('a.b@gmail.com') = public.email_hash('ab@gmail.com'), '10: olağan Gmail kuralı sürer');
+
+-- (sağlamlaştırma) kullanılmış davet kodu yanıtı da deneme sayılır
+select tst.check(position('''used'', ''expired''' in pg_get_functiondef('public.redeem_guest_pass(text)'::regprocedure)) > 0, '10: kullanılmış / süresi dolmuş kod denemesi sayılır');
+-- ops_health push yalnız push = true satırlarını sayar
+select tst.check(position('x.push' in pg_get_functiondef('public.ops_health()'::regprocedure)) > 0, '10: ops_health push yalnız gönderilecek bildirimleri sayar');
