@@ -49,14 +49,15 @@ Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `mo
 - (Siz) 4. Supabase › Authentication › Emails › SMTP Settings: `smtp.resend.com`, port 465, kullanıcı `resend`, şifre = 1. anahtar, gönderen `noreply@moyoapp.com.tr`, ad **Moyo**; Rate Limits'te saatlik e-posta sınırını yükselt
 - (ParentApp penceresi) 5. Türkçe Auth şablonları (onay, şifre sıfırlama, e-posta değişikliği, sihirli bağlantı, davet): nötr metin, uygulamaya göre fark dönüş adresinden (`parentapp://`, `ebeveyn.moyoapp.com.tr`, `clinicapp://`, `uzman.moyoapp.com.tr`) → (Siz) Authentication › Email Templates'e yapıştır
 - (Siz) 6. Edge Functions › Secrets: `RESEND_API_KEY` = 2. anahtar, `MAIL_FROM` = `davet@moyoapp.com.tr`, `BRAND_NAME` = `Moyo`
-- (Siz) 7. Gelen posta `destek@`, `kvkk@`, `fatura@`: Cloudflare › Email › Email Routing (ücretsiz, kökte MX; Resend'in MX'i `send` alt alanında, çakışmaz) → kendi posta kutunuza yönlendir
+- (Siz) 7. Gelen posta: **yalnız `destek@moyoapp.com.tr`** (kullanıcı kararı 20 Kasım 2026: her iletişim konusu için tek adres; eski liste `destek@`, `kvkk@`, `fatura@`): Cloudflare › Email › Email Routing (ücretsiz, kökte MX; Resend'in MX'i `send` alt alanında, çakışmaz) → kendi posta kutunuza yönlendir
 - (Claude, iki pencere) 8. Gmail / Outlook / iCloud uçtan uca deneme (kayıt onayı, şifremi unuttum: ParentApp + ClinicApp; davet e-postası)
 - (Siz + iki pencere, birlikte seçilen an) 9. Authentication › Providers › Email › **Confirm email açık** — iki uygulamayı birden etkiler; App Review deneme hesapları önceden onaylı olmalı
 - (Claude) Şifremi unuttum akışı (ParentApp, ClinicApp; `parentapp://`, `clinicapp://`) — ekranlar var, 8. adımda denenir
 - (Claude) İşlem e-postaları: hoş geldin, deneme bitiyor, ödeme + fatura, hesap silindi (sonra; Resend Edge Function'dan)
 
 ### 1.4 Destek
-- (Siz) `destek@`, `kvkk@`, `fatura@` posta kutuları
+- (Siz) `destek@` posta kutusu (tek adres, 20 Kasım 2026). **Almak:** Cloudflare › Email Routing, `destek@moyoapp.com.tr` → kendi Gmail'iniz (1.3 adım 7). **Göndermek** (paneldeki "Yanıtla" taslağı da bu adresten çıksın): Gmail › Ayarlar › Hesaplar ve İçe Aktarma › "Farklı bir adresten posta gönder" › `destek@moyoapp.com.tr` ("Takma ad olarak değerlendir" işaretli) › SMTP `smtp.resend.com`, bağlantı noktası 465 (SSL), kullanıcı adı `resend`, şifre = Resend'de yeni bir yalnız gönderme anahtarı (sohbete yazılmaz) → Gmail'in gönderdiği doğrulama kodu Email Routing ile gelir → aynı sayfada "Varsayılan yap". Panelde "Yanıtla" Gmail'de açılır, Kimden: `destek@` (kullanıcı kararı 20 Kasım 2026: "Destek formu kalsın")
+- (Siz) Ekip bildirimi: her yeni talepte `destek@`'e tek satırlık e-posta (talep no, uygulama, konu, "Panelde aç"; kişinin e-postası ve mesajı girmez). Supabase › Edge Functions › `support` › yeni kodu yayınla (Verify JWT kapalı) + Secrets: `ADMIN_PANEL_URL` = panelin adresi ("Panelde aç" için; isteğe bağlı). Gönderim mevcut `RESEND_API_KEY` + `MAIL_FROM` ile (`noreply@moyoapp.com.tr`, ad "Moyo Destek")
 - (Claude) Uygulama içi "Yardım ve iletişim" (oyunda ebeveyn kapısı arkasında) — **destek sayfası ve formu yazıldı** (2 Kasım: `/destek`, sabit adres `…/functions/v1/support`, panel Destek kuyruğu; `sozlesme/admin.md` "Destek"); kalan: (Siz) SQL + `support` işlevi, (uygulama pencereleri) bağlantıyı ekle
 - (Claude) SSS
 - (Siz) Yanıt süresi; KVKK başvurusu yasal süre 30 gün
@@ -196,8 +197,8 @@ D. Uygulamalar ve deneme
 - (Siz) İlk süper admin + iki adımlı doğrulama
 
 ## 4. Analitik ve hata izleme
-- (Siz) Sentry + PostHog (AB) hesapları (oyun için hesap yok)
+- ~~(Siz) Sentry + PostHog (AB) hesapları (oyun için hesap yok)~~ **Lansmanda yok (kullanıcı kararı 20 Kasım 2026; hukuk/README sorun 6).** Eklenirse önce aydınlatma, gizlilik ve alt işleyen metinleri.
 - (ortak) ParentApp ve GameApp olay listeleri `sozlesme/akislar.md` §9
 - (Claude) GameApp: Supabase'e olay servisi + Xcode Organizer/MetricKit
-- (Claude) ParentApp + ClinicApp: Sentry + PostHog; replay ParentApp maskeli, ClinicApp kapalı
+- ~~(Claude) ParentApp + ClinicApp: Sentry + PostHog; replay ParentApp maskeli, ClinicApp kapalı~~ (lansmanda yok, yukarıda)
 - (Claude) Admin Raporlar: kayıt, günlük aktif, G1/G7/G30, üç huni

@@ -3,6 +3,7 @@
 | Nerede | Moyo Oyun (GameApp), Moyo Ebeveyn (ParentApp) ve Moyo Mercek (ClinicApp) pencereleri; ekran ekran gösterilecek kısa metinler ve bağlı belge anahtarları | Dayanak | KVKK md. 3, 5, 6, 10, 11; 6502 s. TKHK md. 5; Kurul'un Çerez Uygulamaları Hakkında Rehberi; Apple App Review 3.1.2, 5.1.1 |
 
 > İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ekran metinlerinde ad kuralı: aile uygulaması kendinden "Moyo" diye söz eder, başka uygulamadan anılırken "Moyo Ebeveyn"; çocuğun oyunu "Moyo Oyun"; uzman ürünü uzmana dönük metinde "Moyo Mercek", aileye dönük metinde "Moyo Uzman". Tablolardaki uygulama adları yeni adlarla; "… penceresi" iç addır. Avukat dosyasının kısa metin önerileri §15'te (kullanıcı kararı bekler).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo Mercek kayıtta aile bağı bilgisi (§1.2, B.8), belge yükleme kullanılmıyor (§12, §14), Moyo Ebeveyn bildirim ayarları ve tanıtım izni (§14.1, yeni; kullanıcı kararı 5a, D.16), tek iletişim adresi `destek@`.
 
 ## Kısaca
 
@@ -80,6 +81,11 @@
 - Kabul **etkin bir eylemle** olmalı: satırdaki kutu işaretlenmeden ya da düğme "Kabul et ve hesap oluştur" olmadan hesap açılmaz (sessizce "kullanarak kabul" sayılmaz — `03-joon-karsilastirma.md` X4).
 - Aydınlatma bağlantıdır, kutusu yoktur; hesap açılınca gösterildiği kaydedilir.
 - *(Önceki uzun biçim: iki satır — sözleşme kutusu + ayrı aydınlatma satırı. Sözleşme Ek-3 bu kısa biçime göre güncellenecek.)*
+- **Aile bağı bilgisi (kullanıcı kararı 20 Kasım 2026, B.8: "uzman kayıtlarının silineceğini uzmana en başta söylediğimizden emin ol"; Moyo Mercek penceresi uygular):** kabul satırının hemen üstünde tek küçük satır:
+
+> Aile paylaşımı bitirirse yeni kayıt göremezsin; aile hesabını ya da çocuğu silerse o aileye ait notların ve kayıtların da silinir. Saklaman gereken kayıtları raporla ya da CSV ile kendin indir.
+
+  Karşılığı Uzman Hizmet Sözleşmesi 6.4-a ve Ek-3 kayıt satırı, Uzman Aydınlatma Metni 7. Uzman arayüzündeki sınır uyarısı değildir (3 Kasım 2026 kararı): veri akışını anlatır.
 - *Öneri (avukat dosyası, kullanıcı kararı bekler):* §15 satır 5 ("Moyo Mercek bir takip panelidir. …"); 3 Kasım 2026 kararıyla çelişebilir.
 
 ### 1.3 Moyo Ebeveyn — Moyo Oyun'u bağlamadan önce (veli onayı)
@@ -252,7 +258,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 
 **Sonra:** "Hesabın silindi." ekranı + oturum kapanır.
 
-**Uygulamaya giremeyenler için** (yardım sayfası ve SSS): "Uygulamaya giremiyorsan moyoapp.com.tr/destek sayfasındaki formdan ya da `kvkk@moyoapp.com.tr` adresinden silme talebinde bulunabilirsin."
+**Uygulamaya giremeyenler için** (yardım sayfası ve SSS): "Uygulamaya giremiyorsan moyoapp.com.tr/destek sayfasındaki formdan ya da `destek@moyoapp.com.tr` adresinden silme talebinde bulunabilirsin."
 
 ### 5.2 Moyo Mercek
 
@@ -263,7 +269,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 **Klinik sahibinin aktif mağaza üyeliği varsa:** 5.1'deki kutu, metin "Klinik üyeliğin Apple'da devam ediyor…" (web'de: "Üyeliğini iPhone/iPad'deki App Store ayarlarından iptal et.").
 
 **Tek kişilik klinik:**
-> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo Ebeveyn'deki kendi verileri silinmez; yalnız seninle paylaşımları biter (senin açtığın eğitimlere verdikleri yanıtlar ve hedef davranışlara bildirdikleri olaylar da paylaşımla birlikte silinir). Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Mevzuatın sana yüklediği kayıt saklama yükümlülüğü sende; saklaman gereken kayıtları silmeden önce indir ya da yazdır.
+> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, taslak ebeveyn eğitimleri, eğitimlerdeki gözlem verilerin ve ustalık ölçütlerin, hedef davranışlar, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo Ebeveyn'deki kendi verileri silinmez; yalnız seninle paylaşımları biter. Ailelere gönderdiğin eğitimler, ebeveynlerin bu eğitimlere verdiği yanıtlar ve kayıtlarla birlikte, ailenin hedef davranışlara bildirdiği olaylar da (davranışın adıyla) ailede kalır; sen ve kliniğin bunlara artık erişemezsiniz. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Mevzuatın sana yüklediği kayıt saklama yükümlülüğü sende; saklaman gereken kayıtları silmeden önce indir ya da yazdır.
 
 **Ekipte başka uzman varken klinik sahibi:**
 > Klinik kalır; sahiplik ekibin en eski üyesine ({ad}) geçer. Kliniğe ait kayıtlar klinikte kalır. Yalnız senin hesabın silinir.
@@ -440,11 +446,11 @@ Danışan menüsünde gözlem grubu "İzle" 14 Kasım 2026'dan beri **"Takip"** 
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| Moyo Mercek | Belgeni yükle (bayrak `clinician_verification` açıkken) | `aydinlatma-uzman`, `sozlesme-uzman` (A11–A12) |
+| Moyo Mercek | ~~Belgeni yükle (bayrak `clinician_verification` açıkken)~~ **Özellik kullanılmıyor** (kullanıcı kararı 20 Kasım 2026: belge yükleme sistemden kaldırıldı; `clinician_verifications` tablosu durur, yeniden açılırsa önce metinler; herkese açık metinlerden belge, rozet, e-Devlet ve BACB anlatımı çıktı) | — |
 
-> Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Sana "Belge yüklendi: <meslek>", ailelere "Uzman diploma belgesini yükledi" görünür; Moyo bir doğrulama ya da yetki beyanı vermez. <u>Uzman Aydınlatma Metni</u>
+> ~~Belgen yalnız inceleme için okunur, karar verilince silinir; kimlik numaran saklanmaz. Sana "Belge yüklendi: <meslek>", ailelere "Uzman diploma belgesini yükledi" görünür; Moyo bir doğrulama ya da yetki beyanı vermez.~~ (kullanılmıyor)
 
-- Rozet adı 14 Kasım 2026 kararıyla "Belgesi incelendi" → "Belge yükledi" (uygulandı: Moyo Mercek "Belge yüklendi: <meslek>", Moyo Ebeveyn "Uzman diploma belgesini yükledi"). Özellik lansmanda kapalı (bayrak `clinician_verification`). Açık: Moyo Ebeveyn'de rozeti olmayan uzmanda "Belgesi incelenmedi" yazısı duruyor; yeni sözcük kullanıcı kararı bekler (`DURUM.md` 14 Kasım 2026).
+- Rozet adı 14 Kasım 2026 kararıyla "Belgesi incelendi" → "Belge yükledi" (uygulandı: Moyo Mercek "Belge yüklendi: <meslek>", Moyo Ebeveyn "Uzman diploma belgesini yükledi"). Özellik lansmanda kapalı (bayrak `clinician_verification`). Açık: Moyo Ebeveyn'de rozeti olmayan uzmanda "Belgesi incelenmedi" yazısı duruyor; yeni sözcük kullanıcı kararı bekler (`DURUM.md` 14 Kasım 2026). **20 Kasım 2026:** kullanıcı kararıyla "Belgesi incelenmedi" yazısı kalktı (P.2) ve belge yükleme sistemden kaldırıldı (B.7); rozet hiçbir ekranda gösterilmez.
 
 Moyo Ebeveyn davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`) ile önceki uzman kayıtları onay metni (`uzman-gecis-v1`) `hukuk_notlari.md` B ve E'deki metinlerdir; burada tekrar edilmez. *Öneri (kullanıcı kararı bekler):* paylaşım onayına §15 satır 3 ("Paylaşılanlar uygulamada bıraktığın kayıtlardır. …").
 
@@ -493,9 +499,31 @@ iOS sistem penceresinde görünen amaç metinleri (`Info.plist`) ve sistem pence
 | Moyo Ebeveyn | Kamera (`NSCameraUsageDescription`) — *yalnız mesajda fotoğraf çekme varsa* | Mesajda "Fotoğraf çek"e ilk basıldığında | Çocuğuna mesajla göndereceğin fotoğrafı çekmek için kamerayı kullanırız. |
 | Moyo Ebeveyn | Bildirim | İlk rutin ya da adım oluşturulunca *(öneri)* | Ön açıklama: "Çocuğun bir adımı yaptığında ya da sana yazdığında haber verelim mi?" [İzin ver] [Şimdi değil] |
 | Moyo Mercek | Bildirim | İlk aile daveti gönderildikten sonra (bayrak `lifecycle_nudges` açıkken; `akislar.md` 25 aşama 1; önceki öneri: ilk aile bağlanınca) | Ön açıklama: "Bir aile seninle çocuk paylaştığında, öneri kararında ya da yeni davranış kaydında haber verelim mi?" [İzin ver] [Şimdi değil] |
-| Moyo Mercek | Fotoğraflar (`NSPhotoLibraryUsageDescription`) — *yalnız belge görsel olarak seçilebiliyorsa* | "Belgeni yükle"de | Mezuniyet belgeni yüklemek için seçtiğin dosyaya erişiriz. Belge incelemeden sonra silinir. |
+| Moyo Mercek | ~~Fotoğraflar (`NSPhotoLibraryUsageDescription`) — yalnız belge görsel olarak seçilebiliyorsa~~ | — | Belge yükleme kullanılmıyor (kullanıcı kararı 20 Kasım 2026); izin istenmez. |
 
 - İzin reddedilirse özellik kibarca kapanır; uygulamanın geri kalanı çalışır. Ayarlara yönlendiren metin: "İzni iPhone Ayarlar › {uygulama} bölümünden açabilirsin."
+
+### 14.1 Moyo Ebeveyn — bildirim ayarları ve tanıtım izni (kullanıcı kararı 20 Kasım 2026, 5a ve D.16; öneri metin, Moyo penceresi uygular)
+
+Kural: Moyo Ebeveyn'de bildirimler günde bir taneyi geçmemeye çalışır. Çocuğun oyunda işaretlediği adım bildirimlerini ebeveyn açıp kapatır; günün bütün adımları tamamlanınca tek bir "bugünün adımları tamamlandı" bildirimi gidebilir. Tanıtım ve kampanya bildirimi ya da e-postası yalnız ayrı izinle; izin ayrı anahtardır, **kapalı başlar**, her an kapatılır (Kullanım Koşulları 16.10; Moyo Mercek için Uzman Hizmet Sözleşmesi 17). Bildirim metnine sağlık bilgisi ve davranış ayrıntısı konmaz. Sunucu tarafı bildirim tercihleri işinde (`sozlesme/akislar.md`, başka pencere).
+
+| Uygulama | Ekran | Bağlı belge |
+|---|---|---|
+| Moyo Ebeveyn | Aile › Ayarlar › Bildirimler | `kosullar-parentapp` (16.10), `aydinlatma-ebeveyn` (4 satır 14) |
+
+> **Bildirimler**
+> Moyo sana günde birden fazla bildirim göndermemeye çalışır.
+>
+> **Adım bildirimleri** [anahtar] — {çocuk_adı} oyunda bir adımı işaretleyince haber ver.
+> **Günün özeti** [anahtar] — Bugünün bütün adımları tamamlanınca tek bildirim: "Bugünün adımları tamamlandı."
+>
+> **Kampanya ve yenilikler** [anahtar, kapalı başlar] — Tanıtım ve kampanya bildirimleri ile e-postaları. İstediğin an kapatabilirsin.
+>
+> <small>Hesap, abonelik, güvenlik ve uzman paylaşımıyla ilgili bildirimler bu ayarlara bağlı değildir. <u>Kullanım Koşulları</u></small>
+
+- "Kampanya ve yenilikler" açılınca izin (zaman ve metin sürümüyle) kaydedilir ve İYS'ye bildirilir; kapatınca da (6563 s. Kanun; `45-pazarlama-kurallari.md` §4).
+- Moyo Mercek'te aynı yapıda tek anahtar "Kampanya ve yenilikler" (kapalı başlar), Ayarlar › Bildirimler.
+- Telefonla (SMS) doğrulama bugün yok (bayrak `parent_sms_verify` kapalı); açılırsa önce aydınlatma ve alt işleyen listesi güncellenir.
 
 ## 15. Avukat dosyası kısa metin önerileri (20 Kasım 2026; öneri, kullanıcı kararı bekler)
 
@@ -524,7 +552,9 @@ Kaynak: avukat dosyası ("takip platformu" konumu; `sozlesme/hukuk_notlari.md` M
 3. **Moyo Oyun koşulları güncellenince oyun kilitlensin mi (2):** Veli yeni sürümü Moyo Ebeveyn'de onaylayana kadar çocuğun oyunu kilitlenmiyor (öneri: çocuğu cezalandırmamak). Bu, eski sürümle kullanımın sürmesi demek; hukuken kabul edilebilir mi?
 4. **Hesap silmede kalanlar (5):** "Ödeme kayıtları, ekip işlem kaydı ve deneme e-posta özeti kalır" cümlesi `42-saklama-imha-politikasi.md` süreleriyle birlikte onaylanmalı.
 5. **Ürün kararı / teyit gerekenler (yazılım):** Ekip sahibi silinince "kliniğe ait kayıtlar klinikte kalır" cümlesi sunucu davranışıyla teyit edilmeli. `kvkk_requests`'te çocuk alanı yok; "Kimin için?" seçimi bugün açıklamaya yazılıyor (ayrı sütun önerisi). Moyo Ebeveyn'de tek çocuk profilini silme ekranı yok (`README.md` sorun 5); 5.3 ve 10. bölüm buna göre yazıldı.
-6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Uzmanın kayıt saklama yükümlülüğüyle çatışma kararı (`00-olgular.md` §2) değişirse bu satır da değişir.
+6. **Hesap silmede uzman kayıtları (5.1):** Ebeveyne "uzmanın bu çocuklar için tuttuğu notlar da silinir" deniyor (bugünkü sistem). Kullanıcı kararı (20 Kasım 2026, B.8): sorun değil; uzmana kayıtta en baştan söylenir (§1.2).
 7. **Karşılama anketi zorunlu oldu (Moyo Mercek, 28 Ekim 2026):** "Şimdilik geç" kaldırıldı. Aydınlatma metni ankete "isteğe bağlı" diyor ve dayanağı meşru menfaat (ürün geliştirme). Ürün araştırması için zorunlu veri toplamak ölçülülük ilkesiyle (KVKK md. 4) çelişebilir. Öneri: ekran kalsın ama her soruda "söylemek istemiyorum / diğer" seçeneği olsun (Joon'daki gibi, `03` J2); yoksa aydınlatma "zorunlu" olarak düzeltilip amacı (ör. meslek → şablon önerisi) somut yazılmalı.
 8. **Kısa metin önerileri (§15):** Moyo Mercek'teki iki satır (5 kayıt onayı, 6 not alanı ipucu) 3 Kasım 2026 kullanıcı kararıyla çelişebilir; kayıt onayındaki tek satırın ve alan ipucunun "sınır uyarısı" sayılıp sayılmayacağı kullanıcıya. 1'deki uzun onay satırı koruyucu maddelerin onaylandığını ispat için yeterli mi (kutu tek, metin uzuyor)?
-9. **Klinik silinince ailenin yanıtları (5.2):** Uzmanın açtığı ebeveyn eğitimlerindeki ebeveyn yanıtları ve uygulama kayıtları ile ailenin hedef davranışlara bildirdiği olaylar paylaşım kaydına zincirleme bağlıdır (`parent_trainings`, `behavior_incidents` → `clinic_links` → `clinics`); tek kişilik klinik ya da paylaşım kaydı silinince bunlar da silinir. 5.2 metni buna göre daraltıldı. Ebeveynin kendi girdiği bu kayıtların uzman tarafındaki bir silmeyle gitmesi (ailenin erişim ve kopya hakkı, md. 11) ürün ve avukat kararı bekler.
+9. **Klinik silinince ailenin yanıtları (5.2) — karar verildi (kullanıcı, 20 Kasım 2026: 3A):** Paylaşım kaydı ya da klinik silinince (uzman hesabını siler; tek kişilik klinik ya da bireysel alan) ailenin kendi girdiği ebeveyn eğitimi yanıtları, uygulama kayıtları, yapılacak işaretleri ve davranış olayları **silinmez**: aileye açılmış eğitimin içeriğiyle (adı, modüller, uygulama görevleri, yapılacaklar) birlikte ailede salt okunur kopya olarak kalır, uzmanın ve kliniğin erişimi kapanır; taslak eğitim, uzmanın gözlem verisi, ustalık ölçütü ve hedef davranış tanımı silinir (olayda yalnız davranışın adı kalır). Aile hesabını ya da çocuğu silerse hepsi silinir. Sunucu: `supabase/proposed/20261120200000_family_keeps_records.sql` (öneri). 5.2 metni buna göre yazıldı. Avukata kalan: (a) uzmanın yazdığı eğitim içeriğinin (başlık, görev ve yapılacak metinleri) uzman hesabı silindikten sonra ailede kalması Uzman Hizmet Sözleşmesi 4.5 ve 9.6'ya eklenmeli mi; (b) paylaşım geri alınınca (satır silinmez) aile bugün bu kayıtları görmüyor, silinince görüyor: geri almada da aileye salt okunur kopya açılsın mı (ürün kararı).
+10. **Bildirim ayarları ve tanıtım izni (§14.1; kullanıcı kararı 20 Kasım 2026):** "günde bir taneyi geçmemeye çalışır" bir hedef olarak yazıldı (taahhüt değil); tanıtım izni ayrı anahtar ve kapalı başlar. Uygulama içi tanıtım bildiriminin ticari elektronik ileti sayılması ve İYS kaydı gerekip gerekmediği avukata (`hukuk_notlari.md` N).
+11. **Kayıtta aile bağı bilgisi (§1.2; B.8):** kayıt satırının üstündeki tek satır uzmanın "önceden bilgilendirildiğini" ispat için yeterli mi; onay kaydına ayrıca yazılmalı mı (bugün yalnız sözleşme sürümü kaydediliyor)?

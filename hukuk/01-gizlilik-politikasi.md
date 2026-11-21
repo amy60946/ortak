@@ -3,6 +3,7 @@
 | Nerede | Herkese açık adres (alan adı: `https://moyoapp.com.tr/yasal/gizlilik`); Pofi Adası, ParentApp ve ClinicApp'in App Store sayfaları; üç uygulamada Ayarlar › Yasal metinler (Pofi Adası'nda ebeveyn kapısının arkasında); ClinicApp web sayfasının alt bilgisi; e-postaların altı | Dayanak | KVKK md. 4, 5, 6, 9, 10, 11, 12, 13; Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ; Apple App Review 5.1.1–5.1.2 |
 
 > Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı, tıbbi cihaz cümlesi, genel ilke (1. bölüm), konum cümlesi (3. bölüm), uzman kayıtlarında veri işleyen rolü (4. bölüm; A/B kapandı), belge yükleme çıktı, uzman–aile ilişkisi (8. bölüm), aktarım amacı (10. bölüm), saklama süreleri dolduruldu (12. bölüm), kampanya izni (15. bölüm).
 
 ## Kısaca
 
@@ -22,11 +23,11 @@
 > - Çocuktan e-posta, telefon, konum, fotoğraf ya da ses almıyoruz. Çocuk yalnız kendi ailesiyle yazışır.
 > - Hiçbir gösterge tanı ya da puan değildir.
 >
-> **Haklarınız:** Verinizi görebilir, düzeltebilir, silebilir, hesabınızı uygulamanın içinden kapatabilirsiniz. Başvuru: uygulamada Yasal ve gizlilik › KVKK başvurusu ya da `kvkk@moyoapp.com.tr`. 30 gün içinde ücretsiz yanıt veririz.
+> **Haklarınız:** Verinizi görebilir, düzeltebilir, silebilir, hesabınızı uygulamanın içinden kapatabilirsiniz. Başvuru: uygulamada Yasal ve gizlilik › KVKK başvurusu ya da `destek@moyoapp.com.tr` (konu: "KVKK başvurusu"). 30 gün içinde ücretsiz yanıt veririz.
 
 ## 1. Biz kimiz, bu metin neyi kapsar?
 
-"Moyo", [AD SOYAD] tarafından işletilen uygulamaları ifade eder. Bu politika Moyo'nun üç uygulamasını, bu uygulamaların internet sayfalarını ve gönderdiği e-postaları kapsar:
+"Moyo" ya da "Platform": [AD SOYAD] tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Bu politika Moyo'nun üç uygulamasını, bu uygulamaların internet sayfalarını ve gönderdiği e-postaları kapsar:
 
 - **Moyo Ebeveyn**: ebeveyn uygulaması (iOS; telefonda "Moyo" adıyla görünür),
 - **Moyo Oyun**: çocuğun oyunu (iOS),
@@ -34,7 +35,7 @@
 
 Kişisel verilerinizin veri sorumlusu:
 **[AD SOYAD]**, [ADRES], MERSİS/VKN: [MERSİS/VKN]
-E-posta: `kvkk@moyoapp.com.tr` (kişisel veri konuları), `destek@moyoapp.com.tr` (diğer sorular).
+E-posta: `destek@moyoapp.com.tr` (bütün konular; kişisel veri başvurularında konu satırına "KVKK başvurusu" yazmanızı rica ederiz).
 
 Bu metinde "biz", Moyo'yu işleten bu kişiyi (veri sorumlusunu) anlatır.
 
@@ -48,9 +49,11 @@ Bu politika genel çerçevedir. Hangi verinin hangi hukuki sebeple işlendiğini
 
 Bu politika ile aydınlatma metinleri birlikte okunur.
 
-**Hizmetimizin sınırı:** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda **112** aranır. Uzman istihdam etmeyiz; uzman ile aile arasında aracılık ya da yönlendirme yapmayız. Moyo Mercek, uzmanın kendi tanıdığı aileyle çalışması için bir araçtır.
+**Hizmetimizin sınırı:** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda **112** aranır. Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır. Uzman istihdam etmeyiz; uzman ile aile arasında aracılık ya da yönlendirme yapmayız. Moyo Mercek, uzmanın kendi tanıdığı aileyle çalışması için bir araçtır.
 
 **Kayıtların niteliği:** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz.
+
+**Genel ilke:** Moyo, kullanıcıların kendi kayıtlarını tutması ve isterse paylaşması için bir araç sunar. Moyo; ebeveyn, çocuk ve uzman arasındaki ilişkinin, kullanıcıların girdiği kayıtların ve bu kayıtlara dayanarak verilen kararların tarafı değildir ve bunlar için bir sorumluluk ya da yükümlülük üstlenmez. Bu ilke yasanın izin verdiği en geniş ölçüde geçerlidir; kast, ağır kusur, tüketicinin vazgeçilemez hakları ve kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır. Her kullanıcı kendi girdiği kayıttan sorumludur.
 
 ## 2. Moyo Oyun
 
@@ -91,13 +94,13 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 
 **Ebeveyn eğitimi:** Uzmanınız size bir eğitim atadıysa tamamladığınız modüller, test yanıtlarınız ve doğru sayısı, açık uçlu yanıtlarınız, uygulama kayıtlarınız (sayı ve isteğe bağlı kısa düşünce) ve tamamladığınız yapılacaklar (nasıl geçtiği ve isteğe bağlı kısa düşünce).
 
-Davranış kayıtları, davranış olayları ve serbest metin alanlarına yazdıklarınız özel nitelikli veri içerebilir. Bu kayıtlar korunur: başka aileler göremez, bir uzmana yalnız açık rızanızla açılır.
+Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Serbest metin alanlarına tanı, ilaç ya da sağlık bilgisi yazmamanızı isteriz. Yine de bu alanlara yazılanlar dahil bütün kayıtlarınız korunur: başka aileler göremez, bir uzmana yalnız açık rızanızla açılır.
 
 **Tanışma yanıtları:** İlk kurulumda verdiğiniz yanıtlar (hedefler, bizi nereden duyduğunuz, çocuğun düzeni, geçen haftaki bazı günlük davranışların ne sıklıkta olduğu, ilgi alanları, motive edenler gibi). Bunları uygulamayı size göre ayarlamak, size destek vermek ve **kimliksiz toplamlar** hâlinde ürünü geliştirmek için kullanırız.
 
 **Uzman paylaşımı ve takip planı:** Uzmanla paylaşım onaylarınız (hangi metnin hangi sürümünü, ne zaman onayladığınız); uzmanın gönderdiği takip planını uygulama kayıtlarınız ("bugün uyguladım", zorluk derecesi, uygulayamama nedeni). Ayrıntı 8. bölümde.
 
-**Abonelik:** Aile aboneliği App Store üzerinden satılır; satıcı Apple'dır. Kart bilgileriniz bize gelmez. Biz yalnız aboneliğin durumunu (ürün, dönem sonu, işlem kimliği) görürüz. Ücretsiz deneme hakkının tekrar tekrar kullanılmasını önlemek için e-posta adresinizin geri çevrilemez özetini (SHA-256) saklarız; bu özet hesabınızı silseniz de [SÜRE] boyunca kalır.
+**Abonelik:** Aile aboneliği App Store üzerinden satılır; satıcı Apple'dır. Kart bilgileriniz bize gelmez. Biz yalnız aboneliğin durumunu (ürün, dönem sonu, işlem kimliği) görürüz. Ücretsiz deneme hakkının tekrar tekrar kullanılmasını önlemek için e-posta adresinizin geri çevrilemez özetini (SHA-256) saklarız; bu özet hesabınızı silseniz de denemenin başladığı tarihten 2 yıl boyunca kalır.
 
 **İzinler:** Mikrofon (sesli mesaj ve davranış kaydındaki ses kaydı için, yalnız siz kayda bastığınızda), fotoğraflar (mesaja fotoğraf eklemek için), bildirimler. İzinleri telefonunuzun ayarlarından istediğiniz an kapatabilirsiniz.
 
@@ -107,11 +110,9 @@ Davranış kayıtları, davranış olayları ve serbest metin alanlarına yazdı
 
 **Hesap:** Ad, unvan, e-posta, klinik adı, ekipteki rol.
 
-**Belge yükleme (isteğe bağlı):** Uzman isterse e-Devlet barkodlu mezuniyet belgesini ya da BACB sicil numarasını yükler. Belgede ad, T.C. kimlik numarası, okul, bölüm, derece ve tarih bulunur. Belge kendi sunucumuzda okunur; yapay zekâ ya da dış bir hizmet kullanılmaz. Belgeyi yalnız yetkili ekip üyesi görür ve her görüntüleme kayda geçer. Karar verilince dosya silinir. Yalnız özet (üniversite, bölüm, derece, mezuniyet yılı), belge barkodu ve karar kaydı saklanır. Kimlik numarası saklanmaz. Ailelere yalnız "Uzman diploma belgesini yükledi" bilgisi gösterilir. Moyo bir doğrulama ya da yetki beyanı vermez; bu bilgi yalnız belgenin yüklendiğini söyler.
-
 **Karşılama anketi:** Meslek, karşılaşılan zorluklar, yararlı bulunan özellikler, gelme nedeni. Kimliksiz toplamlar hâlinde ürünü geliştirmek için kullanılır.
 
-**Aileyle ilgili kayıtlar:** Uzmanın birlikte çalıştığı aile için girdiği notlar (aile görmez), hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (uzman gönderince aile görür), kayıt istediği hedef davranışlar ve stratejileri, atadığı ebeveyn eğitimleri ve bu eğitimler için girdiği gözlem verisi (aile görmez), etiketler. Bu kayıtlar özel nitelikli veri içerebilir.
+**Aileyle ilgili kayıtlar:** Uzmanın birlikte çalıştığı aile için girdiği notlar (aile görmez), hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (uzman gönderince aile görür), kayıt istediği hedef davranışlar ve stratejileri, atadığı ebeveyn eğitimleri ve bu eğitimler için girdiği gözlem verisi (aile görmez), etiketler. Uzman bu alanlara tanı, ilaç ya da sağlık bilgisi yazmamaya özen gösterir.
 
 **Davet bilgileri:** Uzman bir aileyi davet ederken ebeveynin adını ve e-postasını, çocuğun adını ya da takma adını ve yaş grubunu girer. Bu bilgi yalnız daveti iletmek ve ebeveynin onayına sunmak için tutulur. Kullanılmayan davet 3 günde, bağlanmış ama onaylanmamış davet en geç 30 günde silinir. Davet 3 gün geçerlidir; davet başına ebeveyne en çok 3 e-posta (ilk gönderim ve yeniden gönderimler) gider. Bu e-postalar reklam içermez; çocuğun adı ve sağlık bilgisi e-postaya yazılmaz.
 
@@ -119,9 +120,7 @@ Davranış kayıtları, davranış olayları ve serbest metin alanlarına yazdı
 
 **Web:** Moyo Mercek'in web sürümü yalnız oturumu açık tutmak ve seçimlerinizi hatırlamak için zorunlu tarayıcı depolaması kullanır; analiz ya da reklam çerezi yoktur. Ayrıntı: Web Çerez Politikası (`cerez-clinicapp-web`).
 
-**Uzmanın aile kayıtlarında rolümüz:**
-[SEÇENEK A — öneri: Uzmanın birlikte çalıştığı aile hakkında girdiği notlar, hedefler, değerlendirmeler ve takip planı bakımından veri sorumlusu uzman ya da kliniğidir; biz bu kayıtları onun adına ve talimatıyla saklayan **veri işleyeniz**. Bu kayıtlarla ilgili başvurular öncelikle uzmana ya da kliniğe yapılır; biz uzmana teknik olarak yardım ederiz.]
-[SEÇENEK B: Bu kayıtlar bakımından biz ve klinik ayrı ayrı veri sorumlusuyuz.]
+**Uzmanın aile kayıtlarında rolümüz:** Uzmanın birlikte çalıştığı aile hakkında girdiği notlar, hedefler, değerlendirmeler, takip planı ve öteki kayıtlar bakımından veri sorumlusu uzman ya da kliniğidir; biz bu kayıtları onun adına ve talimatıyla saklayan **veri işleyeniz**. Uzman girdiği her kaydı kendi beyanıyla ve kendi sorumluluğunda girer; Moyo bu içeriği denetlemez, doğrulamaz, bunun için sorumluluk ya da yükümlülük üstlenmez. Bu kayıtlarla ilgili başvurular öncelikle uzmana ya da kliniğe yapılır; biz uzmana teknik olarak yardım ederiz.
 
 ## 5. Üç uygulamada ortak kayıtlar
 
@@ -142,7 +141,7 @@ Davranış kayıtları, davranış olayları ve serbest metin alanlarına yazdı
 | İçeriksiz kullanım ölçümü, kimliksiz toplamlarla ürün geliştirme | Meşru menfaat (md. 5/2-f) |
 | Ödeme kayıtlarını saklamak, resmî makamların usulüne uygun taleplerini yanıtlamak, KVKK başvurularını yanıtlamak | Hukuki yükümlülük (md. 5/2-ç) |
 | Onay kayıtlarını ve ekip işlemleri kaydını hak ve savunmalarımız için saklamak | Bir hakkın tesisi, kullanılması veya korunması (md. 5/2-e) |
-| Çocuğun ve uygulamada bıraktığınız kayıtların uzmanla paylaşılması; önceki uzman kayıtlarının yeni uzmana açılması (bu kayıtlar özel nitelikli veri içerebilir) | **Açık rıza** (md. 6) — her biri ayrı ekranda, isteğe bağlı, istediğiniz an geri alınabilir |
+| Çocuğun ve uygulamada bıraktığınız kayıtların uzmanla paylaşılması; önceki uzman kayıtlarının yeni uzmana açılması | **Açık rıza** (md. 5/1 ve md. 6/3-a; serbest metne yazılmış olabilecek bilgiler için de koruma sağlar) — her biri ayrı ekranda, isteğe bağlı, istediğiniz an geri alınabilir |
 
 Her işlemin ayrıntılı dayanağı ilgili aydınlatma metnindedir. Açık rıza vermemeniz uygulamanın temel kullanımını engellemez.
 
@@ -159,14 +158,14 @@ Her işlemin ayrıntılı dayanağı ilgili aydınlatma metnindedir. Açık rız
 
 ## 8. Uzmanla paylaşım
 
-- **Uzmanları doğrulamıyoruz.** Uzmanın kimliğini ve meslek yetkisini kontrol etmeyiz. "Uzman diploma belgesini yükledi" bilgisi yalnız uzmanın bir belge yüklediğini anlatır; bir doğrulama ya da yetki beyanı değildir. Paylaşmadan önce uzmanı gerçek hayatta tanıdığınızdan emin olun.
+- **Uzmanları doğrulamıyoruz.** Uzmanın kimliğini, unvanını ve meslek yetkisini kontrol etmeyiz; uzman hakkında bir doğrulama ya da yetki beyanı göstermeyiz. Uzmanın adı ve unvanı kendi beyanıdır. Paylaşmadan önce uzmanı gerçek hayatta tanıdığınızdan emin olun.
 - **Paylaşımı siz başlatırsınız.** Uzmanın davetini açarsınız, çocuğun bilgisini kontrol edersiniz, "Bu uzmanı tanıyorum ve çocuğun velisiyim" kutusunu işaretler ve açık rıza verirsiniz.
-- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen rutin ve adımları, "Yaptım" ve onay kayıtlarını, davranış kayıtlarını, bildirdiğiniz davranış olaylarını, ebeveyn eğitimindeki yanıtlarınızı (tamamlanan modüller, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar) ve takip planı uygulama kayıtlarınızı. Bunlar uygulamada bıraktığınız kayıtlardır. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
+- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen rutin ve adımları, "Yaptım" ve onay kayıtlarını, davranış kayıtlarını, bildirdiğiniz davranış olaylarını, ebeveyn eğitimindeki yanıtlarınızı (tamamlanan modüller, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar), uzmanın önerdiği derslerde uyguladığınız günleri, randevulara verdiğiniz yanıtları, takip planı uygulama kayıtlarınızı ve uzmanın önerilerine verdiğiniz kararları. Bunlar uygulamada bıraktığınız kayıtlardır. Uzman bu kayıtları yalnız sizin açık rızanızla görür; paylaşımı durdurduğunuz andan sonra yeni kayıtlarınızı göremez. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
 - **Siz ne görürsünüz?** Uzmanın gönderdiği rutin ve adım önerilerini, takip planını, size atadığı ebeveyn eğitimlerini ve kaydetmenizi istediği hedef davranışları. Uzmanın kendi notlarını ve gözlem verisini görmezsiniz.
 - **Uzman değişirse:** İsterseniz, ayrı bir açık rızayla, önceki uzman(lar)ın kayıtları yeni uzmanınıza yalnız okunur olarak açılır. Önceki uzmanın adı ve iletişim bilgileri gösterilmez.
 - **Geri alma:** Paylaşımı ve önceki kayıtların aktarımını Uzmanım bölümünden istediğiniz an durdurursunuz. Uzmanın erişimi hemen sona erer.
 - **Davetten önce:** Uzmanınız sizi davet ederken çocuğunuzun adını ve yaş grubunu girmiş olabilir. Bu bilgi siz onaylayana kadar yalnız davet kaydında durur; onaylamazsanız ya da süre dolarsa silinir.
-- Uzman ile aile arasındaki mesleki ilişki, ücret ve mesleki kararlar uygulamanın dışındadır; Moyo bu ilişkinin tarafı değildir.
+- **Uzman ile aile arasındaki ilişki:** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur.
 
 ## 9. Ekibimizin erişimi
 
@@ -179,7 +178,7 @@ Ekibimiz hesap bilgilerinize ve kullanım kayıtlarınıza yalnız şu amaçlarl
 
 ## 10. Hizmet sağlayıcılarımız ve yurt dışına aktarım
 
-Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağlayıcılar kullanırız. Bunlar veriyi yalnız bu iş için işler, kendi amaçları için kullanamaz.
+Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağlayıcılar kullanırız. Bunlar veriyi yalnız bu iş için işler, kendi amaçları için kullanamaz. Verinin bu sağlayıcılara ve yurt dışına aktarılmasının amacı yalnız hizmeti çalıştırmaktır (veritabanı, depolama, e-posta, ödeme, bildirim).
 
 | Sağlayıcı | Ne için | Konum |
 |---|---|---|
@@ -204,7 +203,7 @@ Güncel ve ayrıntılı liste: **Hizmet Sağlayıcılar (Alt İşleyenler) Liste
 
 - Bütün bağlantılar şifrelidir (TLS).
 - Veritabanında her kullanıcı yalnız kendi ailesini ya da kliniğini görebilir (satır düzeyi güvenlik). Çocuğun cihazı yalnız kendi profilini görür.
-- Mesaj fotoğrafları, ses kayıtları ve uzman belgeleri özel depolama alanlarında durur; yalnız kısa süreli, imzalı bağlantıyla açılır.
+- Mesaj fotoğrafları ve ses kayıtları özel depolama alanlarında durur; yalnız kısa süreli, imzalı bağlantıyla açılır.
 - Ekip paneli iki adımlı doğrulama, rol, gerekçe ve silinemez kayıtla korunur.
 - Bir veri ihlali olursa yasal süreler içinde Kişisel Verileri Koruma Kurulu'na ve etkilenen kişilere bildiririz.
 
@@ -215,17 +214,18 @@ Hiçbir sistem kusursuz değildir. Şifrenizi kimseyle paylaşmayın; çocuğunu
 | Veri | Süre |
 |---|---|
 | Hesap, aile ve klinik verisi | Hesap silinene kadar; silince gecikmeden silinir |
-| Uzmanın aile kayıtları | Klinik ya da (tek kişilik klinikte) uzman hesabı silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter. Aile ya da çocuk profili silinince o çocuğa ait uzman kayıtları da silinir. [Paylaşım bittikten sonraki saklama: [SÜRE]] |
+| Uzmanın aile kayıtları | Klinik ya da (tek kişilik klinikte) uzman hesabı silinene kadar. Ebeveyn paylaşımı geri alınca uzmanın erişimi biter; uzman o andan sonraki kayıtları göremez. Aile ya da çocuk profili silinince o çocuğa ait uzman kayıtları da silinir. Kliniğin denemesi ya da üyeliği bitince kayıtlar silinmez; uzmanın erişimi kapanır, üyelik yenilenince açılır |
 | Kullanılmayan davet bilgisi | 3 gün; bağlanmış ama onaylanmamış davet en geç 30 gün |
-| Uzman belge dosyası | Karar verilince silinir |
 | Giriş kodu deneme kayıtları | 15 dakika ile 1 gün arası |
-| Deneme hakkı kaydı (e-posta özeti) | [SÜRE] |
-| Ekip işlemleri kaydı | [SÜRE]; silinen kullanıcının e-postası bu kayda yazılmaz |
-| Abonelik ve ödeme kayıtları | [SÜRE] (vergi ve ticaret mevzuatının istediği süre) |
-| Kullanım kayıtları | [SÜRE]; sonra yalnız kimliksiz toplamlar kalır |
-| KVKK başvuru kayıtları | Başvuru kapandıktan sonra [SÜRE] |
+| Deneme hakkı kaydı (e-posta özeti) | Denemenin başladığı tarihten 2 yıl |
+| Ekip işlemleri kaydı | 5 yıl; silinen kullanıcının e-postası bu kayda yazılmaz |
+| Abonelik ve ödeme kayıtları | 10 yıl (vergi ve ticaret mevzuatının istediği süre) |
+| Bildirim kayıtları | 12 ay; isterseniz daha önce silersiniz |
+| Kullanım kayıtları | 25 ay; sonra yalnız kimliksiz toplamlar kalır |
+| KVKK başvuru kayıtları | Başvuru kapandıktan sonra 3 yıl |
+| Destek talepleri | Talep kapandıktan sonra 2 yıl; istenmeyen (spam) iletiler 30 gün |
 
-Silinen veriler yedeklerden de [SÜRE] içinde kendiliğinden çıkar. Süre dolan veriyi en geç 6 ayda bir yaptığımız periyodik imhayla siler, yok eder ya da kimliksiz hâle getiririz.
+Silinen veriler yedeklerden de en geç 30 gün içinde kendiliğinden çıkar. Süre dolan veriyi en geç 6 ayda bir yaptığımız periyodik imhayla siler, yok eder ya da kimliksiz hâle getiririz.
 
 ## 13. Hesabınızı silmek
 
@@ -240,13 +240,13 @@ KVKK md. 11 uyarınca şunları isteyebilirsiniz: verinizin işlenip işlenmedi�
 
 **Kendiniz hemen yapabilecekleriniz:** profil ve çocuk bilgilerini düzeltmek, uzman paylaşımını geri almak, cihaz bağlantısını kapatmak, hesabınızı silmek.
 
-**Başvuru yolları:** uygulamada Yasal ve gizlilik › KVKK başvurusu (Moyo Ebeveyn'de Aile › Hesap altında, Moyo Mercek'te Ayarlar altında; hesabınıza bağlıdır, kimliğinizi ayrıca kanıtlamanız gerekmez); `kvkk@moyoapp.com.tr` (kayıtlı e-posta adresinizden); [ADRES] adresine yazılı ve imzalı; KEP: [KEP ADRESİ].
+**Başvuru yolları:** uygulamada Yasal ve gizlilik › KVKK başvurusu (Moyo Ebeveyn'de Aile › Hesap altında, Moyo Mercek'te Ayarlar altında; hesabınıza bağlıdır, kimliğinizi ayrıca kanıtlamanız gerekmez); `destek@moyoapp.com.tr` (kayıtlı e-posta adresinizden; konu satırına "KVKK başvurusu" yazın); [ADRES] adresine yazılı ve imzalı; KEP: [KEP ADRESİ].
 
 Başvurunuzu en geç **30 gün** içinde **ücretsiz** yanıtlarız. Çocuğunuz adına veli olarak başvurabilirsiniz. Yanıttan memnun kalmazsanız Kişisel Verileri Koruma Kurulu'na şikâyette bulunabilirsiniz. Ayrıntı: **KVKK Başvuru Usulü** (`kvkk-basvuru`).
 
 ## 15. E-postalar ve bildirimler
 
-Size yalnız hizmetle ilgili e-postalar göndeririz: e-posta doğrulama, şifre sıfırlama, uzman daveti, abonelik ve hesap bilgileri. Bunlar reklam içermez. Bugün pazarlama e-postası göndermiyoruz; ileride gönderirsek bunu ayrı onayınızla ve kanunun öngördüğü kayıt sistemleri üzerinden yaparız. Anlık bildirimleri telefonunuzun ayarlarından kapatabilirsiniz.
+Size yalnız hizmetle ilgili e-postalar göndeririz: e-posta doğrulama, şifre sıfırlama, uzman daveti, abonelik ve hesap bilgileri. Bunlar reklam içermez. Tanıtım ve kampanya bildirimi ya da e-postası yalnız ayrı izninizle gönderilir; bu izin Ayarlar'da ayrı bir anahtardır, kapalı başlar ve istediğiniz an kapatılır. İzin verirseniz bu iletileri kanunun öngördüğü kayıt sistemleri (İYS) üzerinden göndeririz. Hizmetle ilgili bildirimler ve e-postalar bu izne bağlı değildir. Hangi bildirimleri alacağınızı uygulamanın Ayarlar bölümünden seçersiniz; anlık bildirimleri telefonunuzun ayarlarından da kapatabilirsiniz. Telefonla (SMS) doğrulama bugün yoktur; açılırsa telefon numarasının nasıl işleneceği önceden ayrıca bildirilir.
 
 ## 16. Değişiklikler
 
@@ -260,16 +260,19 @@ Yürürlük: [TARİH] · Sürüm: v1
 ## 17. İletişim
 
 [AD SOYAD], [ADRES]
-Kişisel veri konuları: `kvkk@moyoapp.com.tr` · Diğer konular: `destek@moyoapp.com.tr`
+E-posta: `destek@moyoapp.com.tr` (kişisel veri başvurularında konu: "KVKK başvurusu")
 
 ## Avukata notlar
 
-1. **Uzman notlarında veri sorumlusu (4. bölüm, seçenek A/B):** Yayından önce biri seçilmeli; seçim Uzman Hizmet Sözleşmesi ve Veri İşleme Eki, KVKK başvuru usulü (klinik yönlendirmesi) ve ihlal prosedürüyle aynı olmalı (`hukuk_notlari.md` 5/1).
-2. **Davranış kayıtları, davranış olayları, serbest metin:** 14 Kasım kararıyla (`hukuk_notlari.md` M) metin bunlara "sağlık verisi" demiyor, "özel nitelikli veri içerebilir" diyor; uzmanla paylaşımda açık rıza (`uzman-paylasim-v1`) yerinde. Ailenin kendi kullanımı için (paylaşım olmadan) ayrı açık rıza akışı yok (`00-olgular` §3); bu kayıtların aile içinde tutulmasının md. 6 karşısındaki dayanağı ve ayrı onay gerekip gerekmediği karara bağlanmalı. `02-ornekler` "davranış kayıtları: açık rıza" diyor; bu metin onları açık rıza tablosuna yalnız uzmanla paylaşım üzerinden koydu.
-3. **Özel nitelikli veri içerebilecek kayıtların yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi: Frankfurt, Almanya; AB bölgesi (10 Kasım 2026'da dolduruldu).
-4. **Deneme hakkı e-posta özeti:** SHA-256 özeti tahmin edilebilir (e-posta adresleri sınırlı küme) olduğundan takma adlı kişisel veri sayılabilir; hesap silindikten sonra meşru menfaatle saklanması ve süresi ([SÜRE], öneri 2 yıl) onaylanmalı.
+1. **Uzman notlarında veri sorumlusu (4. bölüm):** kullanıcı kararı (20 Kasım 2026, avukat dosyası A.4): eski seçenek A seçildi, B silindi: uzmanın girdiği kayıtlarda uzman (klinik) veri sorumlusu, Moyo veri işleyen; uzman kaydı kendi beyanıyla ve sorumluluğunda girer, Moyo içeriği denetlemez ve doğrulamaz. Uzman Hizmet Sözleşmesi, Veri İşleme Eki, KVKK başvuru usulü (klinik yönlendirmesi) ve ihlal prosedürü buna göre eşitlendi (`hukuk_notlari.md` 5/1). Avukat teyidi.
+2. **Davranış kayıtları, davranış olayları, serbest metin:** kullanıcının konumu (20 Kasım 2026, A.2): kayıtlar ebeveynin uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır, özel nitelikli veri toplanmaz; 3. bölümde bu konum cümlesi yazıldı. Koruma ağı kaldı: serbest metne tanı, ilaç ya da sağlık bilgisi yazılmaması istenir, yazılırsa güvenlik önlemleri ve uzmanla paylaşımda açık rıza (`uzman-paylasim-v1`) yerinde. Konumumuz bu; md. 6 kapsamının teyidi avukatta. Ailenin kendi kullanımı için (paylaşım olmadan) ayrı açık rıza akışı yok (`00-olgular` §3); bu kayıtların aile içinde tutulmasının md. 6 karşısındaki dayanağı ve ayrı onay gerekip gerekmediği karara bağlanmalı. `02-ornekler` "davranış kayıtları: açık rıza" diyor; bu metin onları açık rıza tablosuna yalnız uzmanla paylaşım üzerinden koydu.
+3. **Özel nitelikli veri içerebilecek kayıtların yurt dışına aktarımı (10. bölüm köşeli parantez):** 2024 sonrası md. 9 + md. 6 birlikte; standart sözleşme yeterli mi, ayrıca açık rıza gerekir mi. Supabase bölgesi: Frankfurt, Almanya; AB bölgesi (10 Kasım 2026'da dolduruldu). 10. bölümün başına aktarımın amacı (hizmeti çalıştırmak: veritabanı, depolama, e-posta, ödeme, bildirim) yazıldı (20 Kasım 2026, C.13). Kullanıcı görüşü: Kurul bildirimi gerekmez; KVKK md. 9 standart sözleşme bildirimi yasal yükümlülük olabilir, teyit avukatta (metindeki bildirim cümlesi olduğu gibi bırakıldı).
+4. **Deneme hakkı e-posta özeti:** SHA-256 özeti tahmin edilebilir (e-posta adresleri sınırlı küme) olduğundan takma adlı kişisel veri sayılabilir; hesap silindikten sonra meşru menfaatle saklanması onaylanmalı. Süre: denemenin başladığı tarihten 2 yıl (kullanıcı 20 Kasım 2026'da `42` önerilerini uygun buldu; sistem `retention_run` `trial_history_days` 730).
+4a. **Saklama süreleri (12. bölüm, 20 Kasım 2026):** `[SÜRE]`'ler `42` §4 önerileriyle dolduruldu (kullanıcı: "uygun"); sistemdeki `retention_run` ayarlarıyla aynı (bildirim 365 gün, kullanım 760 gün ≈ 25 ay, denetim 1825 gün, KVKK 1095 gün, destek 730 gün). Ödeme olaylarının 10 yılı ve yedeklerin en çok 30 günü sistemde zamanlanmış iş değildir (ödeme olaylarında takma adlaştırma ve silme işi yok; yedek süresi Supabase planına bağlı). Bildirim kayıtları ve destek talepleri satırları tabloya eklendi. Üyeliği biten kliniğin kayıtları süresiz kalır (kullanıcı kararı; `42` satır 9a). Paylaşım bittikten sonra uzman kayıtları için `42` satır 9'daki "12 ay" önerisi sistemde yok; metne sistemin davranışı yazıldı (klinik silinene kadar).
 5. **Bildirim yolu ve planlanan araçlar:** (a) Expo yedek bildirim yolu (`00-olgular.md` §5) bildirim başlığını ve metnini (çocuk adı geçebilir) ABD'ye taşıyor; canlıda kapatılması ya da alt işleyen olarak kalması kararı; bildirim metnini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir. (b) `CANLIYA_ALMA.md` 4. bölümde ParentApp ve ClinicApp için **Sentry + PostHog** planlanmış; eklenirse "üçüncü taraf analiz/izleme yok" cümlesi ve "Bir bakışta" kutusu değişmeli, ClinicApp web'de çerez onayı gerekir.
-6. **Aile ya da çocuk silinince uzman kayıtlarının silinmesi (12–13. bölüm):** Bugünkü sistemde uzmanın o çocuk için tuttuğu notlar, hedefler ve takip planı da siliniyor; metin bunu açıkça yazıyor. Uzmanın mesleki kayıt saklama yükümlülüğüyle çatışabilir (`00-olgular.md` §2, `22-uzman-hizmet-sozlesmesi.md` notu 4).
+6. **Aile ya da çocuk silinince uzman kayıtlarının silinmesi (12–13. bölüm):** Bugünkü sistemde uzmanın o çocuk için tuttuğu notlar, hedefler ve takip planı da siliniyor; metin bunu açıkça yazıyor. Kullanıcı kararı (20 Kasım 2026, B.8): sorun değil; uzmana kayıtta en baştan söylenir, uzmanın yasal kayıt ve saklama yükümlülüğü uzmandadır (Uzman Hizmet Sözleşmesi 6.4–6.4-a).
+6a. **Genel ilke (1. bölüm; kullanıcı isteği 20 Kasım 2026):** sorumluluğun Moyo'da olmadığı ana fikri bütün sözleşme ve aydınlatma metinlerinde aynı sözlerle yazıldı. Her sorumsuzluk cümlesinde "yasanın izin verdiği en geniş ölçüde" ve "kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır" sınırı bilerek korundu: TBK md. 115 ve TKHK md. 5 (haksız şart) karşısında sınırsız bir sorumsuzluk kaydı bütünüyle geçersiz sayılabilir; sınır maddeyi ayakta tutar. Aydınlatma ve gizlilik metninde ayrıca "kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır" eklendi (KVKK yükümlülükleri sözleşmeyle kaldırılamaz).
+6b. **Uzman belge yükleme (eski 4. bölüm):** kullanıcı kararı (20 Kasım 2026, B.7): özellik sistemden kaldırıldı; belge, rozet, e-Devlet belgesi ve BACB anlatımı bu metinden çıktı. `clinician_verifications` tablosu durur; yeniden açılırsa önce metinler.
 7. **Tek çocuk profilini silme:** Veritabanı ebeveynin çocuk satırını silmesine izin veriyor, ama ParentApp'te bunun ekranı yok (`README.md` sorun 5). 13. bölüm ve hak listesi "çocuğun profilini silebilir" diyor; canlıdan önce ekran yapılmalı ya da cümle çıkarılmalı.
 8. **Onay kayıtlarının ispatı:** çözüldü (27 Ekim): `legal_acceptances` artık hesap silinince silinmiyor; rastgele hesap kimliğiyle (e-posta/ad olmadan) saklama süresince kalır. Süre ve dayanak (md. 5/2-e) avukata.
 9. **Çocuğun kendi görüşü:** Yaş grubu C (13+) var. Ayırt etme gücü olan küçük için (ör. 15+) ayrıca bilgilendirme ya da görüş alınması gerekir mi (`hukuk_notlari.md` 5/6).

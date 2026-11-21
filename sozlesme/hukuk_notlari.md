@@ -245,3 +245,43 @@ Fiyat kararı (kullanıcı, 20 Kasım 2026; `ekonomi.md` 9): Moyo Premium aylık
 - Çelişki: `hukuk/45` 1.5 ("ücretsiz" yalnız gerçekten ücretsiz olan için). Avukata madde 30 olarak sorulur; tanıtım sayfası, mağaza metni ya da reklamda da kullanılacaksa Marketing §7.1 kontrolünde aynı soru geçerlidir (`ekonomi.md` 9 "tanıtımda 2 ay ücretsiz").
 - Avukat uygun bulmazsa: rozet "10 ay fiyatına 12 ay" olur (iki dosyada tek satır).
 - **Kapandı (kullanıcı kararı 20 Kasım 2026: "2 ay ücretsiz sorun yok, takipten kaldır"):** madde 30 avukata sorulmaz; "2 ay ücretsiz" Moyo ve Moyo Mercek uygulamalarında ve iki tanıtım sitesinde (moyoapp.com.tr `/ebeveyn/fiyat/`, mercek.moyoapp.com.tr `/fiyat`) kalır. `hukuk/45` 1.5 için bu ifade kullanıcı kararıyla istisna; Marketing §7.1 kontrolünde ayrıca sorulmaz.
+
+### P. Kullanıcının hukuk kararları (20 Kasım 2026; karar belgesi https://claude.ai/artifact/QuUn4gUYnvKj6rigcVT5tB)
+
+1. **Uygulama içi kısa metinler (`hukuk/50` §15):** karar verilmedi, bekliyor.
+2. **Rozeti olmayan uzman:** Moyo Ebeveyn'de "Belgesi incelenmedi" yazısı kalkar, yerine bir şey yazılmaz (A). Rozet yalnız belge yüklenmişse "Uzman diploma belgesini yükledi" der; özellik lansmanda kapalı. Moyo penceresi uygular.
+3. **Paylaşım ya da klinik silinince ailenin kayıtları:** ailenin kendi girdiği ebeveyn eğitimi yanıtları ve davranış olayları kalır, uzmanın erişimi kapanır (A). Aile ya da çocuk silinirse hepsi silinir. Sunucu önerisi `proposed/20261120200000_family_keeps_records.sql` + test `test_family_keeps_records.sql` (20 Kasım 2026; uygulanmadı): uzmanın hesabı ya da paylaşım kaydı silinince Etkin / Ustalaştı eğitimler, ailenin yanıtları, yapılacakları ve davranış olayları ailede salt okunur kalır (`family_kept_trainings()`), taslaklar ve uzmanın gözlem verisi silinir; uzman ve öteki klinikler erişemez. Aynı öneri canlıdaki bir hatayı düzeltir: eğitimde modül tamamlamış ebeveyn, ailede başka ebeveyn varken hesabını silemiyordu. Ardından Moyo penceresi "Önceki uzmanından kalan eğitimler" bölümünü gösterir. Açık uçlar karar belgesinde (3a–3e).
+4. **Mercek tanıtım sayfasına "Araştırmalarla desteklenen davranış yaklaşımları…" cümlesi:** eklenmez (B). M.2'deki öneri kapandı.
+5. **Bildirim ve iptal akışı sınırları:** kullanıcı ayrıntı istedi; alt kararlar karar belgesinde ayrı tabloda.
+6. **Karşılama anketi:** anket sayfalarının köşesinde küçük bir "Geç" düğmesi olur (kullanıcının kendi seçeneği; 28 Ekim "atlanamaz" kararının yerine geçer). Uzman aydınlatmasındaki "isteğe bağlı" böylece doğru kalır. Moyo Mercek penceresi uygular.
+7. **Moyo Ebeveyn tanışma soruları:** hepsi "Geç" ile atlanabilir (A). Moyo penceresi uygular.
+8. **Üçüncü taraf hata/analiz aracı (Sentry, PostHog):** lansmanda yok (A); "üçüncü taraf analiz yok" cümleleri kalır.
+9. **Lansmandan önceki son iş** (uzmana bağlı ailenin ne ödeyeceği, bireysel mi şirket mi, ad ve adres): lansman günü, avukatın yanıtıyla (`DURUM.md` HATIRLATMA).
+
+### R. Kullanıcının avukat sorularına yanıtları ve bildirim / iptal alt kararları (20 Kasım 2026; karar belgesi)
+
+Kullanıcının konumu; metinlere işlendi (koordinatör, 20 Kasım 2026). Hukuki kesinlik avukatın teyidiyle; teyit isteyenler "(teyit)" diye işaretli.
+
+- **Genel ilke:** Moyo'da sorumluluk ve yükümlülük yoktur; her kullanıcı kendi bıraktığı kayıttan sorumludur; uzman, ebeveyn ve çocuk arasındaki ilişki onların arasındadır. Metinlerde "yasanın izin verdiği en geniş ölçüde" ve "kast, ağır kusur, tüketicinin vazgeçilemez hakları saklı" sınırı korunur (sınırsız sorumsuzluk maddesi bütünüyle geçersiz sayılabileceği için) (teyit).
+- **A.1 Sağlık hizmeti:** girmez; sözleşmelerde açıkça yazılır (sağlık hizmeti, uzaktan sağlık hizmeti, tıbbi cihaz değildir).
+- **A.2 Özel nitelikli veri:** kayıtlar kullanıcının uygulamayı kullanma alışkanlığına ilişkin takip kayıtlarıdır; Moyo sağlık verisi toplamaz ve bu amaçla işlemez. Serbest metne sağlık bilgisi yazılmaması uyarısı ve koruma önlemleri kalır (teyit: md. 6 kapsamı).
+- **A.3** Serbest metin uyarısı ve açık rıza yeterli.
+- **A.4 Veri sorumlusu / işleyen:** uzman kendi beyanıyla veri girer; uzmanın girdiği kayıtlarda uzman veri sorumlusu, Moyo veri işleyen (Gizlilik Politikası A/B seçeneği kapandı); Moyo içerikten sorumlu değildir.
+- **A.5 VERBİS:** gerekmez (gerçek kişi, ana faaliyet özel nitelikli veri işleme değil) (teyit).
+- **B.6 Sorumluluk sınırı:** uygulanır; uzman, ebeveyn ve çocuk ilişkisi Moyo'nun sorumluluğunda değildir.
+- **B.7 Belge yükleme:** özellik sistemden kaldırıldı (kullanıcı); herkese açık metinlerden çıktı, `clinician_verifications` tablosu durur; yeniden açılırsa önce metinler. Belge itirazı sorusu (README sorun 8) konusuz kaldı.
+- **B.8 Uzman kayıtları:** saklama yükümlülüğü uzmanda; aile paylaşımı sonlandırınca uzman yeni veri görmez; aile ya da çocuk silinince uzmanın o aileye ait kayıtları da silinir; bu uzmana en başta (sözleşme, kayıt onayı) söylenir (README sorun 4 karara bağlandı).
+- **B.9 Moyo içeriği:** genel bilgilendirme olarak kalır; sözleşmelerde madde ve sorumsuzluk cümlesi.
+- **B.10 Gerçek kişi:** bireysel ilerlenir.
+- **C.11 Açık rıza:** uzmana bağlanırken ayrı açık rıza ekranı kalır; sözleşme bu ekranın varlığını ve kapsamını anlatır (rıza sözleşmeye gömülmez). Davranış kaydının dayanağı sözleşmenin ifası.
+- **C.12 Paylaşım rızası:** `uzman-paylasim-v1` ile devam; metin yeni kalemleri kapsar.
+- **C.12b Çocuk:** 18 yaşından küçük çocuğun hak ve yükümlülükleri adına ebeveyn sorumludur.
+- **C.13 Yurt dışı aktarım:** amaç (hizmeti çalıştırmak: veritabanı, depolama, e-posta, ödeme, bildirim) metinlerde başta yazılı; kullanıcı görüşü: Kurul bildirimi gerekmez (teyit: KVKK md. 9 standart sözleşme bildirimi).
+- **D.14 Tanıtım dili:** risk yok (kullanıcı); tanı adları tanıtımdan kaldırıldı. M.2 riski kullanıcıca kapatıldı.
+- **D.15 Saklama süreleri:** `hukuk/42` önerileri uygun; `[SÜRE]`'ler dolduruldu. İstisna 42 satır 9a: üyeliği biten kliniğin verisi süresiz tutulur (5l) (teyit: KVKK md. 4 "gerektiği kadar").
+- **D.16 Kampanya / SMS:** tanıtım bildirimi ve e-postası yalnız ayrı izinle (Ayarlar'da ayrı anahtar, kapalı başlar); SMS doğrulaması açılırsa ayrı bilgilendirme.
+- **Ad:** "Moyo" ya da "Platform" bütün uygulamaları anlatır; tekil ve çoğul birbirinin yerine kullanılır (çekirdek madde 10).
+- **Kalan avukat soruları:** bildirim (N 1–10), iptal (N 11–15), sürüm (O), zorunlu anket dayanağı ve takvim aboneliği alıcısı, tek çocuk / oyun kaydı silme yolu (README sorun 5).
+
+**Bildirim ve iptal alt kararları (5):** 5a Moyo Ebeveyn'de günde bir bildirimi geçmemeye çalışılır; çocuğun adım işaretleme bildirimleri ebeveynin ayarında açılır / kapanır, günün bütün adımları bitince tek "tamamlandı" bildirimi gider (öneri `proposed/20261120210000_parent_notification_prefs.sql`, hazırlanıyor) · 5c kampanya izni ayrı ve kapalı başlar · 5d e-posta özetleri isteğe bağlı · 5e uzmanların %10'u karşılaştırma grubu · 5f iptal anında aylık planda %50 indirim (Moyo Ebeveyn 2 ay, Moyo Mercek 3 ay) · 5g ara verme yerine 1 ay ücretsiz · 5i ziyaret başına tek teklif, kabul edilen teklif Ebeveyn'de 6, Mercek'te 12 ayda bir · 5l üyelik bitince Mercek verisi süresiz tutulur. Kullanıcı ayrıntı istedi: 5b, 5h, 5j, 5k (karar belgesinde).
+

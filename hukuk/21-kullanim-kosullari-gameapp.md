@@ -5,6 +5,7 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md` §1, §2, §4. Ana sözleşme: `20-kullanim-kosullari-parentapp.md`. Hukuki görüş değildir.
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Çekirdek 3 → 2.4 (2.3'teki "tanı ya da puan değildir" oraya taşındı), çekirdek 9 → 11 (yeni; İletişim 12 oldu), çekirdek 10 → 1.1. Oyun metninde iş nesnesi "macera" (aile tarafında rutin ve adım).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı 1.1; tıbbi cihaz cümlesi 2.4; çocuğun hak ve yükümlülükleri 3.4; genel ilke ve uzman–aile ilişkisi 11 (kısa biçim).
 
 ## Kısaca
 
@@ -21,7 +22,7 @@
 
 ### 1. Kapsam ve kabul
 
-1.1. Bu koşullar, Moyo'yu işleten `[AD SOYAD]` ("biz") ile çocuğunu Moyo Oyun'a bağlayan veli ("siz") arasındadır. "Moyo", `[AD SOYAD]` tarafından işletilen uygulamaları ifade eder.
+1.1. Bu koşullar, Moyo'yu işleten `[AD SOYAD]` ("biz") ile çocuğunu Moyo Oyun'a bağlayan veli ("siz") arasındadır. "Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
 
 1.2. Bu koşulları **çocuğunuz kabul etmez.** Çocuğunuzu oyuna ilk kez bağlamadan önce Moyo Ebeveyn'de siz, veli ya da yasal temsilci olarak kabul edersiniz. Onayınız metnin sürümü ve zamanıyla kaydedilir.
 
@@ -35,7 +36,7 @@
 
 2.3. Oyundaki seviye, deneyim puanı (XP), yıldızlar ve evcil hayvanın göstergeleri **yalnız oyun içindir;** çocuğunuz hakkında bir değerlendirme değildir. Evcil hayvan hastalanmaz ve ölmez.
 
-2.4. **Tanı, tedavi ve acil durum.** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda 112 aranır.
+2.4. **Tanı, tedavi ve acil durum.** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda 112 aranır. Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır.
 
 ### 3. Oyuna bağlanma ve kullanım
 
@@ -45,7 +46,7 @@
 
 3.3. Cihaz değişirse yeni bir kodla bağlanırsınız; oyun sunucudaki yedekten kaldığı yerden devam eder.
 
-3.4. Çocuğunuzun oyunu ne zaman ve ne kadar oynadığını gözetmek size aittir.
+3.4. **Çocuk.** 18 yaşından küçük çocuğun bu hizmetle ilgili hak ve yükümlülüklerini velisi ya da yasal temsilcisi olan ebeveyn kullanır ve üstlenir. Çocuğun hesabını veli açar ve yönetir; çocuğun kullanımından, çocuk adına verilen onaylardan ve girilen kayıtlardan ebeveyn sorumludur. Çocuğunuzun oyunu ne zaman ve ne kadar oynadığını gözetmek size aittir.
 
 ### 4. Coin ve Güneş Taşı
 
@@ -97,11 +98,15 @@ Moyo Oyun'un yazılımı, karakterleri, görselleri, müziği, sesleri ve metinl
 
 ### 11. Sorumluluk
 
+**Genel ilke.** Moyo, kullanıcıların kendi kayıtlarını tutması ve isterse paylaşması için bir araç sunar. Moyo; ebeveyn, çocuk ve uzman arasındaki ilişkinin, kullanıcıların girdiği kayıtların ve bu kayıtlara dayanarak verilen kararların tarafı değildir ve bunlar için bir sorumluluk ya da yükümlülük üstlenmez. Bu ilke yasanın izin verdiği en geniş ölçüde geçerlidir; kast, ağır kusur, tüketicinin vazgeçilemez hakları ve kişisel verilerin korunmasına ilişkin kanuni yükümlülükler saklıdır. Her kullanıcı kendi girdiği kayıttan sorumludur.
+
+**Uzman ile aile arasındaki ilişki.** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur.
+
 **Sorumluluğun sınırı.** Moyo'nun sorumluluğu, yasanın izin verdiği en geniş ölçüde, doğrudan zararlarla ve son 12 ayda ödenen ücretle sınırlıdır. Kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Sorumlulukla ilgili öteki konularda Moyo Ebeveyn Kullanım Koşulları 15. madde geçerlidir.
 
 ### 12. İletişim
 
-`[AD SOYAD]`, `[ADRES]`. Destek: `destek@moyoapp.com.tr`. Kişisel veriler: `kvkk@moyoapp.com.tr`.
+`[AD SOYAD]`, `[ADRES]`. İletişim (kişisel veri başvuruları dahil): `destek@moyoapp.com.tr`; KVKK başvurusunda konu satırına "KVKK başvurusu" yazmanızı rica ederiz.
 
 Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`.
 
@@ -111,3 +116,4 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`.
 2. **Silme yolu:** olgulara göre çocuğun verisi yalnız ebeveyn hesabı silinince siliniyor; tek bir çocuk profilini ya da yalnız oyun kaydını silme yolu ve oyunun içinden silme talebi yolu yok. Apple 5.1.1(v) ve KVKK md. 7 açısından yeterli mi, yoksa ParentApp'e "Çocuk profilini sil" eklenmeli mi?
 3. **Sorumluluk ve uyuşmazlığın atıfla düzenlenmesi:** bu metin değişiklik ve uyuşmazlık için Moyo Ebeveyn koşullarına atıf yapıyor; çekirdek 3 (2.4) ve 9 (11) burada kısa biçimde tekrarlandı. Oyun ücretsiz olduğu için "son 12 ayda ödenen ücret" sınırı oyun bakımından sıfıra iner; tüketiciye karşı geçerliliği (TKHK md. 5)? Veli ParentApp koşullarını zaten kabul ettiği için atıf yeterli mi, yoksa bu maddeler burada da tekrarlanmalı mı?
 4. "Aile aboneliği bitince çocuk cezalandırılmaz (oyun ve birikimler kalır)" kuralı karar bekliyor (`CANLIYA_ALMA.md` 2.2); kabul edilirse 4. maddeye bir cümle eklenir.
+5. **20 Kasım 2026 (kullanıcının avukat sorularına yanıtları):** genel ilke ve uzman–aile ilişkisi (11) Moyo Ebeveyn Kullanım Koşulları'yla aynı sözlerle kısa biçimde; çocuğun hak ve yükümlülüklerini veli kullanır ve üstlenir (3.4; TMK md. 342). Sorumsuzluk cümlelerindeki "yasanın izin verdiği en geniş ölçüde" ve "kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır" sınırı TBK md. 115 ve TKHK md. 5 karşısında maddeyi ayakta tutmak için korundu.

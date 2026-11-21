@@ -5,7 +5,13 @@
 //        `adult`: "18 yaşından büyüğüm" kutusu (form yetişkinler içindir; çocuk ürünü, Apple 1.3/5.1.4).
 //        `website` gizli tuzak alanıdır (insan doldurmaz); 3 saniyeden kısa doldurulan form sessizce yok sayılır.
 // Kayıt SQL'de: support_request_create (proposed/20261102210000_support.sql; e-posta başına 24 saatte 3, saatte toplam 60).
-// Yayın: Supabase → Edge Functions → support, "Verify JWT" KAPALI. Secret: LEGAL_PUBLIC_URL (zaten var).
+// Ekip bildirimi (kullanıcı kararı 20 Kasım 2026, "Destek formu kalsın"): her yeni talepte SUPPORT_NOTIFY_TO adresine
+//   (yoksa destek@moyoapp.com.tr) tek satırlık e-posta: talep no, uygulama, konu, "Panelde aç". Kişinin e-postası, adı ve
+//   mesajı bildirime GİRMEZ; kişisel veri panelde kalır. Gönderim Resend (RESEND_API_KEY + MAIL_FROM; gönderen adres
+//   MAIL_FROM'un alan adında noreply@) ya da test SMTP'si (SMTP_USER + SMTP_PASS, invite-email ile aynı). Başarısız
+//   bildirim talebi düşürmez (en çok 4 sn beklenir, yalnız hata kodu günlüğe yazılır).
+// Yayın: Supabase → Edge Functions → support, "Verify JWT" KAPALI. Secret: LEGAL_PUBLIC_URL (zaten var); isteğe bağlı
+//   ADMIN_PANEL_URL (panelin adresi; "Panelde aç" bağlantısı için) ve SUPPORT_NOTIFY_TO.
 // Testi index.test.ts (node --experimental-strip-types --test supabase/functions/support/*.test.ts); Deno.serve yalnız Deno'da.
 
 export const APPS = ['parent', 'child', 'clinic', 'other'] as const;
@@ -56,8 +62,30 @@ export function supportPage(publicUrl: string): string | null {
   return base ? `${base}/destek` : null;
 }
 
+export const APP_LABELS: Record<string, string> = { parent: 'Moyo', child: 'Moyo Oyun', clinic: 'Moyo Mercek', other: 'Diğer' };
+export const TOPIC_LABELS: Record<string, string> = {
+  account: 'Hesap ve giriş', subscription: 'Abonelik ve ödeme', bug: 'Hata', privacy: 'Kişisel veriler (KVKK)',
+  clinic: 'Klinik ve ekip', other: 'Diğer',
+};
+export const NOTIFY_TO = 'destek@moyoapp.com.tr';
+
+// Ekibe giden bildirim: yalnız talep no, uygulama, konu ve panel bağlantısı (e-posta, ad, mesaj yok).
+export function teamNotice(ref: string, x: Pick<Input, 'app' | 'topic'>, panelUrl: string) {
+  const app = APP_LABELS[x.app] ?? 'Diğer', topic = TOPIC_LABELS[x.topic] ?? 'Diğer';
+  const base = panelUrl.replace(/\/+$/, '');
+  const link = /^https:\/\//.test(base) ? `${base}/#/destek` : '';
+  const line = `Yeni destek talebi ${ref} · ${app} · ${topic}`;
+  const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  return {
+    subject: line,
+    text: link ? `${line}\nPanelde aç: ${link}` : `${line}\nYönetim paneli › Destek`,
+    html: `<p>${esc(line)}</p><p>${link ? `<a href="${esc(link)}">Panelde aç</a>` : 'Yönetim paneli › Destek'}</p>`,
+  };
+}
+
 export async function handle(req: Request, env: (k: string) => string,
-                             create: (x: Input) => Promise<{ ref?: string; error?: string } | null>): Promise<Response> {
+                             create: (x: Input) => Promise<{ ref?: string; error?: string } | null>,
+                             notify?: (ref: string, x: Input) => Promise<void>): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   if (req.method === 'GET' || req.method === 'HEAD') {
     const to = supportPage(env('LEGAL_PUBLIC_URL'));
@@ -75,7 +103,15 @@ export async function handle(req: Request, env: (k: string) => string,
   if (pre) return json({ error: MESSAGES[pre][1] }, MESSAGES[pre][0]);
   let r: { ref?: string; error?: string } | null = null;
   try { r = await create(x); } catch { r = null; }
-  if (r?.ref) return json({ ok: true, ref: r.ref });
+  if (r?.ref) {
+    if (notify) {
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const limit = new Promise<void>((done) => { timer = setTimeout(done, 4000); });
+      await Promise.race([notify(r.ref, x).catch(() => {}), limit]);
+      clearTimeout(timer);
+    }
+    return json({ ok: true, ref: r.ref });
+  }
   const [status, msg] = MESSAGES[r?.error ?? 'server'] ?? MESSAGES.server;
   return json({ error: msg }, status);
 }
@@ -89,5 +125,28 @@ if (typeof Deno !== 'undefined') {
       { p_app: x.app, p_topic: x.topic, p_email: x.email, p_name: x.name, p_message: x.message });
     if (error) { console.error('support_request_create', error.code); return null; }
     return data as { ref?: string; error?: string };
+  }, async (ref, x) => {
+    const m = teamNotice(ref, x, env('ADMIN_PANEL_URL'));
+    const to = env('SUPPORT_NOTIFY_TO') || NOTIFY_TO;
+    try {
+      if (env('RESEND_API_KEY') && env('MAIL_FROM')) {
+        const from = `noreply@${env('MAIL_FROM').split('@')[1]}`;
+        const r = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${env('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: `Moyo Destek <${from}>`, to: [to], subject: m.subject, text: m.text, html: m.html }),
+        });
+        if (!r.ok) throw new Error(`resend ${r.status}`);
+      } else if (env('SMTP_USER') && env('SMTP_PASS')) {
+        const nodemailer = (await import('npm:nodemailer@7.0.9')).default;
+        const port = Number(env('SMTP_PORT') || 465);
+        const t = nodemailer.createTransport({ host: env('SMTP_HOST') || 'smtp.gmail.com', port, secure: port === 465,
+                                               auth: { user: env('SMTP_USER'), pass: env('SMTP_PASS') } });
+        await t.sendMail({ from: { name: 'Moyo Destek', address: env('SMTP_USER') }, to, subject: m.subject, text: m.text, html: m.html });
+      }
+    } catch (e) {
+      const x2 = e as { code?: string; message?: string };
+      console.error('support notify', x2.code ?? (String(x2.message ?? '').startsWith('resend') ? x2.message : 'error'));
+    }
   }));
 }

@@ -3,15 +3,18 @@
 | Nerede | Herkese açık adres (`legal` sunucu işlevi, alan adı: `https://moyoapp.com.tr/yasal/alt-isleyenler`); Gizlilik Politikası 10. bölümden ve aydınlatma metinlerinden bağlantı; Uzman Hizmet Sözleşmesi Veri İşleme Eki'nden atıf; üç uygulamada Ayarlar › Yasal metinler | Dayanak | KVKK md. 9 (7499 s. Kanun ile 2024 değişikliği), md. 10, md. 11/1-ç, md. 12/2; Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar Hakkında Yönetmelik (2024) |
 
 > Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
+> 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): aktarım amacı başa yazıldı (Kısaca), Moyo/Platform tanımı (1), Supabase satırında belge ve "özel nitelikli" nitelendirmesi çıktı (3.1), tek iletişim adresi `destek@`.
 
 ## Kısaca
 
 Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman) çalıştırmak için bizim adımıza ve talimatımızla çalışan birkaç hizmet sağlayıcı kullanırız. Bu sayfa hepsini, ne için kullandığımızı, hangi veriye eriştiklerini, nerede olduklarını ve yurt dışı aktarımı hangi güvenceyle yaptığımızı gösterir. Reklam ağı, veri satın alan ya da analiz/izleme yapan bir sağlayıcı **yoktur**. Yapay zekâ hizmetine veri gönderilmez. Yeni bir sağlayıcı eklemeden önce bu listeyi güncelleriz.
 
+**Aktarımın amacı:** Verinin bu sağlayıcılara ve yurt dışına aktarılmasının amacı yalnız hizmeti çalıştırmaktır (veritabanı, depolama, e-posta, ödeme, bildirim). Sağlayıcılar veriyi kendi amaçları için kullanamaz.
+
 ## 1. Tanımlar
 
 - **Veri sorumlusu:** Moyo'yu işleten [AD SOYAD] ("biz").
-- **Moyo:** "Moyo", [AD SOYAD] tarafından işletilen uygulamaları ifade eder.
+- **Moyo ya da Platform:** "Moyo" ya da "Platform": [AD SOYAD] tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer.
 - **Alt işleyen (hizmet sağlayıcı):** Kişisel veriyi yalnız bizim adımıza ve talimatımızla işleyen şirket. Veriyi kendi amaçları için kullanamaz.
 - **Bağımsız veri sorumlusu:** Veriyi kendi amaçları için de işleyen ve kendi gizlilik politikasına tabi olan şirket (ör. App Store satışında Apple).
 
@@ -34,8 +37,8 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 | | |
 |---|---|
 | Rol | Alt işleyen |
-| Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar, davranış kayıtlarındaki ses kayıtları ve uzman belgeleri için özel dosya depolama; bildirim, e-posta ve belge ön kontrolü gibi sunucu işlevleri; zamanlanmış işler |
-| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; rutinler ve adımlar, mesajlar, oyun kaydı; davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, tanışma yanıtları ve uzman notları gibi özel nitelikli veri içerebilecek kayıtlar; kullanım ve güvenlik kayıtları |
+| Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar ve davranış kayıtlarındaki ses kayıtları için özel dosya depolama; bildirim ve e-posta gibi sunucu işlevleri; zamanlanmış işler |
+| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; rutinler ve adımlar, mesajlar, oyun kaydı; davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, tanışma yanıtları ve uzman notları gibi kullanıcıların kendi girdiği takip kayıtları; kullanım ve güvenlik kayıtları |
 | İlgili kişiler | Ebeveynler, çocuklar, uzmanlar, ekip üyeleri |
 | Konum | Frankfurt, Almanya; AB bölgesi |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + imzadan sonra 5 iş günü içinde Kurul'a bildirim |
@@ -142,15 +145,17 @@ Her alt işleyenle yazılı bir veri işleme sözleşmesi yapar ya da sağlayıc
 
 Her güncellemede bu sayfanın sürümü (v1, v2 …) ve tarihi değişir; eski sürümler saklanır. Liste yılda en az bir kez gözden geçirilir.
 
-Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `kvkk@moyoapp.com.tr`
+Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `destek@moyoapp.com.tr`
 
 ## Avukata notlar
 
 1. **Standart sözleşme pratiği:** Supabase, Apple, RevenueCat, Resend ve Cloudflare gibi yabancı şirketlerin Kurul'un Türkçe standart sözleşmesini değiştirmeden imzalaması pratikte zor olabilir. İmzalamazlarsa hangi yol kalır (bağlayıcı şirket kuralları, arızi aktarım istisnası, açık rıza)? Kurul'a bildirimin veri sorumlusunca mı veri işleyence mi yapılacağı ve tek bildirimle birden çok sağlayıcının kapsanıp kapsanamayacağı.
 2. **Apple'ın rolü:** Satışta bağımsız veri sorumlusu, APNs'te alt işleyen olarak yazıldı. Bu ayrım ve APNs için ayrıca sözleşme/güvence gerekip gerekmediği. Bildirim metninde çocuk adı geçiyor; bildirim içeriğini en aza indirmek (ör. "Yeni bir bildirimin var") tercih edilebilir — ürün kararı.
 3. **Expo yedek yolu ve planlanan araçlar:** Expo Push (`00-olgular.md` §5) canlıda kapatılacak mı, yoksa listede mi kalacak? Kalırsa standart sözleşme gerekir. `CANLIYA_ALMA.md` 4'te planlanan Sentry ve PostHog eklenirse bu liste, gizlilik politikası ve ClinicApp web çerez onayı önceden değişmeli.
-4. **Uzmana itiraz hakkı ve süre (6. bölüm):** Uzman veri sorumlusu sayılırsa (gizlilik 4. bölüm seçenek A) bu kural Veri İşleme Eki'nin parçası olur; süre (öneri 30 gün) ve fesih sonucu onaylanmalı.
+4. **Uzmana itiraz hakkı ve süre (6. bölüm):** kullanıcı kararı (20 Kasım 2026, A.4): uzman kayıtlarında uzman veri sorumlusu, Moyo veri işleyen (gizlilik 4. bölüm; A/B kapandı); bu kural Veri İşleme Eki'nin parçasıdır. Süre (öneri 30 gün) ve fesih sonucu onaylanmalı; bildirim süresi saklama süresi olmadığı için `[SÜRE]` kaldı (6. bölümde iki yer).
 5. **Test dönemi Gmail:** Test e-postalarının gerçek kişilere (pilot uzman ve aileler) gitmesi durumunda bu dönem için de aktarım güvencesi gerekip gerekmediği.
-6. **20 Kasım 2026 güncellemesi (iç not; koordinatör doğrulamalı):** Cloudflare satırı (alan adı ve DNS, Moyo Mercek web uygulaması, tanıtım ve davet sayfaları) ile RevenueCat ve Resend'in "Kullanımda" durumu `DURUM.md` kayıtlarına (6, 10, 11 Kasım 2026) göre yazıldı; `00-olgular` §5 hâlâ yalnız "yönetim paneli barındırma" diyor, güncellenmeli. Moyo Mercek web uygulaması Cloudflare'den yalnız dosya olarak sunulur, uygulama verisi tarayıcıdan doğrudan Supabase'e gider (yönetim paneli için de aynı mı, teyit edilmeli: 3.6 "panelde görüntülenen kullanıcı verisi Cloudflare ağından geçer" diyor). `kvkk@` ve `destek@` için Cloudflare Email Routing kurulursa KVKK başvuruları ve destek yazışmaları Cloudflare'den geçer; o zaman 3.6'ya eklenmeli.
+6. **20 Kasım 2026 güncellemesi (iç not; koordinatör doğrulamalı):** Cloudflare satırı (alan adı ve DNS, Moyo Mercek web uygulaması, tanıtım ve davet sayfaları) ile RevenueCat ve Resend'in "Kullanımda" durumu `DURUM.md` kayıtlarına (6, 10, 11 Kasım 2026) göre yazıldı; `00-olgular` §5 hâlâ yalnız "yönetim paneli barındırma" diyor, güncellenmeli. Moyo Mercek web uygulaması Cloudflare'den yalnız dosya olarak sunulur, uygulama verisi tarayıcıdan doğrudan Supabase'e gider (yönetim paneli için de aynı mı, teyit edilmeli: 3.6 "panelde görüntülenen kullanıcı verisi Cloudflare ağından geçer" diyor). Kullanıcı kararı (20 Kasım 2026): her konu için tek e-posta `destek@moyoapp.com.tr` (`kvkk@` kullanılmaz); Cloudflare Email Routing yalnız `destek@`'i yönlendirir. Kurulursa KVKK başvuruları ve destek yazışmaları Cloudflare'den geçer; o zaman 3.6'ya eklenmeli.
 7. **Seans ve takvim (olgularda yok):** Uzmanın dış takvim aboneliği (`sozlesme/akislar.md` 20 E) seans bilgisini (tür, isteğe bağlı baş harf) uzmanın seçtiği takvim hizmetine (Google, Apple, Microsoft) taşır; içe aktarmada sunucumuz uzmanın gizli iCal adresini okur. Bunlar uzmanın kendi seçtiği hizmetler: alt işleyen mi, 4. bölümde alıcı mı, yoksa uzmanın kendi aktarımı mı; bir satır gerekir mi.
 8. **Uzmanın itirazında dışa aktarma:** 6. bölümdeki "kayıtlarını dışa aktarır" sözü Uzman Hizmet Sözleşmesi'nin daraltılan diliyle uyum için çıkarıldı (Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez; uygulamadaki rapor ve CSV araçları ayrıca durur). Fesih sonucunun Veri İşleme Eki'yle aynı yazılması gerekir.
+9. **Yurt dışı aktarım ve Kurul bildirimi (kullanıcı, C.13; 20 Kasım 2026):** aktarımın amacının hizmeti çalıştırmak olduğu Kısaca'da başa yazıldı. Kullanıcı görüşü: Kurul bildirimi gerekmez; KVKK md. 9 standart sözleşme bildirimi (imzadan sonra 5 iş günü) yasal yükümlülük olabilir, teyit avukatta. Metindeki bildirim cümleleri olduğu gibi bırakıldı.
+10. **Konum (3.1; kullanıcı, A.2):** Supabase satırında kayıtlar "özel nitelikli veri içerebilecek kayıtlar" diye nitelenmiyor, "kullanıcıların kendi girdiği takip kayıtları" deniyor; 6. bölümdeki "özel nitelikli veri içerebilecek kayıtları kapsıyorsa yeniden onay" kuralı koruma ağı olarak kaldı. md. 6 kapsamının teyidi avukatta.

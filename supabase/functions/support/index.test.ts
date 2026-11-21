@@ -1,7 +1,7 @@
 // node --experimental-strip-types --test supabase/functions/support/*.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { clean, handle, precheck, supportPage } from './index.ts';
+import { clean, handle, precheck, supportPage, teamNotice } from './index.ts';
 
 const env = (k: string) => (k === 'LEGAL_PUBLIC_URL' ? 'https://admin-panel.example.workers.dev/yasal' : '');
 const good = { app: 'parent', topic: 'bug', email: 'veli@example.com', name: 'Ayşe', message: 'Uygulama açılmıyor, yardım eder misiniz?', adult: true, elapsed_ms: 15000 };
@@ -40,4 +40,24 @@ test('gönderim: talep numarası; bot sessizce "tamam" alır ama kayıt açılma
   assert.equal(down.status, 503);
   const bad = await handle(new Request('https://x', { method: 'POST', body: 'bozuk' }), env, create);
   assert.equal(bad.status, 400);
+});
+
+test('ekip bildirimi: talep no, uygulama, konu, panel bağlantısı; e-posta, ad ve mesaj yok', async () => {
+  const m = teamNotice('D-ABC234', clean(good), 'https://panel.example.com/');
+  assert.equal(m.subject, 'Yeni destek talebi D-ABC234 · Moyo · Hata');
+  assert.ok(m.text.includes('Panelde aç: https://panel.example.com/#/destek'));
+  for (const part of [m.subject, m.text, m.html]) {
+    assert.ok(!part.includes('veli@example.com') && !part.includes('Ayşe') && !part.includes('açılmıyor'));
+  }
+  assert.ok(teamNotice('D-X', { app: 'clinic', topic: 'privacy' }, '').text.endsWith('Yönetim paneli › Destek'));
+  assert.ok(!teamNotice('D-X', { app: 'zz', topic: 'zz' }, 'javascript:alert(1)').html.includes('javascript'));
+  // bildirim çağrılır; hata ya da gecikme talebi düşürmez
+  let sent = '';
+  const ok = await handle(post(good), env, async () => ({ ref: 'D-ABC234' }), async (ref) => { sent = ref; });
+  assert.equal(ok.status, 200); assert.equal(sent, 'D-ABC234');
+  const fail = await handle(post(good), env, async () => ({ ref: 'D-ABC235' }), async () => { throw new Error('resend 500'); });
+  assert.deepEqual(await fail.json(), { ok: true, ref: 'D-ABC235' });
+  let called = false;
+  await handle(post({ ...good, website: 'x' }), env, async () => ({ ref: 'D-Z' }), async () => { called = true; });
+  assert.equal(called, false);
 });

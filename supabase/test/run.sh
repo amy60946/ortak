@@ -7,7 +7,7 @@ shopt -s nullglob   # proposed/ boş olabilir
 here="$(cd "$(dirname "$0")" && pwd)"
 export ORTAK_TEST_DIR="$here"   # test_items_catalog.sql yandaki game-app/items.json'ı buradan bulur (GAME_ITEMS_JSON ile değiştirilebilir)
 for t in "$here"/test_*.sql; do
-  db="ortak_$(basename "$t" .sql)"
+  db="${ORTAK_DB_PREFIX:-ortak}_$(basename "$t" .sql)"
   psql -q -v ON_ERROR_STOP=1 -d postgres -c "drop database if exists $db" -c "create database $db"
   run() { psql -q -t -o /dev/null -v ON_ERROR_STOP=1 -d "$db" -f "$1"; }
   run "$here/supabase_stub.sql"
