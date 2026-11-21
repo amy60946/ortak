@@ -51,6 +51,13 @@ select tst.check(not exists (select 1 from public.support_requests where support
 select tst.check(public.support_source_hash('2001:db8:1:2::1') = public.support_source_hash('2001:db8:1:2:ffff::9'), 'IPv6 aynı /64 ağı tek kaynak');
 select tst.check(public.support_source_hash('2001:db8:1:2::1') <> public.support_source_hash('2001:db8:1:3::1'), 'başka /64 ayrı kaynak');
 select tst.check(public.support_source_hash('') is null and public.support_source_hash(null) is null, 'adres yoksa özet yok');
+-- IPv4'e eşlenmiş IPv6 IPv4 sayılır (hepsi tek /64 kovasına düşmez); adres gerçek ayrıştırıcıyla denetlenir
+select tst.check(public.support_source_hash('::ffff:203.0.113.7') = public.support_source_hash('203.0.113.7'), 'eşlenmiş IPv6 = IPv4');
+select tst.check(public.support_source_hash('::ffff:203.0.113.7') <> public.support_source_hash('::ffff:198.51.100.9'), 'eşlenmiş iki IPv4 ayrı kaynak');
+select tst.check(public.support_source_net('::FFFF:1.2.3.4') = '1.2.3.4' and public.support_source_net('1.2.3.4/8') = '1.2.3.4', 'eşlenmiş adres ve maske ayıklanır');
+select tst.check(public.support_source_net('2001:DB8:1:2::7') = '2001:db8:1:2::/64', 'IPv6 /64 ağı');
+select tst.check(public.support_source_hash('unknown') = public.support_source_hash('<script>') and public.support_source_hash('unknown') = public.support_source_hash('1.2.3.999'),
+                 'adres biçiminde olmayan her değer tek ortak kova (değiştirerek sınır aşılmaz)');
 
 -- tek kaynaktan sel: saatte 5; başka kaynak etkilenmez
 set role service_role;
@@ -67,6 +74,43 @@ select 'D-G' || lpad(g::text, 5, '0'), 'other', 'other', 'gun' || g || '@example
 set role service_role;
 select tst.check(tst.sr('g15@example.com', '203.0.113.7') ? 'ref', 'günün 15. talebi');
 select tst.check(tst.sr('g16@example.com', '203.0.113.7') ->> 'error' = 'too_many_source', 'aynı kaynaktan günde 15');
+reset role;
+delete from public.support_requests;
+
+-- gün dönümü: dünün tuzuyla yazılmış özetler de sayılır (gece yarısında sayaç sıfırlanmaz)
+insert into public.support_source_salts (day, salt) values ((now() at time zone 'utc')::date - 1, 'dun-tuzu-deneme')
+  on conflict (day) do update set salt = excluded.salt;
+insert into public.support_requests (ref, app, topic, email, message, created_at, source_hash)
+select 'D-Y' || lpad(g::text, 5, '0'), 'other', 'other', 'dun' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '20 minutes',
+       encode(extensions.digest('dun-tuzu-deneme|203.0.113.50', 'sha256'), 'hex')
+  from generate_series(1, 5) g;
+select tst.check(public.support_source_hash('203.0.113.50') <> encode(extensions.digest('dun-tuzu-deneme|203.0.113.50', 'sha256'), 'hex'), 'bugünün tuzu farklı');
+set role service_role;
+select tst.check(tst.sr('dun6@example.com', '::ffff:203.0.113.50') ->> 'error' = 'too_many_source', 'dünün tuzuyla sayılan 5 talep + 1 → kaynak sınırı (eşlenmiş adresle de)');
+select tst.check(tst.sr('dun7@example.com', '203.0.113.51') ? 'ref', 'komşu adres etkilenmez');
+reset role;
+select tst.check(exists (select 1 from public.support_source_salts where day = (now() at time zone 'utc')::date - 1)
+                 and not exists (select 1 from public.support_source_salts where day < (now() at time zone 'utc')::date - 1), 'tuz en çok 2 gün');
+delete from public.support_requests;
+
+-- hedefli kilit: başkası bir kişinin adresiyle 3 talep açsa da o kişi kendi bağlantısından yazabilir; KVKK e-posta sınırından muaf
+set role service_role;
+select tst.check(tst.sr('Kurban@Example.org', '192.0.2.201') ? 'ref', 'saldırgan 1');
+select tst.check(tst.sr(' kurban@example.org ', '192.0.2.201', 'account') ? 'ref', 'saldırgan 2');
+select tst.check(tst.sr('kurban@example.org', '192.0.2.201', 'other') ? 'ref', 'saldırgan 3');
+select tst.check(tst.sr('kurban@example.org', '192.0.2.201') ->> 'error' = 'too_many', 'aynı kaynaktan aynı adrese 24 saatte 3');
+select tst.check(tst.sr('kurban@example.org', '198.51.100.77', 'privacy') ? 'ref', 'kurbanın KVKK talebi kabul');
+select tst.check(tst.sr('kurban@example.org', '198.51.100.77', 'account') ? 'ref', 'kurbanın normal talebi kabul (başka kaynak)');
+select tst.check(tst.sr('kurban@example.org', '192.0.2.201', 'privacy') ? 'ref', 'KVKK e-posta sınırından muaf (kaynak sınırı sürer)');
+select tst.check(tst.sr('kurban@example.org', '192.0.2.201', 'privacy') ? 'ref', 'kaynağın 5. talebi');
+select tst.check(tst.sr('kurban@example.org', '192.0.2.201', 'privacy') ->> 'error' = 'too_many_source', 'KVKK kaynak sınırında');
+reset role;
+delete from public.support_requests;
+-- kaynak bilinmiyorsa (eski imza) adres başına sınır sürer
+set role service_role;
+select public.support_request_create('parent', 'bug', 'yalin@example.com', '', 'Eski işlevden gelen talep ' || g) from generate_series(1, 3) g;
+select tst.check(tst.sr('yalin@example.com', null) ->> 'error' = 'too_many', 'kaynaksız: e-posta başına 3');
+select tst.check(tst.sr('yalin@example.com', null, 'privacy') ? 'ref', 'kaynaksız da KVKK muaf');
 reset role;
 delete from public.support_requests;
 
@@ -90,8 +134,18 @@ insert into public.support_requests (ref, app, topic, email, message, created_at
 select 'D-T' || lpad(g::text, 5, '0'), 'other', 'other', 'top' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '5 minutes'
   from generate_series(1, 300) g;
 set role service_role;
-select tst.check(tst.sr('a2@example.com', '192.0.2.2') ->> 'error' = 'busy', 'genel sınır 300 (son çare)');
+select tst.check(public.support_request_create('parent', 'bug', 'a2@example.com', '', 'Kaynaksız talep burada') ->> 'error' = 'busy', 'genel sınır 300 (son çare): kaynaksız reddedilir');
+select tst.check(tst.sr('a2@example.com', '192.0.2.1') ->> 'error' = 'busy', 'pay doluyken son saatte yazmış kaynak reddedilir');
+select tst.check(tst.sr('ilk@example.com', '192.0.2.2') ? 'ref', 'pay doluyken ilk kez yazan kaynak bir talep açar');
+select tst.check(tst.sr('ilk2@example.com', '192.0.2.2') ->> 'error' = 'busy', 'ilk kez yazanın ikinci talebi reddedilir');
 select tst.check(tst.sr('a3@example.com', '192.0.2.3', 'privacy') ? 'ref', 'KVKK talebi genel sınır dolsa da kabul');
+reset role;
+-- sert tavan 600: saldırgan yeni kaynaklarla da sınırsız giremez
+insert into public.support_requests (ref, app, topic, email, message, created_at)
+select 'D-U' || lpad(g::text, 5, '0'), 'other', 'other', 'tav' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '5 minutes'
+  from generate_series(1, 298) g;
+set role service_role;
+select tst.check(tst.sr('son@example.com', '192.0.2.40') ->> 'error' = 'busy', 'saatte 600 sert tavan (ilk kez yazana da)');
 reset role;
 insert into public.support_requests (ref, app, topic, email, message, created_at)
 select 'D-P' || lpad(g::text, 5, '0'), 'other', 'privacy', 'kvkk' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '5 minutes'
@@ -208,3 +262,78 @@ set role service_role;
 select tst.check(tst.take(tst.v('i10'), '00000000-0000-0000-0000-0000000000d2') ? 'to', 'eski kayıt sayılmaz');
 reset role;
 select tst.check((select count(*) from public.invite_email_sends) = 1, '8 günden eski kayıt silindi');
+delete from public.invite_email_sends;
+
+-- alıcı anahtarı: aynı gelen kutusunun takma adları tek alıcı
+select tst.check(public.invite_email_key(' J.Doe+kampanya@GoogleMail.com ') = 'jdoe@gmail.com', 'Gmail: nokta, +etiket, googlemail');
+select tst.check(public.invite_email_to_hash('j.d.o.e@gmail.com') = public.invite_email_to_hash('jdoe+1@googlemail.com'), 'Gmail takma adları aynı özet');
+select tst.check(public.invite_email_key('ali+x@example.com') = 'ali@example.com', 'her alan adında +etiket atılır');
+select tst.check(public.invite_email_key('a.li@example.com') = 'a.li@example.com', 'Gmail dışında nokta kalır');
+select tst.check(public.invite_email_key('a+b@c@gmail.com') = 'a+b@c@gmail.com', 'birden çok @ varsa olduğu gibi');
+select tst.check(public.invite_email_key('+x@example.com') = '+x@example.com', 'yerel kısım boşalmaz');
+insert into tst.kv values ('g1', tst.inv('00000000-0000-0000-0000-0000000000d1', 'gelen.kutu@gmail.com'));
+insert into tst.kv values ('g2', tst.inv('00000000-0000-0000-0000-0000000000d1', 'gelenkutu+1@googlemail.com'));
+insert into tst.kv values ('g3', tst.inv('00000000-0000-0000-0000-0000000000d2', 'G.e.l.e.n.k.u.t.u+2@gmail.com'));
+set role service_role;
+select tst.check(tst.take(tst.v('g1'), '00000000-0000-0000-0000-0000000000d1') ? 'to', 'takma ad 1');
+select tst.check(tst.take(tst.v('g2'), '00000000-0000-0000-0000-0000000000d1') ? 'to', 'takma ad 2');
+select tst.check(tst.take(tst.v('g3'), '00000000-0000-0000-0000-0000000000d2') ->> 'error' = 'rate_recipient', 'Gmail takma adı aynı alıcı sayılır');
+reset role;
+delete from public.invite_email_sends;
+
+-- sistem payı ikiye ayrılır: yeni hesaplar (saatte 60) yerleşiklerin payını (200) tüketemez
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000d4', false, '{"account":"clinician","clinic_name":"Sarı","name":"Efe"}');
+insert into tst.kv values ('n1', tst.inv('00000000-0000-0000-0000-0000000000d3', 'yeni1@example.com'));
+insert into tst.kv values ('n2', tst.inv('00000000-0000-0000-0000-0000000000d3', 'yeni2@example.com'));
+insert into tst.kv values ('e1', tst.inv('00000000-0000-0000-0000-0000000000d2', 'yerlesik1@example.com'));
+insert into tst.kv values ('p1', tst.inv('00000000-0000-0000-0000-0000000000d4', 'ucretli1@example.com'));
+set role service_role;
+select tst.check(tst.take(tst.v('n1'), '00000000-0000-0000-0000-0000000000d3') ? 'to', 'yeni hesap gönderir');
+reset role;
+select tst.check((select pool from public.invite_email_sends where code = tst.v('n1')) = 'new', 'yeni hesap küçük paydan');
+-- saldırganın yeni hesapları küçük payı doldurur
+insert into public.invite_email_sends (clinician_id, code, to_hash, pool)
+select null, 'X', md5('n' || g), 'new' from generate_series(1, 59) g;
+set role service_role;
+select tst.check(tst.take(tst.v('n2'), '00000000-0000-0000-0000-0000000000d3') ->> 'error' = 'rate_global', 'yeni hesap payı saatte 60');
+select tst.check(tst.take(tst.v('e1'), '00000000-0000-0000-0000-0000000000d2') ? 'to', 'yerleşik uzman yeni hesap payı dolsa da gönderir');
+reset role;
+select tst.check((select pool from public.invite_email_sends where code = tst.v('e1')) = 'main', 'yerleşik uzman ana paydan');
+-- ücretli paketteki yeni hesap yerleşik sayılır
+update public.clinics set plan = 'solo', period_end = now() + interval '30 days'
+ where id = (select clinic_id from public.clinicians where id = '00000000-0000-0000-0000-0000000000d4');
+set role service_role;
+select tst.check(tst.take(tst.v('p1'), '00000000-0000-0000-0000-0000000000d4') ? 'to', 'ücretli klinikteki yeni hesap ana paydan gönderir');
+reset role;
+select tst.check((select pool from public.invite_email_sends where code = tst.v('p1')) = 'main', 'ücretli klinik ana pay');
+-- ana pay dolunca yerleşik de reddedilir, yeni hesap payı ana paya sayılmaz
+delete from public.invite_email_sends where pool = 'new';
+insert into public.invite_email_sends (clinician_id, code, to_hash, pool)
+select null, 'X', md5('m' || g), 'main' from generate_series(1, 198) g;
+insert into tst.kv values ('e2', tst.inv('00000000-0000-0000-0000-0000000000d2', 'yerlesik2@example.com'));
+set role service_role;
+select tst.check(tst.take(tst.v('e2'), '00000000-0000-0000-0000-0000000000d2') ->> 'error' = 'rate_global', 'ana pay saatte 200');
+select tst.check(tst.take(tst.v('n2'), '00000000-0000-0000-0000-0000000000d3') ? 'to', 'yeni hesap payı ana paydan bağımsız');
+reset role;
+delete from public.invite_email_sends;
+
+-- hesap silip yeniden kaydolmak alıcı sınırını sıfırlamaz
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000d5', false, '{"account":"clinician","clinic_name":"Gri","name":"Nur"}');
+insert into tst.kv values ('s1', tst.inv('00000000-0000-0000-0000-0000000000d5', 'silinen@example.com'));
+insert into tst.kv values ('s2', tst.inv('00000000-0000-0000-0000-0000000000d5', 'Silinen+b@example.com'));
+set role service_role;
+select tst.check(tst.take(tst.v('s1'), '00000000-0000-0000-0000-0000000000d5') ? 'to', 'silinecek hesap 1');
+select tst.check(tst.take(tst.v('s2'), '00000000-0000-0000-0000-0000000000d5') ? 'to', 'silinecek hesap 2');
+reset role;
+delete from auth.users where id = '00000000-0000-0000-0000-0000000000d5';
+select tst.check(not exists (select 1 from public.clinicians where id = '00000000-0000-0000-0000-0000000000d5'), 'uzman silindi');
+select tst.check((select count(*) from public.invite_email_sends where clinician_id is null) = 2, 'gönderim satırları kalır, uzman bağı boşalır');
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000d6', false, '{"account":"clinician","clinic_name":"Gri","name":"Nur"}');
+insert into tst.kv values ('s3', tst.inv('00000000-0000-0000-0000-0000000000d6', 'silinen@example.com'));
+set role service_role;
+select tst.check(tst.take(tst.v('s3'), '00000000-0000-0000-0000-0000000000d6') ->> 'error' = 'rate_recipient', 'yeniden kayıttan sonra aynı alıcı yine sınırda');
+reset role;
+select tst.check((select confdeltype from pg_constraint where conname = 'invite_email_sends_clinician_id_fkey') = 'n', 'yabancı anahtar on delete set null');

@@ -64,6 +64,16 @@ test('uzmanın yazdığı ad, unvan ve klinik adından bağlantı ve adres çık
   assert.equal(nameSafe('Yaz bana: kotu@ornek.com'), 'Yaz bana:');
   assert.equal(nameSafe('bit.ly/x ödül kotu-site.com/a'), 'ödül');
   assert.equal(nameSafe('Uzm. Psk. Ali'), 'Uzm. Psk. Ali');
+  // bilinmeyen uzantı ve gizlenmiş adres: nokta ayrılır, bağlantı olmaz
+  assert.equal(nameSafe('Ödül kotu.example'), 'Ödül kotu. example');
+  assert.equal(nameSafe('kotu.zip/a.b'), 'kotu. zip/a. b');
+  assert.equal(nameSafe('kotu\u200b.\u200bexample'), 'kotu. example');
+  assert.equal(nameSafe('kotu\uFF0Eexample'), 'kotu. example');
+  assert.equal(nameSafe('kotu\u3002com'), '');
+  assert.equal(nameSafe('Uzm.Psk. Ali'), 'Uzm. Psk. Ali');
+  assert.equal(nameSafe('Prof. Dr. Ayşe Şahin'), 'Prof. Dr. Ayşe Şahin');
+  assert.equal(nameSafe('Ayşe.'), 'Ayşe.');
+  for (const x of ['a.b.c.d', 'x.y/z', 'evil.example', 'b\u00ADit.ly']) assert.ok(!/\S\.\S/.test(nameSafe(x)), nameSafe(x));
   const m = buildInviteEmail({ code: 'ABC234', token: null, expires_at: '2026-11-25T10:00:00Z', to: 'a@b.co',
     clinician: 'Ece https://kotu.example', title: 'Psikolog www.x.com', clinic: 'Klinik kotu@x.com' },
     { brand: 'Moyo', baseUrl: '', storeUrl: '', privacyUrl: '' });

@@ -2,8 +2,9 @@
 // ClinicApp daveti oluşturduktan sonra uzman oturumuyla çağırır:
 //   POST { code }  →  { sent: true } | { sent: false, reason }
 //   reason: not_configured (e-posta ayarı yok) · not_found · no_email · closed · expired · no_access · limit_invite · too_soon
-//           · limit_day · rate_recipient (aynı adrese günde 2 / haftada 4) · rate_clinician (uzman günde 20, yeni hesap
-//           ilk 24 saatte 5) · rate_global (sistem saatte 200) · send_failed (proposed/20261121110000_support_invite_limits.sql)
+//           · limit_day · rate_recipient (aynı adrese günde 2 / haftada 4; Gmail noktası, +etiket ve googlemail takma adları
+//           aynı adres) · rate_clinician (uzman günde 20, yeni hesap ilk 24 saatte 5) · rate_global (sistem saatte 200 yerleşik
+//           hesaplara, 7 günden yeni ve ücretsiz hesaplara ayrı 60) · send_failed (proposed/20261121110000_support_invite_limits.sql)
 // "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi); oturum işlevin içinde doğrulanır (auth.getUser).
 // Gönderim yolu (Supabase → Edge Functions → Secrets; anahtar sohbete ya da depoya yazılmaz):
 //   Canlı: RESEND_API_KEY + MAIL_FROM (alan adındaki adres, ör. davet@alanadi.com)
@@ -25,11 +26,17 @@ export const headerSafe = (s: string) => s.replace(/[\r\n<>"]+/g, ' ').replace(/
 // Uzmanın kendi yazdığı alanlar (ad, unvan, klinik adı) e-postada bağlantı ya da adres taşımasın (sistem göndericisinden
 // istenmeyen tanıtım/oltalama metni gitmesin): http(s)://…, www.…, e-posta adresi ve alan adı biçimli parçalar çıkarılır.
 // Reddetmek yerine temizlenir: gerçek bir uzman adında bunlar olmaz, olursa e-posta yine gider (davet akışı bozulmaz).
+// Ardından kalan, iki boşluk olmayan karakter arasındaki her noktanın arkasına boşluk konur ("kotu.example" kendiliğinden
+// bağlantı olmasın; "Dr. Ayşe" değişmez); görünmez karakterler (sıfır genişlikli, yön işaretleri) ve tam genişlikli / ideografik
+// noktalar önce ayıklanır, böylece bunlarla gizlenmiş adresler de ayrılır.
 export const nameSafe = (s: string) => headerSafe(String(s ?? '')
+  .replace(/[\u00AD\u200B-\u200F\u2028-\u202E\u2060-\u2064\uFEFF]/g, '')
+  .replace(/[\u3002\uFF0E\uFF61]/g, '.')
   .replace(/\b[a-z][a-z0-9+.-]*:\/\/\S*/gi, ' ')
   .replace(/\bwww\.\S*/gi, ' ')
   .replace(/\S+@\S+/g, ' ')
-  .replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|info|io|co|tr|xyz|me|link|app|site|online|ru|cn|top|biz|ly|gl|to|cc|ws)\b\S*/gi, ' '));
+  .replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|info|io|co|tr|xyz|me|link|app|site|online|ru|cn|top|biz|ly|gl|to|cc|ws)\b\S*/gi, ' ')
+  .replace(/(\S)\.(?=\S)/g, '$1. '));
 
 export function untilText(iso: string) {
   return new Date(iso).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });

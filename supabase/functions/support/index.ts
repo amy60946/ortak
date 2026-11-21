@@ -5,12 +5,15 @@
 //        `adult`: "18 yaşından büyüğüm" kutusu (form yetişkinler içindir; çocuk ürünü, Apple 1.3/5.1.4).
 //        `website` gizli tuzak alanıdır (insan doldurmaz); 3 saniyeden kısa doldurulan form sessizce yok sayılır.
 // Kayıt SQL'de: support_request_create (proposed/20261121110000_support_invite_limits.sql): kaynak (gönderenin adresi, günlük
-//   tuzla özetlenir) başına saatte 5 ve günde 15; e-posta başına 24 saatte 3; genel saatte 300 (son çare; istenmeyen ve KVKK
-//   sayılmaz); KVKK ("privacy") ayrı paydan saatte 100.
+//   tuzla özetlenir) başına saatte 5 ve 24 saatte 15; e-posta başına 24 saatte 3 (kaynak biliniyorsa aynı kaynaktan; KVKK
+//   muaf); genel saatte 300 (son çare; istenmeyen ve KVKK sayılmaz; doluyken son saatte yazmamış kaynak 600'e kadar bir talep
+//   açar); KVKK ("privacy") ayrı paydan saatte 100. Sınır iletilerinin hepsi destek@moyoapp.com.tr adresini önerir.
 // Kaynak adresi: Worker (admin-panel/worker) formu gönderenin adresini `x-moyo-client-ip` başlığıyla, paylaşılan gizli anahtarı
 //   `x-moyo-forward-key` ile iletir. Anahtar (secret SUPPORT_FORWARD_KEY) eşleşirse iletilen adres kullanılır; eşleşmezse ya da
 //   başlık yoksa işlevin gördüğü istemci adresi. SUPPORT_FORWARD_KEY hiç tanımlı değilse kaynak sınırı uygulanmaz (Worker'dan
 //   gelen bütün talepler tek adresten görünür; sınır formu herkese kapatırdı). Önce Worker'a, sonra Supabase'e eklenir.
+//   Sıra yanlış olsa da form kapanmaz: Worker'dan (`cf-worker` başlığı) geçerli anahtarsız gelen istek kaynak bilinmiyor
+//   sayılır (yalnız e-posta ve genel sınırlar). Adresler normIp ile denetlenir (IPv4'e eşlenmiş IPv6 → IPv4).
 // Gövde en çok 20 000 karakter (Content-Length olmasa da akış kesilir).
 // Ekip bildirimi (kullanıcı kararı 20 Kasım 2026, "Destek formu kalsın"): her yeni talepte SUPPORT_NOTIFY_TO adresine
 //   (yoksa destek@moyoapp.com.tr) tek satırlık e-posta: talep no, uygulama, konu, "Panelde aç". Kişinin e-postası, adı ve
@@ -37,9 +40,9 @@ const json = (body: unknown, status = 200) =>
 export const MESSAGES: Record<string, [number, string]> = {
   invalid: [400, 'Bilgiler eksik ya da hatalı: geçerli bir e-posta ve en az 10 karakterlik bir mesaj yazın.'],
   adult: [400, 'Bu form yetişkinler içindir; "18 yaşından büyüğüm" kutusunu işaretleyin. Çocuğunuz adına siz yazabilirsiniz.'],
-  too_many: [429, 'Bu e-posta adresinden bugün yeterince talep aldık; yanıtımızı bekleyin ya da yarın yeniden deneyin.'],
-  too_many_source: [429, 'Bu bağlantıdan kısa sürede çok fazla talep geldi; bir süre sonra yeniden deneyin.'],
-  busy: [503, 'Şu an çok fazla talep var; birkaç dakika sonra yeniden deneyin.'],
+  too_many: [429, 'Bu e-posta adresinden bugün yeterince talep aldık; yanıtımızı bekleyin, yarın yeniden deneyin ya da destek@moyoapp.com.tr adresine yazın.'],
+  too_many_source: [429, 'Bu bağlantıdan kısa sürede çok fazla talep geldi; bir süre sonra yeniden deneyin ya da destek@moyoapp.com.tr adresine yazın.'],
+  busy: [503, 'Şu an çok fazla talep var; birkaç dakika sonra yeniden deneyin ya da destek@moyoapp.com.tr adresine yazın.'],
   server: [503, 'Talep kaydedilemedi; biraz sonra yeniden deneyin.'],
 };
 
@@ -54,17 +57,39 @@ export function same(a: string, b: string): boolean {
   return diff === 0;
 }
 
-const IP = /^[0-9A-Fa-f:.]{2,45}$/;
-// Talebin kaynağı: anahtar eşleşirse Worker'ın ilettiği adres; anahtar tanımlı değilse null (kaynak sınırı yok)
+// Adresi gerçek ayrıştırıcıyla denetler ve tek biçime getirir; adres değilse null.
+// IPv4 (her bölüm 0–255, baştaki sıfır yok) olduğu gibi; IPv6 URL ayrıştırıcısıyla kısaltılmış küçük harf biçime;
+// IPv4'e eşlenmiş IPv6 (::ffff:a.b.c.d) IPv4'e çevrilir (yoksa bütün bu adresler SQL'de tek /64 kovasına düşerdi).
+const V4 = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+export function normIp(s: string): string | null {
+  const v = (s ?? '').trim();
+  if (!v || v.length > 45) return null;
+  if (V4.test(v)) return v;
+  if (!v.includes(':') || !/^[0-9A-Fa-f:.]+$/.test(v)) return null;
+  let host: string;
+  try { host = new URL(`http://[${v}]/`).hostname.slice(1, -1); } catch { return null; }
+  const m = /^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/.exec(host);
+  if (m) {
+    const hi = parseInt(m[1], 16), lo = parseInt(m[2], 16);
+    return `${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`;
+  }
+  return host;
+}
+
+// Talebin kaynağı: anahtar eşleşirse Worker'ın ilettiği adres; anahtar tanımlı değilse null (kaynak sınırı yok).
+// Worker'dan (Cloudflare `cf-worker` başlığı) geçerli anahtarsız gelen istek de null: Supabase'e secret eklenmiş ama
+// Worker'a eklenmemişse bütün form Worker'ın tek adresinden sayılıp herkese kapanmasın (yayın sırası hatası).
 export function sourceOf(req: Request, env: (k: string) => string): string | null {
   const key = env('SUPPORT_FORWARD_KEY');
   if (!key) return null;
   const given = req.headers.get('x-moyo-forward-key');
-  const fwd = (req.headers.get('x-moyo-client-ip') ?? '').trim();
-  if (given !== null && key.length >= 16 && same(key, given) && IP.test(fwd)) return fwd;
-  const own = (req.headers.get('cf-connecting-ip') ?? req.headers.get('x-real-ip')
-               ?? (req.headers.get('x-forwarded-for') ?? '').split(',')[0]).trim();
-  return own && IP.test(own) ? own : 'unknown';
+  const fwd = normIp(req.headers.get('x-moyo-client-ip') ?? '');
+  const keyed = given !== null && key.length >= 16 && same(key, given);
+  if (keyed && fwd) return fwd;
+  if (!keyed && req.headers.get('cf-worker') !== null) return null;
+  const own = normIp((req.headers.get('cf-connecting-ip') ?? req.headers.get('x-real-ip')
+               ?? (req.headers.get('x-forwarded-for') ?? '').split(',')[0]).trim());
+  return own ?? 'unknown';
 }
 
 // Gövdeyi en çok max karakter okur; aşarsa null (Content-Length olmasa da)
