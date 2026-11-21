@@ -54,3 +54,18 @@ test('çocuk adı, uzman notu ve alıcı adresi gövdede yok; marka adı değiş
   assert.ok(!b.text.includes('aile@ornek.com') && !b.html.includes('aile@ornek.com'));
   assert.equal(b.subject, 'Ece Kaya sizi Pofi uygulamasına davet ediyor');
 });
+
+test('uzmanın yazdığı ad, unvan ve klinik adından bağlantı ve adres çıkarılır', async () => {
+  const { nameSafe } = await import('./index.ts');
+  assert.equal(nameSafe('Ece Kaya'), 'Ece Kaya');
+  assert.equal(nameSafe('Dr. Ayşe Şahin'), 'Dr. Ayşe Şahin');
+  assert.equal(nameSafe('Kazan http://kotu.example/x hemen'), 'Kazan hemen');
+  assert.equal(nameSafe('Ödül www.kotu.com tıkla'), 'Ödül tıkla');
+  assert.equal(nameSafe('Yaz bana: kotu@ornek.com'), 'Yaz bana:');
+  assert.equal(nameSafe('bit.ly/x ödül kotu-site.com/a'), 'ödül');
+  assert.equal(nameSafe('Uzm. Psk. Ali'), 'Uzm. Psk. Ali');
+  const m = buildInviteEmail({ code: 'ABC234', token: null, expires_at: '2026-11-25T10:00:00Z', to: 'a@b.co',
+    clinician: 'Ece https://kotu.example', title: 'Psikolog www.x.com', clinic: 'Klinik kotu@x.com' },
+    { brand: 'Moyo', baseUrl: '', storeUrl: '', privacyUrl: '' });
+  for (const part of [m.subject, m.text, m.html, m.fromName]) assert.ok(!/kotu\.example|www\.x|kotu@x/.test(part), part);
+});

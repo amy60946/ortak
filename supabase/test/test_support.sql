@@ -53,9 +53,9 @@ select tst.check(public.support_request_create('parent', 'bug', 'veli@example.co
 reset role;
 insert into public.support_requests (ref, app, topic, email, message, created_at)
 select 'D-' || lpad(g::text, 6, '0'), 'other', 'other', 'toplu' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '10 minutes'
-  from generate_series(1, 60) g;
+  from generate_series(1, 300) g;
 set role service_role;
-select tst.check(public.support_request_create('clinic', 'clinic', 'uzman@example.com', '', 'Ekibe nasıl üye eklerim?') ->> 'error' = 'busy', 'saatte 60 üstü: meşgul');
+select tst.check(public.support_request_create('clinic', 'clinic', 'uzman@example.com', '', 'Ekibe nasıl üye eklerim?') ->> 'error' = 'busy', 'saatte 300 üstü (son çare): meşgul');
 reset role;
 delete from public.support_requests where email like 'toplu%';
 
