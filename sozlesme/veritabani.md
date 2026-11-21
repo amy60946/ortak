@@ -216,7 +216,7 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 | `clinic_share_child(p_clinic_id, p_child_id)` | P | O klinikle etkin paylaşım varsa kodsuz çocuk ekler |
 | `family_clinic_links()` | P | Dönüşe `clinic_id` eklendi |
 | İç: `notify`, `notify_parents`, `notify_child`, `notify_clinic`, `child_name`, olay tetikleyicileri, `notifications_push` (pg_net → Edge Function `push-apns` / Expo) | — | İstemci çağıramaz |
-| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar. Çocuğa (`app='child'`): yalnız `child_push_claim` izin verirse, genel metinle ("Pofi Adası · Adada yeni bir haber var!"; görev başlığı/ad/not yok), `data` yalnız `kind` + `notification_id` (2 Kasım 2026) |
+| Edge Function `push-apns` (`supabase/functions/push-apns`) | sunucu | Bildirimi Apple'a gönderir; `notifications.apns_sent_at` yazar. Çocuğa (`app='child'`): yalnız `child_push_claim` izin verirse, genel metinle ("Adada yeni bir haber var!", başlık yok: iOS uygulama adını "Moyo Oyun" gösterir; görev başlığı/ad/not yok), `data` yalnız `kind` + `notification_id` (2 Kasım 2026) |
 
 ## 6. Klinik ekibi ve kullanıcı takibi (21 Ekim 2026'da uygulandı, `migrations/20261021100000_clinic_team_tracking.sql`)
 
