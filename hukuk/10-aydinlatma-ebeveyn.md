@@ -120,8 +120,8 @@ Uzman e-posta adresinizi de girmiş olabilir. Bu adresi yalnız tek bir davet e-
 | Apple | Bildirim gönderimi (APNs) | Bildirim jetonu, bildirim içeriği | ABD / AB |
 | Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | Bildirim jetonu, bildirim başlığı ve metni | ABD |
 | RevenueCat | Abonelik durumunu doğrulama | Rastgele uygulama kullanıcı kimliği, satın alma kayıtları | ABD |
-| Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | E-posta adresi, e-postanın içeriği | ABD / AB |
-| Cloudflare | Yönetim panelinin barındırılması | Yetkili ekip üyesinin ekranında açılan veriler | Küresel |
+| Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) ve destek yazışmalarına giden yanıtlar | E-posta adresi, e-postanın içeriği | ABD / AB |
+| Cloudflare | Yönetim panelinin barındırılması; destek@ adresine gelen e-postaların alınıp destek kaydına iletilmesi (e-posta orada saklanmaz) | Yetkili ekip üyesinin ekranında açılan veriler; destek e-postasının gönderen adresi, konusu ve içeriği | Küresel |
 
 Abonelik satışını **Apple** yapar. Satın alma sırasında Apple'a verdiğiniz bilgiler (ödeme bilgisi dahil) Apple'ın kendi gizlilik koşullarına tabidir; bunlar bize gelmez. Apple bize yalnız abonelik durumunu ve işlem kimliğini iletir.
 
