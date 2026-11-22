@@ -26,8 +26,8 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 | 2 | Apple | Satışta bağımsız veri sorumlusu; bildirimde alt işleyen | App Store satışı ve aboneliği; anlık bildirim (APNs) | Üçü | ABD / AB | Kullanımda |
 | 3 | Expo | Alt işleyen | Yedek bildirim yolu | Moyo Ebeveyn, Moyo Mercek (Expo anahtarı kaydeden cihazlar) | ABD | Kodda var; canlıda kalıp kalmayacağı karar bekliyor |
 | 4 | RevenueCat | Alt işleyen | Abonelik durumunun doğrulanması | Moyo Ebeveyn, Moyo Mercek | ABD | Kullanımda |
-| 5 | Resend | Alt işleyen | İşlem e-postaları | Moyo Ebeveyn, Moyo Mercek | ABD / AB | Kullanımda |
-| 6 | Cloudflare | Alt işleyen | Alan adı ve DNS; ekip yönetim panelinin, Moyo Mercek web uygulamasının, tanıtım ve davet sayfalarının ve herkese açık yasal metin / destek sayfalarının barındırılması (destek formunun içeriği Cloudflare üzerinden geçer, orada saklanmaz) | Ekip paneli, Moyo Mercek web, moyoapp.com.tr sayfaları (/yasal, /destek dahil) | Küresel ağ | Kullanımda |
+| 5 | Resend | Alt işleyen | İşlem e-postaları ve destek yazışmalarına giden yanıtlar (otomatik "alındı" yanıtı dahil) | Moyo Ebeveyn, Moyo Mercek | ABD / AB | Kullanımda |
+| 6 | Cloudflare | Alt işleyen | Alan adı ve DNS; ekip yönetim panelinin, Moyo Mercek web uygulamasının, tanıtım ve davet sayfalarının ve herkese açık yasal metin / destek sayfalarının barındırılması (destek formunun içeriği Cloudflare üzerinden geçer, orada saklanmaz); destek@ adresine gelen e-postaların Email Routing ile alınıp destek kaydına iletilmesi (e-posta Cloudflare'da saklanmaz) | Ekip paneli, Moyo Mercek web, moyoapp.com.tr sayfaları (/yasal, /destek dahil) | Küresel ağ | Kullanımda |
 | 7 | Google (Gmail SMTP) | Alt işleyen | Yalnız test dönemi e-postaları | Moyo Mercek (davet) | ABD | **Yalnız test; canlıdan önce kaldırılır** |
 
 ## 3. Ayrıntılar
@@ -83,7 +83,7 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 | | |
 |---|---|
 | Rol | Alt işleyen |
-| Amaç | İşlem e-postaları: e-posta doğrulama, şifre sıfırlama, e-posta değişikliği, uzmanın aile daveti, abonelik ve hesap bilgilendirmeleri |
+| Amaç | İşlem e-postaları: e-posta doğrulama, şifre sıfırlama, e-posta değişikliği, uzmanın aile daveti, abonelik ve hesap bilgilendirmeleri; destek@ adresinden giden destek yanıtları ve otomatik "alındı" yanıtı |
 | Veri | Alıcının e-posta adresi ve e-posta içeriği. Davet e-postasında uzmanın adı, unvanı, klinik adı ve davet kodu bulunur; çocuğun adı ve sağlık bilgisi yazılmaz, konu satırında unvan yer almaz |
 | İlgili kişiler | Ebeveynler, uzmanlar |
 | Konum | ABD / AB |
@@ -95,8 +95,8 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 | | |
 |---|---|
 | Rol | Alt işleyen |
-| Amaç | Alan adının (moyoapp.com.tr) DNS hizmeti; ekibimizin kullandığı yönetim panelinin, Moyo Mercek'in web uygulamasının, tanıtım ve davet sayfalarının ve herkese açık yasal metin ve destek sayfalarının barındırılması |
-| Veri | Ekip üyesinin oturum bilgisi; panelde görüntülenen kullanıcı verisi Cloudflare ağından şifreli bağlantıyla geçer; ağ düzeyinde ziyaretçi IP adresleri |
+| Amaç | Alan adının (moyoapp.com.tr) DNS hizmeti; ekibimizin kullandığı yönetim panelinin, Moyo Mercek'in web uygulamasının, tanıtım ve davet sayfalarının ve herkese açık yasal metin ve destek sayfalarının barındırılması; destek@ adresine gelen e-postaların alınıp destek kaydına iletilmesi (e-posta Cloudflare'da saklanmaz) |
+| Veri | Ekip üyesinin oturum bilgisi; panelde görüntülenen kullanıcı verisi Cloudflare ağından şifreli bağlantıyla geçer; ağ düzeyinde ziyaretçi IP adresleri; destek@ adresine yazanların e-posta adresi, adı, e-postanın konusu ve içeriği (yalnız iletim sırasında) |
 | İlgili kişiler | Ekip üyeleri; panelde kaydı görüntülenen ebeveyn, çocuk ve uzmanlar; sayfaları ve Moyo Mercek web uygulamasını açan ziyaretçiler |
 | Konum | Küresel ağ |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + Kurul'a bildirim |

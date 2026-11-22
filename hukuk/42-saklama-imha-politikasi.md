@@ -38,7 +38,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | Supabase yedekleri | Veritabanının günlük yedekleri ve zamana dönük geri yükleme kayıtları | Yedekler en çok 30 gün sonunda kendiliğinden döner |
 | Hizmet sağlayıcılar (`alt-isleyenler`) | RevenueCat abone kaydı, Resend gönderim kayıtları, Apple bildirim anahtarları, Cloudflare ağ kayıtları | Sağlayıcının silme yolu (API ya da destek talebi) ve sağlayıcının kendi saklama süreleri |
 | Kullanıcı cihazları | Moyo Oyun'un yerel oyun kaydı; Moyo Ebeveyn ve Moyo Mercek önbelleği | Uygulama tarafında temizlik (bkz. 10. bölüm) |
-| E-posta kutuları | `destek@` yazışmaları (tek iletişim adresi; KVKK başvuruları, ihlal bildirimleri ve ödeme soruları dahil; kullanıcı kararı 20 Kasım 2026) | E-postanın silinmesi ve çöp kutusunun boşaltılması |
+| E-posta kutuları | `destek@` yazışmaları (tek iletişim adresi; KVKK başvuruları, ihlal bildirimleri ve ödeme soruları dahil; kullanıcı kararı 20 Kasım 2026). Destek kutusu canlıya alınınca `destek@` panele (Supabase veritabanı) düşer; e-posta kutusunda yalnız önceki yazışmalar ve Worker'ın yedek yönlendirmesi (`SUPPORT_FALLBACK_TO`, Supabase'e ulaşılamadığında) kalır | E-postanın silinmesi ve çöp kutusunun boşaltılması |
 | Ekip bilgisayarları | Panelden indirilen müşteri listeleri (CSV, en çok 500 satır), ekran görüntüleri | Dosyanın silinmesi ve çöp kutusunun boşaltılması |
 | Kâğıt | Yazılı KVKK başvuruları ve ekleri | Kilitli dolapta saklama; süre dolunca imha makinesinde yok etme |
 | Kod depoları | Kişisel veri **konmaz** (kural) | — |
@@ -75,7 +75,7 @@ Temel ilke: Veri, işlendiği amaç için gereken süre kadar saklanır (KVKK md
 | 22 | Ekip işlemleri denetim kaydı | `admin_audit` | 5 yıl; silinen kullanıcının e-postası yazılmaz | Silme | Gece imha işi (yalnız bu işle ve en az 1 yıl eski kesimle silinebilir) | ⚙️ |
 | 23 | Yasal metin onay kayıtları | `legal_acceptances` (öneri `20261027200000`) | Hesap silinse de rastgele kimlikle kalır (öneri SQL'i güncellendi 27 Ekim: auth.users'a bağ yok) → [SÜRE] | Silme / takma ad | ❌ karar bekliyor | ❌ |
 | 24 | KVKK başvuruları | `kvkk_requests` (öneri `20261027200000`) | Başvuru kapandıktan sonra 3 yıl | Silme | Gece imha işi | ⚙️ |
-| 25 | Destek talepleri ve yazışmaları | `support_requests` (/destek formu); ekibin e-posta kutusundaki yanıtlar | Kapanıştan 2 yıl; istenmeyen (spam) 30 gün | Silme | Tablo: gece imha işi (`support_days`); e-posta kutusu: elle, periyodik imhada | ⚙️ |
+| 25 | Destek talepleri ve yazışmaları | `support_requests` (/destek formu; destek kutusu önerisiyle `destek@` e-postaları da) ve `support_messages` (konuşma: gelen iletiler, ekibin yanıtları ve iç notları; ek içeriği saklanmaz); kutu öncesi ekibin e-posta kutusundaki yanıtlar | Kapanıştan 2 yıl; istenmeyen (spam) 30 gün (son iletiden) | Silme | Tablo: gece imha işi (`support_days`; iletiler taleple birlikte silinir); e-posta kutusu: elle, periyodik imhada | ⚙️ |
 | 26 | Veri ihlali envanteri | iç belge (`43-veri-ihlali-proseduru.md`) | 5 yıl | Silme | Elle | — |
 | 27 | İmha kayıtları | imha kayıt tablosu | En az 3 yıl (Yönetmelik) | Silme | Gece imha işi (en az 3 yıl, alt sınır sunucuda) | ⚙️ |
 | 28 | Panelden indirilen dosyalar (CSV) | ekip bilgisayarı | İş bitince, en geç 30 gün | Silme + çöp kutusunu boşaltma | Elle | — |
