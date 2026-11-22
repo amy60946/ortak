@@ -74,13 +74,21 @@ test('kaynak: anahtar eşleşince Worker\'ın ilettiği adres; eşleşmezse işl
   assert.equal(sourceOf(req({ ...own, 'x-moyo-client-ip': 'evil<script>', 'x-moyo-forward-key': KEY }), withKey), '198.51.100.1');
   assert.equal(sourceOf(req({}), withKey), 'unknown');
   assert.equal(sourceOf(req({ ...own, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': KEY }), () => ''), null);
-  // yayın sırası hatası: Worker'dan (cf-worker) anahtarsız ya da yanlış anahtarla gelen istek kaynak bilinmiyor (null),
-  // Worker'ın tek adresine kovalanmaz; anahtar eşleşince yine iletilen adres
+  // `cf-worker` başlığı (her Cloudflare Worker'ının alt isteğinde; saldırganın kendi Worker'ı da ekler) kaynaksız yol açmaz:
+  // anahtarsız ya da yanlış anahtarla gelen istek, her doğrudan çağıran gibi işlevin gördüğü kendi adresiyle sayılır;
+  // anahtar eşleşince yine iletilen adres
   const wk = { 'cf-worker': 'moyoapp.com.tr', 'cf-connecting-ip': '104.16.0.1' };
-  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5' }), withKey), null);
-  assert.equal(sourceOf(req({ ...wk }), withKey), null);
-  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': 'yanlis'.repeat(4) }), withKey), null);
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5' }), withKey), '104.16.0.1');
+  assert.equal(sourceOf(req({ ...wk }), withKey), '104.16.0.1');
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': 'yanlis'.repeat(4) }), withKey), '104.16.0.1');
+  assert.equal(sourceOf(req({ 'cf-worker': 'attacker.workers.dev', 'cf-connecting-ip': '198.51.100.1' }), withKey), '198.51.100.1');
+  assert.equal(sourceOf(req({ 'cf-worker': 'x', 'x-moyo-forward-key': 'bad', 'x-moyo-client-ip': '1.1.1.1', 'cf-connecting-ip': '198.51.100.1' }), withKey), '198.51.100.1');
+  assert.equal(sourceOf(req({ 'cf-worker': 'x' }), withKey), 'unknown');
+  assert.notEqual(sourceOf(req({ 'cf-worker': 'attacker.workers.dev' }), withKey), null);
   assert.equal(sourceOf(req({ ...wk, 'x-moyo-client-ip': '203.0.113.5', 'x-moyo-forward-key': KEY }), withKey), '203.0.113.5');
+  // kısa anahtar (16'dan kısa) hiçbir zaman eşleşmez: Worker'dan gelen istek kendi adresiyle sayılır (kaynaksız yola düşmez)
+  const shortKey = (k: string) => (k === 'SUPPORT_FORWARD_KEY' ? 'short' : '');
+  assert.equal(sourceOf(req({ ...wk, 'x-moyo-forward-key': 'short', 'x-moyo-client-ip': '1.2.3.4' }), shortKey), '104.16.0.1');
   // adres gerçek ayrıştırıcıyla: eşlenmiş IPv6 → IPv4, IPv6 küçük harf kısa biçim, geçersiz değer düşer
   assert.equal(sourceOf(req({ 'x-moyo-client-ip': '::ffff:203.0.113.5', 'x-moyo-forward-key': KEY }), withKey), '203.0.113.5');
   assert.equal(sourceOf(req({ 'cf-connecting-ip': '::FFFF:198.51.100.2' }), withKey), '198.51.100.2');

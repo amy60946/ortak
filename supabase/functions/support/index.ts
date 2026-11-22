@@ -6,14 +6,16 @@
 //        `website` gizli tuzak alanıdır (insan doldurmaz); 3 saniyeden kısa doldurulan form sessizce yok sayılır.
 // Kayıt SQL'de: support_request_create (proposed/20261121110000_support_invite_limits.sql): kaynak (gönderenin adresi, günlük
 //   tuzla özetlenir) başına saatte 5 ve 24 saatte 15; e-posta başına 24 saatte 3 (kaynak biliniyorsa aynı kaynaktan; KVKK
-//   muaf); genel saatte 300 (son çare; istenmeyen ve KVKK sayılmaz; doluyken son saatte yazmamış kaynak 600'e kadar bir talep
-//   açar); KVKK ("privacy") ayrı paydan saatte 100. Sınır iletilerinin hepsi destek@moyoapp.com.tr adresini önerir.
+//   muaf); genel saatte 300 (son çare; istenmeyen ve KVKK sayılmaz; doluyken son saatte yazmamış, geniş ağından da (/24, /48)
+//   yazılmamış kaynak 600'e kadar bir talep açar); KVKK ("privacy") ayrı paydan saatte 100 (aynı istisnayla 200'e kadar);
+//   kaynaksız talepler ayrıca saatte 30 + KVKK 10'luk ortak kovada. Sınır iletilerinin hepsi destek@moyoapp.com.tr'yi önerir.
 // Kaynak adresi: Worker (admin-panel/worker) formu gönderenin adresini `x-moyo-client-ip` başlığıyla, paylaşılan gizli anahtarı
-//   `x-moyo-forward-key` ile iletir. Anahtar (secret SUPPORT_FORWARD_KEY) eşleşirse iletilen adres kullanılır; eşleşmezse ya da
-//   başlık yoksa işlevin gördüğü istemci adresi. SUPPORT_FORWARD_KEY hiç tanımlı değilse kaynak sınırı uygulanmaz (Worker'dan
-//   gelen bütün talepler tek adresten görünür; sınır formu herkese kapatırdı). Önce Worker'a, sonra Supabase'e eklenir.
-//   Sıra yanlış olsa da form kapanmaz: Worker'dan (`cf-worker` başlığı) geçerli anahtarsız gelen istek kaynak bilinmiyor
-//   sayılır (yalnız e-posta ve genel sınırlar). Adresler normIp ile denetlenir (IPv4'e eşlenmiş IPv6 → IPv4).
+//   `x-moyo-forward-key` ile iletir. Anahtar (secret SUPPORT_FORWARD_KEY) sabit sürede eşleşirse iletilen adres kullanılır;
+//   eşleşmezse ya da başlık yoksa işlevin kendi gördüğü istemci adresi (her doğrudan çağıran gibi; `cf-worker` başlığına
+//   bakılmaz: her Cloudflare Worker'ı bu başlıkla gelir, anahtarsız yol sınırsız olmasın). SUPPORT_FORWARD_KEY hiç tanımlı
+//   değilse kaynak yok (SQL'de kaynaksız kova). Yayın sırası: önce Worker'a, sonra Supabase'e; arada geçen birkaç dakikada
+//   Worker'dan gelen talepler kaynaksız kovada, sıra ters olursa Worker'ın tek adresinin kovasında sayılır (geçici).
+//   Adresler normIp ile denetlenir (IPv4'e eşlenmiş IPv6 → IPv4).
 // Gövde en çok 20 000 karakter (Content-Length olmasa da akış kesilir).
 // Ekip bildirimi (kullanıcı kararı 20 Kasım 2026, "Destek formu kalsın"): her yeni talepte SUPPORT_NOTIFY_TO adresine
 //   (yoksa destek@moyoapp.com.tr) tek satırlık e-posta: talep no, uygulama, konu, "Panelde aç". Kişinin e-postası, adı ve
@@ -76,9 +78,9 @@ export function normIp(s: string): string | null {
   return host;
 }
 
-// Talebin kaynağı: anahtar eşleşirse Worker'ın ilettiği adres; anahtar tanımlı değilse null (kaynak sınırı yok).
-// Worker'dan (Cloudflare `cf-worker` başlığı) geçerli anahtarsız gelen istek de null: Supabase'e secret eklenmiş ama
-// Worker'a eklenmemişse bütün form Worker'ın tek adresinden sayılıp herkese kapanmasın (yayın sırası hatası).
+// Talebin kaynağı: anahtar eşleşirse Worker'ın ilettiği adres; yoksa işlevin kendi gördüğü adres (geçersizse 'unknown',
+// SQL'de tek ortak kova); anahtar tanımlı değilse null (kaynaksız kova). Anahtarsız gelen istek hangi başlığı taşırsa taşısın
+// (ör. `cf-worker`: her Cloudflare Worker'ının alt isteğinde vardır) kaynaksız yola düşmez.
 export function sourceOf(req: Request, env: (k: string) => string): string | null {
   const key = env('SUPPORT_FORWARD_KEY');
   if (!key) return null;
@@ -86,7 +88,6 @@ export function sourceOf(req: Request, env: (k: string) => string): string | nul
   const fwd = normIp(req.headers.get('x-moyo-client-ip') ?? '');
   const keyed = given !== null && key.length >= 16 && same(key, given);
   if (keyed && fwd) return fwd;
-  if (!keyed && req.headers.get('cf-worker') !== null) return null;
   const own = normIp((req.headers.get('cf-connecting-ip') ?? req.headers.get('x-real-ip')
                ?? (req.headers.get('x-forwarded-for') ?? '').split(',')[0]).trim());
   return own ?? 'unknown';

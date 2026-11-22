@@ -2,9 +2,11 @@
 // ClinicApp daveti oluşturduktan sonra uzman oturumuyla çağırır:
 //   POST { code }  →  { sent: true } | { sent: false, reason }
 //   reason: not_configured (e-posta ayarı yok) · not_found · no_email · closed · expired · no_access · limit_invite · too_soon
-//           · limit_day · rate_recipient (aynı adrese günde 2 / haftada 4; Gmail noktası, +etiket ve googlemail takma adları
-//           aynı adres) · rate_clinician (uzman günde 20, yeni hesap ilk 24 saatte 5) · rate_global (sistem saatte 200 yerleşik
-//           hesaplara, 7 günden yeni ve ücretsiz hesaplara ayrı 60) · send_failed (proposed/20261121110000_support_invite_limits.sql)
+//           · limit_day · rate_recipient (aynı adrese günde 3 / haftada 6: bir davetin 3 gönderimi sığar; Gmail noktası,
+//           +etiket, googlemail, Proton . - _, tırnak, sondaki nokta ve görünmez karakter takma adları aynı adres)
+//           · rate_clinician (uzman günde 20, yeni hesap ilk 24 saatte 5) · rate_global (sistem saatte 200 yerleşik hesaplara,
+//           7 günden yeni ve ücretsiz hesaplara ayrı 60; ilk 24 saatindeki hesabın ilk 2 gönderimi 150'ye kadar reddedilmez)
+//           · send_failed (proposed/20261121110000_support_invite_limits.sql)
 // "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi); oturum işlevin içinde doğrulanır (auth.getUser).
 // Gönderim yolu (Supabase → Edge Functions → Secrets; anahtar sohbete ya da depoya yazılmaz):
 //   Canlı: RESEND_API_KEY + MAIL_FROM (alan adındaki adres, ör. davet@alanadi.com)
@@ -23,19 +25,29 @@ export type Built = { subject: string; text: string; html: string; fromName: str
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 // başlık alanları: satır sonu ve adres karakterleri atılır
 export const headerSafe = (s: string) => s.replace(/[\r\n<>"]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
-// Uzmanın kendi yazdığı alanlar (ad, unvan, klinik adı) e-postada bağlantı ya da adres taşımasın (sistem göndericisinden
-// istenmeyen tanıtım/oltalama metni gitmesin): http(s)://…, www.…, e-posta adresi ve alan adı biçimli parçalar çıkarılır.
-// Reddetmek yerine temizlenir: gerçek bir uzman adında bunlar olmaz, olursa e-posta yine gider (davet akışı bozulmaz).
-// Ardından kalan, iki boşluk olmayan karakter arasındaki her noktanın arkasına boşluk konur ("kotu.example" kendiliğinden
-// bağlantı olmasın; "Dr. Ayşe" değişmez); görünmez karakterler (sıfır genişlikli, yön işaretleri) ve tam genişlikli / ideografik
-// noktalar önce ayıklanır, böylece bunlarla gizlenmiş adresler de ayrılır.
+// Uzmanın kendi yazdığı alanlar (ad, unvan, klinik adı; konu, gönderen adı ve gövdede) e-postada bağlantı ya da adres
+// taşımasın (sistem göndericisinden istenmeyen tanıtım/oltalama metni gitmesin). Reddetmek yerine temizlenir: gerçek bir uzman
+// adında bunlar olmaz, olursa e-posta yine gider (davet akışı bozulmaz). Sıra:
+//   1) NFKC (tam genişlikli harf ve nokta düz biçime); benzer noktalar (· ˙ ․ ‧ ﹒ ． 。 ｡ ⸱ ⸳ …) "." olur;
+//   2) görünmez ve biçim karakterleri (Unicode Cf: sıfır genişlikli, yön işaretleri ve yalıtıcıları, yumuşak tire, BOM …),
+//      birleştirici ve değişim seçicileri silinir (yerine boşluk girmez: gizlenmiş adres birleşir ve aşağıda yakalanır);
+//   3) http(s)://…, www.…, e-posta adresi ve alan adı biçimli parçalar çıkarılır;
+//   4) izin listesi: harf, işaret, rakam, boşluk ve . ' ’ - & dışındaki her karakter boşluk olur (köşeli ayraç, bölü, iki
+//      nokta, @, satır sonu, denetim karakterleri; "hxxps[:]//evil[.]com" bağlantıya dönüşmez);
+//   5) boşluklar teklenir; iki boşluk olmayan karakter arasındaki her noktanın arkasına boşluk konur ("kotu.example"
+//      kendiliğinden bağlantı olmasın; "Dr. Ayşe" değişmez); en çok 80 karakter (headerSafe).
+const LOOKALIKE_DOTS = /[\u00B7\u0387\u02D9\u2024\u2027\u2219\u22C5\u2E31\u2E33\u30FB\uFF65\uFE52\uFF0E\u3002\uFF61\u1427]/g;
+const INVISIBLE = /[\p{Cf}\u034F\u115F\u1160\u3164\uFFA0\u180B-\u180F\uFE00-\uFE0F\u{E0100}-\u{E01EF}]/gu;
 export const nameSafe = (s: string) => headerSafe(String(s ?? '')
-  .replace(/[\u00AD\u200B-\u200F\u2028-\u202E\u2060-\u2064\uFEFF]/g, '')
-  .replace(/[\u3002\uFF0E\uFF61]/g, '.')
+  .normalize('NFKC')
+  .replace(LOOKALIKE_DOTS, '.')
+  .replace(INVISIBLE, '')
   .replace(/\b[a-z][a-z0-9+.-]*:\/\/\S*/gi, ' ')
   .replace(/\bwww\.\S*/gi, ' ')
   .replace(/\S+@\S+/g, ' ')
   .replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|info|io|co|tr|xyz|me|link|app|site|online|ru|cn|top|biz|ly|gl|to|cc|ws)\b\S*/gi, ' ')
+  .replace(/[^\p{L}\p{M}\p{N}\s.'’&-]/gu, ' ')
+  .replace(/\s+/g, ' ')
   .replace(/(\S)\.(?=\S)/g, '$1. '));
 
 export function untilText(iso: string) {

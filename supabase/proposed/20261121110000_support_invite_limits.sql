@@ -5,24 +5,32 @@
 -- 1) Destek (support_request_create): tek kişinin farklı e-postalarla saatlik genel sınırı (60) doldurup formu herkese
 --    kapatması engellenir.
 --    · Kaynak başına sınır: Edge Function `support` gönderenin adresini p_source ile verir (Worker'dan gelen istekte
---      SUPPORT_FORWARD_KEY eşleşirse Worker'ın ilettiği adres, yoksa işlevin gördüğü adres; Worker'dan anahtarsız gelen istek
---      kaynak bilinmiyor sayılır). Adres düz saklanmaz: günlük rastgele tuzla SHA-256 özeti (support_requests.source_hash);
---      tuz 2 gün sonra silinir, özet 2 gün sonra boşaltılır. Adres inet ile ayrıştırılır; IPv4'e eşlenmiş IPv6 IPv4 sayılır,
---      öteki IPv6 /64 ağına indirgenir. Sayımda bugünün ve dünün tuzuyla iki özet aranır (gün dönümünde sayaç sıfırlanmaz).
+--      SUPPORT_FORWARD_KEY eşleşirse Worker'ın ilettiği adres, yoksa işlevin kendi gördüğü adres; secret tanımlı değilse
+--      kaynak yok). Adres düz saklanmaz: günlük rastgele tuzla SHA-256 özeti (support_requests.source_hash) ve geniş ağının
+--      (IPv4 /24, IPv6 /48) aynı tuzla ikinci özeti (source_wide_hash); tuz 2 gün sonra silinir, iki özet 2 gün sonra
+--      boşaltılır. Adres inet ile ayrıştırılır; IPv4'e eşlenmiş IPv6 IPv4 sayılır, öteki IPv6 /64 ağına indirgenir. Sayımda
+--      bugünün ve dünün tuzuyla iki özet aranır (gün dönümünde sayaç sıfırlanmaz).
 --      Sınır: aynı kaynaktan saatte 5, 24 saatte 15 → {"error":"too_many_source"}.
 --    · E-posta başına 24 saatte 3 → too_many. Kaynak biliniyorsa yalnız aynı kaynaktan o adresle açılanlar sayılır (başkası
---      bir kişinin adresini yazarak onun formunu kapatamaz); kaynak bilinmiyorsa adres başına. KVKK (topic 'privacy') muaf.
+--      bir kişinin adresini yazarak onun formunu kapatamaz); kaynak yoksa yalnız kaynaksız açılanlar. KVKK (topic 'privacy') muaf.
 --    · Genel sınır yalnız son çare: saatte 300 ("istenmeyen" işaretlenenler ve KVKK talepleri sayılmaz) → busy. Dolunca son
---      bir saatte hiç yazmamış bilinen kaynak yine bir talep açar (sert tavan saatte 600).
---      "Kişisel verilerim (KVKK)" (topic 'privacy') ayrı paydan: saatte 100 KVKK talebi (genel sınır dolsa da kabul).
+--      bir saatte hiç yazmamış ve geniş ağından da (/24, /48) yazılmamış bilinen kaynak yine bir talep açar (sert tavan 600).
+--      "Kişisel verilerim (KVKK)" (topic 'privacy') ayrı paydan: saatte 100 KVKK talebi (genel sınır dolsa da kabul); doluyken
+--      aynı kuralla ilk kez yazan kaynak bir KVKK talebi açar (sert tavan 200).
+--    · Kaynaksız talepler (eski 5 parametreli çağrı, secret ya da adres yok) bu paylara ek olarak kendi küçük ortak kovasında:
+--      saatte 30 (KVKK dışı) ve 10 (KVKK), yalnız kaynaksız satırlar sayılır → busy.
 --    · Eski 5 parametreli imza durur (kaynak yok sayılır; yayındaki eski işlev çalışmaya devam eder).
 -- 2) Davet e-postası (clinic_invite_email_take): mevcut sınırlara (davet başına 3, 60 sn, uzman başına günde 30 davet) ek
---    olarak her gönderim invite_email_sends'e yazılır (alıcı adres yalnız özet olarak; özet büyük/küçük harf, "+etiket" ve
---    Gmail'de nokta ve googlemail.com farkı atılarak: aynı gelen kutusunun takma adları tek alıcı sayılır):
---    · aynı alıcı adrese (bütün kliniklerden) 24 saatte 2, 7 günde 4 → rate_recipient
+--    olarak her gönderim invite_email_sends'e yazılır (alıcı adres yalnız özet olarak; özet NFKC, görünmez karakterler,
+--    büyük/küçük harf, tırnaklı yerel kısım, alan adı sonundaki nokta, "+etiket", Gmail'de nokta ve googlemail.com, Proton'da
+--    . - _ ve alan adı farkı atılarak: aynı gelen kutusunun takma adları tek alıcı sayılır):
+--    · aynı alıcı adrese (bütün kliniklerden) 24 saatte 3, 7 günde 6 → rate_recipient (bir davetin 3 gönderimi sığar)
 --    · uzman başına 24 saatte 20 gönderim; hesabın ilk 24 saatinde 5 → rate_clinician
 --    · sistem payı saatte 200 yerleşik hesaplara; yerleşik olmayan (7 günden yeni ve ücretli paketi olmayan klinikte) hesaplar
---      ayrı küçük paydan saatte 60 ve yerleşiklerin payına sayılmaz → rate_global
+--      ayrı küçük paydan saatte 60 ve yerleşiklerin payına sayılmaz → rate_global. İlk 24 saatindeki hesabın ilk 2 gönderimi
+--      küçük pay dolu diye reddedilmez (paya sayılır; küçük payın sert tavanı saatte 150).
+--    · Davet adresi oluşturulurken denetlenir (clinic_invites tetikleyicisi): küçük harf, kırpılmış, yalnız düz ASCII adres
+--      ('E-posta adresi geçersiz'); eski satırlar değiştirilmez.
 --    Gönderilemeyen e-posta (clinic_invite_email_done p_ok=false) kayıttan düşer (hak geri verilir). Kayıt 8 gün tutulur;
 --    uzman hesabı silinse de satır kalır (uzman bağı boşalır), silip yeniden kaydolmak alıcı sınırını sıfırlamaz.
 --    Bütün sayaçlar (destek ve davet) danışma kilitleriyle (pg_advisory_xact_lock) sıraya alınır: paralel istekler aşamaz.
@@ -32,6 +40,11 @@
 -- =====================================================================
 alter table public.support_requests add column if not exists source_hash text;
 create index if not exists support_requests_source_idx on public.support_requests (source_hash, created_at) where source_hash is not null;
+-- Geniş ağın (IPv4 /24, IPv6 /48) özeti: yalnız "ilk kez yazan kaynak" istisnasında bakılır (tek /48'deki binlerce /64 ya da
+-- tek /24'teki adresler payı istisnayla dolduramasın). Aynı tuz, aynı 2 günlük saklama; adres ya da ağ düz yazılmaz.
+alter table public.support_requests add column if not exists source_wide_hash text;
+create index if not exists support_requests_wide_idx on public.support_requests (source_wide_hash, created_at) where source_wide_hash is not null;
+create index if not exists support_requests_nosource_idx on public.support_requests (created_at) where source_hash is null;
 
 -- Günlük tuz (yalnız sunucu; kimse okuyamaz)
 create table if not exists public.support_source_salts (
@@ -63,27 +76,54 @@ begin
 end $$;
 revoke execute on function public.support_source_net(text) from public, anon, authenticated;
 
--- Kaynağın özetleri: [bugünün tuzuyla, dünün tuzuyla (varsa)]. Sayımlar ikisine de bakar: gün dönümünde (UTC) sayaç
--- sıfırlanmaz (eskiden tek özet olduğu için gece yarısında aynı kaynak bir saatte 10 talep açabiliyordu).
+-- Kaynağın geniş ağı: IPv4 /24, IPv6 /48 (support_source_net'ten türetilir; adres olmayan değer yine 'invalid').
+create or replace function public.support_source_wide(p_source text)
+returns text language plpgsql immutable set search_path = '' as $$
+declare
+  n text := public.support_source_net(p_source);
+  a inet;
+begin
+  if n is null or n = 'invalid' then return n; end if;
+  a := n::inet;
+  return case when family(a) = 6 then host(network(set_masklen(a, 48))) || '/48'
+              else host(network(set_masklen(a, 24))) || '/24' end;
+end $$;
+revoke execute on function public.support_source_wide(text) from public, anon, authenticated;
+
+-- Bir değerin günlük tuzlu özetleri: [bugünün tuzuyla, dünün tuzuyla (varsa)]. Sayımlar ikisine de bakar: gün dönümünde
+-- (UTC) sayaç sıfırlanmaz (eskiden tek özet olduğu için gece yarısında aynı kaynak bir saatte 10 talep açabiliyordu).
 -- Tuz 2 günden fazla tutulmaz; adres düz yazılmaz.
-create or replace function public.support_source_hashes(p_source text)
+create or replace function public.support_salted_hashes(p_value text)
 returns text[] language plpgsql security definer set search_path = '' as $$
 declare
-  net text := public.support_source_net(p_source);
   today date := (now() at time zone 'utc')::date;
   s text;
   y text;
 begin
-  if net is null then return null; end if;
+  if p_value is null then return null; end if;
   insert into public.support_source_salts (day, salt) values (today, gen_random_uuid()::text || gen_random_uuid()::text)
     on conflict (day) do nothing;
   delete from public.support_source_salts where day < today - 1;
   select salt into s from public.support_source_salts where day = today;
   select salt into y from public.support_source_salts where day = today - 1;
-  return array_remove(array[encode(extensions.digest(s || '|' || net, 'sha256'), 'hex'),
-                            case when y is not null then encode(extensions.digest(y || '|' || net, 'sha256'), 'hex') end], null);
+  return array_remove(array[encode(extensions.digest(s || '|' || p_value, 'sha256'), 'hex'),
+                            case when y is not null then encode(extensions.digest(y || '|' || p_value, 'sha256'), 'hex') end], null);
 end $$;
+revoke execute on function public.support_salted_hashes(text) from public, anon, authenticated;
+
+-- Kaynağın özetleri (adres ya da /64): tuz || '|' || ağ
+create or replace function public.support_source_hashes(p_source text)
+returns text[] language sql security definer set search_path = '' as $$
+  select public.support_salted_hashes(public.support_source_net(p_source))
+$$;
 revoke execute on function public.support_source_hashes(text) from public, anon, authenticated;
+
+-- Geniş ağın özetleri (/24, /48): tuz || '|wide|' || ağ (kaynak özetiyle karışmaz)
+create or replace function public.support_source_wide_hashes(p_source text)
+returns text[] language sql security definer set search_path = '' as $$
+  select public.support_salted_hashes('wide|' || public.support_source_wide(p_source))
+$$;
+revoke execute on function public.support_source_wide_hashes(text) from public, anon, authenticated;
 
 -- Adresin bugünkü özeti (kayda yazılan); adres yoksa null.
 create or replace function public.support_source_hash(p_source text)
@@ -94,7 +134,8 @@ revoke execute on function public.support_source_hash(text) from public, anon, a
 
 -- Formdan yeni talep (yalnız sunucu: Edge Function `support`).
 -- Dönüş: {"ref"} ya da {"error": "invalid" | "too_many" | "too_many_source" | "busy"}.
--- Sıra: kaynak sınırı (5/saat, 15/24 saat) → e-posta sınırı (KVKK hariç) → pay (KVKK ayrı; genel 300, ilk kez yazan kaynağa 600'e kadar).
+-- Sıra: kaynak sınırı (5/saat, 15/24 saat) → e-posta sınırı (KVKK hariç) → kaynaksız kova (30/saat, KVKK 10/saat)
+-- → pay (KVKK 100, ilk kez yazan kaynağa 200'e kadar; genel 300, ilk kez yazan kaynağa 600'e kadar).
 create or replace function public.support_request_create(p_app text, p_topic text, p_email text, p_name text, p_message text,
                                                          p_source text)
 returns jsonb language plpgsql security definer set search_path = '' as $$
@@ -102,9 +143,13 @@ declare
   em text := lower(trim(coalesce(p_email, '')));
   msg text := trim(coalesce(p_message, ''));
   nm text := left(trim(coalesce(p_name, '')), 80);
+  kvkk boolean := p_topic = 'privacy';
   srcs text[];
+  wides text[];
   src text;
   pool integer;
+  soft integer;
+  hard integer;
   r text;
   alphabet constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   -- karışan harf/rakam yok (I, O, 0, 1)
   i integer;
@@ -115,16 +160,18 @@ begin
     return jsonb_build_object('error', 'invalid');
   end if;
   srcs := public.support_source_hashes(p_source);
+  wides := public.support_source_wide_hashes(p_source);
   src := srcs[1];
   -- Sayım ve kayıt yarışsız: paralel istekler birbirinin henüz işlenmemiş kaydını göremez, bu yüzden her sayaç kilitlenir.
   -- Sıra sabit (kaynak → e-posta → pay; kilitlenme yok). Pay kilidi her talepte alınır: bütün form talepleri sıraya girer
-  -- (hacim saatte en çok birkaç yüz; aşım payı yok). Kilit anahtarları bellekte; özetin kendisi ya da adres yazılmaz.
+  -- (hacim saatte en çok birkaç yüz; aşım payı yok); kaynaksız kova, KVKK payı ve geniş ağ sayımı da bu kilidin içinde.
+  -- Kilit anahtarları bellekte; özetin kendisi ya da adres yazılmaz.
   if src is not null then perform pg_advisory_xact_lock(hashtext('support:src'), hashtext(src)); end if;
   perform pg_advisory_xact_lock(hashtext('support:email'), hashtext(em));
   perform pg_advisory_xact_lock(hashtext('support:pool'), 0);
   -- 2 günden eski özetler boşaltılır (tuzu silindiği için zaten geri çevrilemez; kişisel veri azaltma)
-  update public.support_requests set source_hash = null
-   where source_hash is not null and created_at < now() - interval '2 days';
+  update public.support_requests set source_hash = null, source_wide_hash = null
+   where (source_hash is not null or source_wide_hash is not null) and created_at < now() - interval '2 days';
   if src is not null and (
        (select count(*) from public.support_requests where source_hash = any(srcs) and created_at > now() - interval '1 hour') >= 5
     or (select count(*) from public.support_requests where source_hash = any(srcs) and created_at > now() - interval '24 hours') >= 15) then
@@ -132,31 +179,38 @@ begin
   end if;
   -- E-posta sınırı (24 saatte 3). Adres doğrulanmadığı için başkası da yazabilir: kaynak biliniyorsa yalnız AYNI kaynaktan
   -- bu adresle açılanlar sayılır (bir kaynak başkasının hakkını harcayamaz; "too_many" yalnız kendi gönderdiklerini söyler).
-  -- Kaynak bilinmiyorsa (secret yok ya da eski 5 parametreli çağrı) adres başına. KVKK (privacy) bu sınırdan muaf: yasal
-  -- başvuru yolu üçüncü kişi tarafından kapatılamasın (kaynak sınırı ve KVKK payı sürer).
-  if p_topic <> 'privacy' and (
+  -- Kaynak yoksa (secret yok ya da eski 5 parametreli çağrı) yalnız kaynaksız açılanlar sayılır: bilinen kaynaklardan bir
+  -- kişinin adresiyle açılan talepler onu kaynaksız yolda da kilitlemesin. KVKK (privacy) bu sınırdan muaf: yasal başvuru
+  -- yolu üçüncü kişi tarafından kapatılamasın (kaynak sınırı, kaynaksız kova ve KVKK payı sürer).
+  if not kvkk and (
        (src is not null and (select count(*) from public.support_requests
                               where lower(email) = em and source_hash = any(srcs) and created_at > now() - interval '24 hours') >= 3)
     or (src is null and (select count(*) from public.support_requests
-                          where lower(email) = em and created_at > now() - interval '24 hours') >= 3)) then
+                          where lower(email) = em and source_hash is null and created_at > now() - interval '24 hours') >= 3)) then
     return jsonb_build_object('error', 'too_many');
   end if;
-  if p_topic = 'privacy' then
-    -- KVKK başvurusu ayrı paydan: genel sınır dolsa da kabul (yasal başvuru yolu kapanmasın)
-    if (select count(*) from public.support_requests
-         where topic = 'privacy' and status <> 'spam' and created_at > now() - interval '1 hour') >= 100 then
-      return jsonb_build_object('error', 'busy');
-    end if;
-  else
+  -- Kaynaksız kova (paylara ek): kaynaksız yol (Worker'ın anahtarsız isteği artık kendi adresiyle sayılır; kalan: eski imza,
+  -- secret ya da adres yok) tek başına bir payı tüketemesin. Yalnız kaynaksız satırlar sayılır; "istenmeyen" sayılmaz.
+  if src is null then
     select count(*) into pool from public.support_requests
-     where topic <> 'privacy' and status <> 'spam' and created_at > now() - interval '1 hour';
-    -- Genel pay (300) yalnız son çare. Dolunca herkes eşit reddedilmez: son bir saatte hiç yazmamış, bilinen bir kaynak
-    -- yine bir talep açar (sert tavan 600), böylece birkaç kaynaktan gelen sel ilk kez yazanları dışarıda bırakmaz.
-    -- Kalan risk: 600'ü doldurmak için en az ~360 ayrı kaynak (adres ya da /64) gerekir; tam koruma ancak bir doğrulamayla (Turnstile).
-    if pool >= 300 and (src is null or pool >= 600
-        or exists (select 1 from public.support_requests where source_hash = any(srcs) and created_at > now() - interval '1 hour')) then
+     where source_hash is null and (topic = 'privacy') = kvkk and status <> 'spam' and created_at > now() - interval '1 hour';
+    if pool >= (case when kvkk then 10 else 30 end) then
       return jsonb_build_object('error', 'busy');
     end if;
+  end if;
+  -- Paylar yalnız son çare: KVKK 100 (genel sınır dolsa da kabul; yasal başvuru yolu kapanmasın), genel 300 ("istenmeyen"
+  -- ve KVKK sayılmaz). Dolunca herkes eşit reddedilmez: son bir saatte hiç yazmamış bilinen bir kaynak, geniş ağından
+  -- (IPv4 /24, IPv6 /48) da son bir saatte yazılmamışsa, yine bir talep açar (sert tavan KVKK 200, genel 600). Geniş ağ
+  -- koşulu tek /48'deki binlerce /64 ya da tek /24 ile istisnanın doldurulmasını önler.
+  -- Kalan risk: tavanı doldurmak için yüzlerce ayrı /24 ya da /48 gerekir; tam koruma ancak bir doğrulamayla (Turnstile).
+  select count(*) into pool from public.support_requests
+   where (topic = 'privacy') = kvkk and status <> 'spam' and created_at > now() - interval '1 hour';
+  soft := case when kvkk then 100 else 300 end;
+  hard := case when kvkk then 200 else 600 end;
+  if pool >= soft and (src is null or pool >= hard
+      or exists (select 1 from public.support_requests where source_hash = any(srcs) and created_at > now() - interval '1 hour')
+      or exists (select 1 from public.support_requests where source_wide_hash = any(wides) and created_at > now() - interval '1 hour')) then
+    return jsonb_build_object('error', 'busy');
   end if;
   loop
     r := 'D-';
@@ -165,19 +219,37 @@ begin
     end loop;
     exit when not exists (select 1 from public.support_requests where ref = r);
   end loop;
-  insert into public.support_requests (ref, app, topic, email, name, message, source_hash) values (r, p_app, p_topic, em, nm, msg, src);
+  insert into public.support_requests (ref, app, topic, email, name, message, source_hash, source_wide_hash)
+  values (r, p_app, p_topic, em, nm, msg, src, case when src is not null then wides[1] end);
   return jsonb_build_object('ref', r);
 end $$;
 revoke execute on function public.support_request_create(text, text, text, text, text, text) from public, anon, authenticated;
 grant execute on function public.support_request_create(text, text, text, text, text, text) to service_role;
 
--- Eski imza (yayındaki eski Edge Function): kaynak bilinmez, yalnız e-posta ve genel sınırlar
+-- Eski imza (yayındaki eski Edge Function): kaynak yok; e-posta sınırı (kaynaksız talepler), kaynaksız kova ve paylar
 create or replace function public.support_request_create(p_app text, p_topic text, p_email text, p_name text, p_message text)
 returns jsonb language sql security definer set search_path = '' as $$
   select public.support_request_create(p_app, p_topic, p_email, p_name, p_message, null::text)
 $$;
 revoke execute on function public.support_request_create(text, text, text, text, text) from public, anon, authenticated;
 grant execute on function public.support_request_create(text, text, text, text, text) to service_role;
+
+-- Panel kuyruğu: kaynak özetleri panele gitmez (aynı kaynaktan gelen talepleri 2 gün boyunca birbirine bağlamaya yarardı;
+-- panelde kullanılmıyor). Gövde migrations/20261102210000_support.sql ile aynı, yalnız iki özet çıkarılır.
+create or replace function public.admin_support_requests(p_status text default 'open', p_limit integer default 100)
+returns jsonb language plpgsql stable security definer set search_path = '' as $$
+begin
+  perform public.admin_require(array['support']);
+  return coalesce((
+    select jsonb_agg(to_jsonb(s) - 'handled_by' - 'source_hash' - 'source_wide_hash'
+                     order by case when p_status = 'open' then s.created_at end asc, s.created_at desc)
+      from (select * from public.support_requests
+             where case when coalesce(p_status, 'open') = 'open' then status in ('new', 'in_progress')
+                        when p_status = 'all' then true else status = p_status end
+             order by created_at desc limit greatest(1, least(coalesce(p_limit, 100), 500))) s), '[]'::jsonb);
+end $$;
+revoke execute on function public.admin_support_requests(text, integer) from public, anon;
+grant execute on function public.admin_support_requests(text, integer) to authenticated;
 
 -- =====================================================================
 -- 2. Davet e-postası
@@ -203,21 +275,35 @@ create index if not exists invite_email_sends_clinician_idx on public.invite_ema
 create index if not exists invite_email_sends_at_idx on public.invite_email_sends (at);
 create index if not exists invite_email_sends_pool_idx on public.invite_email_sends (pool, at);
 
--- Alıcı sınırının anahtarı: aynı gelen kutusuna giden takma adlar tek alıcı. Küçük harf + kırpma; tam bir "@" varsa yerel
--- kısımdaki "+etiket" (her alan adında) atılır; gmail.com / googlemail.com'da noktalar da atılır ve googlemail.com → gmail.com.
--- Saklanan yalnız bu anahtarın özetidir (invite_email_to_hash). Eski anahtarla yazılmış satırlar (canlıda yok) dönüştürülmez.
+-- Alıcı sınırının anahtarı: aynı gelen kutusuna giden takma adlar tek alıcı. Önce NFKC (tam genişlikli harf, "․" gibi
+-- benzer noktalar), görünmez ve biçim karakterleri (Unicode Cf: yumuşak tire, sıfır genişlikli, yön işaretleri, BOM …;
+-- birleştirici ve değişim seçicileri, Hangul dolgu harfleri) ve bölünmez boşluklar atılır, küçük harf, bütün boşluklar
+-- atılır. Tam bir "@" varsa: yerel kısmı saran çift tırnak ve alan adı sonundaki noktalar atılır, "+etiket" (her alan adında)
+-- atılır; gmail.com / googlemail.com'da noktalar atılır ve googlemail.com → gmail.com; proton.me / protonmail.com /
+-- protonmail.ch / pm.me'de . - _ atılır ve alan adı proton.me. Anahtar yalnız sayım içindir (gönderim davetteki adresle);
+-- fazladan birleştirme sınırı yalnız sıkılaştırır. Saklanan yalnız bu anahtarın özetidir (invite_email_to_hash). Eski
+-- anahtarla yazılmış satırlar (canlıda yok) dönüştürülmez.
 create or replace function public.invite_email_key(p_email text)
 returns text language sql immutable set search_path = '' as $$
-  with e as (select lower(trim(coalesce(p_email, ''))) as v),
+  with e as (select regexp_replace(lower(regexp_replace(normalize(coalesce(p_email, ''), NFKC),
+                      '[ ­͏؀-؅؜۝܏࢐࢑࣢ᅟᅠ᠋-᠏ '
+                      '​-‏ - ⁠-⁤⁦-⁯ㅤ︀-️﻿ﾠ￹-￻'
+                      '\U000110BD\U000110CD\U00013430-\U0001343F\U0001BCA0-\U0001BCA3\U0001D173-\U0001D17A'
+                      '\U000E0001\U000E0020-\U000E007F\U000E0100-\U000E01EF]', '', 'g')),
+                    '[[:space:]]', '', 'g') as v),
        p as (select v,
-                    case when char_length(v) - char_length(replace(v, '@', '')) = 1 then split_part(v, '@', 1) end as l,
-                    split_part(v, '@', 2) as d
+                    case when char_length(v) - char_length(replace(v, '@', '')) = 1 then split_part(v, '@', 1) end as l0,
+                    rtrim(split_part(v, '@', 2), '.') as d
                from e),
-       q as (select v, d, l, coalesce(nullif(split_part(l, '+', 1), ''), l) as base from p)
+       q as (select v, d, case when l0 ~ '^".*"$' and char_length(l0) >= 2 then substr(l0, 2, char_length(l0) - 2) else l0 end as l
+               from p),
+       r as (select v, d, l, coalesce(nullif(split_part(l, '+', 1), ''), l) as base from q)
   select case when l is null then v
               when d in ('gmail.com', 'googlemail.com') then coalesce(nullif(replace(base, '.', ''), ''), base) || '@gmail.com'
+              when d in ('proton.me', 'protonmail.com', 'protonmail.ch', 'pm.me')
+                then coalesce(nullif(regexp_replace(base, '[._-]', '', 'g'), ''), base) || '@proton.me'
               else base || '@' || d end
-    from q
+    from r
 $$;
 revoke execute on function public.invite_email_key(text) from public, anon, authenticated;
 
@@ -226,6 +312,26 @@ returns text language sql immutable set search_path = '' as $$
   select encode(extensions.digest('invite|' || public.invite_email_key(p_email), 'sha256'), 'hex')
 $$;
 revoke execute on function public.invite_email_to_hash(text) from public, anon, authenticated;
+
+-- Davet adresi oluşturulurken denetlenir: kırpılır, küçük harfe çevrilir, yalnız düz ASCII adres kabul edilir (tırnaklı yerel
+-- kısım, alan adı sonunda nokta, görünmez karakter, bölünmez boşluk, birden çok adres, tam genişlikli harf reddedilir;
+-- bunlar alıcı sınırını aşmanın yoluydu). Hata metni clinic_create_invite'ınkiyle aynı (ClinicApp metni olduğu gibi gösterir).
+-- Yalnız yeni ya da değişen adres denetlenir: eski satırlar değiştirilmez (adresin boşaltılması, ör. KVKK işlemi, serbest).
+create or replace function public.clinic_invites_email_check()
+returns trigger language plpgsql set search_path = '' as $$
+begin
+  if new.parent_email is not null and (tg_op = 'INSERT' or new.parent_email is distinct from old.parent_email) then
+    new.parent_email := lower(btrim(new.parent_email, E' \t\r\n ﻿'));
+    if new.parent_email !~ '^[a-z0-9._%+''-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$' then
+      raise exception 'E-posta adresi geçersiz';
+    end if;
+  end if;
+  return new;
+end $$;
+revoke execute on function public.clinic_invites_email_check() from public, anon, authenticated;
+drop trigger if exists clinic_invites_email_check on public.clinic_invites;
+create trigger clinic_invites_email_check before insert or update of parent_email on public.clinic_invites
+  for each row execute function public.clinic_invites_email_check();
 
 -- Edge Function invite-email çağırır (hizmet rolü, istek başlığı yok): uzmanın davetin alanındaki üyeliği denetlenir
 create or replace function public.clinic_invite_email_take(p_code text, p_user uuid)
@@ -238,6 +344,9 @@ declare
   th text;
   pl text;
   cap integer;
+  used integer;
+  mine integer;
+  fresh boolean;
 begin
   select * into me from public.clinicians where id = p_user;
   if not found then return jsonb_build_object('error', 'not_found'); end if;
@@ -272,22 +381,27 @@ begin
                or (c.plan in ('solo', 'clinic') and c.period_end > now())
              then 'main' else 'new' end;
   cap := case when pl = 'main' then 200 else 60 end;
+  fresh := me.created_at > now() - interval '24 hours';
   -- Sayım ve kayıt yarışsız: davet satırı kilidi yalnız aynı daveti korur; farklı davetlerden paralel gönderimler sayaçları
   -- aşmasın diye alıcı, uzman ve pay kilitlenir. Sıra sabit (davet satırı → alıcı → uzman → pay; kilitlenme yok). Pay kilidi
-  -- her gönderimde alınır (gönderimler sıraya girer, hacim saatte en çok ~260; aşım payı yok).
+  -- her gönderimde alınır (gönderimler sıraya girer, hacim saatte en çok ~350; aşım payı yok). Bütün sayımlar pay kilidinden sonra.
   perform pg_advisory_xact_lock(hashtext('invite:to'), hashtext(th));
   perform pg_advisory_xact_lock(hashtext('invite:clinician'), hashtext(me.id::text));
   perform pg_advisory_xact_lock(hashtext('invite:pool'), hashtext(pl));
-  if (select count(*) from public.invite_email_sends where pool = pl and at > now() - interval '1 hour') >= cap then
+  select count(*) into used from public.invite_email_sends where pool = pl and at > now() - interval '1 hour';
+  select count(*) into mine from public.invite_email_sends where clinician_id = me.id;
+  -- Yeni hesap payı (60) birkaç kendi açılmış hesapla doldurulabilir: ilk 24 saatindeki hesabın ilk 2 gönderimi pay dolu diye
+  -- reddedilmez (gerçek yeni uzman ilk davetini gönderebilsin); paya sayılır, sert tavan saatte 150. Sonrası olağan 60.
+  if used >= cap and not (pl = 'new' and fresh and mine < 2 and used < 150) then
     return jsonb_build_object('error', 'rate_global');
   end if;
-  if (select count(*) from public.invite_email_sends where to_hash = th and at > now() - interval '24 hours') >= 2
-     or (select count(*) from public.invite_email_sends where to_hash = th and at > now() - interval '7 days') >= 4 then
+  -- Alıcı: 24 saatte 3 (bir davet en çok 3 kez gönderilir, hepsi sığar), 7 günde 6
+  if (select count(*) from public.invite_email_sends where to_hash = th and at > now() - interval '24 hours') >= 3
+     or (select count(*) from public.invite_email_sends where to_hash = th and at > now() - interval '7 days') >= 6 then
     return jsonb_build_object('error', 'rate_recipient');
   end if;
   if (select count(*) from public.invite_email_sends where clinician_id = me.id and at > now() - interval '24 hours') >= 20
-     or (me.created_at > now() - interval '24 hours'
-         and (select count(*) from public.invite_email_sends where clinician_id = me.id) >= 5) then
+     or (fresh and mine >= 5) then
     return jsonb_build_object('error', 'rate_clinician');
   end if;
   insert into public.invite_email_sends (clinician_id, code, to_hash, pool) values (me.id, inv.code, th, pl);

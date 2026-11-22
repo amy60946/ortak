@@ -144,7 +144,7 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `user_flags` | K13 | |
 | `legal_acceptances` | K14 | rastgele kimlik, e-posta/ad yok |
 | `kvkk_requests` | K14 | |
-| `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi) |
+| `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi). Kötüye kullanım sınırı için gönderen adresin (IPv6 /64) ve geniş ağının (IPv4 /24, IPv6 /48) günlük tuzlu özetleri (`source_hash`, `source_wide_hash`; adres ve ağ düz yazılmaz, panelde gösterilmez), 2 gün sonra boşaltılır, tuz da 2 gün sonra silinir. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
 | `usage_daily_totals` | — | anonim günlük toplamlar |
 | `retention_runs` | — | imha kaydı, yalnız sayı |
 | `offer_code_pool` | — | davet ödülü Apple teklif kodu havuzu: kod, ürün, son tarih, atanma zamanı (aileye bağ yok; atanan kod `referral_rewards`te) |
