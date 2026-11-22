@@ -1,4 +1,4 @@
--- Hatırlatma kaydı (proposed/20261120231000_nudge_kvkk.sql): KVKK dökümünde "hatirlatmalar"; 12 ay sonra silinir
+-- Hatırlatma kaydı (migrations/20261120231000_nudge_kvkk.sql): KVKK dökümünde "hatirlatmalar"; 12 ay sonra silinir
 -- (imha işi "live" değilken yalnız sayar); kıyas seed'i (20261120221000) yüklenir ve yön anahtardan gelir; yetki.
 \set ON_ERROR_STOP on
 create schema if not exists tst;

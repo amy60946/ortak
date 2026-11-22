@@ -1,4 +1,4 @@
--- Sunucu bildirim motoru (proposed/20261120230000_nudge_engine.sql): bayrak kapalıyken hiçbir şey; kurallar; sessiz saat
+-- Sunucu bildirim motoru (migrations/20261120230000_nudge_engine.sql): bayrak kapalıyken hiçbir şey; kurallar; sessiz saat
 -- (Moyo 21–08, Mercek hafta içi 08:30–19:00); günde 1, 7 günde 2, o gün açıldıysa yok, 3 yanıtsız → 14 gün ara;
 -- %10 karşılaştırma grubu (Mercek'in cihaz içi özetiyle aynı); tercih (tips); hesap bilgisi sınır dışı; açılma, dönüşüm,
 -- panel istatistiği, kural aç / kapat, metinde ad / yer tutucu yok, yetki.
@@ -321,7 +321,7 @@ update public.nudge_rules set enabled = true where key = 'parent_child_none';
 select tst.check((select count(*) from public.nudge_candidates(tst.t0(), true, true) where rule_key = 'parent_child_none') >= 1, 'açılınca yeniden');
 -- yeniden çalıştırınca owner'ın seçimi korunur
 update public.nudge_rules set enabled = false where key = 'parent_inactive_7d';
-\ir ../proposed/20261120230000_nudge_engine.sql
+\ir ../migrations/20261120230000_nudge_engine.sql
 select tst.check(not (select enabled from public.nudge_rules where key = 'parent_inactive_7d'), 'öneri yeniden çalışınca kapalı kural kapalı kalır');
 
 select 'BİLDİRİM MOTORU TESTLERİ GEÇTİ' as sonuc;

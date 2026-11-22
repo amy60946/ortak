@@ -53,9 +53,9 @@ select tst.check(public.support_request_create('parent', 'bug', 'veli@example.co
 reset role;
 insert into public.support_requests (ref, app, topic, email, message, created_at)
 select 'D-' || lpad(g::text, 6, '0'), 'other', 'other', 'toplu' || g || '@example.com', 'Toplu deneme mesajı', now() - interval '10 minutes'
-  from generate_series(1, 60) g;
+  from generate_series(1, 300) g;
 set role service_role;
-select tst.check(public.support_request_create('clinic', 'clinic', 'uzman@example.com', '', 'Ekibe nasıl üye eklerim?') ->> 'error' = 'busy', 'saatte 60 üstü: meşgul');
+select tst.check(public.support_request_create('clinic', 'clinic', 'uzman@example.com', '', 'Ekibe nasıl üye eklerim?') ->> 'error' = 'busy', 'saatte 300 üstü (son çare): meşgul');
 reset role;
 delete from public.support_requests where email like 'toplu%';
 
@@ -67,7 +67,8 @@ select tst.as_user('00000000-0000-0000-0000-0000000000f2', 'aal1');
 select tst.fails($$select public.admin_support_requests('open', 50)$$, 'iki adımlı doğrulama şart');
 select tst.as_user('00000000-0000-0000-0000-0000000000f2', 'aal2');
 select tst.check(jsonb_array_length(public.admin_support_requests('open', 50)) = 3, 'açık talepler');
-select tst.check((public.admin_support_requests('open', 50) -> 0 ->> 'message') like 'Aboneliğim%', 'en eski önce');
+-- 20261122100000_support_inbox.sql'den beri sıra son iletiye göre, en yeni önce
+select tst.check((public.admin_support_requests('open', 50) -> 0 ->> 'message') like 'Üçüncü%', 'son iletiye göre en yeni önce');
 reset role;
 insert into tst.kv values ('id1', to_jsonb((select id from public.support_requests where name = 'Ayşe')));
 set role authenticated;
@@ -81,7 +82,8 @@ reset role;
 select tst.check((select answered_at is not null and handled_by = '00000000-0000-0000-0000-0000000000f2' from public.support_requests where name = 'Ayşe'), 'yanıt zamanı ve ilgilenen');
 
 -- sağlık: 2 günden eski yeni talep sarı
-update public.support_requests set created_at = now() - interval '3 days' where status = 'new';
+-- 20261122100000_support_inbox.sql'den beri son iletiye (last_message_at) göre sayılır
+update public.support_requests set created_at = now() - interval '3 days', last_message_at = now() - interval '3 days' where status = 'new';
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000000f3', 'aal2');
 select tst.check((select c ->> 'level' from jsonb_array_elements(public.admin_health() -> 'checks') c where c ->> 'key' = 'support') = 'warn', 'yanıtsız eski talep: sarı');

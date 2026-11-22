@@ -186,8 +186,8 @@ Hizmeti sunmak için bizim adımıza ve talimatımızla çalışan hizmet sağla
 | Apple | App Store satışı ve aboneliği (satıcı Apple'dır), anlık bildirim (APNs) | ABD / AB |
 | Expo | Yedek bildirim yolu: cihaz Expo bildirim anahtarı verirse bildirim Expo üzerinden Apple'a iletilir | ABD |
 | RevenueCat | Abonelik durumunun doğrulanması | ABD |
-| Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) | ABD / AB |
-| Cloudflare | Ekip yönetim panelinin barındırılması | Küresel ağ |
+| Resend | İşlem e-postaları (doğrulama, şifre sıfırlama, uzman daveti) ve destek yazışmalarına giden yanıtlar | ABD / AB |
+| Cloudflare | Ekip yönetim panelinin barındırılması; destek@ adresine gelen e-postaların alınıp destek kaydına iletilmesi (e-posta orada saklanmaz) | Küresel ağ |
 
 Güncel ve ayrıntılı liste: **Hizmet Sağlayıcılar (Alt İşleyenler) Listesi** (`alt-isleyenler`). Yeni bir sağlayıcı eklemeden önce listeyi güncelleriz.
 

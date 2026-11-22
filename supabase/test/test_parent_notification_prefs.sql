@@ -1,4 +1,4 @@
--- Ebeveyn bildirim tercihleri ve "günün adımları tamamlandı" (proposed/20261120210000_parent_notification_prefs.sql; bildirim sınırı 5a).
+-- Ebeveyn bildirim tercihleri ve "günün adımları tamamlandı" (migrations/20261120210000_parent_notification_prefs.sql; bildirim sınırı 5a).
 -- Varsayılanlar, aç/kapat, başkası okuyamaz, anon çağıramaz; step_done kapalıyken satır var ama push yok; day_complete günde bir kez.
 \set ON_ERROR_STOP on
 

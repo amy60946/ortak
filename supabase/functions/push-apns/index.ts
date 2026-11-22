@@ -4,7 +4,9 @@
 // gerçek bir bildirimi gönderebilir (yalnız son 10 dakikada oluşmuş olanı), başka bir şey yapamaz; yanıt cihaz
 // bilgisi içermez.
 // Secret'lar (Supabase → Edge Functions → Secrets): APNS_KEY_P8 (.p8 dosyasının tüm metni), APNS_KEY_ID, APNS_TEAM_ID.
-// İsteğe bağlı: PUSH_SECRET (Vault'taki `push_secret` ile aynı değer) tanımlıysa çağrı `x-push-secret` başlığını taşımalı.
+// İsteğe bağlı: PUSH_SECRET (Vault'taki `push_secret` ile aynı değer) tanımlıysa çağrı `x-push-secret` başlığını taşımalı
+// (sabit sürede karşılaştırılır). Yanlış/eksik başlık, geçersiz gövde ve gönderilecek bildirim olmaması aynı yanıtı alır
+// ({"skipped":true}, 200): dışarıdan anahtarın tanımlı olup olmadığı anlaşılmaz.
 // İsteğe bağlı: APNS_SANDBOX=1 (yalnız Xcode'dan kurulan geliştirme sürümleri için; TestFlight/App Store üretimdir).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -51,19 +53,31 @@ async function send(host: string, token: string, topic: string, payload: unknown
   return { ok: r.ok, status: r.status, reason };
 }
 
+// Sabit sürede karşılaştırma
+function same(a: string, b: string): boolean {
+  const x = new TextEncoder().encode(a);
+  const y = new TextEncoder().encode(b);
+  let diff = x.length ^ y.length;
+  for (let i = 0; i < Math.max(x.length, y.length); i++) diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
+  return diff === 0;
+}
+
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('POST', { status: 405 });
   const secret = Deno.env.get('PUSH_SECRET');
-  if (secret && req.headers.get('x-push-secret') !== secret) return Response.json({ error: 'yetkisiz' }, { status: 401 });
+  if (secret && !same(secret, req.headers.get('x-push-secret') ?? '')) {
+    console.warn('push-apns: x-push-secret eşleşmedi (Vault push_secret ile PUSH_SECRET aynı mı?)');   // yalnız günlükte
+    return Response.json({ skipped: true });
+  }
   const { notification_id } = await req.json().catch(() => ({}));
-  if (!Number.isSafeInteger(notification_id) || notification_id <= 0) return Response.json({ error: 'notification_id gerekli' }, { status: 400 });
+  if (!Number.isSafeInteger(notification_id) || notification_id <= 0) return Response.json({ skipped: true });
 
   // Sahiplen: yalnız henüz gönderilmemişse
   const recent = new Date(Date.now() - 10 * 60e3).toISOString();
   const { data: n } = await db.from('notifications').update({ apns_sent_at: new Date().toISOString() })
     .eq('id', notification_id).is('apns_sent_at', null).gte('created_at', recent).select('*').maybeSingle();
   if (!n) return Response.json({ skipped: true });
-  // Yalnız uygulama içi satır (ebeveynin bildirim tercihi; proposed/20261120210000_parent_notification_prefs.sql): tetikleyici zaten
+  // Yalnız uygulama içi satır (ebeveynin bildirim tercihi; migrations/20261120210000_parent_notification_prefs.sql): tetikleyici zaten
   // çağırmaz, bu satır elle yapılan çağrıya karşı. Sütun yoksa (SQL uygulanmadı) undefined döner, gönderim eskisi gibi sürer.
   if (n.push === false) return Response.json({ skipped: 'yalnız uygulama içi' });
   const topic = TOPIC[n.app];

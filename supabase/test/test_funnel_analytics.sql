@@ -1,4 +1,4 @@
--- Huni analitiği, abonelik sağlığı, kıyas tabloları (proposed/20261120220000_funnel_analytics.sql)
+-- Huni analitiği, abonelik sağlığı, kıyas tabloları (migrations/20261120220000_funnel_analytics.sql)
 -- Yetki (her admin okur; kişi listesi yalnız owner / support; yazma yalnız owner), RLS, adım sayıları ve yüzdeler (kümülatif),
 -- medyan süre, çıkış ekranları, iptal nedenleri, kpis {value, n}, abonelik sağlığı, kıyas ve App Store verisi.
 \set ON_ERROR_STOP on
