@@ -84,8 +84,8 @@
 | Supabase | Veritabanı, kimlik doğrulama, dosya depolama, sunucu işlevleri | Bu metindeki bütün veriler | Frankfurt, Almanya; AB bölgesi |
 | Apple | App Store (üyelik satışı; satıcı Apple'dır), bildirim gönderimi (APNs) | Üyelik işlemleri, bildirim jetonu ve bildirim metni | ABD / AB |
 | RevenueCat | Üyelik durumunun doğrulanması | Rastgele kullanıcı kimliği, satın alma kayıtları | ABD |
-| Resend | İşlem e-postaları (e-posta doğrulama, şifre sıfırlama, sizin adınıza aile daveti) | E-posta adresiniz, adınız, unvanınız, klinik adınız, e-posta içeriği | ABD / AB |
-| Cloudflare | Yönetim panelinin ve Moyo Mercek web sürümünün sayfalarının barındırılması | Yetkili ekibin ekranına gelen hesap ve üyelik bilgileri; web sürümünü açtığınızda bağlantı kayıtları (IP adresi, tarayıcı bilgisi) | Küresel |
+| Resend | İşlem e-postaları (e-posta doğrulama, şifre sıfırlama, sizin adınıza aile daveti) ve destek yazışmalarına giden yanıtlar | E-posta adresiniz, adınız, unvanınız, klinik adınız, e-posta içeriği | ABD / AB |
+| Cloudflare | Yönetim panelinin ve Moyo Mercek web sürümünün sayfalarının barındırılması; destek@ adresine gelen e-postaların alınıp destek kaydına iletilmesi (e-posta orada saklanmaz) | Yetkili ekibin ekranına gelen hesap ve üyelik bilgileri; web sürümünü açtığınızda bağlantı kayıtları (IP adresi, tarayıcı bilgisi); destek e-postasının gönderen adresi, konusu ve içeriği | Küresel |
 | Google (Gmail SMTP) — yalnız test dönemi | Test e-postaları | E-posta adresi, e-posta içeriği | ABD |
 
 Bu sağlayıcılar verilerinizi yalnız bu hizmetler için işler, kendi amaçlarıyla kullanmaz.
