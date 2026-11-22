@@ -19,8 +19,8 @@
 --   Tercih: "Hatırlatmalar ve ipuçları" = tercih anahtarı tips (Moyo: parent_notification_prefs.tips, Moyo Mercek:
 --   clinician_notification_prefs.tips; ikisi de varsayılan açık).
 --   Gönderim mevcut yol: notifications satırı (kind 'nudge', data.nudge = açılacak yer) → notifications_push → push-apns / Expo.
--- Önkoşul: proposed/20261120210000_parent_notification_prefs.sql (notifications.push, parent_notification_prefs) ve
---          proposed/20261120220000_funnel_analytics.sql (funnel_parent_steps / funnel_clinic_steps). Tekrar çalıştırılabilir.
+-- Önkoşul: migrations/20261120210000_parent_notification_prefs.sql (notifications.push, parent_notification_prefs) ve
+--          migrations/20261120220000_funnel_analytics.sql (funnel_parent_steps / funnel_clinic_steps). Tekrar çalıştırılabilir.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -36,7 +36,7 @@ do $$ begin
   end if;
 end $$;
 
--- Moyo: parent_notification_prefs'e üçüncü anahtar. Son tanım burada (önceki: proposed/20261120210000).
+-- Moyo: parent_notification_prefs'e üçüncü anahtar. Son tanım burada (önceki: migrations/20261120210000).
 alter table public.parent_notification_prefs add column if not exists tips boolean not null default true;
 
 create or replace function public.parent_notification_prefs_of(p_user uuid)

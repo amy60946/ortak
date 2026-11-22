@@ -4,7 +4,7 @@
 //   POST { app, topic, email, name?, message, adult: true, website?, elapsed_ms? } → 200 {ok, ref} · 400/429/503 {error}
 //        `adult`: "18 yaşından büyüğüm" kutusu (form yetişkinler içindir; çocuk ürünü, Apple 1.3/5.1.4).
 //        `website` gizli tuzak alanıdır (insan doldurmaz); 3 saniyeden kısa doldurulan form sessizce yok sayılır.
-// Kayıt SQL'de: support_request_create (proposed/20261121110000_support_invite_limits.sql): kaynak (gönderenin adresi, günlük
+// Kayıt SQL'de: support_request_create (migrations/20261121110000_support_invite_limits.sql): kaynak (gönderenin adresi, günlük
 //   tuzla özetlenir) başına saatte 5 ve 24 saatte 15; e-posta başına 24 saatte 3 (kaynak biliniyorsa aynı kaynaktan; KVKK
 //   muaf); genel saatte 300 (son çare; istenmeyen ve KVKK sayılmaz; doluyken son saatte yazmamış, geniş ağından da (/24, /48)
 //   yazılmamış kaynak 600'e kadar bir talep açar); KVKK ("privacy") ayrı paydan saatte 100 (aynı istisnayla 200'e kadar);

@@ -1,4 +1,4 @@
--- Destek formu kaynak sınırı ve davet e-postası gönderim sınırları (proposed/20261121110000_support_invite_limits.sql)
+-- Destek formu kaynak sınırı ve davet e-postası gönderim sınırları (migrations/20261121110000_support_invite_limits.sql)
 \set ON_ERROR_STOP on
 create schema if not exists tst;
 create or replace function tst.as_user(u uuid) returns void language plpgsql as $$

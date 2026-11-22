@@ -8,7 +8,7 @@
 //           · rate_clinician (uzman günde 20, yeni hesap ilk 24 saatte 5) · rate_global (sistem saatte 200 yerleşik hesaplara,
 //           7 günden yeni ve ücretsiz hesaplara ayrı 60; böyle bir hesabın kayan 24 saatteki ilk 2 gönderimi 150'ye kadar
 //           reddedilmez)
-//           · send_failed (proposed/20261121110000_support_invite_limits.sql)
+//           · send_failed (migrations/20261121110000_support_invite_limits.sql)
 // "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi); oturum işlevin içinde doğrulanır (auth.getUser).
 // Gönderim yolu (Supabase → Edge Functions → Secrets; anahtar sohbete ya da depoya yazılmaz):
 //   Canlı: RESEND_API_KEY + MAIL_FROM (alan adındaki adres, ör. davet@alanadi.com)

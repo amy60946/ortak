@@ -47,7 +47,7 @@ select tst.check(has_function_privilege('authenticated', 'public.register_push_t
 select tst.check(not has_function_privilege('authenticated', 'public.notify(uuid, text, text, text, text, jsonb, uuid, uuid)', 'execute'), 'iç fonksiyon kapalı kalır');
 select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee in ('anon', 'authenticated') and table_schema = 'public' and privilege_type = 'TRUNCATE'), 'TRUNCATE yetkisi yok');
 -- istemcinin yazabildiği her tabloda bütün tarih / zaman sütunları sonsuz değer denetiminde (yeni tablo ekleyen göç sonunda
--- public.finite_time_guard_attach() çağırır; proposed/20261121100000_security_audit_fixes.sql)
+-- public.finite_time_guard_attach() çağırır; migrations/20261121100000_security_audit_fixes.sql)
 select tst.check(not exists (
   select 1 from pg_class c join pg_namespace s on s.oid = c.relnamespace
    where s.nspname = 'public' and c.relkind in ('r', 'p') and not c.relispartition
@@ -75,7 +75,7 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(not public.family_premium((select v::uuid from tst.kv where k = 'fid')), 'bağlantısız uzman soramaz');
 
 reset role;
--- anon rolünün hiçbir public tabloda (görünüm dahil) ve dizide yetkisi yok (proposed/20261121100000_security_audit_fixes.sql)
+-- anon rolünün hiçbir public tabloda (görünüm dahil) ve dizide yetkisi yok (migrations/20261121100000_security_audit_fixes.sql)
 select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee = 'anon' and table_schema = 'public'),
   'anon hiçbir public tabloda yetkili değil: ' || coalesce((select string_agg(distinct table_name, ', ') from information_schema.role_table_grants
                                                             where grantee = 'anon' and table_schema = 'public'), ''));

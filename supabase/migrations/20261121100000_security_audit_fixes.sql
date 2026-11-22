@@ -844,7 +844,7 @@ end $$;
 revoke execute on function public.finite_time_guard_attach() from public, anon, authenticated;
 
 -- (b) Huni adım haritası sonsuz zamanı almaz (admin_funnel / admin_funnel_people medyan ve sıra hesabı); son tanımlar burada
--- (önceki: proposed/20261120220000_funnel_analytics.sql; yalnız son süzgece isfinite eklendi).
+-- (önceki: migrations/20261120220000_funnel_analytics.sql; yalnız son süzgece isfinite eklendi).
 create or replace function public.funnel_parent_steps(p_family uuid, p_now timestamptz default null)
 returns jsonb language plpgsql stable security definer set search_path = '' as $$
 declare
