@@ -127,7 +127,7 @@ test('gövde sınırı: Content-Length olmadan da 20 000 karakterde kesilir', as
 });
 
 // =====================================================================================================================
-// Destek kutusu: /support/inbound ve /support/reply (proposed/20261122100000_support_inbox.sql)
+// Destek kutusu: /support/inbound ve /support/reply (migrations/20261122100000_support_inbox.sql)
 // =====================================================================================================================
 const KEY = 'k'.repeat(32);
 const ienv = (extra: Record<string, string> = {}) => (k: string) =>

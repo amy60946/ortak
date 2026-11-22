@@ -24,7 +24,7 @@
 //   (destek@) kalktı. Gönderim Resend (RESEND_API_KEY + MAIL_FROM; gönderen MAIL_FROM'un alan adında noreply@) ya da test
 //   SMTP'si (SMTP_USER + SMTP_PASS). Başarısız uyarı talebi düşürmez (en çok 4 sn beklenir, yalnız hata kodu günlüğe yazılır).
 //
-// Destek kutusu (proposed/20261122100000_support_inbox.sql; sözleşme sozlesme/veritabani.md §39):
+// Destek kutusu (migrations/20261122100000_support_inbox.sql; sözleşme sozlesme/veritabani.md §39):
 //   POST /support/inbound  Worker'ın email() işleyicisi (destek@moyoapp.com.tr → Cloudflare Email Routing → Worker). Başlık
 //        x-moyo-forward-key = SUPPORT_FORWARD_KEY (sabit sürede; yoksa 401). Gövde JSON en çok 256 KB:
 //        {from, fromName, subject, text, messageId, refs, attachments:[{name,size,type}], auto, auth}. RPC support_inbound_email

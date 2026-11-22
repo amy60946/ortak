@@ -1,4 +1,4 @@
--- Destek kutusu (proposed/20261122100000_support_inbox.sql): gelen e-posta, konuşma, yanıt, iç not, konu ve KVKK süresi,
+-- Destek kutusu (migrations/20261122100000_support_inbox.sql): gelen e-posta, konuşma, yanıt, iç not, konu ve KVKK süresi,
 -- hazır yanıtlar, gönderim sonucu, sınırlar, yetki, sistem sağlığı ve saklama.
 \set ON_ERROR_STOP on
 create schema if not exists tst;
