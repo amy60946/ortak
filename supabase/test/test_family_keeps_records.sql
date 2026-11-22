@@ -1,4 +1,4 @@
--- Paylaşım kaydı ya da klinik silinince ailenin kayıtları ailede kalır (proposed/20261120200000_family_keeps_records.sql; kullanıcı kararı
+-- Paylaşım kaydı ya da klinik silinince ailenin kayıtları ailede kalır (migrations/20261120200000_family_keeps_records.sql; kullanıcı kararı
 -- 20 Kasım 2026, hukuk kararı 3A): uzman hesabını silince (tek kişilik klinik) Etkin / Ustalaştı eğitimler, ebeveynin yanıtları,
 -- uygulama kayıtları, yapılacakları ve davranış olayları kalır; taslak, gözlem verisi, ölçüt ve ailenin girdisi olmayan arşivli parçalar
 -- silinir; aile salt okur, yeni kayıt giremez; aynı çocukla etkin paylaşımı olan başka uzman ve kliniği duran uzman göremez;

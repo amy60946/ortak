@@ -1,5 +1,5 @@
 -- Otomatik hatırlatma kaydı (nudge_log) için KVKK: dökümde yer alır, 12 ay sonra silinir (koordinatör, 20 Kasım 2026).
--- Önkoşul: proposed/20261120200000_family_keeps_records.sql (data_export_of'un son hâli) ve 20261120230000_nudge_engine.sql.
+-- Önkoşul: migrations/20261120200000_family_keeps_records.sql (data_export_of'un son hâli) ve 20261120230000_nudge_engine.sql.
 -- Saklama: bildirimlerle aynı (hukuk/42 satır 19a; app_config.retention.nudge_log_days, varsayılan 365, en az 30).
 -- Gece imha işi (retention_run) canlıya alınana kadar ("live" kapalı) bu adım da yalnız sayar, silmez.
 -- Tekrar çalıştırılabilir.

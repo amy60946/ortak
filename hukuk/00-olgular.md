@@ -54,7 +54,7 @@
 
 **Bildirim metinleri:** bazı bildirimlerin başlık/metninde çocuğun adı geçebilir (ör. çocuğun bir adımı tamamladığını haber veren bildirim); bu metin bildirim sağlayıcısı (Apple, yedek yolda Expo) üzerinden telefona iletilir. Sağlık bilgisi ve davranış ayrıntısı bildirim metnine konmaz.
 
-**Aile ya da çocuk silinince:** uzmanla paylaşım kaydı aileye bağlı olduğu için o çocuğa ait uzman notları, hedefleri ve takip planı da silinir (bugünkü sistem). Kullanıcı kararı (20 Kasım 2026, B.8): sorun değil; uzmana kayıtta en baştan söylenir (`hukuk/50` §1.2, `22` 6.4-a), aile bağı kopunca uzman yeni veri görmez. (Çekirdek madde 7: uzmanın kayıt tutma ve saklama yükümlülükleri uzmandadır, Moyo'ya geçmez; uzman raporu ve CSV'yi kendisi indirir.) Uzmanın hesabı ya da kliniği silinince ailenin kendi girdiği eğitim yanıtları ve davranış olayları ailede kalır (3A; öneri `supabase/proposed/20261120200000_family_keeps_records.sql`, uygulanmadı).
+**Aile ya da çocuk silinince:** uzmanla paylaşım kaydı aileye bağlı olduğu için o çocuğa ait uzman notları, hedefleri ve takip planı da silinir (bugünkü sistem). Kullanıcı kararı (20 Kasım 2026, B.8): sorun değil; uzmana kayıtta en baştan söylenir (`hukuk/50` §1.2, `22` 6.4-a), aile bağı kopunca uzman yeni veri görmez. (Çekirdek madde 7: uzmanın kayıt tutma ve saklama yükümlülükleri uzmandadır, Moyo'ya geçmez; uzman raporu ve CSV'yi kendisi indirir.) Uzmanın hesabı ya da kliniği silinince ailenin kendi girdiği eğitim yanıtları ve davranış olayları ailede kalır (3A; `supabase/migrations/20261120200000_family_keeps_records.sql`, uygulandı 22 Kasım 2026).
 
 ## 3. Akışlar ve onaylar (sistemde var)
 

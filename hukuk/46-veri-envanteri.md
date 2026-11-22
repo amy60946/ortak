@@ -131,29 +131,29 @@ Denetim: `tools/veri_envanteri_kontrol.py` göçlerdeki ve önerilerdeki her `cr
 | `user_activity` | K12 | |
 | `push_tokens` | K12 | |
 | `notifications` | K12 | |
-| `parent_notification_prefs` | K12 | ebeveynin anlık bildirim tercihi (adım bildirimi, gün tamam); ÖNERİ `proposed/20261120210000` |
-| `clinician_notification_prefs` | K12 | uzmanın "Hatırlatmalar ve ipuçları" tercihi (`tips`); ÖNERİ `proposed/20261120230000` |
-| `nudge_log` | K12 | otomatik hatırlatma kararı: kime, hangi kural, ne zaman, sonuç (gönderildi / atlandı / karşılaştırma grubu), açıldı mı, 72 saatte hedef adıma geçti mi; metin ve içerik yok. Saklama kullanım kaydıyla aynı olmalı (`42` §4; imha işine eklenmedi). ÖNERİ `proposed/20261120230000` |
-| `nudge_pauses` | K12 | üç yanıtsız hatırlatmadan sonraki 14 günlük ara (kişi, bitiş); ÖNERİ `proposed/20261120230000` |
-| `notification_push_log` | K12 | anlık bildirim sınırı için gönderim kaydı: gönderen, alıcı, bildirim türü, zaman; içerik yok. Gönderen her yeni bildirimde 1 günden eski satırlarını siler; hesap silinince zincirleme silinir. ÖNERİ `proposed/20261121100000` |
-| `referral_paid_transactions` | K11 | davet ödülü üretmiş mağaza işlem kimliği (App Store original transaction id), aile, davet kodu, tarih; bir satın almanın ikinci kez ödül üretmemesi için. Aile silinince aile bağı boşalır, işlem kimliği kalır (yalnız kötüye kullanımı önlemek için; başka veriyle eşlenmez). Yalnız sunucu. ÖNERİ `proposed/20261121100000` |
-| `support_source_salts` | — | destek formu kaynak sınırı için günlük rastgele tuz; kişisel veri yok. 2 gün sonra silinir. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
-| `invite_email_sends` | K12 | davet e-postası gönderim sınırı kaydı: gönderen uzman, davet kodu, alıcı adresin özeti (adresin kendisi yok; Gmail takma adları tek özet), pay (yerleşik / yeni hesap), zaman; içerik yok. Gönderilemeyen e-posta kayıttan düşer; 8 günden eski satırlar her gönderimde silinir. Uzman hesabı silinince satır 8 günlük saklama dolana kadar kalır, uzman bağı boşalır (geriye yalnız özet ve zaman; kişiye bağlanmaz), silip yeniden kaydolmak sınırı sıfırlamasın diye. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
+| `parent_notification_prefs` | K12 | ebeveynin anlık bildirim tercihi (adım bildirimi, gün tamam); uygulandı 22 Kasım 2026, `migrations/20261120210000` |
+| `clinician_notification_prefs` | K12 | uzmanın "Hatırlatmalar ve ipuçları" tercihi (`tips`); uygulandı 22 Kasım 2026, `migrations/20261120230000` |
+| `nudge_log` | K12 | otomatik hatırlatma kararı: kime, hangi kural, ne zaman, sonuç (gönderildi / atlandı / karşılaştırma grubu), açıldı mı, 72 saatte hedef adıma geçti mi; metin ve içerik yok. Saklama kullanım kaydıyla aynı olmalı (`42` §4; imha işine eklenmedi). uygulandı 22 Kasım 2026, `migrations/20261120230000` |
+| `nudge_pauses` | K12 | üç yanıtsız hatırlatmadan sonraki 14 günlük ara (kişi, bitiş); uygulandı 22 Kasım 2026, `migrations/20261120230000` |
+| `notification_push_log` | K12 | anlık bildirim sınırı için gönderim kaydı: gönderen, alıcı, bildirim türü, zaman; içerik yok. Gönderen her yeni bildirimde 1 günden eski satırlarını siler; hesap silinince zincirleme silinir. uygulandı 22 Kasım 2026, `migrations/20261121100000` |
+| `referral_paid_transactions` | K11 | davet ödülü üretmiş mağaza işlem kimliği (App Store original transaction id), aile, davet kodu, tarih; bir satın almanın ikinci kez ödül üretmemesi için. Aile silinince aile bağı boşalır, işlem kimliği kalır (yalnız kötüye kullanımı önlemek için; başka veriyle eşlenmez). Yalnız sunucu. uygulandı 22 Kasım 2026, `migrations/20261121100000` |
+| `support_source_salts` | — | destek formu kaynak sınırı için günlük rastgele tuz; kişisel veri yok. 2 gün sonra silinir. uygulandı 22 Kasım 2026, `migrations/20261121110000_support_invite_limits.sql` |
+| `invite_email_sends` | K12 | davet e-postası gönderim sınırı kaydı: gönderen uzman, davet kodu, alıcı adresin özeti (adresin kendisi yok; Gmail takma adları tek özet), pay (yerleşik / yeni hesap), zaman; içerik yok. Gönderilemeyen e-posta kayıttan düşer; 8 günden eski satırlar her gönderimde silinir. Uzman hesabı silinince satır 8 günlük saklama dolana kadar kalır, uzman bağı boşalır (geriye yalnız özet ve zaman; kişiye bağlanmaz), silip yeniden kaydolmak sınırı sıfırlamasın diye. uygulandı 22 Kasım 2026, `migrations/20261121110000_support_invite_limits.sql` |
 | `code_attempts` | K13 | |
 | `admin_audit` | K13 | |
 | `user_flags` | K13 | |
 | `legal_acceptances` | K14 | rastgele kimlik, e-posta/ad yok |
 | `kvkk_requests` | K14 | |
-| `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi). Kötüye kullanım sınırı için gönderen adresin (IPv6 /64) ve geniş ağının (IPv4 /24, IPv6 /48) günlük tuzlu özetleri (`source_hash`, `source_wide_hash`; adres ve ağ düz yazılmaz, panelde gösterilmez), 2 gün sonra boşaltılır, tuz da 2 gün sonra silinir. ÖNERİ `proposed/20261121110000_support_invite_limits.sql` |
+| `support_requests` | K15 | /destek formu; kapanan 2 yıl, istenmeyen 30 gün (imha işi). Kötüye kullanım sınırı için gönderen adresin (IPv6 /64) ve geniş ağının (IPv4 /24, IPv6 /48) günlük tuzlu özetleri (`source_hash`, `source_wide_hash`; adres ve ağ düz yazılmaz, panelde gösterilmez), 2 gün sonra boşaltılır, tuz da 2 gün sonra silinir. uygulandı 22 Kasım 2026, `migrations/20261121110000_support_invite_limits.sql` |
 | `usage_daily_totals` | — | anonim günlük toplamlar |
 | `retention_runs` | — | imha kaydı, yalnız sayı |
 | `offer_code_pool` | — | davet ödülü Apple teklif kodu havuzu: kod, ürün, son tarih, atanma zamanı (aileye bağ yok; atanan kod `referral_rewards`te) |
 | `storage_trash` | — | silinecek dosya yolları (geçici; yol aile kimliği içerir) |
 | `app_config` | — | ayarlar |
 | `feature_flags` | — | |
-| `nudge_rules` | — | otomatik hatırlatma kuralları ve sabit metinleri (kişiye bağ yok); ÖNERİ `proposed/20261120230000` |
-| `store_funnel_daily` | — | App Store Connect günlük toplamları (gösterim, ürün sayfası, indirme; kişi yok); ÖNERİ `proposed/20261120220000` |
-| `kpi_benchmarks` | — | iç karşılaştırma için kıyas değerleri ve kaynakları; ÖNERİ `proposed/20261120220000` |
+| `nudge_rules` | — | otomatik hatırlatma kuralları ve sabit metinleri (kişiye bağ yok); uygulandı 22 Kasım 2026, `migrations/20261120230000` |
+| `store_funnel_daily` | — | App Store Connect günlük toplamları (gösterim, ürün sayfası, indirme; kişi yok); uygulandı 22 Kasım 2026, `migrations/20261120220000` |
+| `kpi_benchmarks` | — | iç karşılaştırma için kıyas değerleri ve kaynakları; uygulandı 22 Kasım 2026, `migrations/20261120220000` |
 | `legal_documents` | — | yasal metinler |
 | `billing_plans` | — | |
 | `task_templates` | — | |

@@ -1,4 +1,4 @@
--- Güvenlik denetimi düzeltmeleri (proposed/20261121100000_security_audit_fixes.sql): her bulgu için açık artık çalışmıyor,
+-- Güvenlik denetimi düzeltmeleri (migrations/20261121100000_security_audit_fixes.sql): her bulgu için açık artık çalışmıyor,
 -- meşru kullanım çalışıyor. Bulgular: paylaşım bitince eski uzman, mail kovasında kardeş çocuk, sonsuz zaman damgası, ücretsiz plan
 -- güncelleme açığı, üyelik bitince takvim, anonim KVKK başvurusu, Gmail özeti, sağlamlaştırma, bildirim seli.
 \set ON_ERROR_STOP on

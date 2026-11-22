@@ -3,7 +3,7 @@
 -- izni kaynak sayfaları açmadığı için sayılar arama özetlerinden; her satırın notunda yazar. Panelden owner düzeltebilir
 -- (admin_benchmark_set, gerekçeli). Değeri olmayan satır da eklenir (panel "kıyas yok" der). Ad, yön (better) ve birim
 -- tetikleyiciyle anahtardan gelir. Tekrar çalıştırılabilir: var olan satır güncellenir.
--- Önkoşul: proposed/20261120220000_funnel_analytics.sql
+-- Önkoşul: migrations/20261120220000_funnel_analytics.sql
 do $$ begin
   if to_regclass('public.kpi_benchmarks') is null then
     raise exception 'Önce 20261120220000_funnel_analytics.sql çalıştırılmalı (sonra bu dosyayı yeniden çalıştırın)';
