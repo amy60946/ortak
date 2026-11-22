@@ -656,6 +656,31 @@ select tst.check(public.email_hash('a.b@gmail.com') = public.email_hash('ab@gmai
 select tst.check(position('''used'', ''expired''' in pg_get_functiondef('public.redeem_guest_pass(text)'::regprocedure)) > 0, '10: kullanılmış / süresi dolmuş kod denemesi sayılır');
 -- ops_health push yalnız push = true satırlarını sayar
 select tst.check(position('x.push' in pg_get_functiondef('public.ops_health()'::regprocedure)) > 0, '10: ops_health push yalnız gönderilecek bildirimleri sayar');
+-- ops_health support_source (yeniden test 4, satır 6): son 24 saatte kaynaksız talep → sarı (SUPPORT_FORWARD_KEY / eski support
+-- işlevi); kaynaklı, "istenmeyen" ve 24 saatten eski kaynaksız talep uyarı vermez; ayrıntıda kişisel veri yok
+delete from public.support_requests;
+create or replace function tst.src_check() returns jsonb language sql as $$
+  select c from jsonb_array_elements(public.ops_health() -> 'checks') c where c ->> 'key' = 'support_source' $$;
+select tst.check(tst.src_check() ->> 'level' = 'ok' and tst.src_check() ->> 'label' = 'Destek formu kaynak sınırı', '10: talep yokken kaynak denetimi yeşil');
+insert into public.support_requests (ref, app, topic, email, message, created_at, source_hash, status) values
+  ('D-HS0001', 'parent', 'bug', 'kaynakli@example.com', 'Kaynaklı deneme talebi', now() - interval '10 minutes', md5('k'), 'new'),
+  ('D-HS0002', 'parent', 'bug', 'spam@example.com', 'İstenmeyen kaynaksız talep', now() - interval '10 minutes', null, 'spam'),
+  ('D-HS0003', 'parent', 'bug', 'eski@example.com', 'Eski kaynaksız talep', now() - interval '25 hours', null, 'new');
+select tst.check(tst.src_check() ->> 'level' = 'ok', '10: kaynaklı, istenmeyen ve 24 saatten eski kaynaksız talep yeşil');
+insert into public.support_requests (ref, app, topic, email, name, message, created_at, source_hash) values
+  ('D-HS0004', 'parent', 'privacy', 'kisi@example.com', 'Ayşe Kişi', 'Kaynaksız gelen KVKK talebi', now() - interval '2 hours', null),
+  ('D-HS0005', 'clinic', 'bug', 'kisi2@example.com', '', 'Kaynaksız gelen talep', now() - interval '1 minute', null);
+select tst.check(tst.src_check() ->> 'level' = 'warn' and tst.src_check() ->> 'detail' like '2 talep kaynaksız%SUPPORT_FORWARD_KEY%support%'
+                 and public.ops_health() ->> 'status' in ('warn', 'fail'), '10: son 24 saatte kaynaksız talep → sarı, kurulum yönergesiyle');
+select tst.check(tst.src_check()::text !~ '@|Ayşe|D-HS|kisi', '10: kaynak denetiminde kişisel veri ya da talep no yok');
+update public.support_requests set status = 'spam' where ref in ('D-HS0004', 'D-HS0005');
+select tst.check(tst.src_check() ->> 'level' = 'ok', '10: kaynaksız talepler istenmeyen işaretlenince yeşil');
+delete from public.support_requests;
+-- canlıda sıra: bu dosya 20261121110000'den önce uygulanır; sütun yokken denetim atlanır, sağlık işlevi çalışır
+begin;
+alter table public.support_requests drop column source_hash cascade;
+select tst.check(tst.src_check() is null and public.ops_health() ? 'checks', '10: kaynak sütunu yokken denetim atlanır, sağlık çalışır');
+rollback;
 
 -- finite_time_guard_attach: değişmeyen tabloya dokunmaz, yeni tarih sütununu bir sonraki çağrıda listeye alır
 select tst.check(public.finite_time_guard_attach() = 0, '10a: yardımcı ikinci çağrıda hiçbir tabloyu yeniden kurmaz');

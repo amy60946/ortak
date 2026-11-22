@@ -3,9 +3,11 @@
 //   POST { code }  →  { sent: true } | { sent: false, reason }
 //   reason: not_configured (e-posta ayarı yok) · not_found · no_email · closed · expired · no_access · limit_invite · too_soon
 //           · limit_day · rate_recipient (aynı adrese günde 3 / haftada 6: bir davetin 3 gönderimi sığar; Gmail noktası,
-//           +etiket, googlemail, Proton . - _, tırnak, sondaki nokta ve görünmez karakter takma adları aynı adres)
+//           +etiket, googlemail, Proton . - _, Yandex alan adları ve . = -, me.com / mac.com = icloud.com, IDN alan adı
+//           yazımları, tırnak, sondaki nokta ve görünmez karakter takma adları aynı adres)
 //           · rate_clinician (uzman günde 20, yeni hesap ilk 24 saatte 5) · rate_global (sistem saatte 200 yerleşik hesaplara,
-//           7 günden yeni ve ücretsiz hesaplara ayrı 60; ilk 24 saatindeki hesabın ilk 2 gönderimi 150'ye kadar reddedilmez)
+//           7 günden yeni ve ücretsiz hesaplara ayrı 60; böyle bir hesabın kayan 24 saatteki ilk 2 gönderimi 150'ye kadar
+//           reddedilmez)
 //           · send_failed (proposed/20261121110000_support_invite_limits.sql)
 // "Verify JWT" KAPALI yayınlanır (diğer işlevlerimiz gibi); oturum işlevin içinde doğrulanır (auth.getUser).
 // Gönderim yolu (Supabase → Edge Functions → Secrets; anahtar sohbete ya da depoya yazılmaz):
@@ -25,30 +27,45 @@ export type Built = { subject: string; text: string; html: string; fromName: str
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 // başlık alanları: satır sonu ve adres karakterleri atılır
 export const headerSafe = (s: string) => s.replace(/[\r\n<>"]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
-// Uzmanın kendi yazdığı alanlar (ad, unvan, klinik adı; konu, gönderen adı ve gövdede) e-postada bağlantı ya da adres
-// taşımasın (sistem göndericisinden istenmeyen tanıtım/oltalama metni gitmesin). Reddetmek yerine temizlenir: gerçek bir uzman
-// adında bunlar olmaz, olursa e-posta yine gider (davet akışı bozulmaz). Sıra:
-//   1) NFKC (tam genişlikli harf ve nokta düz biçime); benzer noktalar (· ˙ ․ ‧ ﹒ ． 。 ｡ ⸱ ⸳ …) "." olur;
-//   2) görünmez ve biçim karakterleri (Unicode Cf: sıfır genişlikli, yön işaretleri ve yalıtıcıları, yumuşak tire, BOM …),
-//      birleştirici ve değişim seçicileri silinir (yerine boşluk girmez: gizlenmiş adres birleşir ve aşağıda yakalanır);
-//   3) http(s)://…, www.…, e-posta adresi ve alan adı biçimli parçalar çıkarılır;
-//   4) izin listesi: harf, işaret, rakam, boşluk ve . ' ’ - & dışındaki her karakter boşluk olur (köşeli ayraç, bölü, iki
-//      nokta, @, satır sonu, denetim karakterleri; "hxxps[:]//evil[.]com" bağlantıya dönüşmez);
-//   5) boşluklar teklenir; iki boşluk olmayan karakter arasındaki her noktanın arkasına boşluk konur ("kotu.example"
+// Uzmanın kendi yazdığı alanlar (ad, unvan, klinik adı; konu, gönderen adı ve gövdede) e-postada bağlantı, adres ya da telefon
+// numarası taşımasın (sistem göndericisinden istenmeyen tanıtım/oltalama metni gitmesin). Reddetmek yerine temizlenir: gerçek
+// bir uzman adında bunlar olmaz, olursa e-posta yine gider (davet akışı bozulmaz). Sıra:
+//   1) benzer noktalar (· ˙ ˑ ․ ‧ ﹒ ． 。 ｡ ⸱ ⸳ ꞏ ꓸ ॱ ٠ ۰ …) "." olur: NFKC'den ÖNCE (˙ gibi bazıları NFKC'de boşluk +
+//      birleştiriciye döner) ve NFKC'den sonra bir kez daha (NFKC'nin ürettikleri: Yunanca ano teleia → ·, ･ → ・);
+//   2) NFKC + NFC (tam genişlikli harf ve nokta düz biçime; Türkçe harfler birleşik kalır);
+//   3) görünmez ve biçim karakterleri (Unicode Cf: sıfır genişlikli, yön işaretleri ve yalıtıcıları, yumuşak tire, BOM …),
+//      değişim seçicileri ve NFC'den sonra kalan birleştirici işaretler silinir (yerine boşluk girmez: gizlenmiş adres birleşir
+//      ve aşağıda yakalanır);
+//   4) http(s)://…, www.…, e-posta adresi ve alan adı biçimli parçalar çıkarılır;
+//   5) izin listesi: Latin alfabesinin harfleri, ASCII rakam, boşluk ve . ' ’ - & dışındaki her karakter boşluk olur (başka
+//      alfabelerin noktaya benzeyen harf ve rakamları, köşeli ayraç, bölü, iki nokta, @, satır sonu, denetim karakterleri;
+//      "hxxps[:]//evil[.]com" bağlantıya dönüşmez);
+//   6) 5 ya da daha uzun rakam dizisi (arada boşluk, nokta, tire ya da ayraç olabilir: telefon numarası) çıkarılır
+//      ("Klinik 2", "Dr. Ali 3" kalır);
+//   7) boşluklar teklenir; iki boşluk olmayan karakter arasındaki her noktanın arkasına boşluk konur ("kotu.example"
 //      kendiliğinden bağlantı olmasın; "Dr. Ayşe" değişmez); en çok 80 karakter (headerSafe).
-const LOOKALIKE_DOTS = /[\u00B7\u0387\u02D9\u2024\u2027\u2219\u22C5\u2E31\u2E33\u30FB\uFF65\uFE52\uFF0E\u3002\uFF61\u1427]/g;
+// Sonuçta harf ya da rakam kalmazsa (boş ya da yalnız noktalama) buildInviteEmail yansız metne düşer (realText).
+const LOOKALIKE_DOTS = /[\u00B7\u0387\u02D1\u02D9\u0660\u06F0\u0971\u1427\u2024\u2027\u2219\u22C5\u2E31\u2E33\u3002\u30FB\uA4F8\uA78F\uFE52\uFF0E\uFF61\uFF65]/g;
 const INVISIBLE = /[\p{Cf}\u034F\u115F\u1160\u3164\uFFA0\u180B-\u180F\uFE00-\uFE0F\u{E0100}-\u{E01EF}]/gu;
+const MARKS = /\p{M}/gu;
+const PHONE = /\d(?:[\s.()\-]*\d){4,}/g;
 export const nameSafe = (s: string) => headerSafe(String(s ?? '')
+  .replace(LOOKALIKE_DOTS, '.')
   .normalize('NFKC')
+  .normalize('NFC')
   .replace(LOOKALIKE_DOTS, '.')
   .replace(INVISIBLE, '')
+  .replace(MARKS, '')
   .replace(/\b[a-z][a-z0-9+.-]*:\/\/\S*/gi, ' ')
   .replace(/\bwww\.\S*/gi, ' ')
   .replace(/\S+@\S+/g, ' ')
   .replace(/\b[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|info|io|co|tr|xyz|me|link|app|site|online|ru|cn|top|biz|ly|gl|to|cc|ws)\b\S*/gi, ' ')
-  .replace(/[^\p{L}\p{M}\p{N}\s.'’&-]/gu, ' ')
+  .replace(/[^\p{Script=Latin}0-9 .'’&-]/gu, ' ')
+  .replace(PHONE, ' ')
   .replace(/\s+/g, ' ')
   .replace(/(\S)\.(?=\S)/g, '$1. '));
+// Temizlenmiş alan bir ad mı (en az bir harf ya da rakam)? Değilse boş: kişi için "Uzmanınız", klinik adı hiç yazılmaz.
+export const realText = (s: string) => (/[\p{L}\p{N}]/u.test(s) ? s : '');
 
 export function untilText(iso: string) {
   return new Date(iso).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
@@ -56,9 +73,11 @@ export function untilText(iso: string) {
 
 export function buildInviteEmail(m: InviteMail, e: MailEnv): Built {
   const brand = e.brand || 'Moyo'; // görünen ad (kullanıcı kararı 9 Kasım 2026; eskisi ParentApp). Supabase secret BRAND_NAME varsa o kullanılır
-  const name = nameSafe(m.clinician) || 'Uzmanınız';
-  const who = [nameSafe(m.title), name].filter(Boolean).join(' ');
-  const clinic = nameSafe(m.clinic);
+  // ad temizlikten sonra boşsa (ya da yalnız noktalama) "Uzmanınız"; o durumda unvan da yazılmaz ("Uzm. Uzmanınız" olmasın)
+  const person = realText(nameSafe(m.clinician));
+  const name = person || 'Uzmanınız';
+  const who = person ? [realText(nameSafe(m.title)), person].filter(Boolean).join(' ') : name;
+  const clinic = realText(nameSafe(m.clinic));
   const from = clinic && clinic !== name ? ` (${clinic})` : '';
   const until = untilText(m.expires_at);
   const link = m.token && e.baseUrl ? `${e.baseUrl.replace(/\/?$/, '/')}${m.token}` : '';

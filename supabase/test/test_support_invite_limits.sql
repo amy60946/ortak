@@ -433,6 +433,21 @@ select tst.check(public.invite_email_key('john.doe@proton.me') = 'johndoe@proton
 select tst.check((select count(distinct public.invite_email_to_hash(e)) from unnest(array[
                     'john.doe@proton.me', 'john-doe@proton.me', 'john_doe@proton.me', 'johndoe@proton.me', 'John.Doe+x@protonmail.com',
                     'johndoe@protonmail.ch', 'j.o.h.n-d_o.e@pm.me', '"john.doe"@proton.me.']) e) = 1, 'Proton takma adlarının hepsi tek alıcı');
+-- yeniden test 4 (satır 26–27): Yandex (alan adları tek, . = -) ve Apple (me.com / mac.com = icloud.com)
+select tst.check((select count(distinct public.invite_email_to_hash(e)) from unnest(array[
+                    'ali.veli@yandex.com.tr', 'ali-veli@yandex.ru', 'ali.veli@ya.ru', 'ali.veli@yandex.com', 'ali-veli@yandex.ua',
+                    'ali.veli@yandex.kz', 'ali.veli@yandex.by', 'Ali.Veli+x@Yandex.Com.TR', 'ali-veli@yandex.ru.']) e) = 1, 'Yandex takma adlarının hepsi tek alıcı');
+select tst.check(public.invite_email_key('ali.veli@ya.ru') = 'ali-veli@yandex.ru'
+                 and public.invite_email_key('aliveli@yandex.ru') = 'aliveli@yandex.ru', 'Yandex: nokta tireye döner, atılmaz (aliveli ayrı kutu)');
+select tst.check((select count(distinct public.invite_email_to_hash(e)) from unnest(array[
+                    'jdoe@icloud.com', 'jdoe@me.com', 'jdoe@mac.com', 'JDoe+x@Me.com']) e) = 1, 'Apple takma adlarının hepsi tek alıcı');
+select tst.check(public.invite_email_key('j.doe@icloud.com') <> public.invite_email_key('jdoe@icloud.com')
+                 and public.invite_email_key('ali.veli@example.ru') = 'ali.veli@example.ru', 'Apple ve öteki alan adlarında nokta kalır');
+-- IDN: Unicode, Punycode ve büyük harf yazımı (veritabanının yerel ayarından bağımsız) tek alıcı; ASCII komşu alan adı ayrı
+select tst.check((select count(distinct public.invite_email_to_hash(e)) from unnest(array[
+                    'ali@şirket.com.tr', 'ali@xn--irket-ova.com.tr', 'ALI@ŞİRKET.COM.TR', 'ali+x@Şirket.com.tr.', 'ali@XN--IRKET-OVA.com.tr']) e) = 1
+                 and public.invite_email_key('ALI@ŞİRKET.COM.TR' collate "C") = public.invite_email_key('ali@şirket.com.tr')
+                 and public.invite_email_key('ali@sirket.com.tr') = 'ali@sirket.com.tr', 'IDN alan adı yazımları tek alıcı (C yerel ayarında da)');
 insert into tst.kv values ('g1', tst.inv('00000000-0000-0000-0000-0000000000d1', 'gelen.kutu@gmail.com'));
 insert into tst.kv values ('g2', tst.inv('00000000-0000-0000-0000-0000000000d1', 'gelenkutu+1@googlemail.com'));
 insert into tst.kv values ('g3', tst.inv('00000000-0000-0000-0000-0000000000d2', 'G.e.l.e.n.k.u.t.u+2@gmail.com'));
@@ -462,6 +477,23 @@ insert into tst.kv select 'pm', sum(tst.ok(tst.take(tst.v(k), u)))::text
 select tst.check(tst.v('pm') = '3', 'Proton takma adlarından yalnız 3 gönderim (yeniden test 6a: önce 4/4)');
 reset role;
 delete from public.invite_email_sends;
+-- uçtan uca: Yandex, Apple ve IDN yazımlarıyla aynı kutuya yalnız 3 gönderim (yeniden test 4: önce 7/7 ve 3/3)
+insert into tst.kv select 'yx' || n, tst.inv(case when n % 2 = 0 then '00000000-0000-0000-0000-0000000000d1' else '00000000-0000-0000-0000-0000000000d2' end, e)
+  from unnest(array['ali.veli@yandex.com.tr', 'ali-veli@yandex.ru', 'ali.veli@ya.ru', 'ali.veli@yandex.com', 'ali-veli@yandex.ua',
+                    'ali.veli@yandex.kz', 'ali.veli@yandex.by']) with ordinality x(e, n);
+insert into tst.kv select 'ap' || n, tst.inv('00000000-0000-0000-0000-0000000000d1', e)
+  from unnest(array['elma.kutu@icloud.com', 'elma.kutu@me.com', 'elma.kutu@mac.com', 'elma.kutu+x@icloud.com']) with ordinality x(e, n);
+insert into tst.kv select 'idn' || n, tst.inv('00000000-0000-0000-0000-0000000000d2', e)
+  from unnest(array['ali@şirket.com.tr', 'ali@xn--irket-ova.com.tr', 'ALI@ŞİRKET.COM.TR', 'ali@s' || chr(807) || 'irket.com.tr']) with ordinality x(e, n);
+set role service_role;
+insert into tst.kv select 'yx', sum(tst.ok(tst.take(tst.v('yx' || n), case when n % 2 = 0 then '00000000-0000-0000-0000-0000000000d1'
+                                                                           else '00000000-0000-0000-0000-0000000000d2' end)))::text
+  from generate_series(1, 7) n;
+insert into tst.kv select 'ap', sum(tst.ok(tst.take(tst.v('ap' || n), '00000000-0000-0000-0000-0000000000d1')))::text from generate_series(1, 4) n;
+insert into tst.kv select 'idn', sum(tst.ok(tst.take(tst.v('idn' || n), '00000000-0000-0000-0000-0000000000d2')))::text from generate_series(1, 4) n;
+reset role;
+select tst.check(tst.v('yx') = '3' and tst.v('ap') = '3' and tst.v('idn') = '3', 'Yandex 7, Apple 4, IDN 4 yazımdan her birinde yalnız 3 gönderim');
+delete from public.invite_email_sends;
 
 -- B5: davet adresi oluşturulurken denetlenir; olağan adresler kabul, bozuk biçimler aynı hatayla reddedilir
 insert into tst.kv values ('o1', tst.inv('00000000-0000-0000-0000-0000000000d1', 'Ayse.Yilmaz+klinik@Gmail.com'));
@@ -483,6 +515,34 @@ select tst.check((select count(*) = 0 from unnest(array[
                   where tst.err(format('select tst.inv(%L, %L)', '00000000-0000-0000-0000-0000000000d1', e)) is distinct from 'E-posta adresi geçersiz'),
                  'bozuk biçimler oluşturulurken reddedilir, hata metni aynı ("E-posta adresi geçersiz")');
 select tst.check(not exists (select 1 from public.clinic_invites where parent_email like '%jdoe%'), 'reddedilen adresle davet oluşmadı');
+-- yeniden test 4 (satır 32): Türkçe karakterli (IDN) alan adı ve RFC atext işaretleri (& = …) kabul; ayrıştırılmış (NFD)
+-- yazım NFC'ye çevrilir. ASCII olmayan yerel kısım bilerek reddedilir.
+insert into tst.kv values ('o5', tst.inv('00000000-0000-0000-0000-0000000000d1', 'ali@şirket.com.tr'));
+insert into tst.kv values ('o6', tst.inv('00000000-0000-0000-0000-0000000000d1', 'a&b=c@example.com'));
+insert into tst.kv values ('o7', tst.inv('00000000-0000-0000-0000-0000000000d1', 'veli@s' || chr(807) || 'irket.com.tr'));
+insert into tst.kv values ('o8', tst.inv('00000000-0000-0000-0000-0000000000d1', 'x!#$%*/?^_`{|}~-y@alt.örnek.org'));
+select tst.check((select parent_email from public.clinic_invites where code = tst.v('o5')) = 'ali@şirket.com.tr'
+                 and (select parent_email from public.clinic_invites where code = tst.v('o6')) = 'a&b=c@example.com'
+                 and (select parent_email from public.clinic_invites where code = tst.v('o7')) = 'veli@şirket.com.tr'
+                 and (select parent_email from public.clinic_invites where code = tst.v('o8')) = 'x!#$%*/?^_`{|}~-y@alt.örnek.org',
+                 'IDN alan adı ve atext işaretleri kabul, NFD yazım NFC (önce reddediliyordu)');
+set role service_role;
+select tst.check(tst.take(tst.v('o5'), '00000000-0000-0000-0000-0000000000d1') ? 'to', 'IDN adrese e-posta gider');
+reset role;
+select tst.check((select count(*) = 0 from unnest(array[
+                    'a..b@x.com', '.a@x.com', 'a.@x.com', 'a@x.com.', '"a"@x.com', 'a@x', 'a@x.c', E'a\u200b@x.com', E'a@x\u200b.com',
+                    E'a@\u200bx.com', E'a\u00a0b@x.com', E'a@x\u00a0.com', E'a@ş\u00adirket.com', E'a@x.co\u2028m', E'a@\u1680x.com',
+                    E'a@x\u2060.com', E'a@x.com\u0085', E'a@gmail\u3002com', E'a@gmail\uff61com', E'a@x\ufe0f.com', E'a@x\u3164.com',
+                    'ayşe@example.com', 'a(b)@x.com', 'a@x.com,b@y.com', 'a;b@x.com', 'a:b@x.com', 'a\b@x.com', 'a[b]@x.com',
+                    'a@x..com', 'a@.x.com', 'a@x_y.com', 'a@x/y.com', E'a@x\u2024com']) e
+                  where tst.err(format('select tst.inv(%L, %L)', '00000000-0000-0000-0000-0000000000d1', e)) is distinct from 'E-posta adresi geçersiz'),
+                 'nokta, tırnak, görünmez karakter, bölünmez boşluk, IDN noktası ve ayraç biçimleri reddedilir (aynı hata metni)');
+-- biçim denetimi veritabanının yerel ayarına bağlı değil: C sıralamasında da aynı sonuç
+select tst.check((select bool_and(public.invite_email_valid(e) = public.invite_email_valid(e collate "C")) from unnest(array[
+                    'ali@şirket.com.tr', 'a&b=c@example.com', 'ayse.yilmaz+klinik@gmail.com', 'o''brien@example.co.uk', 'x@alt.örnek.org',
+                    'a..b@x.com', E'a@x\u200b.com', E'a@x\u00a0.com', 'a@x', 'ayşe@example.com', E'a@gmail\u3002com']) e)
+                 and public.invite_email_valid('ali@şirket.com.tr' collate "C") and not public.invite_email_valid(E'a@x\u00a0.com' collate "C"),
+                 'biçim denetimi C yerel ayarında da aynı');
 -- eski satırlar değiştirilmez; adresi değişen satır denetlenir; adres boşaltılabilir
 set session_replication_role = replica;
 insert into public.clinic_invites (code, clinic_id, clinician_id, kind, label, expires_at, parent_email)
@@ -571,13 +631,52 @@ select tst.check(tst.take(tst.v('w2'), '00000000-0000-0000-0000-0000000000e2') -
 select tst.check(tst.take(tst.v('x1'), '00000000-0000-0000-0000-000000000113') ->> 'error' = 'rate_global', '150''den sonra yeni hesap da reddedilir');
 reset role;
 select tst.check((select count(*) from public.invite_email_sends where pool = 'new' and at > now() - interval '1 hour') = 150, 'küçük pay en çok 150');
--- 24 saatten eski yeni hesap güvenceden yararlanmaz
+-- Yeniden test 4 (satır 36): güvence yerleşik olmayan her hesaba, kayan 24 saatte ilk 2 gönderim (deneme süresindeki gerçek
+-- uzman 2.–7. günde de). (Önceki sürümde burada 2 günlük hesap rate_global alıyordu: güvence yalnız ilk 24 saatti; bu test
+-- eski sınırı bilerek kodluyordu, yeni kurala göre değişti.)
 update public.clinicians set created_at = now() - interval '2 days' where id = '00000000-0000-0000-0000-000000000113';
 delete from public.invite_email_sends where code = 'X';
 select tst.check((select count(*) from public.invite_email_sends where pool = 'new') = 63, 'küçük payda 63 gerçek gönderim kaldı');
+insert into tst.kv select 'x' || g, tst.inv('00000000-0000-0000-0000-000000000113', 'gun3-' || g || '@example.com') from generate_series(2, 4) g;
 set role service_role;
-select tst.check(tst.take(tst.v('x1'), '00000000-0000-0000-0000-000000000113') ->> 'error' = 'rate_global', '1 günden eski yeni hesap pay doluyken güvencesiz');
+select tst.check(tst.take(tst.v('x1'), '00000000-0000-0000-0000-000000000113') ? 'to', '2 günlük (yerleşik olmayan) hesabın 1. gönderimi pay doluyken gider');
+select tst.check(tst.take(tst.v('x2'), '00000000-0000-0000-0000-000000000113') ? 'to', '2 günlük hesabın 2. gönderimi');
+select tst.check(tst.take(tst.v('x3'), '00000000-0000-0000-0000-000000000113') ->> 'error' = 'rate_global', '24 saatte yalnız 2 güvenceli gönderim');
 reset role;
+-- kayan 24 saat: önceki iki gönderim 24 saatten eskiye düşünce yeniden 2
+update public.invite_email_sends set at = now() - interval '25 hours' where clinician_id = '00000000-0000-0000-0000-000000000113';
+insert into public.invite_email_sends (clinician_id, code, to_hash, pool)
+select null, 'X', md5('y' || g), 'new' from generate_series(1, 60) g;
+set role service_role;
+select tst.check(tst.take(tst.v('x3'), '00000000-0000-0000-0000-000000000113') ? 'to', 'kayan 24 saat dolunca güvence yeniden (pay dolu)');
+reset role;
+-- yeniden testin biçimi: 12 kendi açılmış hesap payı doldurduktan sonra deneme süresinin 3. günündeki gerçek uzman
+insert into auth.users (id, is_anonymous, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000000e3', false, '{"account":"clinician","clinic_name":"Deneme","name":"Üçüncü Gün"}');
+update public.clinicians set created_at = now() - interval '2 days 6 hours' where id = '00000000-0000-0000-0000-0000000000e3';
+select tst.check((select plan from public.clinics where id = (select clinic_id from public.clinicians where id = '00000000-0000-0000-0000-0000000000e3')) = 'trial',
+                 'deneme kliniği (yerleşik değil)');
+insert into tst.kv select 't' || g, tst.inv('00000000-0000-0000-0000-0000000000e3', 'veli-deneme' || g || '@example.com') from generate_series(1, 3) g;
+set role service_role;
+select tst.check(tst.take(tst.v('t1'), '00000000-0000-0000-0000-0000000000e3') ? 'to', 'deneme 3. gün: 1. davet pay dolu olsa da gider (önce rate_global)');
+select tst.check(tst.take(tst.v('t2'), '00000000-0000-0000-0000-0000000000e3') ? 'to', 'deneme 3. gün: 2. davet');
+select tst.check(tst.take(tst.v('t3'), '00000000-0000-0000-0000-0000000000e3') ->> 'error' = 'rate_global', 'deneme 3. gün: 3. davet pay dolu, güvence bitti');
+reset role;
+select tst.check((select pool from public.invite_email_sends where code = tst.v('t1')) = 'new', 'güvenceli gönderim küçük paya sayılır');
+-- sert tavan 150 güvenceyi de durdurur (yerleşik olmayan eski hesapta da)
+update public.invite_email_sends set at = now() - interval '25 hours' where clinician_id = '00000000-0000-0000-0000-0000000000e3';
+insert into public.invite_email_sends (clinician_id, code, to_hash, pool)
+select null, 'X', md5('z' || g), 'new' from generate_series(1, 150 - (select count(*) from public.invite_email_sends where pool = 'new' and at > now() - interval '1 hour')) g;
+set role service_role;
+select tst.check(tst.take(tst.v('t3'), '00000000-0000-0000-0000-0000000000e3') ->> 'error' = 'rate_global', 'küçük pay 150''de: güvenceli hesap da reddedilir');
+reset role;
+select tst.check((select count(*) from public.invite_email_sends where pool = 'new' and at > now() - interval '1 hour') = 150, 'küçük pay yine en çok 150');
+-- 7 günden eski hesap yerleşiktir (ana pay; küçük paydan ve güvenceden bağımsız)
+update public.clinicians set created_at = now() - interval '8 days' where id = '00000000-0000-0000-0000-0000000000e3';
+set role service_role;
+select tst.check(tst.take(tst.v('t3'), '00000000-0000-0000-0000-0000000000e3') ? 'to', '7 günden eski hesap ana paydan gönderir');
+reset role;
+select tst.check((select pool from public.invite_email_sends where code = tst.v('t3') order by id desc limit 1) = 'main', 'yerleşik hesap ana pay');
 delete from public.invite_email_sends;
 
 -- hesap silip yeniden kaydolmak alıcı sınırını sıfırlamaz

@@ -23,14 +23,16 @@
 -- 2) Davet e-postası (clinic_invite_email_take): mevcut sınırlara (davet başına 3, 60 sn, uzman başına günde 30 davet) ek
 --    olarak her gönderim invite_email_sends'e yazılır (alıcı adres yalnız özet olarak; özet NFKC, görünmez karakterler,
 --    büyük/küçük harf, tırnaklı yerel kısım, alan adı sonundaki nokta, "+etiket", Gmail'de nokta ve googlemail.com, Proton'da
---    . - _ ve alan adı farkı atılarak: aynı gelen kutusunun takma adları tek alıcı sayılır):
+--    . - _ ve alan adı farkı, Yandex'te alan adı farkı ve . = -, Apple'da me.com / mac.com = icloud.com; Türkçe karakterli
+--    (IDN) ya da xn-- alan adı parçası tek parça sayılarak: aynı gelen kutusunun takma adları tek alıcı sayılır):
 --    · aynı alıcı adrese (bütün kliniklerden) 24 saatte 3, 7 günde 6 → rate_recipient (bir davetin 3 gönderimi sığar)
 --    · uzman başına 24 saatte 20 gönderim; hesabın ilk 24 saatinde 5 → rate_clinician
 --    · sistem payı saatte 200 yerleşik hesaplara; yerleşik olmayan (7 günden yeni ve ücretli paketi olmayan klinikte) hesaplar
---      ayrı küçük paydan saatte 60 ve yerleşiklerin payına sayılmaz → rate_global. İlk 24 saatindeki hesabın ilk 2 gönderimi
---      küçük pay dolu diye reddedilmez (paya sayılır; küçük payın sert tavanı saatte 150).
---    · Davet adresi oluşturulurken denetlenir (clinic_invites tetikleyicisi): küçük harf, kırpılmış, yalnız düz ASCII adres
---      ('E-posta adresi geçersiz'); eski satırlar değiştirilmez.
+--      ayrı küçük paydan saatte 60 ve yerleşiklerin payına sayılmaz → rate_global. Yerleşik olmayan hesabın kayan 24 saatteki
+--      ilk 2 gönderimi küçük pay dolu diye reddedilmez (paya sayılır; küçük payın sert tavanı saatte 150).
+--    · Davet adresi oluşturulurken denetlenir (clinic_invites tetikleyicisi, invite_email_valid): küçük harf, kırpılmış; yerel
+--      kısım ASCII (RFC atext, baştaki / sondaki / çift nokta yok), alan adı harf (her alfabe), rakam ve tire parçaları, son
+--      parça en az 2 karakter ('E-posta adresi geçersiz'); eski satırlar değiştirilmez.
 --    Gönderilemeyen e-posta (clinic_invite_email_done p_ok=false) kayıttan düşer (hak geri verilir). Kayıt 8 gün tutulur;
 --    uzman hesabı silinse de satır kalır (uzman bağı boşalır), silip yeniden kaydolmak alıcı sınırını sıfırlamaz.
 --    Bütün sayaçlar (destek ve davet) danışma kilitleriyle (pg_advisory_xact_lock) sıraya alınır: paralel istekler aşamaz.
@@ -280,9 +282,14 @@ create index if not exists invite_email_sends_pool_idx on public.invite_email_se
 -- birleştirici ve değişim seçicileri, Hangul dolgu harfleri) ve bölünmez boşluklar atılır, küçük harf, bütün boşluklar
 -- atılır. Tam bir "@" varsa: yerel kısmı saran çift tırnak ve alan adı sonundaki noktalar atılır, "+etiket" (her alan adında)
 -- atılır; gmail.com / googlemail.com'da noktalar atılır ve googlemail.com → gmail.com; proton.me / protonmail.com /
--- protonmail.ch / pm.me'de . - _ atılır ve alan adı proton.me. Anahtar yalnız sayım içindir (gönderim davetteki adresle);
--- fazladan birleştirme sınırı yalnız sıkılaştırır. Saklanan yalnız bu anahtarın özetidir (invite_email_to_hash). Eski
--- anahtarla yazılmış satırlar (canlıda yok) dönüştürülmez.
+-- protonmail.ch / pm.me'de . - _ atılır ve alan adı proton.me; yandex.ru / yandex.com / yandex.com.tr / yandex.ua /
+-- yandex.by / yandex.kz / ya.ru'da "." "-" olur (Yandex ikisini aynı sayar) ve alan adı yandex.ru; me.com / mac.com →
+-- icloud.com. ASCII olmayan karakter içeren ya da xn-- ile başlayan alan adı parçası "*" olur (ali@şirket.com.tr,
+-- ali@ŞİRKET.com.tr ve ali@xn--irket-ova.com.tr tek alıcı; veritabanının yerel ayarına ve Punycode'a bağlı değil; başka
+-- IDN alan adlarındaki aynı yerel kısım da aynı alıcı sayılır, yalnız sıkılaştırır). Kalan: Fastmail alt alan adı adreslemesi
+-- (x@kullanici.fastmail.com) birleşmez. Anahtar yalnız sayım içindir (gönderim davetteki adresle); fazladan birleştirme
+-- sınırı yalnız sıkılaştırır. Saklanan yalnız bu anahtarın özetidir (invite_email_to_hash). Eski anahtarla yazılmış satırlar
+-- (canlıda yok) dönüştürülmez.
 create or replace function public.invite_email_key(p_email text)
 returns text language sql immutable set search_path = '' as $$
   with e as (select regexp_replace(lower(regexp_replace(normalize(coalesce(p_email, ''), NFKC),
@@ -297,12 +304,20 @@ returns text language sql immutable set search_path = '' as $$
                from e),
        q as (select v, d, case when l0 ~ '^".*"$' and char_length(l0) >= 2 then substr(l0, 2, char_length(l0) - 2) else l0 end as l
                from p),
-       r as (select v, d, l, coalesce(nullif(split_part(l, '+', 1), ''), l) as base from q)
+       r as (select v, d, l, coalesce(nullif(split_part(l, '+', 1), ''), l) as base,
+                    -- IDN parçası (ASCII olmayan ya da xn--) "*": Unicode / Punycode / büyük harf yazımları birleşir
+                    coalesce((select string_agg(case when octet_length(x) <> char_length(x) or x like 'xn--%' then '*' else x end,
+                                                '.' order by n)
+                                from unnest(string_to_array(d, '.')) with ordinality t(x, n)), d) as dk
+               from q)
   select case when l is null then v
               when d in ('gmail.com', 'googlemail.com') then coalesce(nullif(replace(base, '.', ''), ''), base) || '@gmail.com'
               when d in ('proton.me', 'protonmail.com', 'protonmail.ch', 'pm.me')
                 then coalesce(nullif(regexp_replace(base, '[._-]', '', 'g'), ''), base) || '@proton.me'
-              else base || '@' || d end
+              when d in ('yandex.ru', 'yandex.com', 'yandex.com.tr', 'yandex.ua', 'yandex.by', 'yandex.kz', 'ya.ru')
+                then replace(base, '.', '-') || '@yandex.ru'
+              when d in ('icloud.com', 'me.com', 'mac.com') then base || '@icloud.com'
+              else base || '@' || dk end
     from r
 $$;
 revoke execute on function public.invite_email_key(text) from public, anon, authenticated;
@@ -313,16 +328,41 @@ returns text language sql immutable set search_path = '' as $$
 $$;
 revoke execute on function public.invite_email_to_hash(text) from public, anon, authenticated;
 
--- Davet adresi oluşturulurken denetlenir: kırpılır, küçük harfe çevrilir, yalnız düz ASCII adres kabul edilir (tırnaklı yerel
--- kısım, alan adı sonunda nokta, görünmez karakter, bölünmez boşluk, birden çok adres, tam genişlikli harf reddedilir;
--- bunlar alıcı sınırını aşmanın yoluydu). Hata metni clinic_create_invite'ınkiyle aynı (ClinicApp metni olduğu gibi gösterir).
--- Yalnız yeni ya da değişen adres denetlenir: eski satırlar değiştirilmez (adresin boşaltılması, ör. KVKK işlemi, serbest).
+-- Davet adresinin biçimi (tetikleyici çağırır; adres önce kırpılır, küçük harfe ve NFC'ye çevrilir):
+--   · yerel kısım: ASCII harf, rakam ve RFC 5322 atext işaretleri  . ! # $ % & ' * + / = ? ^ _ ` { | } ~ -  (baştaki,
+--     sondaki ve art arda nokta yok; ASCII olmayan yerel kısım bilerek reddedilir);
+--   · alan adı: noktayla ayrılmış parçalar; parça ASCII harf, rakam, tire ya da ASCII olmayan harf (her alfabe:
+--     ali@şirket.com.tr); son parça en az 2 karakter; sonda nokta yok;
+--   · her yerde reddedilen: boşluk (her tür), tırnak, köşeli ayraç, , ; : < > \ ( ), görünmez ve biçim karakterleri
+--     (Unicode Cf, bölünmez boşluk, dolgu harfleri, değişim seçicileri), denetim karakterleri, 。 ． ｡ (IDN'de nokta sayılır)
+--     ve NFKC'ye göre değişen her karakter (tam genişlikli harf, ․ ﹒ gibi benzer noktalar).
+--   Yerel ayara bağlı değil ([[:alpha:]] C yerel ayarında ASCII dışını tanımaz): ASCII dışı karakterler yasak listesi dışında
+--   kabul edilir (karakter aralıkları kod noktasına göre). Alıcı sınırı ayrıca invite_email_key'de (IDN parçaları tek parça).
+create or replace function public.invite_email_valid(p_email text)
+returns boolean language sql immutable set search_path = '' as $f$
+  -- L = alan adı parçasının bir karakteri: ASCII harf / rakam / tire ya da yasak listesinde olmayan ASCII dışı karakter
+  with c as (select '([a-z0-9-]|[^\u0001-\u00a0\u00ad\u034f\u0600-\u0605\u061c\u06dd\u070f\u0890\u0891\u08e2\u115f\u1160\u1680'
+                    '\u180b-\u180f\u2000-\u200f\u2028-\u202f\u205f-\u206f\u3000\u3002\u3164\ufe00-\ufe0f\ufeff\uff0e\uff61\uffa0'
+                    '\ufff9-\ufffb\U000110bd\U000110cd\U00013430-\U0001343f\U0001bca0-\U0001bca3\U0001d173-\U0001d17a'
+                    '\U000e0001\U000e0020-\U000e007f\U000e0100-\U000e01ef])' as l)
+  select coalesce(p_email is nfkc normalized
+                  and p_email ~ replace('^[a-z0-9!#$%&''*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&''*+/=?^_`{|}~-]+)*@L+(\.L+)*\.L{2,}$', 'L', l),
+                  false)
+    from c
+$f$;
+revoke execute on function public.invite_email_valid(text) from public, anon, authenticated;
+
+-- Davet adresi oluşturulurken denetlenir: kırpılır, küçük harfe ve NFC'ye çevrilir, biçimi invite_email_valid denetler
+-- (tırnaklı yerel kısım, alan adı sonunda nokta, görünmez karakter, bölünmez boşluk, birden çok adres, tam genişlikli harf
+-- reddedilir; bunlar alıcı sınırını aşmanın yoluydu). Hata metni clinic_create_invite'ınkiyle aynı (ClinicApp metni olduğu
+-- gibi gösterir). Yalnız yeni ya da değişen adres denetlenir: eski satırlar değiştirilmez (adresin boşaltılması, ör. KVKK
+-- işlemi, serbest).
 create or replace function public.clinic_invites_email_check()
 returns trigger language plpgsql set search_path = '' as $$
 begin
   if new.parent_email is not null and (tg_op = 'INSERT' or new.parent_email is distinct from old.parent_email) then
-    new.parent_email := lower(btrim(new.parent_email, E' \t\r\n ﻿'));
-    if new.parent_email !~ '^[a-z0-9._%+''-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$' then
+    new.parent_email := normalize(lower(btrim(new.parent_email, E' \t\r\n ﻿')), NFC);
+    if not public.invite_email_valid(new.parent_email) then
       raise exception 'E-posta adresi geçersiz';
     end if;
   end if;
@@ -346,6 +386,7 @@ declare
   cap integer;
   used integer;
   mine integer;
+  mine_day integer;
   fresh boolean;
 begin
   select * into me from public.clinicians where id = p_user;
@@ -390,9 +431,12 @@ begin
   perform pg_advisory_xact_lock(hashtext('invite:pool'), hashtext(pl));
   select count(*) into used from public.invite_email_sends where pool = pl and at > now() - interval '1 hour';
   select count(*) into mine from public.invite_email_sends where clinician_id = me.id;
-  -- Yeni hesap payı (60) birkaç kendi açılmış hesapla doldurulabilir: ilk 24 saatindeki hesabın ilk 2 gönderimi pay dolu diye
-  -- reddedilmez (gerçek yeni uzman ilk davetini gönderebilsin); paya sayılır, sert tavan saatte 150. Sonrası olağan 60.
-  if used >= cap and not (pl = 'new' and fresh and mine < 2 and used < 150) then
+  select count(*) into mine_day from public.invite_email_sends where clinician_id = me.id and at > now() - interval '24 hours';
+  -- Yeni hesap payı (60) birkaç kendi açılmış hesapla doldurulabilir: yerleşik olmayan hesabın (deneme süresindeki gerçek
+  -- uzman da: 1.–7. gün) kayan 24 saatteki ilk 2 gönderimi pay dolu diye reddedilmez (gerçek yeni uzman her gün davetini
+  -- gönderebilsin); paya sayılır, sert tavan saatte 150. Sonrası olağan 60. Hesap başına sınırlar (ilk 24 saatte 5, sonra
+  -- 24 saatte 20) aşağıda, değişmedi.
+  if used >= cap and not (pl = 'new' and mine_day < 2 and used < 150) then
     return jsonb_build_object('error', 'rate_global');
   end if;
   -- Alıcı: 24 saatte 3 (bir davet en çok 3 kez gönderilir, hepsi sığar), 7 günde 6
@@ -400,8 +444,7 @@ begin
      or (select count(*) from public.invite_email_sends where to_hash = th and at > now() - interval '7 days') >= 6 then
     return jsonb_build_object('error', 'rate_recipient');
   end if;
-  if (select count(*) from public.invite_email_sends where clinician_id = me.id and at > now() - interval '24 hours') >= 20
-     or (fresh and mine >= 5) then
+  if mine_day >= 20 or (fresh and mine >= 5) then
     return jsonb_build_object('error', 'rate_clinician');
   end if;
   insert into public.invite_email_sends (clinician_id, code, to_hash, pool) values (me.id, inv.code, th, pl);

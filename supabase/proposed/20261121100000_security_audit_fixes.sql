@@ -936,7 +936,8 @@ begin
 end $$;
 
 -- (c) ops_health 'push': yalnız gönderilecek (push = true) bildirimler sayılır; tercihle kapanan ya da sınıra takılan satır
--- kalıcı uyarı vermez (son tanım burada; önceki: migrations/20261102200000_kvkk_ops.sql).
+-- kalıcı uyarı vermez. 'support_source': destek formuna son 24 saatte kaynaksız talep geldiyse sarı (destek sınırı kurulumu
+-- eksik, 20261121110000) (son tanım burada; önceki: migrations/20261102200000_kvkk_ops.sql).
 create or replace function public.ops_health()
 returns jsonb language plpgsql stable security definer set search_path = '' as $$
 declare
@@ -1045,6 +1046,21 @@ begin
     checks := checks || jsonb_build_array(jsonb_build_object('key', 'support', 'label', 'Destek talepleri',
       'level', case when n > 0 then 'warn' else 'ok' end,
       'detail', case when n > 0 then n || ' talep 2 günden uzun süredir yanıtsız' else m || ' açık talep' end));
+  end if;
+
+  -- destek formu kaynağı (20261121110000_support_invite_limits.sql uygulanmışsa): son 24 saatte kaynaksız gelen ("istenmeyen"
+  -- olmayan) talep, kurulumun eksik olduğunu gösterir (SUPPORT_FORWARD_KEY yok ya da eski `support` işlevi yayında). O durumda
+  -- bütün form saatte 30 talepten (KVKK 10) oluşan tek kaynaksız kovayı paylaşır; tek kişi kovayı doldurup formu kapatabilir.
+  -- Yalnız sayı; adres, özet ya da e-posta yok.
+  if exists (select 1 from pg_attribute where attrelid = to_regclass('public.support_requests') and attname = 'source_hash'
+                                           and not attisdropped) then
+    execute $q$select count(*) from public.support_requests
+                where source_hash is null and status <> 'spam' and created_at > now() - interval '24 hours'$q$ into n;
+    checks := checks || jsonb_build_array(jsonb_build_object('key', 'support_source', 'label', 'Destek formu kaynak sınırı',
+      'level', case when n > 0 then 'warn' else 'ok' end,
+      'detail', case when n > 0 then n || ' talep kaynaksız geldi (son 24 saat): SUPPORT_FORWARD_KEY''i Worker''a ve Supabase''e ekle, '
+                                       || 'support işlevini yeniden yayınla'
+                     else 'Son 24 saatte kaynaksız talep yok' end));
   end if;
 
   -- davet ödülü kodları (20261103200000_referral_codes.sql uygulanmışsa): kod bekleyen ödül, havuz azaldı, süre yaklaşıyor
