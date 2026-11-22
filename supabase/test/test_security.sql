@@ -46,6 +46,19 @@ select tst.check(has_function_privilege('authenticated', 'public.clinic_create_i
 select tst.check(has_function_privilege('authenticated', 'public.register_push_token(text, text, text)', 'execute'), 'push kaydı çalışır');
 select tst.check(not has_function_privilege('authenticated', 'public.notify(uuid, text, text, text, text, jsonb, uuid, uuid)', 'execute'), 'iç fonksiyon kapalı kalır');
 select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee in ('anon', 'authenticated') and table_schema = 'public' and privilege_type = 'TRUNCATE'), 'TRUNCATE yetkisi yok');
+-- istemcinin yazabildiği her tabloda bütün tarih / zaman sütunları sonsuz değer denetiminde (yeni tablo ekleyen göç sonunda
+-- public.finite_time_guard_attach() çağırır; proposed/20261121100000_security_audit_fixes.sql)
+select tst.check(not exists (
+  select 1 from pg_class c join pg_namespace s on s.oid = c.relnamespace
+   where s.nspname = 'public' and c.relkind in ('r', 'p') and not c.relispartition
+     and (has_table_privilege('authenticated', c.oid, 'INSERT') or has_table_privilege('authenticated', c.oid, 'UPDATE')
+          or has_any_column_privilege('authenticated', c.oid, 'INSERT') or has_any_column_privilege('authenticated', c.oid, 'UPDATE'))
+     and exists (select 1 from pg_attribute a join pg_type ty on ty.oid = a.atttypid
+                  where a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
+                    and coalesce(nullif(ty.typbasetype, 0), ty.oid) in ('timestamptz'::regtype, 'timestamp'::regtype, 'date'::regtype)
+                    and not exists (select 1 from pg_trigger t where t.tgrelid = c.oid and t.tgname = 'finite_time_guard' and t.tgenabled <> 'D'
+                                      and a.attname::text = any (string_to_array(encode(t.tgargs, 'escape'), '\000'))))),
+  'istemcinin yazabildiği her tarih sütunu finite_time_guard denetiminde');
 
 set role anon;
 select tst.rejects($$select public.clinic_invite_preview('ABCDEF')$$, 'anon kod önizleyemez');
@@ -62,4 +75,11 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check(not public.family_premium((select v::uuid from tst.kv where k = 'fid')), 'bağlantısız uzman soramaz');
 
 reset role;
+-- anon rolünün hiçbir public tabloda (görünüm dahil) ve dizide yetkisi yok (proposed/20261121100000_security_audit_fixes.sql)
+select tst.check(not exists (select 1 from information_schema.role_table_grants where grantee = 'anon' and table_schema = 'public'),
+  'anon hiçbir public tabloda yetkili değil: ' || coalesce((select string_agg(distinct table_name, ', ') from information_schema.role_table_grants
+                                                            where grantee = 'anon' and table_schema = 'public'), ''));
+select tst.check(not exists (select 1 from pg_sequences q where q.schemaname = 'public'
+                               and has_sequence_privilege('anon', format('%I.%I', q.schemaname, q.sequencename), 'usage,select,update')),
+  'anon hiçbir public diziye yetkili değil');
 select 'TÜM GÜVENLİK TESTLERİ GEÇTİ' as sonuc;

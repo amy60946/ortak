@@ -42,3 +42,22 @@ test('istek: anahtarsız yalnız durum; doğru anahtarla denetim listesi; yanlı
   const r6 = await handle(new Request('https://x/functions/v1/health?key=' + KEY), env, async () => ok);
   assert.ok(!('checks' in (await r6.json())), 'anahtar adreste kabul edilmez (yalnız başlık)');
 });
+
+test('önbellek: anahtarsız çağrı 60 sn aynı sonucu kullanır; anahtarlı yeniden sorar; hata önbelleğe girmez', async () => {
+  const { memo } = await import('./index.ts');
+  let t = 0, calls = 0, next: Health | null = ok;
+  const m = memo(async () => { calls++; return next; }, 60_000, () => t);
+  await m(false); await m(false);
+  assert.equal(calls, 1);
+  await m(true); assert.equal(calls, 2);
+  t = 61_000; next = bad;
+  assert.equal((await m(false))?.status, 'fail'); assert.equal(calls, 3);
+  const n = memo(async () => { calls++; return null; }, 60_000, () => 0);
+  await n(false); await n(false); assert.equal(calls, 5);
+  // handle anahtarlı çağrıda fresh=true geçer
+  let fresh: boolean | null = null;
+  await handle(new Request('https://x', { headers: { 'x-health-key': KEY } }), env, async (f) => { fresh = f; return ok; });
+  assert.equal(fresh, true);
+  await handle(new Request('https://x'), env, async (f) => { fresh = f; return ok; });
+  assert.equal(fresh, false);
+});
