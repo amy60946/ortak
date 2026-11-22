@@ -1,4 +1,4 @@
--- App Review kalıcı çocuk kodu (proposed/20261110200000_review_child_code.sql).
+-- App Review kalıcı çocuk kodu (migrations/20261110200000_review_child_code.sql, uygulandı 22 Kasım 2026).
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

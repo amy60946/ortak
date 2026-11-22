@@ -1,4 +1,4 @@
--- Çocuğa anlık bildirim (proposed/20261102200000_child_push.sql): varsayılan kapalı, yalnız ebeveyn açar, günde en çok 1, sessiz saatler.
+-- Çocuğa anlık bildirim (migrations/20261102200000_child_push.sql, uygulandı 22 Kasım 2026): varsayılan kapalı, yalnız ebeveyn açar, günde en çok 1, sessiz saatler.
 \set ON_ERROR_STOP on
 
 create schema if not exists tst;

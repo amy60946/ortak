@@ -73,7 +73,7 @@ Notlar:
 | `game_items` | Dükkân fiyatları (**sunucu esas**) | `item_id` (PK), `price` (≥ 0), `min_level` (varsayılan 1) | Sunucu (SQL ile tohumlanır; istemci yazamaz) | Herkes (oturum açmış) |
 | `game_levels` | Seviye eşikleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `level` (PK), `total_xp` | Sunucu (SQL ile tohumlanır; `levels.json` ile aynı) | Herkes (oturum açmış) |
 | `code_attempts` | Hatalı kod denemeleri (`20261019020000_server_rules`, uygulandı 19 Ekim) | `user_id`, `at` | yalnız `redeem_child_code` | kimse (RLS açık, politika yok) |
-| `review_child_codes` | App Review kalıcı çocuk kodu (öneri `20261110200000_review_child_code`, akış `akislar.md` 2.0a) | `code` (`^O[A-Z0-9]{5}$`), `child_id`, `active`, `note`, `created_at`, `last_used_at`, `use_count` | yalnız `review_code_set` / `review_code_off` (SQL Editor) ve `redeem_child_code` | kimse (RLS açık, politika yok) |
+| `review_child_codes` | App Review kalıcı çocuk kodu (uygulandı 22 Kasım 2026, `migrations/20261110200000_review_child_code`, akış `akislar.md` 2.0a) | `code` (`^O[A-Z0-9]{5}$`), `child_id`, `active`, `note`, `created_at`, `last_used_at`, `use_count` | yalnız `review_code_set` / `review_code_off` (SQL Editor) ve `redeem_child_code` | kimse (RLS açık, politika yok) |
 | `game_saves` | Oyun kaydı yedeği | `child_id` (PK), `family_id`, `data` (jsonb, en fazla 262 144 bayt), `updated_at` | O (`game_save_put`) | O (`game_save_get`), P (aile; ParentApp bugün okumuyor) |
 
 `game_items` içeriği oyunun `Resources/Data/items.json` dosyasıyla birebir aynıdır (48 eşya; fiyat ve seviye 2026-10-19'da karşılaştırıldı, fark yok). Liste: `ekonomi.md`.
@@ -202,7 +202,7 @@ SQL: `supabase/migrations/20261019120000_clinic_children.sql`, `20261019130000_n
 |---|---|---|---|---|
 | `notifications` | Kullanıcı başına bildirim kutusu | `id` (bigserial), `user_id`, `app`, `kind`, `title` (≤120), `body` (≤300), `data` (jsonb), `family_id`, `child_id`, `created_at`, `read_at`, `push` (uygulandı 22 Kasım 2026, `migrations/20261120210000`, bölüm 34: varsayılan true; false = yalnız uygulama içi, telefona gönderilmez) | **Yalnız sunucu tetikleyicileri**; kullanıcı yalnız `read_at` günceller ve siler | Kendi satırları (O, P, K) — Realtime yayınında |
 | `push_tokens` | Cihaz push anahtarı | `token` (PK), `user_id`, `app`, `platform`, `updated_at` | Yalnız RPC | Kendi satırları |
-| `child_push_settings` (**öneri** `proposed/20261102200000_child_push.sql`, K7 B) | Çocuğa anlık bildirim ayarı (çocuk başına; satır yoksa kapalı) | `child_id` (PK), `family_id`, `enabled` (varsayılan false), `quiet_from` (20:30), `quiet_to` (08:00), `school_quiet` (true: hafta içi 08:00–15:30), `last_sent_at`, `updated_by`, `updated_at` | Yalnız RPC | Ailenin ebeveynleri (RLS); çocuk yalnız `child_push_settings_me()` |
+| `child_push_settings` (uygulandı 22 Kasım 2026, `migrations/20261102200000_child_push.sql`, K7 B) | Çocuğa anlık bildirim ayarı (çocuk başına; satır yoksa kapalı) | `child_id` (PK), `family_id`, `enabled` (varsayılan false), `quiet_from` (20:30), `quiet_to` (08:00), `school_quiet` (true: hafta içi 08:00–15:30), `last_sent_at`, `updated_by`, `updated_at` | Yalnız RPC | Ailenin ebeveynleri (RLS); çocuk yalnız `child_push_settings_me()` |
 
 | Fonksiyon | Kim | Ne |
 |---|---|---|
