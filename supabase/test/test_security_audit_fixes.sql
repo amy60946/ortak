@@ -470,12 +470,15 @@ end loop; end $$;
 reset role;
 select tst.check((select count(distinct id) from public.clinic_links where child_id = '00000000-0000-0000-0000-00000000c0df') = 10, '10: 10 tur paylaş / sonlandır');
 select tst.check((select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_shared'
-                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) = 6
+                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) <= 6
              and (select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_revoked'
-                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) = 6
+                    and child_id = '00000000-0000-0000-0000-00000000c0df' and push) <= 6
              and (select count(*) from public.notifications where user_id = '00000000-0000-0000-0000-000000000089' and kind = 'clinic_shared'
                     and child_id = '00000000-0000-0000-0000-00000000c0df') = 10,
   '10: paylaş / sonlandır döngüsü: satırlar yazılır, her türde saatte en çok 6 anlık bildirim');
+select tst.check((select count(*) from public.notification_push_log where sender_id = '00000000-0000-0000-0000-000000000081'
+                    and user_id = '00000000-0000-0000-0000-000000000089' and at > now() - interval '1 hour') = 12,
+  '10: türleri dolaşarak da aynı gönderenden aynı alıcıya saatte toplam en çok 12 anlık bildirim');
 select tst.check(position('pg_advisory_xact_lock' in pg_get_functiondef('public.notifications_push_throttle()'::regprocedure)) > 0,
   '10: bildirim sınırı gönderen-alıcı-tür başına kilitle sayılır (eşzamanlılık: scratchpad r2a/race.sh)');
 
@@ -617,6 +620,22 @@ select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-000000000
 select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b3'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
                                       'parentapp.premium.monthly', 'tx-ayri');
 select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 2, '10g: ayrı işlem ödül verir');
+-- işlem kimliği ilk olayda yok, abonelik etkinken sonraki olayda geliyor: ödül o olayda verilir
+insert into auth.users (id, is_anonymous, email, email_confirmed_at, raw_user_meta_data) values
+  ('00000000-0000-0000-0000-0000000009b4', false, 'al4@example.com', now(), '{"nickname":"Al4"}');
+select tst.redeem('00000000-0000-0000-0000-0000000009b4');
+select tst.as_user(null);
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b4'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', null);
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 2, '10g: etkin, kimliksiz: ödül bekler');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b4'), 'premium', 'monthly', 'active', now() + interval '1 month', true,
+                                      'parentapp.premium.monthly', 'tx-sonradan');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 3, '10g: kimlik etkin abonelikte sonradan gelince ödül verilir');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b4'), 'premium', 'monthly', 'active', now() + interval '2 month', true,
+                                      'parentapp.premium.monthly', 'tx-sonradan');
+select public.set_family_subscription(tst.fam('00000000-0000-0000-0000-0000000009b4'), 'premium', 'monthly', 'active', now() + interval '3 month', true,
+                                      'parentapp.premium.monthly', 'tx-baska');
+select tst.check((select count(*) from public.referral_rewards where family_id = tst.fam('00000000-0000-0000-0000-0000000009a1')) = 3, '10g: yenileme ve kimlik değişimi ikinci ödül vermez');
 set role authenticated;
 select tst.as_user('00000000-0000-0000-0000-0000000009a1');
 select tst.fails($$select count(*) from public.referral_paid_transactions$$, '10g: işlem tablosu istemciye kapalı');

@@ -756,8 +756,8 @@ begin
   if not new.push or s is null or s = new.user_id or public.notification_push_exempt(new.kind) then return new; end if;
   -- gönderen hesabı bu işlemde silinmişse (hesap silmenin zincirleme bildirimleri) sunucu işi gibi: sayılmaz, silme takılmaz
   if not exists (select 1 from auth.users u where u.id = s) then return new; end if;
-  -- aynı (gönderen, alıcı, tür) için eşzamanlı işlemler sırayla sayılır
-  perform pg_advisory_xact_lock(hashtextextended('push:' || s::text || ':' || new.user_id::text || ':' || new.kind, 0));
+  -- aynı (gönderen, alıcı) için eşzamanlı işlemler sırayla sayılır (tür başına ve toplam sınır aynı kilitle)
+  perform pg_advisory_xact_lock(hashtextextended('push:' || s::text || ':' || new.user_id::text, 0));
   if exists (select 1 from public.notifications n
               where n.user_id = new.user_id and n.kind = new.kind and n.push and n.data = new.data
                 and n.child_id is not distinct from new.child_id and n.created_at > now() - interval '10 minutes') then
@@ -766,6 +766,12 @@ begin
   end if;
   if (select count(*) from public.notification_push_log l
        where l.sender_id = s and l.user_id = new.user_id and l.kind = new.kind and l.at > now() - interval '1 hour') >= 6 then
+    new.push := false;
+    return new;
+  end if;
+  -- bütün türler toplamı: aynı gönderenden aynı alıcıya saatte en çok 12 anlık bildirim (türleri dolaşarak sel yok)
+  if (select count(*) from public.notification_push_log l
+       where l.sender_id = s and l.user_id = new.user_id and l.at > now() - interval '1 hour') >= 12 then
     new.push := false;
     return new;
   end if;
@@ -1216,7 +1222,12 @@ declare
   tx text;
 begin
   if not (new.plan = 'premium' and new.status in ('active', 'grace') and new.source = 'store') then return new; end if;
-  if tg_op = 'UPDATE' and old.plan = 'premium' and old.status in ('active', 'grace') then return new; end if;
+  -- Zaten ödenen abonelikte yeni olay yalnız işlem kimliği değiştiyse (ilk olayda kimlik yoktu, sonra geldi) bakılır;
+  -- çift ödülü rewarded_at ve referral_paid_transactions birincil anahtarı engeller.
+  if tg_op = 'UPDATE' and old.plan = 'premium' and old.status in ('active', 'grace')
+     and nullif(btrim(coalesce(old.store_transaction_id, '')), '') is not distinct from nullif(btrim(coalesce(new.store_transaction_id, '')), '') then
+    return new;
+  end if;
   select * into g from public.guest_passes where redeemed_family = new.family_id and rewarded_at is null for update;
   if not found then return new; end if;
   -- Ödül yalnız mağaza işlem kimliği olan, başka bir aileye bağlı olmayan ve daha önce ödül üretmemiş aboneliğe.
@@ -1265,6 +1276,10 @@ begin
   return new;
 end $$;
 revoke execute on function public.referral_on_paid() from public, anon, authenticated;
+-- İşlem kimliğinin sonradan gelmesi de tetikler (önceki: migrations/20261103200000_referral_codes.sql, yalnız plan, status).
+drop trigger if exists referral_on_paid on public.family_subscriptions;
+create trigger referral_on_paid after insert or update of plan, status, source, store_transaction_id on public.family_subscriptions
+  for each row execute function public.referral_on_paid();
 
 -- (h) Çocuk fotoğrafı ('photo:<yol>') yalnız çocuğun ailesinin önekinde (abc_events.audio_path gibi). Eski satırlara dokunulmaz;
 -- yalnız eklenen ya da değişen avatar denetlenir.
