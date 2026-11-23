@@ -664,6 +664,8 @@ Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; ya
 | `family_book_slot(link, starts_at) → id` | ebeveyn | listedeki saat; en çok 2 gelecek aile randevusu; uzmana `session_booked` |
 | `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
 
+Seans ücreti `clinic_sessions.fee` (yalnız klinik; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.1.
+
 Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
 
 ## 30. Çalışma alanları: uzman birden çok klinikte ve kendi danışanlarıyla (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; kullanıcı kararı; akış `akislar.md` 21, durumlar `durumlar.md` P19)
@@ -766,6 +768,8 @@ Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustala
 | `family_target_behaviors()` | P | Etkin paylaşım başına `{link_id, child_id, child_name, clinic_id, behaviors[]}` (id, title, description, strategies, log_type, status) |
 | `family_incident_report(paylaşım, hedef?, zaman?, sayı?, dakika?, öncül?, sonuç?, strateji?, tepki?, diğer_davranış?)` | P | Olay bildirir; hedefe bağlıysa türe göre zorunlu alan (sıklık → sayı, ABC → öncül + sonuç, süre → dakika), değilse davranışın adı zorunlu; zaman ileri değil, en çok 30 gün geri |
 
+Kayıt türü çoklu seçim (`log_types`; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.3.
+
 Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanlarına `behavior_incident`. uygulandı 22 Kasım 2026, `migrations/20261120200000`: `behavior_incidents_fill` (yeni olayda `behavior_title`), `clinic_target_behaviors_title_sync` (ad değişince olaylarda da). Paylaşım kaydı ya da klinik silinince olay silinmez, `link_id` boşalır; hedef davranış (uzmanın kaydı) silinir, adı olayda kalır; aile okur, uzman okuyamaz; aile ya da çocuk silinince olay da silinir (32'deki not).
 
 ## 34. Ebeveyn bildirim tercihleri ve "günün adımları tamamlandı" (uygulandı 22 Kasım 2026, `migrations/20261120210000_parent_notification_prefs.sql`, 20 Kasım 2026; kullanıcı kararı bildirim sınırı 5a; akış `akislar.md` 7 ve 25, durumlar `durumlar.md` 8; test `test_parent_notification_prefs.sql`)
@@ -811,6 +815,8 @@ Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanların
 | `clinician_notification_prefs` | Moyo Mercek uzman tercihi | `user_id` (PK → `clinicians`, hesapla silinir), `tips` (varsayılan **true**), `updated_at` | yalnız RPC | kendi satırı (K) |
 | `parent_notification_prefs.tips` | Moyo "Hatırlatmalar ve ipuçları" | boolean, varsayılan **true** | `parent_notification_prefs_set('tips', …)` | kendi satırı (P) |
 | `notifications` (`kind = 'nudge'`) | Motorun bildirimi | `data` `{nudge, rule, ref, id}` (+ `code`, `link_id`, `training_id`; Mercek'te `clinic_id` kendiliğinden) | motor | P, K (kendi satırı) |
+
+Kuralın özellik bayrağı `nudge_rules.feature_flag` (eğitim kuralları → `parent_training`; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.4.
 
 RLS: dört yeni tabloda açık; `nudge_rules`, `nudge_log`, `nudge_pauses` politikasız (istemciye kapalı), `clinician_notification_prefs` yalnız kendi satırını okur, yazma yalnız RPC.
 
@@ -882,3 +888,69 @@ Akış: `destek@moyoapp.com.tr` → Cloudflare Email Routing ("Send to a Worker"
 | `ops_health` | `support_mail`: son 24 saatte gönderilemeyen ya da 15 dakikadır bekleyen giden ileti veya alınmayan gelen e-posta → sarı (yalnız sayı). `support`: "2 günden uzun yanıtsız" artık son iletiye göre. |
 
 Edge Function `support` (Verify JWT kapalı): `POST /support` (form, değişmedi; ekip uyarısı yalnız `SUPPORT_NOTIFY_TO` tanımlı ve `moyoapp.com.tr` dışındaysa), `POST /support/inbound` (`x-moyo-forward-key`; 256 KB; 200 `{ok, ref}` · 200 `dropped` · 400 · 401 · 413 · 503), `POST /support/reply` (oturum + `apikey`; CORS yalnız panel; 200 `{ok, status}` · 400 `invalid` · 401/403 `forbidden` · 502/503 `send_failed`). Saklama: imha işi adım 25 (iletiler taleple; her ileti `updated_at`'i yeniler).
+
+## 40. Moyo Mercek 23 Kasım güncellemeleri (ÖNERİ, `proposed/20261123100000_mercek_updates.sql`, 23 Kasım 2026; **uygulanmadı**; kullanıcı kararları 23 Kasım 2026; akış `akislar.md` 27, durumlar `durumlar.md` P18 / P22 / P23 / 8, bayrak `admin.md`; test `test_mercek_updates.sql`)
+
+### 40.1 Seans ücreti
+
+| Alan | Ne | Yazar | Okur |
+|---|---|---|---|
+| `clinic_sessions.fee` | `numeric(10,2)`, boş olabilir, 0–1.000.000 (TL); uzmanın elle yazdığı ücret. Ödeme / tahsilat / fatura yok | K (`clinic_session_create`, `clinic_session_update`) | yalnız K (tablo politikası "seans: klinik okur"; Moyo Mercek `select` listesine `fee` ekler) |
+
+- `clinic_session_create(p)` ve `clinic_session_update(id, p, scope)`: `p.fee` sayı (`450.5`) ya da noktalı metin (`"450.50"`), en çok iki ondalık; boş metin ya da `null` → ücret yok; virgül, eksi, üç ondalık, 1.000.000 üstü → hata `fee_invalid` (22023). Oluştururken serideki her seansa aynı ücret; düzeltirken `fee` anahtarı varsa kapsamdaki her seansa (`one` yalnız bu, `following` bu ve serideki sonraki planlılar), anahtar yoksa ücret değişmez. Öteki her şey önceki tanımla aynı (29).
+- **Aile ücreti görmez:** tabloda aileye politika yok; `family_sessions` (alanları tek tek yazar), `family_session_respond`, `family_offer_respond`, `family_booking_slots`, `family_book_slot`, `session_notify_family` (yalnız tarih / saat), `calendar_feed_events` (uzmanın kendi .ics'i) `fee` okumaz; KVKK dökümünde seans yok. Test bunu ve `family_*` kaynaklarında `fee` geçmediğini denetler.
+
+### 40.2 Raporu aileye gönder
+
+| Tablo | Alanlar | Yazar | Okur |
+|---|---|---|---|
+| `clinic_shared_reports` | `id`, `link_id` (→ `clinic_links`, silinince boş), `clinic_id` (→ `clinics`, silinince boş), `family_id` (→ `families`, zincirleme), `child_id` (→ `children`, zincirleme), `sent_by` (→ `auth.users`, silinince boş), `clinician_name` (≤ 120; gönderim anındaki "ad, unvan"), `title` (1–120), `period_start` / `period_end` (ikisi birlikte ya da ikisi boş, başlangıç ≤ bitiş), `content` (jsonb, biçim v1), `created_at`, `seen_at` (bir ebeveynin ilk açışı) | yalnız `clinic_report_share` | yalnız işlevler (RLS açık, politika ve tablo yetkisi yok) |
+
+Rapor ailede kalır: paylaşım bitince, paylaşım kaydı ya da klinik silinince de (`family_keeps_records` ilkesi, 32–33); yalnız aile ya da çocuk silinince silinir. Başka hiçbir şey silmez (imha işinde adımı yok).
+
+**İçerik biçimi v1** (`report_content_check`; bilinmeyen anahtar her düzeyde **reddedilir**: yeni alan yeni `v` ve sunucu değişikliğiyle gelir; metin dışı değer yalnız `v`'de):
+
+```json
+{ "v": 1,
+  "child":  { "name": "Mira" },                              // isteğe bağlı, ≤ 120 (ebeveynin girdiği ad)
+  "period": { "start": "2026-10-26", "end": "2026-11-22" },  // isteğe bağlı, YYYY-MM-DD, başlangıç ≤ bitiş
+  "footer": "…",                                             // isteğe bağlı, ≤ 500 (Mercek EXPORT_FOOTER'ı yazar)
+  "sections": [                                              // 1–40 bölüm; her bölümde isteğe bağlı "title" ≤ 200
+    { "type": "text",  "title": "Özet", "body": "≤ 8000" },
+    { "type": "kv",    "rows": [["Tamamlama", "%72"]] },     // ≤ 60 satır, her satır tam 2 metin ≤ 300
+    { "type": "table", "columns": ["Hafta", "Oran"], "rows": [["26.10 – 01.11", "%71"]] },  // sütun ≤ 12, satır ≤ 200, hücre ≤ 12 metin ≤ 300
+    { "type": "list",  "items": ["≤ 500"] }                  // ≤ 60 öge
+  ] }
+```
+
+Bütün içerik (jsonb metni) ≤ 256 KB (`content_too_large`). Biçim hatası `content_invalid` (hata ayrıntısında `detail`: hangi alan, ör. `sections[3].rows`). Moyo içerikteki metni düz metin olarak gösterir (HTML yorumlamaz).
+
+| İşlev | Kim | Ne |
+|---|---|---|
+| `clinic_report_share(p_link uuid, p_title text, p_period_start date, p_period_end date, p_content jsonb) → uuid` | K | Seçili çalışma alanının uzmanı (`clinician_access`), paylaşım açık ve ona görünür (`clinic_link_mine`: etkin + bu alanın + `clinic_link_visible`). Başlık kırpılır. Paylaşım başına kayan 24 saatte en çok 20 (paylaşım kilidiyle sırayla). Uzman adı + unvanı kopyalanır. Ebeveynlere `report_shared` (aşağıda). Dönen: rapor kimliği |
+| `clinic_reports_sent(p_link uuid) → jsonb` | K | `[{id, title, period_start, period_end, clinician_name, mine, created_at, seen_at}]`, en yeni önce; içerik yok. Paylaşım bu alanda ve uzmana görünürken (`clinic_link_visible`; paylaşım bitse de liste kalır). `seen_at` yalnız paylaşım etkinken ya da bitmeden önce açıldıysa döner (bittikten sonraki açılış uzmana gösterilmez) |
+| `family_reports(p_child uuid default null) → jsonb` | P | Ailenin arşivi: `[{id, child_id, child_name, title, clinician_name, period_start, period_end, created_at, seen_at}]`, en yeni önce; içerik yok; `p_child` ile tek çocuk. Paylaşım bitse ya da silinse de. Ailesi olmayan hesapta `[]` |
+| `family_report(p_id uuid) → jsonb` | P | `{id, link_id, child_id, child_name, title, clinician_name, period_start, period_end, created_at, seen_at, content}` (gönderen kimliği, klinik ve aile kimliği dönmez). İlk açışta `seen_at` yazılır; sonraki açışlar değiştirmez |
+
+Hatalar (ileti Türkçe, `hint` sabit anahtar): `no_access` (P0402 "Üyelik etkin değil"; ebeveyn de bunu alır), `link_not_visible` (42501 "Bu aileyle paylaşım açık değil": paylaşım yok, bitti, başka klinik, başka alan), `title_invalid`, `period_invalid`, `content_invalid`, `content_too_large` (22023), `too_many_reports` (P0001), `report_not_found` (P0002; başka aile, uzman, oturumsuz).
+
+**Bildirim** `report_shared` (app `parent`, ailenin bütün ebeveynleri; `child_id` dolu): başlık "Uzmanınızdan yeni rapor", metin "Uzmanınız bir rapor paylaştı. Moyo'da açabilirsiniz." (çocuk adı ve klinik ayrıntı yok); `data` `{report_id, link_id}` → dokununca `family_report(report_id)` sayfası. Gönderen uzman olduğu için olağan anlık bildirim sınırına tabi (`notification_push_exempt` dışında; aynı uzmandan aynı ebeveyne saatte 6 bu tür, 12 toplam; satır her zaman yazılır). İç yardımcılar `report_content_check`, `report_content_fail`, `report_str_ok`, `report_strs_ok`, `report_keys_ok` istemciye kapalı.
+
+### 40.3 Kayıt türü çoklu seçim
+
+| Alan | Ne |
+|---|---|
+| `clinic_target_behaviors.log_types` | `text[] not null default '{frequency}'`, 1–3 tekil değer `frequency` / `abc` / `duration`, sunucu sabit sıraya dizer (frequency, abc, duration) ve tekrarı düşürür. Var olan satırlar `{log_type}` ile doldu |
+| `clinic_target_behaviors.log_type` | eskisi gibi durur, her zaman `log_types[1]` |
+| `behavior_incidents.log_types` | bildirim anındaki türlerin kopyası (hedefe bağlı değilse boş); `log_type` = ilk tür. Var olan olaylar `{log_type}` ile doldu |
+
+- Tetikleyici `clinic_target_behaviors_log_types` (ekleme ve güncelleme): eklemede `log_types` verilmediyse (boş, ya da varsayılan `{frequency}` kalmış ve `log_type` başka bir tür: eski Moyo Mercek) `{log_type}`; güncellemede `log_types` değişmeden yalnız `log_type` değiştiyse (eski Moyo Mercek) `log_types = {log_type}`; öteki her durumda `log_types` kazanır. Boş dizi, boş öge ya da bilinmeyen tür `check_violation`. **Yeni Moyo Mercek yalnız `log_types` yazar** (`log_type` göndermez). `behavior_incidents_fill` aynı eşitlemeyi olayda yapar.
+- `family_target_behaviors()` her davranışta `log_types` da döndürür (`log_type` kalır). Uzman tabloları doğrudan okur (`select *` ile `log_types` gelir); olaylar da öyle (aile RLS'iyle, uzman "olay: klinik okur").
+- `family_incident_report` (imza ve hata anahtarları aynı): hedefe bağlı olayda **seçili her türün** alanı zorunlu ve yazılır (sıklık → `p_count` `count_required`, ABC → `p_antecedent` + `p_consequence` `abc_required`, süre → `p_duration_min` `duration_required`); seçili olmayanın alanı yazılmaz. "Diğer" olay değişmedi. **Uyumluluk:** eski Moyo yalnız ilk türün alanını gönderir; çok türlü davranışa eski sürümden bildirim ilk eksik alanın hatasıyla reddedilir (tek türlü davranışlar eskisi gibi). Moyo güncellenmeden uzmanların çoklu seçimi kullanmaması önerilir.
+
+### 40.4 Ebeveyn eğitimi bayrağı ve bildirim motoru
+
+- Bayrak `parent_training` (`admin.md`): satır yoksa kapalı; uygulamalar `client_config` ile okur.
+- `nudge_rules.feature_flag` (yeni sütun, boş olabilir): kural yalnız bu bayrağı açık kişiye gider (`flag_on`: kişiye istisna → genel bayrak + yüzde). `clinic_training_none` ve `clinic_training_draft` → `parent_training`; ötekiler boş. `nudge_try` bayrak kapalıysa `flag_off` döner ve kayıt yazmaz (bayrak açılınca kuralın süresi dolmamışsa gönderilir). `admin_nudge_rules()` `feature_flag`'i de döndürür. Moyo'da ebeveyn eğitimine / derslere yönelik kural yok.
+
+Ayrıca `finite_time_guard_attach()` yeni tabloya takılır.

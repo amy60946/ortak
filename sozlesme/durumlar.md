@@ -227,7 +227,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | Alan | Değerler |
 |---|---|
 | `notifications.app` | `parent` / `child` / `clinic` |
-| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana); `migrations/20261028120000_guest_pass.sql` (uygulandı 3 Kasım 2026): `guest_pass_used` (kodu veren ailenin ebeveynlerine: davetin kullanıldı; `data.code`, kullananın kimliği yok), `referral_reward` (davet edene: davet ettiğin aile abone oldu, 1 ay; `data.status` `applied` / `code_pending`); uygulandı 22 Kasım 2026, `migrations/20261120210000_parent_notification_prefs.sql`: `day_complete` (ebeveynlere: çocuğun bugün planlı bütün adımları işaretlendi, günde en çok bir; `data` `{child_id, date, steps, pending}`) (anlamları: `akislar.md` 7, 10, 12, 14, 19, 25) |
+| `notifications.kind` | `task_done`, `task_declined`, `task_approved`, `task_rejected`, `task_retry` (27 Ekim 2026), `gift` (çocuğa: hediye geldi; `20261027140000`, uygulandı), `task_assigned`, `message`, `device_linked`, `parent_joined`, `clinic_shared`, `clinic_revoked`, `clinic_suggestion`, `suggestion_decided`, `abc_event`, `team_joined`, `client_assigned`, `admin_message`; `20261026100000` (uygulandı): `invite_claimed` (uzmana: aile daveti kabul etti), `invite_expired` (uzmana: 48 saatte kullanılmadı), `care_plan_shared` (ebeveyne: takip planı paylaşıldı/güncellendi), `invite_child_updated` (uzmana: ebeveyn önerilen çocuk bilgisini düzeltti; `child_id` dolu), `invite_declined` (uzmana: aile daveti kabul etmedi); `20261026050000` (uygulandı): `verification_approved`, `verification_rejected` (`data.reason`), `verification_suspended` (uzmana); `migrations/20261028120000_guest_pass.sql` (uygulandı 3 Kasım 2026): `guest_pass_used` (kodu veren ailenin ebeveynlerine: davetin kullanıldı; `data.code`, kullananın kimliği yok), `referral_reward` (davet edene: davet ettiğin aile abone oldu, 1 ay; `data.status` `applied` / `code_pending`); uygulandı 22 Kasım 2026, `migrations/20261120210000_parent_notification_prefs.sql`: `day_complete` (ebeveynlere: çocuğun bugün planlı bütün adımları işaretlendi, günde en çok bir; `data` `{child_id, date, steps, pending}`); ÖNERİ `proposed/20261123100000_mercek_updates.sql`: `report_shared` (ebeveynlere: uzman sistem içinden rapor gönderdi; "Uzmanınızdan yeni rapor" · "Uzmanınız bir rapor paylaştı. Moyo'da açabilirsiniz."; `data` `{report_id, link_id}`, `child_id` dolu; olağan anlık bildirim sınırına tabi) (anlamları: `akislar.md` 7, 10, 12, 14, 19, 25, 27) |
 | `notifications.push` (uygulandı 22 Kasım 2026, `20261120210000`) | `true` telefona da gider (varsayılan) / `false` yalnız uygulama içi (ebeveynin tercihi) |
 | Ebeveyn bildirim anahtarı (`parent_notification_prefs_set` `p_key`; uygulandı 22 Kasım 2026, `20261120210000`) | `step_done` (adım bildirimi: `task_done`, `task_declined`; varsayılan kapalı) · `day_complete` (gün bildirimi; varsayılan açık) · `tips` ("Hatırlatmalar ve ipuçları": sunucu motorunun ipuçları; varsayılan açık; uygulandı 22 Kasım 2026, `20261120230000`) |
 | Uzman bildirim anahtarı (`clinician_notification_prefs_set` `p_key`; uygulandı 22 Kasım 2026, `20261120230000`) | `tips` ("Hatırlatmalar ve ipuçları"; varsayılan açık) |
@@ -235,6 +235,7 @@ Eski hayvan kimlikleri (veri değiştirilmez, gösterirken eşlenir): sıra `mar
 | `nudge_log.result` (uygulandı 22 Kasım 2026, `20261120230000`) | `sent` (gönderildi) · `holdout` (karşılaştırma grubu; gönderilmedi, ölçülür) · `skipped_quiet` (sessiz saat) · `skipped_limit` (`detail`: `opened_today` o gün açtı · `daily` günde 1 · `weekly` 7 günde 2 · `pause` 14 günlük ara) · `skipped_pref` (tercih kapalı) |
 | `nudge_rules.category` | `tip` (hatırlatma / ipucu: sınırlara ve karşılaştırma grubuna tabi) · `account` (hesap bilgisi: deneme bitişi; yalnız sessiz saate uyar) |
 | `nudge_rules.trigger` | `step` (huni adımında takılı) · `review_waiting` · `inactive` · `trial_ending` · `invite_expiring` · `training_none` · `training_draft` |
+| `nudge_rules.feature_flag` (ÖNERİ `20261123100000`) | boş (bayraksız) · `parent_training` (`training_none`, `training_draft`: ebeveyn eğitimi bayrağı kapalı kişiye gitmez) |
 | Huni adım anahtarları (`admin_funnel`; uygulandı 22 Kasım 2026, `20261120220000`) | Moyo: `store_impression`, `store_page_view`, `store_download`, `signup`, `email_verified`, `child_added`, `game_linked`, `first_routine`, `first_done`, `first_approved`, `active_d7`, `trial_end`, `paid`, `renewed` · Moyo Mercek: `store_*`, `signup`, `survey_done`, `first_invite`, `family_linked`, `first_training`, `active_w2`, `trial_end`, `paid`, `renewed` |
 | Kıyas anahtarları (`kpi_benchmarks.key`) | `store_tap_through`, `store_page_conversion`, `download_to_signup`, `signup_to_activation`, `trial_to_paid`, `monthly_churn`, `monthly_renewal_m1`, `annual_renewal`, `annual_share`, `refund_rate`, `billing_issue_rate`, `d1_retention`, `d7_retention`, `d30_retention`; `better` `high` / `low` |
 | `push_tokens.app` | `parent` / `child` / `clinic` |
@@ -405,7 +406,7 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 
 | Alan | Değerler | Türkçe |
 |---|---|---|
-| `clinic_sessions.status` | `planned`, `done`, `no_show`, `late_cancel`, `cancelled`, `postponed`, `offered` | Planlandı, Yapıldı, Gelmedi, Geç iptal, İptal, Ertelendi, Teklif edildi (bekleme listesindeki aileye) |
+| `clinic_sessions.status` | `planned`, `done`, `no_show`, `late_cancel`, `cancelled`, `postponed`, `offered` | Planlandı, Yapıldı, **Yapılmadı** (`no_show`; kullanıcı kararı 23 Kasım 2026, önce "Gelmedi"; anahtar değişmedi), Geç iptal, İptal, Ertelendi, Teklif edildi (bekleme listesindeki aileye) |
 | `clinic_sessions.kind` | `individual`, `family`, `parent`, `group`, `intake`, `other` | Bireysel seans, Aile görüşmesi, Ebeveyn görüşmesi, Grup seansı, İlk görüşme, Diğer (danışansız blokta ör. toplantı) |
 | `clinic_sessions.mode` | `in_person`, `online`, `home` | Yüz yüze, Online, Ev ziyareti |
 | `clinic_sessions.family_response` | `ok`, `unavailable` | Geleceğiz, Uygun değil |
@@ -413,7 +414,8 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 | `clinic_waitlist.status` | `waiting`, `offered`, `booked`, `removed` | Bekliyor, Teklif gönderildi, Randevu aldı, Listeden çıktı |
 | Bildirim (ebeveyn, `app='parent'`) | `session_scheduled`, `session_changed`, `session_cancelled`, `session_offer` | `data.session_id`; dokununca Uzmanım › Randevular |
 | Bildirim (uzman, `app='clinic'`) | `session_family_response`, `session_booked`, `session_offer_answered` | `data.session_id`, `data.link_id`; dokununca Takvim'de o seans |
-| Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources` | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
+| `clinic_sessions.fee` (ÖNERİ `20261123100000`) | `numeric(10,2)`, boş ya da 0–1.000.000 TL | Seans ücreti (uzman elle yazar; yalnız klinik, aile görmez; `veritabani.md` 40.1) |
+| Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources`; `fee_invalid` (ÖNERİ `20261123100000`: ücret sayı değil, eksi, ikiden çok ondalık ya da 1.000.000 üstü) | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
 
 ## P19. Çalışma alanları (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; `akislar.md` 21)
 
@@ -455,6 +457,18 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 |---|---|---|
 | `clinic_target_behaviors.status` | `baselining`, `stable`, `improving`, `regressing`, `mastered` | Başlangıç ölçümü (gri), Durağan (mavi), İyileşiyor (yeşil), Geriliyor (turuncu), Ustalaştı (mor) |
 | `clinic_target_behaviors.log_type` | `frequency`, `abc`, `duration` | Sıklık sayısı, ABC (öncül ve sonuç), Süre |
+| `clinic_target_behaviors.log_types` (ÖNERİ `20261123100000`) | 1–3 tekil değer, sabit sıra `frequency`, `abc`, `duration` | Kayıt türü çoklu seçim; `log_type` = ilk tür (`veritabani.md` 40.3) |
+| `behavior_incidents.log_types` (ÖNERİ `20261123100000`) | bildirim anındaki türler (diğer olayda boş) | Olay formu seçili her türün alanını ister: sayı, öncül + sonuç, süre |
 | `behavior_incidents.response` | 1–5 | Çocuğun tepkisi: 1 Kötü … 5 Çok iyi |
 | `behavior_incidents.behavior_id` | boş | "Diğer bildirilen olaylar" (davranışın adı `other_behavior`) |
 | Bildirim (app `clinic`) | `behavior_incident` | "Yeni davranış olayı: <davranış>" → danışan › Davranışlar ve Olaylar |
+
+## P23. Aileye gönderilen rapor (ÖNERİ `proposed/20261123100000_mercek_updates.sql`, 23 Kasım 2026; `akislar.md` 27, `veritabani.md` 40.2)
+
+| Alan | Değerler | Ekranda |
+|---|---|---|
+| `clinic_shared_reports.content.v` | `1` | İçerik biçimi sürümü |
+| Bölüm türü (`content.sections[].type`) | `text`, `kv`, `table`, `list` | Metin, etiket–değer satırları, tablo, madde listesi |
+| `clinic_shared_reports.seen_at` | boş / zaman | Moyo'da açılmadı / ilk açılış (Moyo Mercek listesinde "Açıldı"; paylaşım bittikten sonraki açılış gösterilmez) |
+| Bildirim (app `parent`) | `report_shared` | "Uzmanınızdan yeni rapor" → Moyo'da rapor sayfası (`data.report_id`) |
+| Hatalar (`hint`) | `no_access`, `link_not_visible`, `title_invalid`, `period_invalid`, `content_invalid` (`detail`: alan), `content_too_large`, `too_many_reports`, `report_not_found` | İleti Türkçe; uygulama gösterebilir |

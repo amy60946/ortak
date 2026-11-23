@@ -632,15 +632,15 @@ Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentA
 
 **ClinicApp (uzman):**
 1. **Takvim** (A): ana ekrandan; gün / hafta, durum renkleri, sahip için uzman süzgeci, dolu saatler (`clinic_busy`), dış takvim blokları (E). "+ Seans": danışan ya da danışansız blok, uzman (sahip başkasına atar), tür, yer (yüz yüze / online / ev), oda, süre, tekrar (her hafta / iki haftada bir, kaç seans), aileye göster, paket.
-2. **Durum** (A): Yapıldı · Gelmedi · İptal (süre içinde Geç iptal; affedilebilir) · Ertelendi; "notu bekleyen" listesi (yapıldı ama kaydı yok, son 14 gün).
+2. **Durum** (A): Yapıldı · Yapılmadı (`no_show`; 23 Kasım 2026'ya kadar "Gelmedi", `durumlar.md` P18) · İptal (süre içinde Geç iptal; affedilebilir) · Ertelendi; "notu bekleyen" listesi (yapıldı ama kaydı yok, son 14 gün).
 3. **Seans öncesi özet** (C): son yapılan seanstan bu yana evde olanlar (rutin oranı ve önceki dönem, davranış kayıtları, bekleyen öneri, değerlendirme zamanı, ailenin yanıtı/notu) + kendiliğinden gündem; hesap ClinicApp'te mevcut verilerden.
 4. **Seans kaydı** (C): katılanlar, gözlem / çalışılan / sonraki adım (yalnız klinik), gündem işaretleri, aileye ev ödevi = Takip Planı'nın gönderilmemiş maddeleri seçilip "Aileye gönder" (`care_plan_publish_selected`), sonraki seans.
-5. **Danışan › Seanslar**: devam (yapıldı / gelmedi / geç iptal), son 10 hafta, her seansın ara döneminde evden gelenler, paket kullanımı, bekleme listesi.
+5. **Danışan › Seanslar**: devam (yapıldı / yapılmadı / geç iptal), son 10 hafta, her seansın ara döneminde evden gelenler, paket kullanımı, bekleme listesi.
 6. **Takvim ayarları** (D, E): çalışma saatleri ve "aileye açık" saatler, odalar ve şubeler (sahip), geç iptal süresi ve paket sayımı, hatırlatma dakikaları, aileye randevu alma (aç/kapat, bildirim süresi, ufuk, süre), takvim aboneliği bağlantısı (kopyala, baş harf göster, yenile, kapat), dış takvim adresi ekle/kaldır + "Şimdi eşitle".
 7. **Bekleme listesi** (D): danışanı listeye al; iptal ya da boş saatte "Bekleme listesine teklif et" → aile kabul ederse randevu.
 
 **ParentApp (ebeveyn) — yapıldı 5 Kasım 2026 (parent-app acfa1d8; SQL uygulanana kadar bölüm görünmez):**
-1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Gelmedi / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
+1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Yapılmadı / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
 2. **Yanıt** (B): gelecekteki planlı kartta "Geleceğiz" / "Uygun değil" (isteğe bağlı kısa not, ≤ 300) → `family_session_respond`; verilen yanıt kartta görünür, değiştirilebilir. Saat değişince yanıt sıfırlanır (sunucu).
 3. **Hatırlatma** (B): her açılışta ve `session_*` bildiriminde `family_sessions()` → gelecekteki `planned` her seans için `reminders` dakikaları kadar önce **yerel bildirim** (expo-notifications, cihazda; eski planlananlar silinip yeniden kurulur). Metin: "Yarın 15:00 Nazlı'nın seansı · Elif Örnek" / "2 saat sonra …". Bildirim ayarından kapatılabilir.
 4. **Takvime ekle**: kartta .ics paylaşımı (cihaz takvimi), yalnız o seans.
@@ -721,6 +721,8 @@ Kurallar: aile tablolara yazamaz, yalnız işlevlerle; ebeveyn yalnız kendisine
 
 **Paylaşım kaydı ya da klinik silinince ailede kalır (uygulandı 22 Kasım 2026, `migrations/20261120200000_family_keeps_records.sql`; kullanıcı kararı 20 Kasım 2026, hukuk kararı 3A; `veritabani.md` 32):** uzman hesabını silince (tek kişilik klinik ya da bireysel alan) ya da panel uzman hesabını silince paylaşım kaydı da silinir. O zaman aileye açılmış (Etkin / Ustalaştı) eğitimler, ebeveynin modül yanıtları, uygulama kayıtları ve yapılacak işaretleri **ailede salt okunur kopya** olarak kalır; taslaklar, uzmanın gözlem verisi ve ustalık ölçütü silinir. Uzman tarafı (o klinik de, aynı çocukla çalışan başka uzman da) bu kopyaya erişemez; ebeveyn yeni kayıt giremez. Ebeveyn kopyayı `family_kept_trainings()` ile okur (uzman ve klinik adı yok). **ParentApp (yazıldı 21 Kasım 2026, parent-app#37; SQL uygulanınca birleşir):** Ben'de "Derslere devam et"in altında açılıp kapanan **"Önceki eğitimlerin"** bölümü (kullanıcı seçimi 20 Kasım 2026; benchmark: Google Classroom arşivi) ve açıklama "Uzmanla paylaşım sona erdi. Bu eğitimler, cevapların ve yapılacakların sende kalır; yalnızca görüntülenebilir."; salt okunur (oynatıcı ve görev ekranları bitmiş öğe gibi, kayıt ve işaret düğmeleri yok), uzman adı yok; işlev yoksa bölüm görünmez. `family_trainings()` bunları döndürmez. Aile ya da çocuk silinince hepsi silinir. Paylaşımı geri almak (durdurmak) satırı silmez; o durumda bugünkü kural sürer (aile de görmez). Olaylar (ClinicApp): `training.create`, `training.status`, `training.delete`, `training.modules`, `training.task`, `training.todo`, `training.data`, `training.remind`.
 
+**Gizli (kullanıcı kararı 23 Kasım 2026):** bayrak `parent_training` kapalıyken iki uygulamada gizli, sunucu eğitim hatırlatması göndermez (27.4).
+
 **İlk kullanıcıya anlatım (ClinicApp, 11 Kasım 2026; veritabanı değişmedi):** Uygulama görevleri = ebeveynin evde tekrar tekrar uyguladığı beceri, her uygulayışta kayıt (Sıklık / Doğruluk / Süre); Hızlı yapılacaklar = bir kez yapılıp işaretlenen iş, ölçüm yok. İki sekmenin başında tek cümle + üç adım + dokununca formu dolduran üç örnek; "Anladım" ile tek satıra iner. Örnek aile Deniz'de uydurma bir eğitim (cihazda, sunucuya gitmez) ve tur.
 
 ## 24. Hedef davranışlar ve bildirilen olaylar (uygulandı 9 Kasım 2026; ortak `migrations/20261110110000_target_behaviors.sql`, `veritabani.md` 33, `durumlar.md` P22)
@@ -736,6 +738,8 @@ Kullanıcı isteği (9 Kasım 2026): rakibin "Target behaviors & reported incide
 **ParentApp (yapıldı 9 Kasım 2026, parent-app `claude/parentapp-two-features-bn9o8e`):** adım 2. Giriş satırı yalnız ebeveyn kaydı açık en az bir hedef davranış varsa (Ben › Görevlerin, Uzmanım › uzman › Bugün yapılacaklar; o uzmanın paylaşımlarıyla). Birden çok çocuk paylaşılmışsa 1. adımda çocuk seçilir. Olay tarihi gün + saat (ileri değil, en çok 30 gün geri; sunucudaki kuralla aynı). Mevcut "Davranış kaydı" (`abc_events`) satırı yanında ayrı durur. Olay (ParentApp): `incident.report` (`type`: `frequency` / `abc` / `duration` / `other`, `strategy`).
 
 Kurallar: aile tabloya yazamaz, yalnız `family_incident_report`; olay zamanı ileri olamaz, en çok 30 gün geri; türe göre zorunlu alan; ebeveyn kaydı kapalı ya da arşivli hedefe olay bildirilmez ve aile onu görmez; başka aile / klinik görmez; paylaşım bitince kapanır. Tepki ebeveynin gözlemidir, puan değildir.
+
+**Kayıt türü çoklu seçim (ÖNERİ, 23 Kasım 2026):** sıklık / ABC / süre birlikte seçilebilir; olay formu seçili her türü sorar (27.3).
 
 **Paylaşım kaydı ya da klinik silinince ailede kalır (uygulandı 22 Kasım 2026, `migrations/20261120200000_family_keeps_records.sql`; kullanıcı kararı 20 Kasım 2026, hukuk kararı 3A; `veritabani.md` 33):** olaylar silinmez, `link_id` boşalır; hedef davranış (uzmanın kaydı) silinir, adı olayda `behavior_title` olarak kalır (uzman adı değiştirince olaylarda da güncellenir). Aile olaylarını okur (`behavior_incidents`, RLS kendi ailesi; görünen ad `behavior_title`, boşsa `other_behavior`), uzman tarafı okuyamaz; silinen paylaşıma yeni olay bildirilemez. Aile ya da çocuk silinince olaylar da silinir. **ParentApp:** bugün olay listesi yok; gösterilecekse "Bildirdiğin olaylar" (çocuk başına, salt okunur) `link_id` boş olanları "Önceki uzmanın" diye ayırır.
 
@@ -822,3 +826,42 @@ Belge: https://claude.ai/artifact/SyThEGYqrGKSf3bgHUzz6U · kaynaklı tam rapor 
 **Değişmez kurallar:** iptal düğmesi her ekranda, öteki ikincil düğmeyle aynı boy ve kontrastta; ziyaret başına tek teklif; geri sayım, uydurma kıtlık, "emin misin" döngüsü yok; indirim geçen her yerde indirimli fiyat + süre + sonraki fiyat + kendiliğinden yenilenme; teklif mağazadan okunur; Mercek'te yalnız sahip görür.
 
 **Aşamalar:** (0) kullanıcı, kod yok: ödeme ek süresi 16 gün + yalnız metinli iptal sayfası mesajı. (1) Uygulama: yönetim ekranı, neden sorusu, plan değiştirme, iptal sonrası kart, ödeme bandı; neden ve adımlar şimdilik kullanım kaydıyla (`membership.cancel_*`), yeni tablo yok; bayrak `cancel_flow` (yoksa kapalı). **Moyo Mercek'te yapıldı (18 Kasım 2026; oturum dalında ve önizlemede, ana dala ve TestFlight'a alınmadı; gerçek cihazda denenmedi):** "Aboneliği yönet" penceresi (üyelik özeti → isteğe bağlı neden sorusu → nedene uyan tek seçenek → Apple'ın abonelik sayfası), iptal edilmiş üyelik kartı ("Yeniden başlat"), ödeme sorunu bandı. İndirim / ücretsiz ay yok; iptal düğmesi her ekranda öteki ikincil düğmeyle aynı görünümde, soru atlanabilir, geri sayım ve onay döngüsü yok. (2) Teklifler (fiyat kararı + App Store Connect) ve %10 kontrol grubu; sunucuda teklif geçmişi ve "bu aboneye şimdi ne sunulabilir" → o zaman sözleşmeye çevrilir. (3) Geri kazanım teklifleri ve zamanlı mesajlar (bölüm 25'in 2. aşamasına bağlı).
+
+## 27. Moyo Mercek 23 Kasım güncellemeleri (ÖNERİ, `proposed/20261123100000_mercek_updates.sql`, 23 Kasım 2026; **uygulanmadı**; `veritabani.md` 40, `durumlar.md` P18 / P22 / P23, `admin.md` bayrak `parent_training`, hukuk `hukuk_notlari.md` S)
+
+Kullanıcı kararları (23 Kasım 2026, koordinatöre): seans ücreti elle yazılır; "Rapor oluştur"dan sonra rapor sistem içinden aileye gönderilir, ebeveyn bildirim alır ve Moyo'da uygulama içi sayfada görür, Moyo alınan raporları arşivde tutar; hedef davranışın kayıt türü çoklu seçim olur ve ebeveynin olay formu ona uyar; ebeveyn eğitimi iki uygulamada şimdilik gizlenir (kademeli açılabilir); seans durumu "Gelmedi" → "Yapılmadı".
+
+### 27.1 Seans ücreti
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Seans penceresinde "Ücret (TL)" (isteğe bağlı; boş = ücret yok). Tekrarlayan seansta her seansa aynı ücret; düzeltmede "Yalnız bu / Bu ve sonrakiler" ücrete de uyar | `clinic_session_create` / `clinic_session_update` `p.fee` (sayı ya da `"450.50"`; `fee_invalid`) |
+| 2 | [K] | Takvim, seans ayrıntısı, danışan › Seanslar ücreti gösterebilir (toplam vb. uygulamada hesaplanır) | `clinic_sessions.fee` (`select` listesine eklenir) |
+
+Aile ücreti hiçbir yerde görmez (sunucu döndürmez). Ödeme, tahsilat, fatura bu öneride yok (20'deki not geçerli).
+
+### 27.2 Raporu aileye gönder
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Danışan › Rapor › "Rapor oluştur" (çocuk ebeveynin girdiği adla) → önizleme → **"Aileye gönder"**: başlık (varsayılan "Ev rutini gözlem raporu"), dönem, raporun bölümleri biçim v1'e çevrilir (özet `kv`, haftalık kart / adım / beceri / davranış tabloları `table`, ilerleme notu `text`, `footer` = `EXPORT_FOOTER`) | `clinic_report_share(link, title, start, end, content)` → rapor kimliği |
+| 2 | [P] | Ailenin her ebeveynine `report_shared` ("Uzmanınızdan yeni rapor" · "Uzmanınız bir rapor paylaştı. Moyo'da açabilirsiniz.") → dokununca rapor sayfası | bildirim `data.report_id` |
+| 3 | [P] | Moyo'da rapor sayfası: başlık, uzman (ad, unvan), dönem, bölümler sırayla (metin düz metin olarak; HTML yorumlanmaz), en altta `footer`. İlk açılış kaydedilir | `family_report(id)` |
+| 4 | [P] | **Raporlar arşivi** (ör. Uzmanım › Raporlar ya da çocuk sayfası): en yeni önce; açılmamış olan işaretli; çocuk süzgeci. Paylaşım bitse, uzman hesabını ya da kliniğini silse de raporlar kalır; aile ya da çocuk silinince silinir | `family_reports(child?)` |
+| 5 | [K] | Rapor sekmesinde "Gönderilen raporlar": başlık, dönem, tarih, "Açıldı" (paylaşım bittikten sonraki açılış gösterilmez); içerik sunucudan yeniden okunmaz | `clinic_reports_sent(link)` |
+
+Kurallar: yalnız seçili çalışma alanında, paylaşımı açık ve uzmana görünen aileye; paylaşım başına 24 saatte en çok 20 rapor (`too_many_reports`); içerik en çok 256 KB ve biçim v1 (`content_invalid`, `content_too_large`); uzman göndermeden önce raporu görür (taslak sunucuda tutulmaz); gönderilen rapor düzeltilemez ve geri çekilemez (yeni rapor gönderilir). Ebeveyn raporu silemez. Tablo istemciye kapalı, yalnız işlevler.
+
+### 27.3 Kayıt türü çoklu seçim ve olay formu
+
+| # | Kim | Adım | Veritabanı |
+|---|---|---|---|
+| 1 | [K] | Hedef davranış formunda "Kayıt türü" çoklu seçim: Sıklık sayısı · ABC · Süre (en az biri). Yeni uygulama yalnız `log_types` yazar | `clinic_target_behaviors.log_types` (tetikleyici `log_type`'ı ilk türe eşitler) |
+| 2 | [P] | Olay formunun 2. adımı seçili türlerin hepsini sorar (aynı ekranda): sıklık → "Kaç kez oldu?", ABC → "Bu olaydan önce / sonra ne oldu?", süre → "Ne kadar sürdü?"; olay tarihi her zaman | `family_target_behaviors()` `behaviors[].log_types`; `family_incident_report` seçili her türün alanını ister (`count_required`, `abc_required`, `duration_required`) |
+| 3 | [K] | Olay tablosu sütunları olayın kendi türlerine göre (`behavior_incidents.log_types`; tür sonradan değişse de eski olay kendi alanlarıyla) | `behavior_incidents.log_types` |
+
+Uyumluluk: eski Moyo yalnız `log_type` (ilk tür) alanını sorar; çok türlü davranışa eski sürümden olay gönderilemez (ilk eksik alanın hatası). Moyo güncellenmeden uzmanlara çoklu seçim açılmamalı (Moyo Mercek bunu bayrakla ya da Moyo sürümüyle sıralar).
+
+### 27.4 Ebeveyn eğitimi gizli (bayrak `parent_training`)
+
+Bayrak yoksa kapalı (`admin.md`). Kapalıyken Moyo Mercek'te danışan › Ebeveyn Eğitimi, Kaynak kütüphanesi'nden "Ebeveyn eğitimi olarak ata" ve eğitime giden yollar (Başlarken, tur, "Senin sıran" eğitim nedenleri, eğitim bildirimleri, cihaz içi eğitim hatırlatmaları), Moyo'da eğitim bölümleri (Ben › Görevlerin / Derslere devam et'in eğitim kısmı, Uzmanım'daki eğitim görevleri) gizlenir; veri ve işlevler durur. Sunucu bildirim motorunda eğitime yönelik kurallar (`clinic_training_none`, `clinic_training_draft`) bayrak kapalı kişiye gitmez (`nudge_rules.feature_flag`). Hangi ekranın gizleneceğini her uygulamanın penceresi kendi koduna göre belirler; Gelişim › Ben dersleri (22) ayrı özelliktir, bu bayrağa bağlanıp bağlanmayacağı Moyo penceresinin sorusudur. Kademeli açılış: önce tek kişiye `admin_set_user_flag(kullanıcı, 'parent_training', true, …)`, sonra `admin_set_flag('parent_training', true, yüzde, …)`.
