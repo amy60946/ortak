@@ -4,6 +4,7 @@
 
 > İç not — 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Ekran metinlerinde ad kuralı: aile uygulaması kendinden "Moyo" diye söz eder, başka uygulamadan anılırken "Moyo Ebeveyn"; çocuğun oyunu "Moyo Oyun"; uzman ürünü uzmana dönük metinde "Moyo Mercek", aileye dönük metinde "Moyo Uzman". Tablolardaki uygulama adları yeni adlarla; "… penceresi" iç addır. Avukat dosyasının kısa metin önerileri §15'te (kullanıcı kararı bekler).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo Mercek kayıtta aile bağı bilgisi (§1.2, B.8), belge yükleme kullanılmıyor (§12, §14), Moyo Ebeveyn bildirim ayarları ve tanıtım izni (§14.1, yeni; kullanıcı kararı 5a, D.16), tek iletişim adresi `destek@`.
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`): her zaman görünen hesap silme metinlerinden (§5.1, §5.2) eğitim ve ders sözleri çıktı; yalnız eğitime ve derslere ait metinler (§13 ebeveyn dersleri ve kaynak kütüphanesi, §15 satır 2'deki eğitim yanıtı) bayrak açıkken gösterilir. Özgün metin `hukuk/ek-ebeveyn-egitimi.md`.
 
 ## Kısaca
 
@@ -237,10 +238,10 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 > **Hesabını silersen ailen de silinir.**
 > Ailende başka ebeveyn olmadığı için şunlar kalıcı olarak silinir:
 > - hesabın ve çocuk profillerin,
-> - rutinler ve adımlar, onaylar, ödüller, inci ve Güneş Taşı geçmişi, ebeveyn dersleri ve uygulama günlerin,
+> - rutinler ve adımlar, onaylar, ödüller, inci ve Güneş Taşı geçmişi,
 > - mesajlar, fotoğraflar ve sesli mesajlar,
 > - davranış kayıtları, davranış olayları ve tanışma yanıtları,
-> - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler, ebeveyn eğitimleri ve takip planı,
+> - uzman paylaşımları (uzmanın erişimi hemen biter) ve uzmanın bu çocuklar için tuttuğu notlar, hedefler ve takip planı,
 > - oyun yedekleri.
 >
 > Çocuğunun cihazındaki Moyo Oyun'un aileyle bağlantısı kapanır.
@@ -269,7 +270,7 @@ Her satır: **başlık** · sürüm · (onay isteyenlerde) "Onayladın: {tarih}"
 **Klinik sahibinin aktif mağaza üyeliği varsa:** 5.1'deki kutu, metin "Klinik üyeliğin Apple'da devam ediyor…" (web'de: "Üyeliğini iPhone/iPad'deki App Store ayarlarından iptal et.").
 
 **Tek kişilik klinik:**
-> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, taslak ebeveyn eğitimleri, eğitimlerdeki gözlem verilerin ve ustalık ölçütlerin, hedef davranışlar, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo Ebeveyn'deki kendi verileri silinmez; yalnız seninle paylaşımları biter. Ailelere gönderdiğin eğitimler, ebeveynlerin bu eğitimlere verdiği yanıtlar ve kayıtlarla birlikte, ailenin hedef davranışlara bildirdiği olaylar da (davranışın adıyla) ailede kalır; sen ve kliniğin bunlara artık erişemezsiniz. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Mevzuatın sana yüklediği kayıt saklama yükümlülüğü sende; saklaman gereken kayıtları silmeden önce indir ya da yazdır.
+> **Kliniğin ve içindeki her şey silinir:** danışan paylaşımları, notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, hedef davranışlar, takip planları, davetler ve üyelik kaydı. Ailelerin Moyo Ebeveyn'deki kendi verileri silinmez; yalnız seninle paylaşımları biter. Ailenin hedef davranışlara bildirdiği olaylar (davranışın adıyla) ailede kalır; sen ve kliniğin bunlara artık erişemezsiniz. Kayıtların, ailenin izniyle sonraki uzmana aktarımı da sona erer. Mevzuatın sana yüklediği kayıt saklama yükümlülüğü sende; saklaman gereken kayıtları silmeden önce indir ya da yazdır.
 
 **Ekipte başka uzman varken klinik sahibi:**
 > Klinik kalır; sahiplik ekibin en eski üyesine ({ad}) geçer. Kliniğe ait kayıtlar klinikte kalır. Yalnız senin hesabın silinir.
@@ -462,7 +463,7 @@ Moyo Ebeveyn davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`
 
 > Bu sayılar çocuğunun uygulamadaki rutin ve adımlarını özetler; tanı, zekâ ya da dikkat puanı değildir.
 
-**Ebeveyn dersleri (Gelişim › Ben; öneri 5 Kasım 2026, `sozlesme/akislar.md` 22):** ders sayfasının ve "Yakında" kartının altında:
+**Ebeveyn dersleri (Gelişim › Ben; öneri 5 Kasım 2026, `sozlesme/akislar.md` 22; yalnız bayrak `parent_training` açıkken, lansmanda kapalı, kullanıcı kararı 23 Kasım 2026):** ders sayfasının ve "Yakında" kartının altında:
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
@@ -470,9 +471,9 @@ Moyo Ebeveyn davet ekranı uyarısı ve veli beyanı kutusu (`uzman-paylasim-v1`
 
 > Bu dersler bilgi amaçlıdır; tanı ya da tedavi yerine geçmez.
 
-Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (Moyo Ebeveyn ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26).
+Uzmanın önerdiği derste ek satır: "Uzmanın bu dersteki uygulama günlerini görür." Uzman paylaşımı ekranındaki "Paylaşılır" listesine (Moyo Ebeveyn ⓘ, rıza metni `uzman-paylasim-v1` "takip planı uygulama kayıtların" kapsamı) satır: "Uzmanının önerdiği derslerde uyguladığın günler" ve "Paylaşılmaz" listesine: "Kendi seçtiğin dersler". Sürümlü rıza metni değişmedi (`hukuk_notlari.md` 26). Ek satır ve bu iki liste satırı da yalnız bayrak açıkken gösterilir.
 
-**Kaynak kütüphanesi (Moyo Ebeveyn ve Moyo Mercek; kullanıcı kararı 14 Kasım 2026, `hukuk_notlari.md` M.5; iki uygulamada uygulandı):** kütüphane ekranının altında bir kez, göze batmadan (her eğitimde değil):
+**Kaynak kütüphanesi (Moyo Ebeveyn ve Moyo Mercek; kullanıcı kararı 14 Kasım 2026, `hukuk_notlari.md` M.5; iki uygulamada uygulandı; yalnız bayrak `parent_training` açıkken, lansmanda kapalı):** kütüphane ekranının altında bir kez, göze batmadan (her eğitimde değil):
 
 > Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz.
 
@@ -532,7 +533,7 @@ Kaynak: avukat dosyası ("takip platformu" konumu; `sozlesme/hukuk_notlari.md` M
 | # | Nerede (bağlı bölüm) | Metin | Neden | Durum |
 |---|---|---|---|---|
 | 1 | Moyo Ebeveyn kayıt onayı: tek satır, kutuyla (§1.1) | "Moyo bir takip aracıdır; sağlık hizmeti, tanı ya da acil durum hizmeti değildir. Koşulları okudum ve kabul ediyorum." | Koruyucu maddelerin açıkça onaylanması | Öneri, kullanıcı kararı bekler |
-| 2 | Moyo Ebeveyn serbest metin alanları: not, davranış kaydı, onay notu, ebeveyn eğitimi yanıtı (alan ipucu) | "Gözlemini yaz. Tanı, ilaç ya da sağlık bilgisi yazma." | Özel nitelikli veri girişini kaynağında azaltır; bugün yok | Öneri, kullanıcı kararı bekler |
+| 2 | Moyo Ebeveyn serbest metin alanları: not, davranış kaydı, onay notu (alan ipucu); ebeveyn eğitimi yanıtı yalnız bayrak `parent_training` açıkken | "Gözlemini yaz. Tanı, ilaç ya da sağlık bilgisi yazma." | Özel nitelikli veri girişini kaynağında azaltır; bugün yok | Öneri, kullanıcı kararı bekler |
 | 3 | Uzmanla paylaşım onayı (Moyo Ebeveyn; §12 sonu, `uzman-paylasim-v1` ekranı) | "Paylaşılanlar uygulamada bıraktığın kayıtlardır. Paylaşımı istediğin an kapatabilirsin." | Kayıtların kullanıcıya ait olduğunu, kararın ebeveynde olduğunu gösterir | Öneri, kullanıcı kararı bekler |
 | 4 | Davranış kaydı ekranı ve Yardım (Moyo Ebeveyn; §9) | "Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara." | Bugün yalnız bir ekranda; Yardım'da da durmalı | Öneri, kullanıcı kararı bekler (§9'daki uzun metnin kısa biçimi) |
 | 5 | Moyo Mercek kayıt onayı (§1.2) | "Moyo Mercek bir takip panelidir. Mesleki değerlendirme ve kayıt tutma yükümlülüğü sizdedir." | Rol ayrımının uzmanca onaylanması | Öneri, kullanıcı kararı bekler; 3 Kasım 2026 kararıyla çelişebilir |
@@ -558,3 +559,4 @@ Kaynak: avukat dosyası ("takip platformu" konumu; `sozlesme/hukuk_notlari.md` M
 9. **Klinik silinince ailenin yanıtları (5.2) — karar verildi (kullanıcı, 20 Kasım 2026: 3A):** Paylaşım kaydı ya da klinik silinince (uzman hesabını siler; tek kişilik klinik ya da bireysel alan) ailenin kendi girdiği ebeveyn eğitimi yanıtları, uygulama kayıtları, yapılacak işaretleri ve davranış olayları **silinmez**: aileye açılmış eğitimin içeriğiyle (adı, modüller, uygulama görevleri, yapılacaklar) birlikte ailede salt okunur kopya olarak kalır, uzmanın ve kliniğin erişimi kapanır; taslak eğitim, uzmanın gözlem verisi, ustalık ölçütü ve hedef davranış tanımı silinir (olayda yalnız davranışın adı kalır). Aile hesabını ya da çocuğu silerse hepsi silinir. Sunucu: `supabase/migrations/20261120200000_family_keeps_records.sql` (öneri). 5.2 metni buna göre yazıldı. Avukata kalan: (a) uzmanın yazdığı eğitim içeriğinin (başlık, görev ve yapılacak metinleri) uzman hesabı silindikten sonra ailede kalması Uzman Hizmet Sözleşmesi 4.5 ve 9.6'ya eklenmeli mi; (b) paylaşım geri alınınca (satır silinmez) aile bugün bu kayıtları görmüyor, silinince görüyor: geri almada da aileye salt okunur kopya açılsın mı (ürün kararı).
 10. **Bildirim ayarları ve tanıtım izni (§14.1; kullanıcı kararı 20 Kasım 2026):** "günde bir taneyi geçmemeye çalışır" bir hedef olarak yazıldı (taahhüt değil); tanıtım izni ayrı anahtar ve kapalı başlar. Uygulama içi tanıtım bildiriminin ticari elektronik ileti sayılması ve İYS kaydı gerekip gerekmediği avukata (`hukuk_notlari.md` N).
 11. **Kayıtta aile bağı bilgisi (§1.2; B.8):** kayıt satırının üstündeki tek satır uzmanın "önceden bilgilendirildiğini" ispat için yeterli mi; onay kaydına ayrıca yazılmalı mı (bugün yalnız sözleşme sürümü kaydediliyor)?
+12. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Not 9 (klinik silinince ailede kalan eğitim yanıtları) o zaman yeniden geçerli olur; bugün §5.2 yalnız davranış olaylarını sayar.

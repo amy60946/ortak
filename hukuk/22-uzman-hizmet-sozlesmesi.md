@@ -5,10 +5,11 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Taslak maddeler: `sozlesme/hukuk_notlari.md` (E, G, M). Hukuki görüş değildir.
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı 1.1 ve Tanımlar; tıbbi cihaz cümlesi 3.2; uzman–aile ilişkisi 3.2-a (yeni); içerik sorumluluğu 3.3; genel ilke 3.7 (yeni); kayıtların uzmanın beyanı ve sorumluluğunda girilmesi 6.1; aile bağı kopunca 6.4-a (yeni); açık rıza 7.4; belge incelemesi kaldırıldı (Tanımlar, 5.2, 8. bölüm "Uzmanın kimliği ve unvanı" oldu, 11.1-g, 13.4, Ek-3); 3A 4.5 ve 6.4-a; üyelik bitince süresiz saklama 10.7, 14.4; indirim teklifleri 10.11 (yeni); tanıtım iletisi izni 17; veri işleyen rolü 13.2.
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); Kısaca, Tanımlar (aile verisi, uzman kayıtları, kaynak kütüphanesi), 3.1-c, 3.3, 3.4-a, 3.5, 4.5, 6.1, 7.5, 9.1, 11.1-e, 12.2 ve Ek-3'ten çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı). 12.1 fikri mülkiyette "kaynak kütüphanesi" kaldı (uygulama paketinde duruyor).
 
 ## Kısaca
 
-- **Moyo bir takip aracıdır:** Moyo, aile üyelerinin günlük rutin ve sorumlulukları kendi tercihleriyle kaydetmesini ve bu kayıtları görmesini sağlayan dijital bir takip aracıdır. Moyo Mercek, ebeveynin izniyle paylaştığı çocuğun ev rutinini takip etmenize; not, hedef, rutin ve adım önerisi, ebeveyn eğitimi ve takip planı hazırlamanıza yarar.
+- **Moyo bir takip aracıdır:** Moyo, aile üyelerinin günlük rutin ve sorumlulukları kendi tercihleriyle kaydetmesini ve bu kayıtları görmesini sağlayan dijital bir takip aracıdır. Moyo Mercek, ebeveynin izniyle paylaştığı çocuğun ev rutinini takip etmenize; not, hedef, rutin ve adım önerisi ile takip planı hazırlamanıza yarar.
 - **Sağlık hizmeti değildir:** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır. Uzman istihdam etmez; aile ile uzman arasında aracılık ya da yönlendirme yapmaz; belirli bir sonuç taahhüt etmez.
 - **Acil durum ve kriz izleme hizmeti değildir:** Ailenin kayıtları size gecikmeyle ulaşabilir. Risk gördüğünüzde 112'yi aramak ve aileyi uygun yere yönlendirmek sizin mesleki sorumluluğunuzdadır. Bu sınırlar uygulama ekranlarında ayrıca uyarı olarak tekrarlanmaz.
 - **Mesleki sorumluluk sizdedir:** unvanınızın ve yetkinizin doğruluğu, mesleki değerlendirmeniz, meslek etiği, ebeveynin bilgilendirilmesi ve onayı, meslek sırrı, kayıt tutma ve saklama yükümlülüğü. Moyo kayıtları saklar ve gösterir; arşiv ya da dışa aktarma hizmeti taahhüt etmez. Kayıtlarınızı kendi beyanınızla ve sorumluluğunuzda girersiniz; bu kayıtlarda veri sorumlusu sizsiniz, Moyo veri işleyendir.
@@ -47,18 +48,17 @@
 | Ebeveyn | Çocuğun velisi ya da yasal temsilcisi olduğunu beyan eden Moyo Ebeveyn kullanıcısı |
 | Aile | Uzmanın Moyo Mercek'te birlikte çalıştığı ebeveyn ve çocuk |
 | Paylaşım | Ebeveynin bir çocuğu açık rızasıyla bir klinikle paylaşması; etkin olduğu sürece uzman o çocuğun aile verisini salt okur |
-| Aile verisi | Ebeveynin ve çocuğun Moyo Ebeveyn ve Moyo Oyun'da oluşturduğu veriler (rutinler ve adımlar, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, davranış kayıtları ve ses kayıtları, davranış olayları, ebeveyn eğitimi yanıtları gibi) |
-| Uzman kayıtları | Uzmanın Moyo Mercek'e bir aile için girdiği notlar, hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (aile programı), ebeveyn eğitimleri, hedef davranışlar, seans randevuları ve seans kayıtları, etiketler ve davet bilgileri |
+| Aile verisi | Ebeveynin ve çocuğun Moyo Ebeveyn ve Moyo Oyun'da oluşturduğu veriler (rutinler ve adımlar, atamalar, tamamlamalar, "Yapamam" nedenleri, ebeveyn notları, davranış kayıtları ve ses kayıtları, davranış olayları gibi) |
+| Uzman kayıtları | Uzmanın Moyo Mercek'e bir aile için girdiği notlar, hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (aile programı), hedef davranışlar, seans randevuları ve seans kayıtları, etiketler ve davet bilgileri |
 | Takip planı | Uzmanın çocuk için kurduğu davranış hedefleri ve aile programı modülleri |
 | Şablonlar | Platformun sunduğu adım şablonları, hazır rutinler, takip planı şablonları (alanlar, hedefler, modüller, paketler) ve rapor biçimleri |
-| Kaynak kütüphanesi | Platformun sunduğu ebeveyn eğitimi içerikleri (okuma, çoktan seçmeli ve açık uçlu modüller) |
 
 ## 3. Hizmetin tanımı ve niteliği
 
 3.1. **Ne sunuyoruz.** Moyo, aile üyelerinin günlük rutin ve sorumlulukları kendi tercihleriyle kaydetmesini ve bu kayıtları görmesini sağlayan dijital bir takip aracıdır. Moyo Mercek, bu aracın uzmanlara yönelik bölümüdür ve uzmanın:
    - a) aileyi davet etmesine ve ebeveynin onayıyla paylaşılan çocuğun aile verisini salt okumasına,
    - b) aile için not tutmasına, hedef tanımlamasına ve değerlendirme yapmasına,
-   - c) aileye rutin ve adım önerisi, ebeveyn eğitimi, hedef davranış ve takip planı göndermesine,
+   - c) aileye rutin ve adım önerisi, hedef davranış ve takip planı göndermesine,
    - ç) seanslarını planlamasına ve seans kaydı tutmasına,
    - d) yazdırılabilir rapor ve indirilebilir özet (ilerleme notu, CSV) almasına,
    - e) klinik ekibini ve aile atamalarını yönetmesine
@@ -68,13 +68,13 @@
 
 3.2-a. **Uzman ile aile arasındaki ilişki.** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur. Mesleki kararlar Uzmanındır (madde 6.1).
 
-3.3. **Göstergeler, içerik ve sonuç.** Moyo Mercek'teki oranlar, grafikler, hedef değerlendirmeleri ve raporlar, ailenin uygulamada bıraktığı kayıtların özetidir; zekâ ya da dikkat puanı da değildir ve mesleki değerlendirmenin yerini tutmaz. Moyo'nun içeriği (kaynak kütüphanesindeki ebeveyn eğitimi içerikleri, hazır rutinler ve takip planı şablonları) genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Şablonlar ve içerikler uzmanın kendi programını hızlı kurması için sunulur; bir şablonun ya da içeriğin aileye uygun olup olmadığına uzman karar verir. Bu içeriğe dayanılarak verilen kararlardan ve bunların sonuçlarından, yasanın izin verdiği en geniş ölçüde, Moyo sorumlu değildir; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Moyo belirli bir sonuç, gelişme ya da davranış değişikliği taahhüt etmez.
+3.3. **Göstergeler, içerik ve sonuç.** Moyo Mercek'teki oranlar, grafikler, hedef değerlendirmeleri ve raporlar, ailenin uygulamada bıraktığı kayıtların özetidir; zekâ ya da dikkat puanı da değildir ve mesleki değerlendirmenin yerini tutmaz. Moyo'nun içeriği (hazır rutinler ve takip planı şablonları) genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Şablonlar ve içerikler uzmanın kendi programını hızlı kurması için sunulur; bir şablonun ya da içeriğin aileye uygun olup olmadığına uzman karar verir. Bu içeriğe dayanılarak verilen kararlardan ve bunların sonuçlarından, yasanın izin verdiği en geniş ölçüde, Moyo sorumlu değildir; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Moyo belirli bir sonuç, gelişme ya da davranış değişikliği taahhüt etmez.
 
 3.4. **Acil durum ve kriz izleme hizmeti değildir.** Moyo Mercek kriz izleme ya da acil uyarı aracı değildir. Ailenin kayıtları Uzmana gecikmeyle ulaşabilir; Platform bu kayıtları değerlendirmez ve anlık olarak gözden geçirmez. Uzman; çocuğun ya da başkasının hayatı, sağlığı veya güvenliği için risk gördüğünde 112'yi aramaktan, aileyi uygun sağlık kuruluşuna yönlendirmekten ve mevzuattan doğan bildirim yükümlülüklerini yerine getirmekten kendisi sorumludur.
 
-3.4-a. **Sınırların bildirimi.** 3.2–3.4'teki sınırlar Moyo Mercek ekranlarında ayrıca uyarı olarak tekrarlanmaz; Uzman bu sözleşmeyi kabul ederek bunları bildiğini kabul eder. Yalnız kaynak kütüphanesi ekranının altında bir kez "Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz." yazar. Uzmanın dışa aktardığı belgelerin (rapor, ilerleme notu, CSV) altında tek satır yer alır: "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." (Ek-3).
+3.4-a. **Sınırların bildirimi.** 3.2–3.4'teki sınırlar Moyo Mercek ekranlarında ayrıca uyarı olarak tekrarlanmaz; Uzman bu sözleşmeyi kabul ederek bunları bildiğini kabul eder. Uzmanın dışa aktardığı belgelerin (rapor, ilerleme notu, CSV) altında tek satır yer alır: "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." (Ek-3).
 
-3.5. **Uzaktan sağlık hizmeti aracı değildir.** Moyo Mercek'te uzman ile aile arasında görüntülü ya da sesli görüşme ve serbest mesajlaşma özelliği yoktur. Uzman aileye yalnız rutin ve adım önerisi (kısa not dahil), ebeveyn eğitimi, hedef davranış, takip planı, randevu bilgisi ve hatırlatma gönderebilir; ebeveyn yalnız bunlara bağlı kısa yanıt ve not bırakabilir.
+3.5. **Uzaktan sağlık hizmeti aracı değildir.** Moyo Mercek'te uzman ile aile arasında görüntülü ya da sesli görüşme ve serbest mesajlaşma özelliği yoktur. Uzman aileye yalnız rutin ve adım önerisi (kısa not dahil), hedef davranış, takip planı, randevu bilgisi ve hatırlatma gönderebilir; ebeveyn yalnız bunlara bağlı kısa yanıt ve not bırakabilir.
 
 3.6. **Hizmetin sunumu.** Hizmet olduğu gibi sunulur; kesintisiz ya da hatasız olacağı taahhüt edilmez. Bakım, güncelleme, hizmet sağlayıcı kesintisi ya da mücbir sebep nedeniyle hizmet geçici olarak durabilir. Platform özellik ekleyebilir, değiştirebilir ya da kaldırabilir; uzmanın ödediği hizmetin esaslı bir bölümünü kaldıracaksa bunu en az `[SÜRE]` (öneri: 30 gün) önce bildirir.
 
@@ -95,7 +95,7 @@
    - ç) kliniğinden ayrılan bir ekip üyesini derhal ekipten çıkarmayı ya da çıkarılması için Platforma başvurmayı
    üstlenir. Klinik sahibi, ekip üyelerinin bu sözleşmeye aykırı davranışlarından doğan zararlardan, borcun ifasında yardımcı kişi kullananın sorumluluğuna ilişkin genel hükümler (TBK md. 116) çerçevesinde Platforma karşı sorumludur. Her ekip üyesi ayrıca kendi eylemlerinden bizzat sorumludur.
 
-4.5. **Hesabın silinmesi ve ekip.** Uzman hesabını sildiğinde: tek kişilik klinik bütün uzman kayıtları, paylaşımları, davetleri ve üyelik kayıtlarıyla birlikte silinir; ekipte başka uzman varsa klinik ve kayıtları kalır, hesabını silen klinik sahibiyse sahiplik kliniğin en eski üyesine geçer, ekip üyesiyse sorumlusu olduğu aileler klinik sahibine kalır. Klinik silindiğinde ailelerin Moyo Ebeveyn'deki kendi kayıtları silinmez: ailenin girdiği ebeveyn eğitimi yanıtları ve davranış olayları, aileye açılmış eğitimin içeriğiyle birlikte ailede salt okunur kalır; Uzmanın ve kliniğin bunlara erişimi kapanır. App Store üyeliği Apple hesabından ayrıca iptal edilir.
+4.5. **Hesabın silinmesi ve ekip.** Uzman hesabını sildiğinde: tek kişilik klinik bütün uzman kayıtları, paylaşımları, davetleri ve üyelik kayıtlarıyla birlikte silinir; ekipte başka uzman varsa klinik ve kayıtları kalır, hesabını silen klinik sahibiyse sahiplik kliniğin en eski üyesine geçer, ekip üyesiyse sorumlusu olduğu aileler klinik sahibine kalır. Klinik silindiğinde ailelerin Moyo Ebeveyn'deki kendi kayıtları silinmez: ailenin bildirdiği davranış olayları ailede salt okunur kalır; Uzmanın ve kliniğin bunlara erişimi kapanır. App Store üyeliği Apple hesabından ayrıca iptal edilir.
 
 ## 5. Uzmanın beyan ve taahhütleri
 
@@ -110,7 +110,7 @@
 
 ## 6. Mesleki sorumluluk ve etik
 
-6.1. **Mesleki kararlar uzmanındır.** Kayıtlara dayanarak verilen her karar kullanıcının kendi kararıdır. Moyo kayıtları değerlendirmez, yorumlamaz, kimseyi yönlendirmez. Uzman kayıtlarının, rutin ve adım önerilerinin, ebeveyn eğitimlerinin, hedef davranışların ve takip planının içeriği uzmanın mesleki kararıdır. Uzman girdiği her kaydı kendi beyanıyla ve kendi sorumluluğunda girer; Moyo bu içeriği denetlemez, doğrulamaz, onaylamaz ve bunun için bir sorumluluk ya da yükümlülük üstlenmez.
+6.1. **Mesleki kararlar uzmanındır.** Kayıtlara dayanarak verilen her karar kullanıcının kendi kararıdır. Moyo kayıtları değerlendirmez, yorumlamaz, kimseyi yönlendirmez. Uzman kayıtlarının, rutin ve adım önerilerinin, hedef davranışların ve takip planının içeriği uzmanın mesleki kararıdır. Uzman girdiği her kaydı kendi beyanıyla ve kendi sorumluluğunda girer; Moyo bu içeriği denetlemez, doğrulamaz, onaylamaz ve bunun için bir sorumluluk ya da yükümlülük üstlenmez.
 
 6.2. **Meslek etiği ve onam.** Uzman, bağlı olduğu meslek kuruluşunun etik kurallarına (ör. Türk Psikologlar Derneği Etik Yönetmeliği) uyar. Ebeveyni Moyo Mercek'i kullanacağı konusunda bilgilendirmek ve meslek kurallarının gerektirdiği onamı almak uzmanın yükümlülüğüdür. Ebeveynin Moyo Ebeveyn'de verdiği paylaşım onayı (`uzman-paylasim-v1`) ve önceki uzman kayıtlarına ilişkin açık rızası (`uzman-gecis-v1`), Platformun sistemindeki paylaşımın dayanağıdır; uzmanın meslek kurallarından doğan bilgilendirme ve onam yükümlülüğünün yerine geçmez.
 
@@ -136,7 +136,7 @@
 
 7.4. **Paylaşım yalnız ebeveynin onayıyla.** Çocuğun aile verisi uzmana, ancak ebeveyn uzmanın kim olduğunu görüp çocuğu seçerek açık rızasını verdiğinde açılır. Uzman, ailenin açık rızası olmadan ailenin hiçbir kaydını göremez. Bu rıza ebeveynden Moyo Ebeveyn'de ayrı bir ekranda alınır (`uzman-paylasim-v1`) ve ebeveyn tarafından her an geri alınabilir. Platform uzmanların kimliğini ve mesleki belgelerini doğrulamadığını ebeveyne açıkça bildirir ve ondan uzmanı tanıdığını ve çocuğun velisi olduğunu beyan etmesini ister.
 
-7.5. **Uzmanın gördüğü aile verisi.** Paylaşım etkin olduğu sürece uzman çocuğun rutin ve adımlarını, atamalarını, tamamlamalarını, "Yapamam" nedenlerini, ebeveynin notlarını, davranış kayıtlarını (ses kaydı dahil), ebeveynin bildirdiği davranış olaylarını, ebeveyn eğitimi yanıtlarını (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar; uzmanın önerdiği derslerde uygulama günleri), randevulara verilen yanıtları ve takip planı uygulama kayıtlarını **salt okur**. Aile içi mesajlar, coin defteri ve oyun kaydı uzmana gösterilmez. Uzman bu verileri yalnız aileye verdiği mesleki hizmet için kullanır; başka amaçla kopyalamaz, üçüncü kişilere vermez.
+7.5. **Uzmanın gördüğü aile verisi.** Paylaşım etkin olduğu sürece uzman çocuğun rutin ve adımlarını, atamalarını, tamamlamalarını, "Yapamam" nedenlerini, ebeveynin notlarını, davranış kayıtlarını (ses kaydı dahil), ebeveynin bildirdiği davranış olaylarını, randevulara verilen yanıtları ve takip planı uygulama kayıtlarını **salt okur**. Aile içi mesajlar, coin defteri ve oyun kaydı uzmana gösterilmez. Uzman bu verileri yalnız aileye verdiği mesleki hizmet için kullanır; başka amaçla kopyalamaz, üçüncü kişilere vermez.
 
 7.6. **Paylaşımın sona ermesi.** Ebeveyn paylaşımı istediği an durdurabilir; uzman da görebildiği aile için paylaşımı sonlandırabilir. Paylaşım sona erince uzmanın o çocuğun aile verisine erişimi hemen biter; uzman o andan sonraki kayıtları göremez. Bugünkü sistemde uzman, üyeliği etkin olduğu sürece sona ermiş paylaşıma ait kendi uzman kayıtlarını okuyabilir ve silebilir; ancak yeni kayıt ekleyemez ve mevcut kayıtları değiştiremez.
 
@@ -146,7 +146,7 @@
 
 ## 9. Uzman kayıtlarının niteliği ve uzman değişiminde aktarım
 
-9.1. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Uzmanın Moyo Mercek'e girdiği notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, seans kayıtları ve aile programı, ebeveynin rızasıyla paylaşılan çocuğa ilişkin kayıtlardır. Notlar, hedef değerlendirmeleri, seans kayıtları ve ebeveyn eğitimindeki gözlem verisi aileye gösterilmez; uzmanın aileye açık bıraktığı hedefler, "Aileye gönder" dediği takip planı, gönderdiği rutin ve adım önerileri, Etkin yaptığı ebeveyn eğitimleri, ebeveyn kaydına açtığı hedef davranışlar ve aileye gösterilmesini seçtiği randevular ilgili ebeveynlere gösterilir.
+9.1. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Uzmanın Moyo Mercek'e girdiği notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, hedef davranışlar, seans kayıtları ve aile programı, ebeveynin rızasıyla paylaşılan çocuğa ilişkin kayıtlardır. Notlar, hedef değerlendirmeleri ve seans kayıtları aileye gösterilmez; uzmanın aileye açık bıraktığı hedefler, "Aileye gönder" dediği takip planı, gönderdiği rutin ve adım önerileri, ebeveyn kaydına açtığı hedef davranışlar ve aileye gösterilmesini seçtiği randevular ilgili ebeveynlere gösterilir.
 
 9.2. **Süreklilik için aktarım.** Ebeveyn çocuğun takibini başka bir uzmana taşıdığında ve açıkça izin verdiğinde, bu kayıtlar sonraki uzmana salt okunur olarak açılabilir. **Uzman bu aktarıma şimdiden izin verir** ve bu izin Veri İşleme Eki'nde Platforma verilmiş bir talimattır.
 
@@ -196,7 +196,7 @@
    - c) çocukla Moyo üzerinden doğrudan iletişim kurmaya çalışmak; ebeveynden çocuğun oyun giriş kodunu ya da QR'ını istemek; çocuğun cihazına bağlanmaya çalışmak;
    - ç) davet formuna, notlara ya da diğer serbest metin alanlarına gereksiz kimlik bilgisi, üçüncü kişilere ait bilgi ya da davette sağlık bilgisi yazmak;
    - d) yetkisi olmayan verilere erişmeye çalışmak; güvenlik önlemlerini aşmaya çalışmak; izinsiz güvenlik testi yapmak; yazılımı tersine mühendislikle çözmek; otomatik araçlarla veri çekmek ya da sisteme olağan dışı yük bindirmek;
-   - e) şablonları, kaynak kütüphanesini ya da yazılımı toplu kopyalayarak başka bir ürün veya ticari amaç için kullanmak;
+   - e) şablonları ya da yazılımı toplu kopyalayarak başka bir ürün veya ticari amaç için kullanmak;
    - f) hukuka, kişilik haklarına ya da çocuğun üstün yararına aykırı içerik girmek;
    - g) Moyo'yu tanı veya tedavi hizmeti olarak tanıtmak; Moyo adını ve markalarını izinsiz kullanmak; Moyo tarafından doğrulanmış ya da onaylanmış uzman olduğunu ileri sürmek.
 
@@ -206,7 +206,7 @@
 
 12.1. **Platformun hakları.** Moyo Mercek, Moyo Ebeveyn ve Moyo Oyun yazılımları, arayüzleri, markaları, şablonları (adım şablonları, hazır rutinler, takip planı şablonları, rapor biçimleri), kaynak kütüphanesi ve Platformun hazırladığı metinler Platforma ya da lisans verenlerine aittir. Platform, uzmana sözleşme süresince Moyo Mercek'i mesleki hizmeti için kullanma hakkını münhasır olmayan, devredilemeyen ve alt lisans verilemeyen biçimde tanır. Şablonların ve içeriklerin dayandığı kaynaklardaki üçüncü kişi hakları saklıdır.
 
-12.2. **Uzmanın hakları.** Uzmanın uzman kayıtlarına yazdığı özgün içerik (notlar, hedef tanımları, değerlendirmeler, önerilerdeki ve eğitimlerdeki özgün metinler) uzmana ya da aralarındaki ilişkiye göre kliniğe aittir. Uzman bir şablonu ya da içeriği uyarladığında şablonun ya da içeriğin kendisi Platformun kalır; uzmanın eklediği özgün kısım uzmanın olur.
+12.2. **Uzmanın hakları.** Uzmanın uzman kayıtlarına yazdığı özgün içerik (notlar, hedef tanımları, değerlendirmeler, önerilerdeki özgün metinler) uzmana ya da aralarındaki ilişkiye göre kliniğe aittir. Uzman bir şablonu ya da içeriği uyarladığında şablonun ya da içeriğin kendisi Platformun kalır; uzmanın eklediği özgün kısım uzmanın olur.
 
 12.3. **Platforma verilen sınırlı izin.** Uzman, kendi içeriğini yalnız hizmetin sunulması için (saklama, yedekleme, uzmana ve yetkili ekibine gösterme, aileye gönderilen kısmı aileye gösterme, madde 9 uyarınca sonraki uzmana açma) sözleşme ve saklama süresiyle sınırlı, ücretsiz kullanma izni verir. Platform bu içeriği pazarlamada, reklamda ya da yapay zekâ modeli eğitiminde kullanmaz.
 
@@ -324,7 +324,6 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 |---|---|
 | Kayıt ekranı (onay kutusu; işaretlenmeden "Kayıt ol" açılmaz) | ☐ "Hizmet Sözleşmesi ve Veri İşleme Eki'ni kabul ediyorum. Aydınlatma · Gizlilik" — tek satır; "Aydınlatma" (Uzman Aydınlatma Metni) ve "Gizlilik" bağlantıdır, kutuya bağlı değildir. Kutunun üstünde kısa bilgi (madde 6.4-a): "Aile paylaşımı bitirirse yeni kayıt göremezsin; aile hesabını ya da çocuğu silerse o aileye ait notların ve kayıtların da silinir. Saklaman gereken kayıtları raporla ya da CSV ile kendin indir." |
 | Dışa aktarılan belgeler: rapor, ilerleme notu, CSV (alt satır) | "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." (Ekranlarda sınır uyarısı gösterilmez; 3.4-a.) |
-| Kaynak kütüphanesi (ekranın altında, bir kez) | "Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz." |
 | Notlar (not alanının altında) | "Notlarını aile görmez; yalnız kliniğindeki uzmanlar okur. Ebeveyn izin verirse notların, adın gizlenerek çocuğun sonraki uzmanına okunur olarak açılabilir. Nota kimlik bilgisi yazma." |
 | Devralınan kayıtlar | "Önceki uzman 1 · Mart 2026 – Ekim 2026 · ebeveynin izniyle, yalnız okuma" |
 | Davet formu (çocuk önerisi) | Alan "Çocuğun adı" + yaş grubu; altında "Yalnız daveti kabul eden ebeveyn görür. Sağlık bilgisi yazma." Ayrıntı "i" düğmesinde: "Çocuğun adını ve yaş grubunu yazarsan yalnız daveti kabul eden ebeveyn görür; kontrol edip onaylar, düzeltirse sana bildirim gelir. Mesajda görünmez, davet bitince silinir." |
@@ -357,4 +356,5 @@ Bu metinler uygulamanın ilgili yerinde gösterilir ve sözleşmenin yorumunda d
 19. **Uzman–aile ilişkisi (3.2-a; kullanıcı, B.6)** ve **açık rıza (7.4; C.11):** uzman, ailenin açık rızası olmadan hiçbir kaydı göremez; rıza Moyo Ebeveyn'de ayrı ekranda alınır.
 20. **Tanıtım iletisi izni (17; kullanıcı, D.16)** ve **indirim teklifi (10.11; kullanıcı kararı 5f: iptal anında aylık planda %50 indirim, Moyo Mercek 3 ay; yıllıkta yok):** metin rakamsız ve genel tutuldu; koşullar teklif ekranında. Ayarlar'daki tanıtım izni anahtarı bildirim tercihleri işinde (başka pencere).
 21. **Kalan `[SÜRE]`'ler (3.6, 14.3, 16.1):** bildirim ve fesih süreleri saklama süresi olmadığı için 20 Kasım'daki "saklama süreleri uygun" kararının dışında kaldı; öneriler (30 gün, 90 gün) yerinde.
+22. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Notlar 9 ve 15'teki eğitim soruları o zaman yeniden geçerli olur.
 - **Ek-3'ün kaynakları (iç):** kayıt satırı Moyo Mercek `AuthScreens.tsx` (28 Ekim 2026 kısa onay); dışa aktarma alt satırı `metrics.ts` `EXPORT_FOOTER` (14 Kasım 2026, `hukuk_notlari.md` M7); kütüphane satırı `training/Library.tsx` (M5); not alanı, davet ve hesap silme metinleri uygulamadaki güncel metin; acil durum notu `02` uyarlama kararı 6 (Moyo Mercek ekranlarından 3 Kasım 2026'da kaldırıldı, kullanıcı kararı; sınır 3.4 ve 3.4-a'da; avukat: uzmana yönelik B2B araçta sözleşmedeki madde yeterli mi?); "tanı değildir" `hukuk_notlari.md` D; not alanı ve devralınan kayıtlar `hukuk_notlari.md` E.

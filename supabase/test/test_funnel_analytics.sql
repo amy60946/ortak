@@ -238,8 +238,19 @@ select public.admin_store_funnel_set('parent', current_date - 1, 1000, 200, 40, 
 insert into tst.res values ('c0', public.admin_funnel('clinic', current_date - 30, current_date)::jsonb);
 select tst.check((tst.r('c0') ->> 'cohort_size')::int = 2
              and (select string_agg(s ->> 'key' || '=' || coalesce(s ->> 'count', '-'), ',') from jsonb_array_elements(tst.r('c0') -> 'steps') s)
+                 = 'store_impression=-,store_page_view=-,store_download=-,signup=2,survey_done=1,first_invite=1,family_linked=1,active_w2=1,trial_end=1,paid=1,renewed=0',
+                 'Mercek adımları ve kümülatif sayılar (ebeveyn eğitimi bayrağı kapalı: "İlk Etkin eğitim" adımı yok, zincir kırılmaz)');
+reset role;
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;
+set role authenticated;
+select tst.check((select string_agg(s ->> 'key' || '=' || coalesce(s ->> 'count', '-'), ',')
+                    from jsonb_array_elements(public.admin_funnel('clinic', current_date - 30, current_date)::jsonb -> 'steps') s)
                  = 'store_impression=-,store_page_view=-,store_download=-,signup=2,survey_done=1,first_invite=1,family_linked=1,first_training=1,active_w2=1,trial_end=1,paid=1,renewed=0',
-                 'Mercek adımları ve kümülatif sayılar');
+                 'bayrak genelde açılınca "İlk Etkin eğitim" adımı geri gelir');
+reset role;
+delete from public.feature_flags where key = 'parent_training';
+set role authenticated;
 select tst.check(tst.r('c0') -> 'cancel_reasons' = '[{"reason": "expensive", "count": 2}, {"reason": "few_clients", "count": 1}]'::jsonb,
                  'iptal nedeni: membership.cancel_reason, kişi başına');
 select tst.check(tst.r('c0') -> 'kpis' -> 'signup_to_activation' = '{"value": 100.0, "n": 1}'::jsonb, 'Mercek etkinleşme: 14 günde aile bağlandı');

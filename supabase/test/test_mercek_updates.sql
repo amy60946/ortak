@@ -1,5 +1,5 @@
--- Moyo Mercek 23 Kasım güncellemeleri (proposed/20261123100000_mercek_updates.sql):
---   1 seans ücreti (yazma, kapsam, geçersiz değer; aile hiçbir yoldan görmez)
+-- Moyo Mercek 23 Kasım güncellemeleri (migrations/20261123100000_mercek_updates.sql):
+--   1 seans ücreti (yazma, kapsam, geçersiz değer; aile yalnız aileye gösterilen randevuda görür: proposed/20261123200000)
 --   2 çoklu kayıt türü (log_type ↔ log_types iki yönlü; olay formu seçili her türün alanını ister; olayda türlerin kopyası)
 --   3 raporu aileye gönder (bildirim, uzman listesi, aile arşivi ve sayfa, içerik biçimi, boyut, günlük sınır, ret yolları, RLS)
 --   4 ebeveyn eğitimi bayrağı: bildirim motorunun eğitim kuralları bayrak kapalıyken göndermez
@@ -165,21 +165,30 @@ select tst.check((select fee from public.clinic_sessions where id = tst.id('ser2
 select tst.expect(format('select public.clinic_session_update(%L, %L::jsonb, %L)', tst.id('ser1'), '{"fee": "x"}', 'one'), 'fee_invalid', 'düzeltmede geçersiz ücret');
 select tst.check((select fee from public.clinic_sessions where id = tst.id('ser1')) = 350, 'reddedilen düzeltme ücreti değiştirmez');
 
--- aile ücreti hiçbir yoldan görmez
+-- aile ücreti yalnız aileye gösterilen randevuda görür (proposed/20261123200000_session_fee_family.sql)
 select tst.as_user(tst.u('a1'));
-select tst.check(json_array_length(public.family_sessions()) >= 4, 'aile görünür randevuları görür');
-select tst.check(not exists (select 1 from json_array_elements(public.family_sessions()) e where e::jsonb ? 'fee')
-             and not exists (select 1 from json_array_elements(public.family_sessions()) e, jsonb_each(e::jsonb) kv
-                              where kv.value in ('450.5'::jsonb, '450.50'::jsonb, '"450.50"'::jsonb, '300'::jsonb, '350'::jsonb)),
-                 'family_sessions ücret döndürmez (anahtar da değer de yok)');
+select tst.check(json_array_length(public.family_sessions()) = 4, 'aile yalnız aileye gösterilen randevuları görür (s1 + seri 3)');
+select tst.check((select (e->>'fee')::numeric from json_array_elements(public.family_sessions()) e where (e->>'id')::uuid = tst.id('s1')) = 450.50
+             and (select (e->>'fee')::numeric from json_array_elements(public.family_sessions()) e where (e->>'id')::uuid = tst.id('ser0')) = 500
+             and (select (e->>'fee')::numeric from json_array_elements(public.family_sessions()) e where (e->>'id')::uuid = tst.id('ser1')) = 350,
+                 'family_sessions randevunun ücretini döndürür');
+select tst.check((select e::jsonb ? 'fee' and json_typeof(e->'fee') = 'null' from json_array_elements(public.family_sessions()) e
+                   where (e->>'id')::uuid = tst.id('ser2')) is true, 'ücreti silinen randevuda fee boş (null)');
+select tst.check(not exists (select 1 from json_array_elements(public.family_sessions()) e
+                              where (e->>'id')::uuid in (tst.id('maxfee'), tst.id('zerofee'), tst.id('nofee'), tst.id('nullfee'))
+                                 or (e->>'fee')::numeric = 1000000),
+                 'aileye gösterilmeyen seans (ve ücreti) gitmez');
 select tst.check((select count(*) from public.clinic_sessions) = 0 and (select count(fee) from public.clinic_sessions) = 0,
                  'aile seans tablosundan satır (ücret) okuyamaz');
+select tst.as_user(tst.u('b1'));
+select tst.check(json_array_length(public.family_sessions()) = 0, 'başka aile o çocuğun randevusunu ve ücretini görmez');
 select tst.as_user(tst.u('e1'));
 select tst.check((select count(*) from public.clinic_sessions) = 0, 'başka klinik seansları ve ücreti görmez');
 reset role;
 select tst.check(not exists (select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
                               where n.nspname = 'public' and (p.proname like 'family\_%' or p.proname in ('session_notify_family', 'calendar_feed_events'))
-                                and p.prosrc ~ '\mfee\M'), 'aileye ve takvim beslemesine giden işlevlerin hiçbiri fee okumaz');
+                                and p.proname <> 'family_sessions'
+                                and p.prosrc ~ '\mfee\M'), 'family_sessions dışında aileye ve takvim beslemesine giden işlevlerin hiçbiri fee okumaz');
 select tst.check(exists (select 1 from public.notifications where kind = 'session_scheduled')
              and not exists (select 1 from public.notifications where kind like 'session%' and (data ? 'fee' or body ~* '(TL|ücret)')),
                  'randevu bildiriminde ücret yok');

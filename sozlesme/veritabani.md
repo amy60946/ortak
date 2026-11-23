@@ -657,14 +657,14 @@ Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; ya
 | `clinic_waitlist_save(link, note?, remove?)`, `clinic_waitlist_offer(waitlist, starts_at, duration, room?, hours)` | uzman | bekleme listesi; teklif `status='offered'`, aileye `session_offer` |
 | `clinic_calendar_feed(action 'get'\|'rotate'\|'set'\|'delete', initials?)` | uzman | abonelik belirteci; adres `…/functions/v1/calendar-feed?t=<belirteç>` |
 | `clinic_calendar_source_save(url, label?, remove?)`, `clinic_external_event_mark(event, link?, kind, mode, ignore?)` | uzman | dış takvim; eşitleme Edge Function `calendar-import` (POST, oturumla) |
-| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders |
+| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders; `fee` (seans ücreti, TL ya da null; ÖNERİ `proposed/20261123200000_session_fee_family.sql`, 40.1) |
 | `family_session_respond(id, 'ok'\|'unavailable', note?)` | ebeveyn | gelecekteki planlı seans; "uygun değil" uzmana `session_family_response` |
 | `family_offer_respond(id, accept) → 'planned'\|'cancelled'` | ebeveyn | boşalan saat teklifi; uzmana `session_offer_answered` |
 | `family_booking_slots(link) → [{starts_at, duration_min}]` | ebeveyn | klinik açtıysa sorumlu uzmanın `bookable` saatlerinden, dolu saatler, bildirim süresi ve ufuk dışı çıkarılarak (≤ 60) |
 | `family_book_slot(link, starts_at) → id` | ebeveyn | listedeki saat; en çok 2 gelecek aile randevusu; uzmana `session_booked` |
 | `calendar_feed_events(token)`, `calendar_import_sources(clinician)`, `calendar_import_store(...)` | yalnız service_role | Edge Function'lar |
 
-Seans ücreti `clinic_sessions.fee` (yalnız klinik; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.1.
+Seans ücreti `clinic_sessions.fee` (yalnız klinik; `migrations/20261123100000_mercek_updates.sql`, uygulandı 23 Kasım 2026): 40.1.
 
 Paylaşım `active`'ten çıkınca (tetikleyici `clinic_sessions_on_link_end`) gelecekteki planlı seanslar ve açık teklifler `cancelled` ("Paylaşım sona erdi"), bekleme satırı `removed`; uzmanın geçmiş seansları ve kayıtları kalır. Testi `supabase/test/test_sessions.sql`; takvim okuyucu testi `supabase/functions/calendar-import/ics_test.ts` (`node --experimental-strip-types --test`).
 
@@ -768,7 +768,7 @@ Tetikleyiciler: `parent_trainings_notify` (Etkin → `training_assigned`, Ustala
 | `family_target_behaviors()` | P | Etkin paylaşım başına `{link_id, child_id, child_name, clinic_id, behaviors[]}` (id, title, description, strategies, log_type, status) |
 | `family_incident_report(paylaşım, hedef?, zaman?, sayı?, dakika?, öncül?, sonuç?, strateji?, tepki?, diğer_davranış?)` | P | Olay bildirir; hedefe bağlıysa türe göre zorunlu alan (sıklık → sayı, ABC → öncül + sonuç, süre → dakika), değilse davranışın adı zorunlu; zaman ileri değil, en çok 30 gün geri |
 
-Kayıt türü çoklu seçim (`log_types`; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.3.
+Kayıt türü çoklu seçim (`log_types`; `migrations/20261123100000_mercek_updates.sql`, uygulandı 23 Kasım 2026): 40.3.
 
 Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanlarına `behavior_incident`. uygulandı 22 Kasım 2026, `migrations/20261120200000`: `behavior_incidents_fill` (yeni olayda `behavior_title`), `clinic_target_behaviors_title_sync` (ad değişince olaylarda da). Paylaşım kaydı ya da klinik silinince olay silinmez, `link_id` boşalır; hedef davranış (uzmanın kaydı) silinir, adı olayda kalır; aile okur, uzman okuyamaz; aile ya da çocuk silinince olay da silinir (32'deki not).
 
@@ -816,7 +816,7 @@ Tetikleyici `behavior_incidents_notify` → `clinic_link_recipients` uzmanların
 | `parent_notification_prefs.tips` | Moyo "Hatırlatmalar ve ipuçları" | boolean, varsayılan **true** | `parent_notification_prefs_set('tips', …)` | kendi satırı (P) |
 | `notifications` (`kind = 'nudge'`) | Motorun bildirimi | `data` `{nudge, rule, ref, id}` (+ `code`, `link_id`, `training_id`; Mercek'te `clinic_id` kendiliğinden) | motor | P, K (kendi satırı) |
 
-Kuralın özellik bayrağı `nudge_rules.feature_flag` (eğitim kuralları → `parent_training`; ÖNERİ `proposed/20261123100000_mercek_updates.sql`): 40.4.
+Kuralın özellik bayrağı `nudge_rules.feature_flag` (eğitim kuralları → `parent_training`; `migrations/20261123100000_mercek_updates.sql`, uygulandı 23 Kasım 2026): 40.4.
 
 RLS: dört yeni tabloda açık; `nudge_rules`, `nudge_log`, `nudge_pauses` politikasız (istemciye kapalı), `clinician_notification_prefs` yalnız kendi satırını okur, yazma yalnız RPC.
 
@@ -889,16 +889,16 @@ Akış: `destek@moyoapp.com.tr` → Cloudflare Email Routing ("Send to a Worker"
 
 Edge Function `support` (Verify JWT kapalı): `POST /support` (form, değişmedi; ekip uyarısı yalnız `SUPPORT_NOTIFY_TO` tanımlı ve `moyoapp.com.tr` dışındaysa), `POST /support/inbound` (`x-moyo-forward-key`; 256 KB; 200 `{ok, ref}` · 200 `dropped` · 400 · 401 · 413 · 503), `POST /support/reply` (oturum + `apikey`; CORS yalnız panel; 200 `{ok, status}` · 400 `invalid` · 401/403 `forbidden` · 502/503 `send_failed`). Saklama: imha işi adım 25 (iletiler taleple; her ileti `updated_at`'i yeniler).
 
-## 40. Moyo Mercek 23 Kasım güncellemeleri (ÖNERİ, `proposed/20261123100000_mercek_updates.sql`, 23 Kasım 2026; **uygulanmadı**; kullanıcı kararları 23 Kasım 2026; akış `akislar.md` 27, durumlar `durumlar.md` P18 / P22 / P23 / 8, bayrak `admin.md`; test `test_mercek_updates.sql`)
+## 40. Moyo Mercek 23 Kasım güncellemeleri (`migrations/20261123100000_mercek_updates.sql`, uygulandı 23 Kasım 2026; kullanıcı kararları 23 Kasım 2026; akış `akislar.md` 27, durumlar `durumlar.md` P18 / P22 / P23 / 8, bayrak `admin.md`; test `test_mercek_updates.sql`)
 
 ### 40.1 Seans ücreti
 
 | Alan | Ne | Yazar | Okur |
 |---|---|---|---|
-| `clinic_sessions.fee` | `numeric(10,2)`, boş olabilir, 0–1.000.000 (TL); uzmanın elle yazdığı ücret. Ödeme / tahsilat / fatura yok | K (`clinic_session_create`, `clinic_session_update`) | yalnız K (tablo politikası "seans: klinik okur"; Moyo Mercek `select` listesine `fee` ekler) |
+| `clinic_sessions.fee` | `numeric(10,2)`, boş olabilir, 0–1.000.000 (TL); uzmanın elle yazdığı ücret. Ödeme / tahsilat / fatura yok | K (`clinic_session_create`, `clinic_session_update`) | K (tablo politikası "seans: klinik okur"; Moyo Mercek `select` listesine `fee` ekler); aile yalnız `family_sessions` ile, aileye gösterilen randevuda (ÖNERİ `20261123200000`) |
 
 - `clinic_session_create(p)` ve `clinic_session_update(id, p, scope)`: `p.fee` sayı (`450.5`) ya da noktalı metin (`"450.50"`), en çok iki ondalık; boş metin ya da `null` → ücret yok; virgül, eksi, üç ondalık, 1.000.000 üstü → hata `fee_invalid` (22023). Oluştururken serideki her seansa aynı ücret; düzeltirken `fee` anahtarı varsa kapsamdaki her seansa (`one` yalnız bu, `following` bu ve serideki sonraki planlılar), anahtar yoksa ücret değişmez. Öteki her şey önceki tanımla aynı (29).
-- **Aile ücreti görmez:** tabloda aileye politika yok; `family_sessions` (alanları tek tek yazar), `family_session_respond`, `family_offer_respond`, `family_booking_slots`, `family_book_slot`, `session_notify_family` (yalnız tarih / saat), `calendar_feed_events` (uzmanın kendi .ics'i) `fee` okumaz; KVKK dökümünde seans yok. Test bunu ve `family_*` kaynaklarında `fee` geçmediğini denetler.
+- **Aile ücreti yalnız aileye gösterilen randevuda görür** (kullanıcı kararı 23 Kasım 2026; ÖNERİ `proposed/20261123200000_session_fee_family.sql`, **uygulanmadı**; o uygulanana dek aile görmez): `family_sessions` her randevuda `fee` döndürür (sayı ya da null). Aileye gösterilmeyen seans (`visible_to_family` false, danışansız blok, paylaşımı bitmiş) ve ücreti hiçbir yoldan gitmez; tabloda aileye politika yok. `family_session_respond`, `family_offer_respond`, `family_booking_slots`, `family_book_slot`, `session_notify_family` (bildirimde yalnız tarih / saat), `calendar_feed_events` (uzmanın kendi .ics'i) `fee` okumaz; KVKK dökümünde seans yok. Ücret bilgi alanıdır: ödeme, tahsilat, fatura yok. Test bunu, başka ailenin görmediğini ve `family_sessions` dışındaki `family_*` kaynaklarında `fee` geçmediğini denetler.
 
 ### 40.2 Raporu aileye gönder
 
@@ -954,3 +954,24 @@ Hatalar (ileti Türkçe, `hint` sabit anahtar): `no_access` (P0402 "Üyelik etki
 - `nudge_rules.feature_flag` (yeni sütun, boş olabilir): kural yalnız bu bayrağı açık kişiye gider (`flag_on`: kişiye istisna → genel bayrak + yüzde). `clinic_training_none` ve `clinic_training_draft` → `parent_training`; ötekiler boş. `nudge_try` bayrak kapalıysa `flag_off` döner ve kayıt yazmaz (bayrak açılınca kuralın süresi dolmamışsa gönderilir). `admin_nudge_rules()` `feature_flag`'i de döndürür. Moyo'da ebeveyn eğitimine / derslere yönelik kural yok.
 
 Ayrıca `finite_time_guard_attach()` yeni tabloya takılır.
+
+## 41. Ebeveyn eğitimi sunucuda kapalı (ÖNERİ `proposed/20261123210000_parent_training_off.sql`, 23 Kasım 2026; **uygulanmadı**; kullanıcı kararı 23 Kasım 2026; akış `akislar.md` 27.4, bayrak `admin.md`; test `test_parent_trainings.sql` 9, `test_parent_lessons.sql` son bölüm, `test_funnel_analytics.sql`)
+
+Bayrak `parent_training` (satır yoksa kapalı) uzmanın ebeveyn eğitimini (32) ve Moyo'nun kısa ebeveyn derslerini (31) sunucuda da açar / kapatır. Kişiye özel açılış (`user_flags`) o kişi için her şeyi açar.
+
+| Ne | Bayrak kapalıyken |
+|---|---|
+| `parent_training_on()` | çağıranın bayrağı (`flag_on(auth.uid(), 'parent_training')`); authenticated çağırır (politikalarda kullanılıyor) |
+| `parent_training_require()` | bayrak kapalıysa hata `feature_off` (42501); yalnız sunucu içi |
+| `parent_training_kinds()` | `training_assigned`, `training_mastered`, `training_reminder`, `training_activity`, `lesson_assigned` |
+| Tetikleyici `notifications_feature_gate` (BEFORE INSERT) | bu türlerden satır, **alıcının** bayrağı kapalıysa yazılmaz (anlık bildirim de gitmez) |
+| Politika "bildirim: kapalı özellik görünmez" (kısıtlayıcı, select) | bu türlerdeki eski satırlar listede, okunmamış sayısında ve canlı akışta görünmez; bayrak açılınca geri gelir |
+| Politika "eğitim: bayrak kapalıyken kapalı" (kısıtlayıcı, all) | `parent_trainings`, `parent_training_modules`, `parent_training_tasks`, `parent_training_logs`, `parent_training_todos`, `parent_training_data`, `parent_lessons`, `parent_lesson_assignments`, `parent_lesson_progress`, `parent_lesson_practice`: istemci okuyamaz, yazamaz (eski uygulama sürümü de) |
+| `training_family_actor`, `training_clinic_mine` | false → `family_training_module_complete`, `family_training_log`, `family_training_todo_set`, `clinic_training_remind` reddeder |
+| `parent_lesson_require` | `feature_off` → `family_lessons`, `parent_lesson_start`, `parent_lesson_open`, `parent_lesson_finish`, `parent_lesson_practice` reddeder |
+| `family_trainings`, `family_kept_trainings`, `clinic_parent_lessons` | boş liste |
+| `clinic_assign_lesson`, `clinic_withdraw_lesson` | `feature_off` |
+| `funnel_step_defs` (stable) | Moyo Mercek hunisinde `first_training` yalnız bayrak genelde açıkken (`feature_flag_global`) |
+| `admin_nudge_stats` | her kurala `feature_flag` ve `flag_on` (bayrak genelde açık mı) |
+
+Etkilenmeyen: sunucu işlevleri (KVKK dökümü `data_export_of`, hesap silme, "kayıtlar ailede kalır" tetikleyicileri) sahip yetkisiyle çalışır; veri silinmez.

@@ -44,6 +44,8 @@ grant execute on all functions in schema tst to anon, authenticated;
 -- =====================================================================
 -- 1. Paylaşım bitince eski uzman
 -- =====================================================================
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, 'anne@example.com', '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, 'baba@example.com', '{"nickname":"Baba"}'),

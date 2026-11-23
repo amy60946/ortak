@@ -48,6 +48,8 @@ grant usage on schema tst to authenticated;
 grant all on tst.kv to authenticated;
 grant execute on all functions in schema tst to authenticated;
 
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, '{"nickname":"Baba"}'),
@@ -224,3 +226,30 @@ select tst.fails($$insert into public.parent_stone_ledger (family_id, user_id, a
 select tst.check(not has_function_privilege('anon', 'public.family_lessons()', 'execute')
   and not has_function_privilege('authenticated', 'public.parent_lesson_week_stones(uuid, uuid, date)', 'execute'),
   'anon çağıramaz; iç hesap istemciye kapalı');
+
+-- bayrak kapalı (proposed/20261123210000_parent_training_off.sql): dersler sunucuda da çalışmaz, görünmez
+reset role;
+select tst.as_user(null);
+delete from public.feature_flags where key = 'parent_training';
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.fails($$select public.family_lessons()$$, 'aile ders listesi kapalı', 'feature_off');
+select tst.fails($$select public.parent_lesson_start('ovgu')$$, 'derse başlanamaz', 'feature_off');
+select tst.fails($$select public.parent_lesson_open('ovgu')$$, 'ders açılamaz', 'feature_off');
+select tst.fails($$select public.parent_lesson_finish('ovgu')$$, 'ders bitirilemez', 'feature_off');
+select tst.fails($$select public.parent_lesson_practice('ovgu', public.tr_today(), true)$$, 'uygulama günü (taş) yazılamaz', 'feature_off');
+select tst.check((select count(*) from public.parent_lessons) = 0 and (select count(*) from public.parent_lesson_progress) = 0
+             and (select count(*) from public.parent_lesson_practice) = 0 and (select count(*) from public.parent_lesson_assignments) = 0,
+                 'aile ders tablolarını okuyamaz');
+select tst.check((select count(*) from public.notifications where kind = 'lesson_assigned') = 0, 'eski ders önerisi bildirimi görünmez');
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check(jsonb_array_length(public.clinic_parent_lessons('00000000-0000-0000-0000-0000000011a1')) = 0, 'uzman listesi boş');
+select tst.fails($$select public.clinic_assign_lesson('00000000-0000-0000-0000-0000000011a1', 'ovgu', '')$$, 'uzman ders öneremez', 'feature_off');
+select tst.fails($$select public.clinic_withdraw_lesson((select v::uuid from tst.kv where k = 'asg'))$$, 'uzman öneri geri çekemez', 'feature_off');
+reset role;
+select tst.check((select count(*) from public.notifications where kind = 'lesson_assigned') > 0, 'eski bildirim silinmedi (bayrak açılınca geri gelir)');
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100);
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.check(jsonb_array_length(public.family_lessons() -> 'catalog') > 0, 'bayrak açılınca dersler geri gelir');
+reset role;

@@ -4,6 +4,7 @@
 
 > Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
 > 20 Kasım 2026 (ikinci tur): tek iletişim adresi `destek@` (KVKK başvurusunda konu "KVKK başvurusu"), Moyo/Platform tanımı, uzman kayıtlarında veri sorumlusu uzman (8. bölüm; A/B kapandı), başvuru kaydı 3 yıl (11), belge satırı sadeleşti.
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); 8. bölümün tablosundan çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -90,11 +91,11 @@ Amacımız verinizi başkasına vermemektir.
 
 | Kayıt | Kime |
 |---|---|
-| Uzmanın birlikte çalıştığı aile hakkında girdiği kayıtlar (notlar, hedefler, değerlendirmeler, takip planı, hedef davranışlar, atadığı ebeveyn eğitimleri ve gözlem verisi, seans kayıtları) | Bu kayıtların veri sorumlusu uzman ya da kliniğidir; biz onun adına saklayan veri işleyeniz. Başvurunuzu uzmanınıza ya da kliniğine yapın. Bize gelirse kliniğe iletir ve size bildiririz; kliniğe teknik olarak yardım ederiz. |
+| Uzmanın birlikte çalıştığı aile hakkında girdiği kayıtlar (notlar, hedefler, değerlendirmeler, takip planı, hedef davranışlar, seans kayıtları) | Bu kayıtların veri sorumlusu uzman ya da kliniğidir; biz onun adına saklayan veri işleyeniz. Başvurunuzu uzmanınıza ya da kliniğine yapın. Bize gelirse kliniğe iletir ve size bildiririz; kliniğe teknik olarak yardım ederiz. |
 | Uzmanla paylaşımı durdurmak | Başvuru gerekmez: Moyo Ebeveyn › Uzmanım |
 | Uzmanın sizi davet ederken girdiği bilgiler (adınız, e-postanız, çocuğun adı ve yaş grubu) | Davet kaydı kullanılmazsa en geç 3 gün, bağlanıp onaylanmazsa en geç 30 gün içinde kendiliğinden silinir. Daha önce silinmesini isterseniz bize yazın |
 | Uzmanın kendi hesabı (uzmanlar için) | Bize |
-| Ebeveynin girdiği kayıtlar (rutinler ve adımlar, davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, takip planı uygulama kayıtları) | Bize |
+| Ebeveynin girdiği kayıtlar (rutinler ve adımlar, davranış kayıtları ve davranış olayları, takip planı uygulama kayıtları) | Bize |
 
 ## 9. Hangi durumlarda talebi yerine getiremeyiz?
 
@@ -128,6 +129,7 @@ Yürürlük: [TARİH] · Sürüm: v1 · [AD SOYAD], [ADRES] · `destek@moyoapp.c
 8. **20 Kasım 2026 güncellemesi:** Uygulama yolları uygulamalardaki güncel menüye göre yazıldı (Moyo Ebeveyn: Aile › Hesap › Yasal ve gizlilik; Moyo Mercek: Ayarlar › Yasal ve gizlilik; paylaşımı durdurma: Uzmanım › uzman › Uzmanı kaldır). "Verimi indir" ekranı iki uygulamada da henüz yok (sunucu `my_data_export` hazır); yayından önce ekran yapılmalı ya da satır "başvuruyla" diye değişmeli. Tanışmada sağlık sorusu kalmadığı için "sağlık yanıtlarını sil" çıktı. KVKK süreleri (30 gün, Kurul'a 30/60 gün) ve davet süreleri (3 gün, 30 gün) değişmedi; bu metinde deneme süresi geçmiyor.
 
 9. **Tek iletişim adresi (kullanıcı kararı 20 Kasım 2026):** her konu için yalnız `destek@moyoapp.com.tr`; KVKK başvurusunda konu satırına "KVKK başvurusu" yazılması istenir (zorunlu değil). Tebliğ'in kayıtlı e-posta / güvenli elektronik imza şartı ve ayrı bir KVKK adresi gerekip gerekmediği avukatta. **Saklama:** başvuru kaydı 3 yıl, yedekler en geç 30 gün (`42` satır 24 ve 29; sistem `kvkk_closed_days` 1095). Şablon Ş3'teki indirme bağlantısı süresi ve Ş5'teki kanunen saklanan kayıt süresi (örneğe göre değişir) `[SÜRE]` olarak kaldı.
+10. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Not 7'deki eğitim sözleri tarihçedir.
 
 ### Yanıt şablonları (iç kullanım; avukat gözden geçirir, yayımlanmaz)
 

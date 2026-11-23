@@ -6,6 +6,7 @@
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Çekirdek maddelerin yeri: 2 → 3.3; 3 → 3.2; 4 → 3.5; 5 → 11.2; 6 → 15.3; 8 → 13.2; 9 → 15.4; 10 → 1.1. Moyo'nun içeriği maddesi 3.4; davet kodu ve davet ödülü 4.5, 8.2, 8.10 (`hukuk_notlari.md` J3, O). Deneme değişikliği kullanıcının lehine; metin yayımlanmadığı için sürüm artırılmadı (`hukuk_notlari.md` O soru 1).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı 1.1; tıbbi cihaz cümlesi 3.2; konum cümlesi 3.3; içerik sorumluluğu 3.4; genel ilke 3.6 (yeni); çocuğun hak ve yükümlülükleri 5.2; açık rıza ekranı 6.3 (eski rozet maddesinin yerine; belge yükleme kaldırıldı); uzman–aile ilişkisi 6.7; indirim teklifleri 8.11 (yeni); hesap silmede uzman kayıtları 14.1; tanıtım iletisi izni 16.10 (yeni).
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); 2 (tanım), 3.1, 3.3, 3.4, 5.6, 6.6, 9.2 ve 11.2'den çıkarıldı (12. madde fikri mülkiyet: "içerik kütüphanesi" kaldı, uygulama paketinde duruyor), özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -40,19 +41,18 @@
 - **Uzman:** Moyo Uzman'ı kullanan psikolog, terapist, özel eğitim uzmanı gibi meslek mensubu. Uzman bizim çalışanımız değildir.
 - **Aile:** Moyo Ebeveyn'de sizin, varsa diğer ebeveynin ve çocuk profillerinin bulunduğu ortak alan.
 - **Rutin ve adım:** çocuğunuza verdiğiniz sorumluluklar. Adım tek bir iştir; rutin birkaç adımdan oluşur. Verdiğiniz her adım, Moyo Oyun'da çocuğunuz için bir macera olur.
-- **Ebeveyn eğitimi:** uzmanınızın Moyo'nun içerik kütüphanesinden size atadığı modüller, uygulama görevleri ve yapılacaklar.
 - **Coin:** Moyo Oyun'da oyun içi eşyalar için kullanılan sanal değer.
 - **Güneş Taşı:** çocuğunuza vereceğiniz gerçek hayat ödüllerinin sayacı.
 
 ### 3. Hizmetin ne olduğu, ne olmadığı
 
-3.1. Moyo Ebeveyn ile rutin ve adım oluşturur, çocuğunuzun "Yaptım"larını onaylar, ödülleri yönetir, çocuğunuzla mesajlaşır, davranış kaydı tutarsınız. İsterseniz kayıtlarınızı bir uzmanla paylaşır, uzmanınızın atadığı ebeveyn eğitimini kullanır ve tanımladığı davranışlar için olay bildirirsiniz.
+3.1. Moyo Ebeveyn ile rutin ve adım oluşturur, çocuğunuzun "Yaptım"larını onaylar, ödülleri yönetir, çocuğunuzla mesajlaşır, davranış kaydı tutarsınız. İsterseniz kayıtlarınızı bir uzmanla paylaşır ve uzmanınızın tanımladığı davranışlar için olay bildirirsiniz.
 
 3.2. **Tanı, tedavi ve acil durum.** Moyo sağlık hizmeti sunmaz, tanı koymaz, tedavi önermez; hiçbir gösterge tanı ya da puan değildir. Acil durum ve kriz hizmeti değildir; acil durumda 112 aranır. Moyo sağlık hizmeti, uzaktan sağlık hizmeti ya da tıbbi cihaz değildir; tıbbi bir amaçla tasarlanmamıştır. Kayıtlar ve olay bildirimleri bir uzmana anında ulaşmaz. Moyo uzman istihdam etmez; uzman ile aile arasında aracılık ya da yönlendirme yapmaz. Uzmanların kendi programlarını kurması için şablon sunar.
 
-3.3. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Davranış kaydındaki şiddet derecesi, olay bildirimindeki çocuğun tepkisi ve takip planındaki zorluk bildirimi sizin gözleminizdir. Ebeveyn eğitimindeki test sonucu sizin bilgi yoklamanızdır, çocuğa ait bir puan değildir.
+3.3. **Kayıtların niteliği.** Uygulamadaki kayıtlar, kullanıcıların kendi girdiği takip kayıtlarıdır. Moyo bu kayıtları saklar ve gösterir; bir sağlık kaydı, hasta dosyası ya da arşiv sistemi tutmaz. Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Davranış kaydındaki şiddet derecesi, olay bildirimindeki çocuğun tepkisi ve takip planındaki zorluk bildirimi sizin gözleminizdir.
 
-3.4. **Moyo'nun içeriği.** Ebeveyn eğitimi kütüphanesi, kısa ebeveyn dersleri, hazır rutinler, öneriler ve ipuçları Moyo'nun hazırladığı içeriktir. Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Bu içeriğe dayanılarak verilen kararlardan ve bunların sonuçlarından, yasanın izin verdiği en geniş ölçüde, Moyo sorumlu değildir; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Uzmanınızın kendi yazdığı uygulama görevleri, yapılacaklar ve önerilerin içeriği uzmana aittir.
+3.4. **Moyo'nun içeriği.** Hazır rutinler, öneriler ve ipuçları Moyo'nun hazırladığı içeriktir. Genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz. Bu içeriğe dayanılarak verilen kararlardan ve bunların sonuçlarından, yasanın izin verdiği en geniş ölçüde, Moyo sorumlu değildir; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır. Uzmanınızın kendi yazdığı önerilerin içeriği uzmana aittir.
 
 3.5. **Sonuç taahhüdü.** Moyo belirli bir sonuç, gelişme ya da davranış değişikliği taahhüt etmez.
 
@@ -82,7 +82,7 @@
 
 5.5. **Diğer veli.** Ailede birden fazla ebeveyn varsa, paylaşımı yapan ebeveyn diğer velinin bilgisi dahilinde hareket ettiğini kabul eder.
 
-5.6. **Başkalarının verisi.** Adım açıklamalarına, notlara, mesajlara, davranış kayıtlarına, olay bildirimlerine ve eğitim yanıtlarına çocuğunuz dışındaki kişilerin (öğretmen, akraba, başka çocuk) kişisel bilgilerini gereğinden fazla yazmayın. Ses kaydı alırken başkalarının sesini onların bilgisi olmadan kaydetmeyin.
+5.6. **Başkalarının verisi.** Adım açıklamalarına, notlara, mesajlara, davranış kayıtlarına ve olay bildirimlerine çocuğunuz dışındaki kişilerin (öğretmen, akraba, başka çocuk) kişisel bilgilerini gereğinden fazla yazmayın. Ses kaydı alırken başkalarının sesini onların bilgisi olmadan kaydetmeyin.
 
 ### 6. Uzmanla paylaşım
 
@@ -96,7 +96,7 @@
 
 6.5. **Kapsam ve geri alma.** Hangi çocuğu hangi uzmanla paylaştığınızı, önceki uzman kayıtlarının aktarımını (`uzman-gecis-v1`) ve bunların ne zaman biteceğini siz yönetirsiniz. Uzmanım bölümünden istediğiniz an durdurursunuz; uzmanın erişimi hemen biter.
 
-6.6. **Uzmanın önerileri.** Uzman size rutin ve adım önerebilir, ebeveyn eğitimi atayabilir, hedef davranış tanımlayabilir, randevu açabilir ve takip planı gönderebilir. Bunları kabul etmek, değiştirmek, uygulamak ya da reddetmek size kalmıştır.
+6.6. **Uzmanın önerileri.** Uzman size rutin ve adım önerebilir, hedef davranış tanımlayabilir, randevu açabilir ve takip planı gönderebilir. Bunları kabul etmek, değiştirmek, uygulamak ya da reddetmek size kalmıştır.
 
 6.7. **Uzman ile aile arasındaki ilişki.** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur. Uzmanın açtığı randevular uygulamada görünebilir; randevunun yapılması, ücreti ve içeriği sizinle uzman arasındadır. Uzmanın mesleki tutum ve kararlarından, yasanın izin verdiği en geniş ölçüde, sorumlu değiliz; kast, ağır kusur ve tüketicinin vazgeçilemez hakları saklıdır.
 
@@ -148,7 +148,7 @@
 
 9.1. **Coin para değildir.** Coin yalnız sizin onayladığınız adımlarla (ve çocuk başına bir kez verilen hoş geldin hediyesiyle) kazanılır ve yalnız Moyo Oyun'daki oyun içi eşyalara harcanır. Satın alınamaz, paraya çevrilemez, başkasına devredilemez. Bir onayı geri alırsanız o adımın coini düşer. Hesap silinince coinler kaybolur.
 
-9.2. **Güneş Taşı para değildir.** Güneş Taşı, onayladığınız adımlarla kazanılır ve çocuğunuza vereceğiniz ödüllerin sayacıdır. Para ya da ödeme aracı değildir; satın alınamaz, paraya çevrilemez. Kendi adımlarınızla ve uyguladığınız derslerle kazandığınız Güneş Taşlarını yalnız çocuğunuza oyunda hediye göndermek için kullanırsınız.
+9.2. **Güneş Taşı para değildir.** Güneş Taşı, onayladığınız adımlarla kazanılır ve çocuğunuza vereceğiniz ödüllerin sayacıdır. Para ya da ödeme aracı değildir; satın alınamaz, paraya çevrilemez. Kendi adımlarınızla kazandığınız Güneş Taşlarını yalnız çocuğunuza oyunda hediye göndermek için kullanırsınız.
 
 9.3. **Ödüller sizinle çocuğunuz arasındadır.** Ödülleri, taş karşılıklarını ve değiş tokuş oranlarını (ör. "1 taş = 10 dakika ekran süresi" ya da harçlık) siz belirler ve siz verirsiniz. Platform bu ödüllerin tarafı değildir: para tutmaz, ödeme almaz ya da yapmaz, ödülü sağlamaz ve ödülün verilip verilmemesinden sorumlu değildir.
 
@@ -172,7 +172,7 @@ Bu kurallara aykırılıkta 14.2. madde uygulanır.
 
 11.1. **Mesajlaşma aile içidir.** Mesajları yalnız siz, ailedeki diğer ebeveyn ve mesajın gittiği çocuk görür. Uzmanlar ve yabancılar göremez; kardeşler birbirinin sohbetini görmez.
 
-11.2. **İçerik sorumluluğu.** Girilen kaydın doğruluğu ve içeriği girene aittir. Serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir; yazılan bilginin sorumluluğu yazandadır. Gönderdiğiniz yazı, fotoğraf, ses kaydı, adım açıklaması, not, davranış kaydı, olay bildirimi ve eğitim yanıtı çocuğunuza uygun olmalı ve başkalarının haklarını ihlal etmemelidir.
+11.2. **İçerik sorumluluğu.** Girilen kaydın doğruluğu ve içeriği girene aittir. Serbest metin alanlarına tanı, ilaç ya da başkasına ait sağlık bilgisi yazılmaması istenir; yazılan bilginin sorumluluğu yazandadır. Gönderdiğiniz yazı, fotoğraf, ses kaydı, adım açıklaması, not, davranış kaydı ve olay bildirimi çocuğunuza uygun olmalı ve başkalarının haklarını ihlal etmemelidir.
 
 11.3. **İçeriğin sahibi sizsiniz.** Bize yalnız hizmeti sunmak için (saklamak, ailenize ve izin verdiğiniz uzmana göstermek, yedeklemek) sınırlı, ücretsiz ve devredilemez bir kullanım izni verirsiniz. Bu izin hesabınız silinince biter.
 
@@ -296,3 +296,4 @@ Hizmeti sunmak için aşağıdaki işlemleri yaparız. Bunlar bu sözleşmenin u
 14. **Tanıtım iletisi izni (16.10; kullanıcı, D.16):** ayrı anahtar, kapalı başlar, İYS, her iletide ret yolu. Ayarlar'daki anahtar bildirim tercihleri işinde yapılıyor (başka pencere); yapılmadan yayımlanırsa cümle "bugün tanıtım iletisi göndermiyoruz" olur. SMS doğrulaması (bayrak `parent_sms_verify`, kapalı) açılırsa aydınlatma ve alt işleyen listesi önce güncellenir (`README.md` sorun 14).
 15. **İndirim teklifi (8.11; kullanıcı kararı 5f):** iptal anında aylık planda %50 indirim (Moyo Ebeveyn 2 ay), yıllıkta yok. Metin genel tutuldu (rakam yazılmadı); koşullar teklif ekranında. Apple'ın teklif kodu ya da tanıtım teklifi kurallarına ve Ticari Reklam ve Haksız Ticari Uygulamalar Yönetmeliği'ne (iptali zorlaştırmama) uygun mu?
 16. **Çocuğun hak ve yükümlülükleri (5.2; kullanıcı, C.12b):** veli yasal temsilci olarak kullanır ve üstlenir (TMK md. 342); çocuğun kendi KVKK hakları veli eliyle kullanılır. Çocuğun haksız fiilinden velinin sorumluluğu (TMK md. 369, TBK md. 66) bu maddeyle karışmamalı mı?
+17. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Not 10 o zaman yeniden geçerli olur.
