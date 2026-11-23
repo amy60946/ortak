@@ -640,7 +640,7 @@ Kullanıcı isteği: "Önerdiğin beş alternatifin geliştirmesini yap; ParentA
 7. **Bekleme listesi** (D): danışanı listeye al; iptal ya da boş saatte "Bekleme listesine teklif et" → aile kabul ederse randevu.
 
 **ParentApp (ebeveyn) — yapıldı 5 Kasım 2026 (parent-app acfa1d8; SQL uygulanana kadar bölüm görünmez):**
-1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Yapılmadı / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez).
+1. **Uzmanım › <uzman> › Randevular** (B): `family_sessions()`; yaklaşan (ilk 5) + geçmiş (son 60 gün); kart: gün, saat, süre, tür (`kind_label`), yer (`room` · `location`, `mode` online/ev), uzman; durum çipi (Planlandı / Yapıldı / Yapılmadı / Geç iptal / İptal / Ertelendi). Not, gündem, paket gösterilmez (gelmez). Kartta seans ücreti (27.1 adım 3).
 2. **Yanıt** (B): gelecekteki planlı kartta "Geleceğiz" / "Uygun değil" (isteğe bağlı kısa not, ≤ 300) → `family_session_respond`; verilen yanıt kartta görünür, değiştirilebilir. Saat değişince yanıt sıfırlanır (sunucu).
 3. **Hatırlatma** (B): her açılışta ve `session_*` bildiriminde `family_sessions()` → gelecekteki `planned` her seans için `reminders` dakikaları kadar önce **yerel bildirim** (expo-notifications, cihazda; eski planlananlar silinip yeniden kurulur). Metin: "Yarın 15:00 Nazlı'nın seansı · Elif Örnek" / "2 saat sonra …". Bildirim ayarından kapatılabilir.
 4. **Takvime ekle**: kartta .ics paylaşımı (cihaz takvimi), yalnız o seans.
@@ -765,7 +765,7 @@ Belge (benchmark, iki ürünün mesaj tabloları, sınırlar, hukuk, plan): http
 
 **Kararlaşan (kullanıcı, 18 Kasım 2026):** deneme bitiş hatırlatması iyi özellik: iki üründe de bitmeden **3 gün önce** tek, tarafsız hatırlatma; satın alma ekranı bunu takvimle söyler ("bugün ödeme yok · 3 gün kala hatırlatırız · şu tarihte yenilenir"), ekrandaki gün sayıları ve tarihler birbirini tutar.
 
-**Kararlaşan (kullanıcı, 20 Kasım 2026, bildirim sınırı 5a; uygulandı 22 Kasım 2026, `migrations/20261120210000_parent_notification_prefs.sql` + `test_parent_notification_prefs.sql`, uygulanmadı; şema `veritabani.md` 34):** Moyo Ebeveyn'de günde bir bildirimi geçmemeye çalışılır. Sistem her bildirimi üretir, ebeveyn uygulama içinden ayarlar; ayar ebeveyn başınadır (aynı ailedeki iki ebeveyn ayrı seçer) ve yalnız telefona giden anlık bildirimi etkiler, uygulama içi liste ve rozet aynı kalır.
+**Kararlaşan (kullanıcı, 20 Kasım 2026, bildirim sınırı 5a; uygulandı 22 Kasım 2026, `migrations/20261120210000_parent_notification_prefs.sql` + `test_parent_notification_prefs.sql`; şema `veritabani.md` 34):** Moyo Ebeveyn'de günde bir bildirimi geçmemeye çalışılır. Sistem her bildirimi üretir, ebeveyn uygulama içinden ayarlar; ayar ebeveyn başınadır (aynı ailedeki iki ebeveyn ayrı seçer) ve yalnız telefona giden anlık bildirimi etkiler, uygulama içi liste ve rozet aynı kalır.
 
 | Anahtar | Ne | Varsayılan |
 |---|---|---|
@@ -827,7 +827,7 @@ Belge: https://claude.ai/artifact/SyThEGYqrGKSf3bgHUzz6U · kaynaklı tam rapor 
 
 **Aşamalar:** (0) kullanıcı, kod yok: ödeme ek süresi 16 gün + yalnız metinli iptal sayfası mesajı. (1) Uygulama: yönetim ekranı, neden sorusu, plan değiştirme, iptal sonrası kart, ödeme bandı; neden ve adımlar şimdilik kullanım kaydıyla (`membership.cancel_*`), yeni tablo yok; bayrak `cancel_flow` (yoksa kapalı). **Moyo Mercek'te yapıldı (18 Kasım 2026; oturum dalında ve önizlemede, ana dala ve TestFlight'a alınmadı; gerçek cihazda denenmedi):** "Aboneliği yönet" penceresi (üyelik özeti → isteğe bağlı neden sorusu → nedene uyan tek seçenek → Apple'ın abonelik sayfası), iptal edilmiş üyelik kartı ("Yeniden başlat"), ödeme sorunu bandı. İndirim / ücretsiz ay yok; iptal düğmesi her ekranda öteki ikincil düğmeyle aynı görünümde, soru atlanabilir, geri sayım ve onay döngüsü yok. (2) Teklifler (fiyat kararı + App Store Connect) ve %10 kontrol grubu; sunucuda teklif geçmişi ve "bu aboneye şimdi ne sunulabilir" → o zaman sözleşmeye çevrilir. (3) Geri kazanım teklifleri ve zamanlı mesajlar (bölüm 25'in 2. aşamasına bağlı).
 
-## 27. Moyo Mercek 23 Kasım güncellemeleri (ÖNERİ, `proposed/20261123100000_mercek_updates.sql`, 23 Kasım 2026; **uygulanmadı**; `veritabani.md` 40, `durumlar.md` P18 / P22 / P23, `admin.md` bayrak `parent_training`, hukuk `hukuk_notlari.md` S)
+## 27. Moyo Mercek 23 Kasım güncellemeleri (`migrations/20261123100000_mercek_updates.sql`, uygulandı 23 Kasım 2026; `veritabani.md` 40, `durumlar.md` P18 / P22 / P23, `admin.md` bayrak `parent_training`, hukuk `hukuk_notlari.md` S)
 
 Kullanıcı kararları (23 Kasım 2026, koordinatöre): seans ücreti elle yazılır; "Rapor oluştur"dan sonra rapor sistem içinden aileye gönderilir, ebeveyn bildirim alır ve Moyo'da uygulama içi sayfada görür, Moyo alınan raporları arşivde tutar; hedef davranışın kayıt türü çoklu seçim olur ve ebeveynin olay formu ona uyar; ebeveyn eğitimi iki uygulamada şimdilik gizlenir (kademeli açılabilir); seans durumu "Gelmedi" → "Yapılmadı".
 
@@ -837,8 +837,10 @@ Kullanıcı kararları (23 Kasım 2026, koordinatöre): seans ücreti elle yazı
 |---|---|---|---|
 | 1 | [K] | Seans penceresinde "Ücret (TL)" (isteğe bağlı; boş = ücret yok). Tekrarlayan seansta her seansa aynı ücret; düzeltmede "Yalnız bu / Bu ve sonrakiler" ücrete de uyar | `clinic_session_create` / `clinic_session_update` `p.fee` (sayı ya da `"450.50"`; `fee_invalid`) |
 | 2 | [K] | Takvim, seans ayrıntısı, danışan › Seanslar ücreti gösterebilir (toplam vb. uygulamada hesaplanır) | `clinic_sessions.fee` (`select` listesine eklenir) |
+| 3 | [B] | **Uzmanım › <uzman> › Randevular, randevu kartı** (Moyo'da ayrı ayrıntı ekranı yok; kart seansın içeriğidir): süre / tür / yer satırının altında "Seans ücreti: 450 TL" (kuruş varsa "450,50 TL"; Türkçe biçim, binlik ayırıcı nokta). Ücret boşsa satır yok; iptal edilen randevuda gösterilmez. Bölümde ücretli en az bir kart varsa altta bir kez küçük satır "Ücretleri uzmanınız belirler; ödeme Moyo üzerinden alınmaz." | `family_sessions()` `fee` (ÖNERİ `proposed/20261123200000_session_fee_family.sql`; eski sunucuda alan yok → satır yok) |
+| 4 | [K] | Seans penceresinde ücret alanının altında: seans aileye gösteriliyorsa "Aile de Moyo'da görür.", gösterilmiyorsa "Aile bu seansı görmediği için ücreti de görmez." | `visible_to_family` |
 
-Aile ücreti hiçbir yerde görmez (sunucu döndürmez). Ödeme, tahsilat, fatura bu öneride yok (20'deki not geçerli).
+Kullanıcı kararı (23 Kasım 2026, aynı gün ikinci karar): "seans ücreti ebeveyne aksın, görünür olsun onun tarafında da seans içeriğinde". Aile ücreti yalnız aileye gösterilen randevuda görür; bildirimlerde, uzmanın takvim beslemesinde ve başka hiçbir yolda ücret yok. Ödeme, tahsilat, fatura bu öneride yok (20'deki not geçerli). Ücret değişince aileye ayrı bildirim gitmez.
 
 ### 27.2 Raporu aileye gönder
 
