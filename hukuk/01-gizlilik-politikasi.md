@@ -4,6 +4,7 @@
 
 > Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı, tıbbi cihaz cümlesi, genel ilke (1. bölüm), konum cümlesi (3. bölüm), uzman kayıtlarında veri işleyen rolü (4. bölüm; A/B kapandı), belge yükleme çıktı, uzman–aile ilişkisi (8. bölüm), aktarım amacı (10. bölüm), saklama süreleri dolduruldu (12. bölüm), kampanya izni (15. bölüm).
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); 3, 4 ve 8. bölümden çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -92,8 +93,6 @@ Bu politika ile aydınlatma metinleri birlikte okunur.
 
 **Davranış olayları:** Uzmanınız bir hedef davranış için kayıt istediyse bildirdiğiniz olaylar: tarih ve saat; kayıt türüne göre kaç kez olduğu, öncesi ve sonrası ya da süresi; denediğiniz strateji ve çocuğun buna tepkisi (sizin gözleminizdir, puan değildir).
 
-**Ebeveyn eğitimi:** Uzmanınız size bir eğitim atadıysa tamamladığınız modüller, test yanıtlarınız ve doğru sayısı, açık uçlu yanıtlarınız, uygulama kayıtlarınız (sayı ve isteğe bağlı kısa düşünce) ve tamamladığınız yapılacaklar (nasıl geçtiği ve isteğe bağlı kısa düşünce).
-
 Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına ilişkin kendi girdiği takip kayıtlarıdır; Moyo sağlık verisi ya da başka özel nitelikli veri toplamaz ve bu amaçla işlemez. Serbest metin alanlarına tanı, ilaç ya da sağlık bilgisi yazmamanızı isteriz. Yine de bu alanlara yazılanlar dahil bütün kayıtlarınız korunur: başka aileler göremez, bir uzmana yalnız açık rızanızla açılır.
 
 **Tanışma yanıtları:** İlk kurulumda verdiğiniz yanıtlar (hedefler, bizi nereden duyduğunuz, çocuğun düzeni, geçen haftaki bazı günlük davranışların ne sıklıkta olduğu, ilgi alanları, motive edenler gibi). Bunları uygulamayı size göre ayarlamak, size destek vermek ve **kimliksiz toplamlar** hâlinde ürünü geliştirmek için kullanırız.
@@ -112,7 +111,7 @@ Moyo'daki kayıtlar, kullanıcıların uygulamayı kullanma alışkanlığına i
 
 **Karşılama anketi:** Meslek, karşılaşılan zorluklar, yararlı bulunan özellikler, gelme nedeni. Kimliksiz toplamlar hâlinde ürünü geliştirmek için kullanılır.
 
-**Aileyle ilgili kayıtlar:** Uzmanın birlikte çalıştığı aile için girdiği notlar (aile görmez), hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (uzman gönderince aile görür), kayıt istediği hedef davranışlar ve stratejileri, atadığı ebeveyn eğitimleri ve bu eğitimler için girdiği gözlem verisi (aile görmez), etiketler. Uzman bu alanlara tanı, ilaç ya da sağlık bilgisi yazmamaya özen gösterir.
+**Aileyle ilgili kayıtlar:** Uzmanın birlikte çalıştığı aile için girdiği notlar (aile görmez), hedefler ve değerlendirmeler, rutin ve adım önerileri, takip planı (uzman gönderince aile görür), kayıt istediği hedef davranışlar ve stratejileri, etiketler. Uzman bu alanlara tanı, ilaç ya da sağlık bilgisi yazmamaya özen gösterir.
 
 **Davet bilgileri:** Uzman bir aileyi davet ederken ebeveynin adını ve e-postasını, çocuğun adını ya da takma adını ve yaş grubunu girer. Bu bilgi yalnız daveti iletmek ve ebeveynin onayına sunmak için tutulur. Kullanılmayan davet 3 günde, bağlanmış ama onaylanmamış davet en geç 30 günde silinir. Davet 3 gün geçerlidir; davet başına ebeveyne en çok 3 e-posta (ilk gönderim ve yeniden gönderimler) gider. Bu e-postalar reklam içermez; çocuğun adı ve sağlık bilgisi e-postaya yazılmaz.
 
@@ -160,8 +159,8 @@ Her işlemin ayrıntılı dayanağı ilgili aydınlatma metnindedir. Açık rız
 
 - **Uzmanları doğrulamıyoruz.** Uzmanın kimliğini, unvanını ve meslek yetkisini kontrol etmeyiz; uzman hakkında bir doğrulama ya da yetki beyanı göstermeyiz. Uzmanın adı ve unvanı kendi beyanıdır. Paylaşmadan önce uzmanı gerçek hayatta tanıdığınızdan emin olun.
 - **Paylaşımı siz başlatırsınız.** Uzmanın davetini açarsınız, çocuğun bilgisini kontrol edersiniz, "Bu uzmanı tanıyorum ve çocuğun velisiyim" kutusunu işaretler ve açık rıza verirsiniz.
-- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen rutin ve adımları, "Yaptım" ve onay kayıtlarını, davranış kayıtlarını, bildirdiğiniz davranış olaylarını, ebeveyn eğitimindeki yanıtlarınızı (tamamlanan modüller, test ve açık uçlu yanıtlar, uygulama kayıtları, yapılacaklar), uzmanın önerdiği derslerde uyguladığınız günleri, randevulara verdiğiniz yanıtları, takip planı uygulama kayıtlarınızı ve uzmanın önerilerine verdiğiniz kararları. Bunlar uygulamada bıraktığınız kayıtlardır. Uzman bu kayıtları yalnız sizin açık rızanızla görür; paylaşımı durdurduğunuz andan sonra yeni kayıtlarınızı göremez. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
-- **Siz ne görürsünüz?** Uzmanın gönderdiği rutin ve adım önerilerini, takip planını, size atadığı ebeveyn eğitimlerini ve kaydetmenizi istediği hedef davranışları. Uzmanın kendi notlarını ve gözlem verisini görmezsiniz.
+- **Uzman ne görür?** Paylaştığınız çocuğun profil bilgilerini (ad ya da takma ad, simge, yaş grubu; girdiyseniz doğum günü ve cinsiyet), çocuğa verilen rutin ve adımları, "Yaptım" ve onay kayıtlarını, davranış kayıtlarını, bildirdiğiniz davranış olaylarını, randevulara verdiğiniz yanıtları, takip planı uygulama kayıtlarınızı ve uzmanın önerilerine verdiğiniz kararları. Bunlar uygulamada bıraktığınız kayıtlardır. Uzman bu kayıtları yalnız sizin açık rızanızla görür; paylaşımı durdurduğunuz andan sonra yeni kayıtlarınızı göremez. Uzman bunları yalnız okur, değiştiremez. Aile içi mesajları, coin hareketlerini ve oyun kaydını görmez.
+- **Siz ne görürsünüz?** Uzmanın gönderdiği rutin ve adım önerilerini, takip planını ve kaydetmenizi istediği hedef davranışları. Uzmanın kendi notlarını görmezsiniz.
 - **Uzman değişirse:** İsterseniz, ayrı bir açık rızayla, önceki uzman(lar)ın kayıtları yeni uzmanınıza yalnız okunur olarak açılır. Önceki uzmanın adı ve iletişim bilgileri gösterilmez.
 - **Geri alma:** Paylaşımı ve önceki kayıtların aktarımını Uzmanım bölümünden istediğiniz an durdurursunuz. Uzmanın erişimi hemen sona erer.
 - **Davetten önce:** Uzmanınız sizi davet ederken çocuğunuzun adını ve yaş grubunu girmiş olabilir. Bu bilgi siz onaylayana kadar yalnız davet kaydında durur; onaylamazsanız ya da süre dolarsa silinir.
@@ -282,3 +281,4 @@ E-posta: `destek@moyoapp.com.tr` (kişisel veri başvurularında konu: "KVKK ba�
 13. **20 Kasım 2026 güncellemesi:** Çekirdek madde 2 (kayıtların niteliği) ve 10 (hizmet sağlayıcı) 1. bölümde; "Hizmetimizin sınırı" çekirdek madde 3'ün sözlerine çekildi, "Bir bakışta"daki gösterge cümlesi de. 4. bölümdeki A/B seçeneğinde yalnız terim değişti ("danışanı" → "birlikte çalıştığı aile"); içerik avukat kararını bekliyor. Tanışmadaki tanı/ilaç soruları ve `saglik-yanit-v1` metinden çıktı (14 Kasım). 3. bölümdeki iki "7. bölüm" atfı uzman paylaşımı bölümüne (8) düzeltildi.
 14. **Olgularda henüz olmayanlar:** Davranış olayları ve ebeveyn eğitimi (`sozlesme/akislar.md` 23–24, uygulandı 9 Kasım 2026) bu metne 3, 4 ve 8. bölümde eklendi ama `00-olgular` §2'de yok. Seans ve randevu özelliği (`akislar.md` 20, uygulandı 5 Kasım 2026: randevular, ailenin yanıtı ve kısa notu, uzmanın seans notları, bekleme listesi, uzmanın dış takvim aboneliği ve içe aktarması) ne olgularda ne bu metinde var; 8. bölümdeki "randevu uygulamanın dışındadır" ifadesi bu yüzden çıkarıldı. Olgular güncellenince bu metin, aydınlatma metinleri ve `41` (dış takvim akışı) tamamlanmalı. Moyo Ebeveyn'in planlanan web sürümü de olgularda yok.
 15. **Veri sorumlusunun adı:** `[AD SOYAD]` gerçek kişi için (kullanıcı kararı 10 Kasım 2026); MERSİS/VKN satırı gerçek kişide uygulanmayabilir (`00-olgular` §1). Yayımlanacak ad ve adres avukatın yanıtıyla (`hukuk_notlari.md` M 8–9).
+16. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Not 14'teki eğitim cümlesi tarihçedir.

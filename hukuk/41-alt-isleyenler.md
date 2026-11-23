@@ -4,6 +4,7 @@
 
 > Taslak (iç not, yayımlanmaz). 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): aktarım amacı başa yazıldı (Kısaca), Moyo/Platform tanımı (1), Supabase satırında belge ve "özel nitelikli" nitelendirmesi çıktı (3.1), tek iletişim adresi `destek@`.
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); Supabase satırından "ebeveyn eğitimi yanıtları" çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -38,7 +39,7 @@ Moyo Ebeveyn, Moyo Oyun ve Moyo Mercek'i (ailelere dönük ekranlarda Moyo Uzman
 |---|---|
 | Rol | Alt işleyen |
 | Amaç | Bütün uygulama verisinin tutulduğu veritabanı; e-posta + şifre ile giriş ve çocuk cihazının kimliği belirsiz oturumu; mesaj fotoğrafları, sesli mesajlar ve davranış kayıtlarındaki ses kayıtları için özel dosya depolama; bildirim ve e-posta gibi sunucu işlevleri; zamanlanmış işler |
-| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; rutinler ve adımlar, mesajlar, oyun kaydı; davranış kayıtları ve davranış olayları, ebeveyn eğitimi yanıtları, tanışma yanıtları ve uzman notları gibi kullanıcıların kendi girdiği takip kayıtları; kullanım ve güvenlik kayıtları |
+| Veri | Bu uygulamalarda işlenen verilerin tamamı: ebeveyn, çocuk ve uzman hesap ve profil verisi; rutinler ve adımlar, mesajlar, oyun kaydı; davranış kayıtları ve davranış olayları, tanışma yanıtları ve uzman notları gibi kullanıcıların kendi girdiği takip kayıtları; kullanım ve güvenlik kayıtları |
 | İlgili kişiler | Ebeveynler, çocuklar, uzmanlar, ekip üyeleri |
 | Konum | Frankfurt, Almanya; AB bölgesi |
 | Aktarım güvencesi | [standart sözleşme imzalanacak] + imzadan sonra 5 iş günü içinde Kurul'a bildirim |
@@ -159,3 +160,4 @@ Yürürlük: [TARİH] · Sürüm: v1 · İletişim: `destek@moyoapp.com.tr`
 8. **Uzmanın itirazında dışa aktarma:** 6. bölümdeki "kayıtlarını dışa aktarır" sözü Uzman Hizmet Sözleşmesi'nin daraltılan diliyle uyum için çıkarıldı (Moyo arşiv ya da dışa aktarma hizmeti taahhüt etmez; uygulamadaki rapor ve CSV araçları ayrıca durur). Fesih sonucunun Veri İşleme Eki'yle aynı yazılması gerekir.
 9. **Yurt dışı aktarım ve Kurul bildirimi (kullanıcı, C.13; 20 Kasım 2026):** aktarımın amacının hizmeti çalıştırmak olduğu Kısaca'da başa yazıldı. Kullanıcı görüşü: Kurul bildirimi gerekmez; KVKK md. 9 standart sözleşme bildirimi (imzadan sonra 5 iş günü) yasal yükümlülük olabilir, teyit avukatta. Metindeki bildirim cümleleri olduğu gibi bırakıldı.
 10. **Konum (3.1; kullanıcı, A.2):** Supabase satırında kayıtlar "özel nitelikli veri içerebilecek kayıtlar" diye nitelenmiyor, "kullanıcıların kendi girdiği takip kayıtları" deniyor; 6. bölümdeki "özel nitelikli veri içerebilecek kayıtları kapsıyorsa yeniden onay" kuralı koruma ağı olarak kaldı. md. 6 kapsamının teyidi avukatta.
+11. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm).

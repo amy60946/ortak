@@ -6,6 +6,7 @@
 >
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı). Tanı/ilaç soruları ve `saglik-yanit-v1` metinden çıktı (14 Kasım 2026'da kaldırıldı); davranış kaydına tek dayanak (md. 5/2-c, avukat dosyası soru 11); uzmanın gördükleri listesine davranış olayları, ebeveyn eğitimi yanıtları, ders uygulama günleri ve randevu yanıtları eklendi; 4. tablonun 8. satırı (eski: tanı ve ilaç yanıtları) ebeveyn eğitimi ve davranış olaylarına verildi, satır numaraları değişmedi; açık rıza atfı 7499 sayılı Kanun sonrası numarayla md. 6/3-a.
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): Moyo/Platform tanımı (2), genel ilke (1.4), konum cümlesi (Kısaca, 3), bildirim ayarları (4 satır 14), uzmanın gördükleri listesi `uzman-paylasim-v1` ile eşitlendi (5.3), belge rozeti çıktı (5.3), aktarım amacı (5.6), saklama süreleri dolduruldu ve ailenin kendi kayıtları (3A) yazıldı (7).
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); 3 (Ebeveyn eğitimi satırı), 4. tablonun 3. ve 8. satırı (satır numaraları değişmedi), 5.1, 5.3, 5.6 ve 7'den çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -52,7 +53,6 @@
 | **Mesajlar** | Siz ve çocuğunuz arasındaki yazılar, fotoğraflar, sesli mesajlar, çıkartmalar; okundu bilgisi |
 | **Davranış kayıtları ve olaylar** | Davranış kaydı: öncesi, davranış, sonucu, sizin verdiğiniz şiddet derecesi (1–5) ve isteğe bağlı ses kaydı. Davranış olayı (uzmanınızın tanımladığı hedef davranış için bildirdiğiniz): zaman, sayı ya da süre, öncesi ve sonrası, denediğiniz strateji, çocuğun tepkisi (1–5) ve yazdığınız açıklama. Derece ve tepki sizin gözleminizdir; puan ya da tanı değildir. |
 | **Tanışma yanıtları** | İlk kurulumdaki sorular: hedefleriniz, bizi nereden duyduğunuz, rutin ve hatırlatma yüzünden tartışma sıklığı, çocuğun günlük düzeni, geçen hafta bazı günlük davranışların sıklığı (ör. sırasını beklemekte ya da bir işten ötekine geçerken zorlanma), çocuğun bir uzmanla çalışıp çalışmadığı, çocuk için hedefleriniz, ilgi alanları, onu motive eden şeyler. Yanıtlar hazır seçeneklerdir; tanı ya da ilaç sorulmaz. |
-| **Ebeveyn eğitimi** | Uzmanınızın atadığı eğitimde: tamamladığınız modüller, test ve açık uçlu sorulara yanıtlarınız, uygulama kayıtlarınız ve yazdığınız düşünce, yapılacak işaretleriniz ve "Nasıl geçti?" yanıtınız. Kısa ebeveyn derslerinde (kendi seçtiğiniz ya da uzmanınızın önerdiği) ilerlemeniz ve uyguladığınız günler. Test sonucu sizin bilgi yoklamanızdır, çocuğa ait bir puan değildir. |
 | **Uzmanla ilgili kayıtlar** | Hangi çocuğu hangi uzmanla paylaştığınız; onaylarınızın metin sürümü ve zamanı; önceki uzman kayıtlarının aktarım izni; uzmanın rutin ve adım önerilerine verdiğiniz kararlar; uzmanın açtığı randevulara verdiğiniz yanıt ("Geleceğiz" / "Uygun değil") ve notunuz; takip planında "Bugün uyguladım" kayıtlarınız, bildirdiğiniz zorluk (1–5) ve uygulayamama nedeni. Zorluk bildirimi puan değildir. |
 | **Uzmanın davetle getirdiği bilgiler** | Uzman sizi davet ederken e-posta adresinizi ve çocuğunuzun adını ve yaş grubunu girmiş olabilir (bkz. 5.4) |
 | **Abonelik** | Plan, dönem sonu, abonelik durumu, mağaza işlem kimliği, deneme başlangıcı. **Kart bilgileriniz bize gelmez; Apple'da kalır.** |
@@ -70,12 +70,12 @@ Her işlemin dayanağı KVKK'daki şu şartlardır: **md. 5/2-c** sözleşmenin 
 |---|---|---|---|
 | 1 | Hesap açmak, giriş, e-posta doğrulama, şifre sıfırlama | Kimlik ve iletişim, hesap güvenliği | md. 5/2-c |
 | 2 | Aileyi ve çocuk profillerini kurmak; çocuğu 15 dakikalık tek kullanımlık kod ya da QR ile Moyo Oyun'a bağlamak | Aile ve çocuk profili | md. 5/2-c (veli olarak sizinle kurulan sözleşme) * |
-| 3 | Rutin, adım onayı, coin, Güneş Taşı, ödül ve hediyeleri, kendi seçtiğiniz kısa ebeveyn derslerini çalıştırmak | Rutin ve ödül kayıtları; ebeveyn eğitimi (ders ilerlemesi) | md. 5/2-c |
+| 3 | Rutin, adım onayı, coin, Güneş Taşı, ödül ve hediyeleri çalıştırmak | Rutin ve ödül kayıtları | md. 5/2-c |
 | 4 | Siz ve çocuğunuz arasında mesajlaşma | Mesajlar | md. 5/2-c |
 | 5 | Davranış kaydı tutmanız | Davranış kayıtları (davranış kaydı) | md. 5/2-c * |
 | 6 | Uygulamayı ailenize göre düzenlemek, destek vermek | Tanışma yanıtları | md. 5/2-c; destek için md. 5/2-f * |
 | 7 | Ürünü geliştirmek: yanıtların **kimliksiz toplamları**, "bizi nereden duydunuz" | Tanışma yanıtları | md. 5/2-f |
-| 8 | Uzmanınızın atadığı ebeveyn eğitimini ve tanımladığı hedef davranışlar için olay bildirmenizi çalıştırmak; bunları uzmanınıza göstermek | Ebeveyn eğitimi, davranış olayları | md. 5/1 ve md. 6/3-a açık rıza (`uzman-paylasim-v1`) * |
+| 8 | Uzmanınızın tanımladığı hedef davranışlar için olay bildirmenizi çalıştırmak; bunları uzmanınıza göstermek | Davranış olayları | md. 5/1 ve md. 6/3-a açık rıza (`uzman-paylasim-v1`) * |
 | 9 | Çocuğunuzun kayıtlarını seçtiğiniz uzmanla paylaşmak | Uzmanla ilgili kayıtlar + paylaşılan kayıtlar (5.3) | md. 5/1 ve md. 6/3-a açık rıza (`uzman-paylasim-v1`) |
 | 10 | Önceki uzmanın kayıtlarını yeni uzmana açmak | Önceki uzman kayıtları | md. 6/3-a açık rıza (`uzman-gecis-v1`) |
 | 11 | Uzman davetini size iletmek ve hesabınızla eşleştirmek | Uzmanın davetle getirdiği bilgiler | md. 5/2-f * |
@@ -95,16 +95,16 @@ Verilerinizi reklam için kullanmayız, satmayız, profil çıkarmak için kulla
 
 ### 5. Verileriniz kimlerle paylaşılır
 
-**5.1. Ailenizdeki diğer ebeveyn.** Aileye ikinci bir ebeveyn katılırsa aile verisini (çocuk profilleri, rutinler, ödüller, mesajlar, davranış kayıtları ve olaylar, uzman paylaşımları) o da görür ve yönetir. Uzmanın size atadığı ebeveyn eğitimini görür, ama sizin yerinize işaretleyemez.
+**5.1. Ailenizdeki diğer ebeveyn.** Aileye ikinci bir ebeveyn katılırsa aile verisini (çocuk profilleri, rutinler, ödüller, mesajlar, davranış kayıtları ve olaylar, uzman paylaşımları) o da görür ve yönetir.
 
 **5.2. Çocuğunuzun Moyo Oyun cihazı.** Bağlı cihaz yalnız o çocuğun profilini, maceralarını (sizin verdiğiniz adımlar oyunda macera olarak görünür), ona yazdığınız mesajları, ona açık ödülleri ve kendi coin ve Güneş Taşı hareketlerini görür. Kardeşler birbirinin mesajlarını görmez.
 
 **5.3. Uzman — yalnız açık rızanızla.** Bir uzmanın davetini onaylar ve çocuğunuzu seçerseniz:
 - **Kim görür:** davet eden uzman; o kliniğin sahibi; klinik sahibinin bu paylaşımı atadığı ekip üyeleri.
-- **Ne görür (uygulamada sizin bıraktığınız kayıtlar):** çocuğun profil bilgileri; rutinleri, adımları ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; davranış kayıtları ve ses kayıtları; uzmanın tanımladığı hedef davranışlar için bildirdiğiniz **davranış olayları**; uzmanın atadığı **ebeveyn eğitimindeki yanıtlarınız** (modül tamamlama, test ve açık uçlu yanıtlar, uygulama kayıtları ve düşünceniz, yapılacak işaretleri ve "Nasıl geçti?" yanıtınız); uzmanın önerdiği derslerde, öneriden sonra uyguladığınız günler; randevulara verdiğiniz yanıt ve notunuz; takip planı uygulama kayıtlarınız; rutin ve adım önerilerine kararlarınız. Paylaşımdan önceki rutin ve davranış kayıtlarının geçmişi de görünür.
-- **Ne görmez:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı, tanışma yanıtlarınız, kendi seçtiğiniz dersler.
-- Uzman bu kayıtları **yalnız okur**, değiştiremez. Size rutin ve adım önerebilir, ebeveyn eğitimi atayabilir, hedef davranış tanımlayabilir, randevu açabilir ve takip planı gönderebilir; kabul edip etmemek, uygulayıp uygulamamak size kalmıştır.
-- **Durdurma:** Uzmanım bölümünden (uzmanın sayfasında Uzmanı yönet › çocuğu ayır ya da uzmanı kaldır) paylaşımı durdurduğunuz an uzmanın erişimi biter ve uzman o andan sonraki kayıtlarınızı göremez; o uzmanla yürüttüğünüz ebeveyn eğitimi, olay bildirimi ve randevular da size ve uzmana kapanır. Uzmanın o güne kadar Moyo Uzman'a yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır; bu kayıtları siz görmezsiniz.
+- **Ne görür (uygulamada sizin bıraktığınız kayıtlar):** çocuğun profil bilgileri; rutinleri, adımları ve atamaları; "Yaptım" kayıtları ve onay/ret kararlarınız; davranış kayıtları ve ses kayıtları; uzmanın tanımladığı hedef davranışlar için bildirdiğiniz **davranış olayları**; randevulara verdiğiniz yanıt ve notunuz; takip planı uygulama kayıtlarınız; rutin ve adım önerilerine kararlarınız. Paylaşımdan önceki rutin ve davranış kayıtlarının geçmişi de görünür.
+- **Ne görmez:** mesajlarınız, coin ve Güneş Taşı hareketleri, ödüller, oyun kaydı, tanışma yanıtlarınız.
+- Uzman bu kayıtları **yalnız okur**, değiştiremez. Size rutin ve adım önerebilir, hedef davranış tanımlayabilir, randevu açabilir ve takip planı gönderebilir; kabul edip etmemek, uygulayıp uygulamamak size kalmıştır.
+- **Durdurma:** Uzmanım bölümünden (uzmanın sayfasında Uzmanı yönet › çocuğu ayır ya da uzmanı kaldır) paylaşımı durdurduğunuz an uzmanın erişimi biter ve uzman o andan sonraki kayıtlarınızı göremez; o uzmanla yürüttüğünüz olay bildirimi ve randevular da size ve uzmana kapanır. Uzmanın o güne kadar Moyo Uzman'a yazdığı kendi notları ve hedefleri kliniğin kayıtlarında kalır; bu kayıtları siz görmezsiniz.
 - **Önceki uzmanın kayıtları:** Takibi başka bir uzmana taşırsanız ve ayrıca izin verirseniz, önceki uzmanın notları, hedefleri, haftalık değerlendirmeleri, rutin ve adım önerileri, aile programı ve sizin uygulama kayıtlarınız yeni uzmana **yalnız okunur** olarak açılır. Amaç takibin kesintisiz sürmesidir. Önceki uzmanın adı ve bilgileri yeni uzmana gösterilmez. Bu izni Uzmanım bölümünden istediğiniz an geri alırsınız; erişim hemen biter.
 - **Uzmanlar doğrulanmaz.** Platform uzmanın kimliğini, unvanını ve meslek yetkisini doğrulamaz; uzman hakkında bir doğrulama, yetki beyanı ya da hizmet kalitesi taahhüdü vermez. Uzmanın adı ve unvanı kendi beyanıdır. Paylaşmadan önce uzmanı gerçek hayatta tanıdığınızdan emin olun.
 - **Uzman ile aile arasındaki ilişki.** Uzman ile aile arasındaki mesleki ilişki (hizmet, ücret, randevu, iletişim ve öneriler) yalnız onların arasındadır; Moyo bu ilişkinin tarafı, aracısı ya da güvencesi değildir. Her kullanıcı kendi girdiği kayıttan sorumludur.
@@ -125,7 +125,7 @@ Uzman e-posta adresinizi de girmiş olabilir. Bu adresi yalnız tek bir davet e-
 
 Abonelik satışını **Apple** yapar. Satın alma sırasında Apple'a verdiğiniz bilgiler (ödeme bilgisi dahil) Apple'ın kendi gizlilik koşullarına tabidir; bunlar bize gelmez. Apple bize yalnız abonelik durumunu ve işlem kimliğini iletir.
 
-**5.6. Yurt dışına aktarım.** Yukarıdaki sağlayıcıların sunucuları Türkiye dışında olabilir. Aktarımın amacı yalnız hizmeti çalıştırmaktır (veritabanı, depolama, e-posta, ödeme, bildirim). Verilerinizi yurt dışına KVKK md. 9'a uygun olarak aktarırız: Kişisel Verileri Koruma Kurulu'nun ilan ettiği standart sözleşmeyi sağlayıcıyla imzalar, imzadan sonra 5 iş günü içinde Kurul'a bildiririz (ya da varsa yeterlilik kararına dayanırız). Davranış kayıtları ve olaylar, ebeveyn eğitimi yanıtları, not alanları ve uzmanla paylaşılan kayıtlar da bu sunucularda saklanır.
+**5.6. Yurt dışına aktarım.** Yukarıdaki sağlayıcıların sunucuları Türkiye dışında olabilir. Aktarımın amacı yalnız hizmeti çalıştırmaktır (veritabanı, depolama, e-posta, ödeme, bildirim). Verilerinizi yurt dışına KVKK md. 9'a uygun olarak aktarırız: Kişisel Verileri Koruma Kurulu'nun ilan ettiği standart sözleşmeyi sağlayıcıyla imzalar, imzadan sonra 5 iş günü içinde Kurul'a bildiririz (ya da varsa yeterlilik kararına dayanırız). Davranış kayıtları ve olaylar, not alanları ve uzmanla paylaşılan kayıtlar da bu sunucularda saklanır.
 
 **5.7. Yetkili kurumlar.** Mahkeme, savcılık ya da yetkili bir kamu kurumunun usulüne uygun talebi olursa veriler, talebin kapsamıyla sınırlı olarak aktarılabilir. Kanun yasaklamıyorsa sizi bilgilendiririz.
 
@@ -149,7 +149,7 @@ Hukuki sebepler 4. maddededir.
 | Veri | Süre |
 |---|---|
 | Hesap, aile ve çocuk verisi (rutinler, mesajlar, ödüller, davranış kayıtları, tanışma yanıtları) | Hesap silinene kadar; silmede derhal |
-| Ebeveyn eğitimi, davranış olayları, randevular | Uzmanla paylaşıma bağlıdır: paylaşım durunca size ve uzmana kapanır. Uzmanın hesabı ya da kliniği silinirse sizin girdiğiniz eğitim yanıtları, uygulama kayıtları, yapılacak işaretleri ve davranış olayları, size açılmış eğitimin içeriğiyle birlikte sizde salt okunur kalır; uzmanın bunlara erişimi kapanır. Aile ya da çocuk silinince hepsi silinir |
+| Davranış olayları, randevular | Uzmanla paylaşıma bağlıdır: paylaşım durunca size ve uzmana kapanır. Uzmanın hesabı ya da kliniği silinirse sizin bildirdiğiniz davranış olayları sizde salt okunur kalır; uzmanın bunlara erişimi kapanır. Aile ya da çocuk silinince hepsi silinir |
 | Uzmanla paylaşım | Paylaşımı durdurana kadar. Uzmanın kendi notları: klinik ya da tek kişilik klinikte uzman hesabı silinene kadar |
 | Uzman davetindeki bilgiler (e-posta, çocuk adı) | 3 gün (ailenize bağlanmamış davet) / en geç 30 gün (bağlanmış ama onaylanmamış davet) |
 | Kod deneme kayıtları (IP dahil) | 15 dakika – 1 gün |
@@ -226,3 +226,4 @@ Yürürlük tarihi: `[YÜRÜRLÜK TARİHİ]`
 16. **Uzmanın gördükleri (5.3) ve `uzman-paylasim-v1`:** kullanıcı kararı (C.12): v1 ile devam. 5.3'teki "ne görür / ne görmez" listesi Açık Rıza Metinleri 1.1 ve rıza cümlesiyle aynı tutuldu (20 Kasım 2026'da karşılaştırıldı ve eşitlendi).
 17. **Ailenin kendi kayıtları (7. tablo; kullanıcı kararı 3A, 20 Kasım 2026):** uzmanın hesabı ya da kliniği silinince ailenin girdiği eğitim yanıtları ve davranış olayları ailede salt okunur kalır. Sunucu kuralı `supabase/migrations/20261120200000_family_keeps_records.sql` uygulandı (22 Kasım 2026); metin bugünkü sistemle uyumlu. Paylaşım geri alınınca (satır silinmez) aile bu kayıtları bugün görmüyor (`50` not 9b).
 18. **Bildirim ayarları (4 satır 14; kullanıcı kararı 5a):** adım bildirimlerinin ebeveyn ayarlarından açılıp kapanması ve kampanya izninin ayrı anahtar olması bildirim tercihleri işine bağlı (`akislar.md`, başka pencere); ekranlar yapılmadan yayımlanırsa satır sadeleşmeli.
+19. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). 5.3'teki liste bu yüzden şimdilik Açık Rıza Metinleri 1.1'den dar (not 16; rıza metni `uzman-paylasim-v1` değişmedi, `hukuk_notlari.md` S.7). Not 12 ve 17'deki eğitim soruları o zaman yeniden geçerli olur.

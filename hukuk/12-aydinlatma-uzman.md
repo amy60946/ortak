@@ -5,6 +5,7 @@
 > Taslak, 27 Ekim 2026. Olgular: `hukuk/00-olgular.md`. Sözleşme: `22-uzman-hizmet-sozlesmesi.md`. Hukuki görüş değildir.
 > 20 Kasım 2026: 14 Kasım kararları, çekirdek maddeler, Moyo adları, deneme 14 gün (sürüm v1 kaldı).
 > 20 Kasım 2026 (ikinci tur, kullanıcının avukat sorularına yanıtları): uzman kayıtlarında rol (Kısaca, 1.3-a), Moyo/Platform tanımı (1.2), genel ilke (1.5), belge incelemesi çıktı (Kısaca, 2, 3, 4; 6. bölüm "Kimliğiniz ve unvanınız" oldu), ailelerle ilgili kayıtlarınız (7), saklama süreleri dolduruldu (7).
+> 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı (kullanıcı kararı; bayrak `parent_training`); 1.3-a, 1.3-b ve 7'den çıkarıldı, özgün metin `hukuk/ek-ebeveyn-egitimi.md` (sürüm v1 kaldı).
 
 ## Kısaca
 
@@ -25,8 +26,8 @@
 1.2. Platform; çocuklar için Moyo Oyun, ebeveynler için Moyo Ebeveyn ve uzmanlar için Moyo Mercek uygulamalarını işletir. "Moyo" ya da "Platform": `[AD SOYAD]` tarafından işletilen uygulamaların (Moyo Ebeveyn, Moyo Oyun, Moyo Mercek) tümü; tekil ve çoğul kullanım birbirinin yerine geçer. Bu metinde Platforma yüklenen hak ve yükümlülükler, veri sorumlusu olarak onu işleten kişiye aittir. Bu metin, **Moyo Mercek hesabı açan uzmanların ve klinik ekip üyelerinin kendi kişisel verilerini** kapsar.
 
 1.3. Bu metnin kapsamı dışında kalanlar:
-   - a) **Uzman kayıtları** (ailelerle çalışırken yazdığınız notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, ebeveyn eğitimleri, hedef davranışlar, seans kayıtları, takip planı, etiketler ve davet formuna girdiğiniz ebeveyn ve çocuk bilgileri): Bu kayıtlarda veri sorumlusu siz (ya da kliniğiniz), Platform veri işleyendir; rollerimiz ve yükümlülüklerimiz **Veri İşleme Eki**'nde (`veri-isleme-eki`) düzenlenir. Bu kayıtları kendi beyanınızla ve kendi sorumluluğunuzda girersiniz; Moyo içeriği denetlemez, doğrulamaz, bunun için sorumluluk ya da yükümlülük üstlenmez.
-   - b) **Aile verisi** (ebeveynin Moyo Ebeveyn'de oluşturduğu rutinler ve adımlar, tamamlamalar, davranış kayıtları ve olayları, ebeveyn eğitimi yanıtları gibi veriler): Bunlar ebeveyn aydınlatma metnine tabidir; siz bu verileri yalnız ebeveynin açık rızasıyla ve paylaşım sürdükçe görürsünüz.
+   - a) **Uzman kayıtları** (ailelerle çalışırken yazdığınız notlar, hedefler, değerlendirmeler, rutin ve adım önerileri, hedef davranışlar, seans kayıtları, takip planı, etiketler ve davet formuna girdiğiniz ebeveyn ve çocuk bilgileri): Bu kayıtlarda veri sorumlusu siz (ya da kliniğiniz), Platform veri işleyendir; rollerimiz ve yükümlülüklerimiz **Veri İşleme Eki**'nde (`veri-isleme-eki`) düzenlenir. Bu kayıtları kendi beyanınızla ve kendi sorumluluğunuzda girersiniz; Moyo içeriği denetlemez, doğrulamaz, bunun için sorumluluk ya da yükümlülük üstlenmez.
+   - b) **Aile verisi** (ebeveynin Moyo Ebeveyn'de oluşturduğu rutinler ve adımlar, tamamlamalar, davranış kayıtları ve olayları gibi veriler): Bunlar ebeveyn aydınlatma metnine tabidir; siz bu verileri yalnız ebeveynin açık rızasıyla ve paylaşım sürdükçe görürsünüz.
 
 1.4. Bu metinde "Uzman" Moyo Mercek hesabı açan gerçek kişiyi, "Klinik" uzmanın Moyo Mercek'te çalıştığı alanı (kendi bireysel hesabı ya da bir kliniğin ekip hesabı; bir uzman birden çok klinikte çalışabilir), "Klinik sahibi" kliniği kuran ya da sahipliği devralan uzmanı, "Ekip üyesi" klinik sahibinin ekibe katılma isteğini kabul ederek kliniğe katılan uzmanı anlatır. Aile: uzmanın Moyo Mercek'te birlikte çalıştığı ebeveyn ve çocuk.
 
@@ -128,7 +129,7 @@ Süresi dolan veriler Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hal
 - Aile paylaşımı sonlandırınca o andan sonra ailenin yeni kayıtlarını göremezsiniz.
 - Aile hesabını ya da çocuğun profilini silerse, o aileye ait notlarınız ve kayıtlarınız da silinir. Bu kural ailenin kendi verisi üzerindeki kontrolünü ve silme hakkını korur; kayıtlar aileye bağlı takip kayıtlarıdır ve Moyo bir arşiv sistemi değildir.
 - Kliniğinizin denemesi ya da üyeliği bitince kayıtlar silinmez; erişiminiz kapanır, üyelik yenilenince kaldığınız yerden açılır. Kayıtlar klinik ya da hesabınız silinene kadar saklanır.
-- Siz hesabınızı silerseniz ailenin kendi girdiği kayıtlar (ebeveyn eğitimi yanıtları ve davranış olayları dahil) ailede kalır; sizin ve kliniğinizin bunlara erişimi kapanır.
+- Siz hesabınızı silerseniz ailenin kendi girdiği kayıtlar (davranış olayları dahil) ailede kalır; sizin ve kliniğinizin bunlara erişimi kapanır.
 - Mevzuatın ve meslek kurallarının size yüklediği kayıt tutma ve saklama yükümlülüğü sizdedir. Saklamanız gereken kayıtları gerektiğinde raporla, ilerleme notuyla ya da CSV olarak kendiniz indirir ve kendi sisteminizde saklarsınız.
 
 ## 8. Haklarınız (KVKK md. 11)
@@ -187,3 +188,4 @@ Bu metin değişirse yeni sürümü Moyo Mercek'te ve herkese açık adreste yay
 15. **Uzman kayıtlarında rol (Kısaca, 1.3-a; kullanıcı kararı 20 Kasım 2026, A.4):** uzman (klinik) veri sorumlusu, Platform veri işleyen; uzman kaydı kendi beyanıyla ve sorumluluğunda girer, Moyo içeriği denetlemez ve doğrulamaz. Avukat teyidi.
 16. **Ailelerle ilgili kayıtlarınız (7; kullanıcı kararı B.8):** aile bağı koparınca uzmanın yeni veri görmemesi ve aile silinince uzman kayıtlarının da silinmesi "sorun değil" (kullanıcı); kural uzmana kayıtta en baştan söylenir (`50` §1.2, Uzman Hizmet Sözleşmesi Ek-3) ve bu metinde savunusuyla (ailenin silme hakkı, arşiv olmama) yazıldı. Uzman hesabını silince ailenin kendi kayıtlarının ailede kalması 3A önerisine bağlı (`supabase/migrations/20261120200000_family_keeps_records.sql`, uygulanmadı). Bu kayıtlar Veri İşleme Eki kapsamında olduğu için bu aydınlatmada yalnız bilgi olarak duruyor.
 17. **Genel ilke (1.5):** kullanıcı isteğiyle (20 Kasım 2026) bütün metinlerde aynı sözlerle; sınır cümlesi TBK md. 115 ve TKHK md. 5 karşısında maddeyi ayakta tutmak için korundu.
+18. 23 Kasım 2026: ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalı; metinden çıkarıldı, açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm).

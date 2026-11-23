@@ -39,6 +39,7 @@
 | `45-pazarlama-kurallari.md` | — | Marketing penceresi: sağlık iddiası, deneme süreleri, ürün adları, çocuklar, izleme, İYS, etkileyici, uzman tanıklığı kuralları | — | iç |
 | `44-kvkk-basvuru-usulu.md` | `kvkk-basvuru` | herkes | — | taslak |
 | `50-uygulama-ici-metinler.md` | — | yazılımcılar: ekran ekran kısa metinler (§15: avukat dosyasının kısa metin önerileri, kullanıcı kararı bekler) | — | taslak |
+| `ek-ebeveyn-egitimi.md` | — | ebeveyn eğitimi ve kısa ebeveyn dersleri lansmanda kapalıyken metinlerden çıkarılan parçaların özgün hâli (dosya, bölüm, metin); özellik açılırken geri eklenir | — | iç |
 
 ## Fonksiyon → hukuki dokunuş haritası
 
@@ -54,7 +55,7 @@
 | Uzmanla paylaşım | Açık rıza `uzman-paylasim-v1`, "uzmanı tanıyorum, veliyim" | acik-riza (paylaşım), kosullar-parentapp | `clinic_links.consent_version` |
 | Uzman değişiminde kayıt aktarımı | Açık rıza `uzman-gecis-v1` + uzmanın önceden izni; kimlik gizleme | acik-riza (geçiş), sozlesme-uzman | `clinic_link_history` |
 | Uzman notları, hedefler, takip planı (lansmanda bayrakla kapalı), seans kayıtları | Veri sorumlusu/işleyen rolleri, gizlilik, sona ermede silme; uzmanın kayıt tutma ve saklama yükümlülüğü uzmanda (çekirdek madde 7) | sozlesme-uzman, veri-isleme-eki | — |
-| Ebeveyn eğitimi (uzman atar, ebeveyn yanıtlar; kaynak kütüphanesi) | Moyo'nun içeriği genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz; ebeveynin yanıtları uzmanla paylaşımın parçası (koruma ağı: açık rıza); içeriğe dayanan kararlardan Moyo sorumlu değildir | kosullar-parentapp, sozlesme-uzman, aydinlatma-ebeveyn | `parent_training_*` |
+| Ebeveyn eğitimi (uzman atar, ebeveyn yanıtlar; kaynak kütüphanesi) ve kısa ebeveyn dersleri (**lansmanda kapalı**, bayrak `parent_training`, kullanıcı kararı 23 Kasım 2026; yayımlanacak metinlerden çıkarıldı, açılırken `ek-ebeveyn-egitimi.md`'den yeni sürümle geri eklenir) | Moyo'nun içeriği genel bilgilendirmedir, mesleki değerlendirmenin yerini tutmaz; ebeveynin yanıtları uzmanla paylaşımın parçası (koruma ağı: açık rıza); içeriğe dayanan kararlardan Moyo sorumlu değildir | kosullar-parentapp, sozlesme-uzman, aydinlatma-ebeveyn | `parent_training_*` |
 | Dışa aktarılan belgeler (rapor, ilerleme notu, CSV) | Alt satır: "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." (uygulandı 14 Kasım 2026) | sozlesme-uzman, uygulama içi metinler | `EXPORT_FOOTER` (Moyo Mercek) |
 | Uzman belge incelemesi (**kullanılmıyor**, kullanıcı kararı 20 Kasım 2026: sistemden kaldırıldı, `clinician_verifications` durur, yeniden açılırsa önce metinler; herkese açık metinlerden çıktı) | Kimlik no içeren belge; yalnız inceleme; karar sonrası silme. Rozet 14 Kasım 2026'dan beri "Belge yükledi" (aileye "Uzman diploma belgesini yükledi", uzmana "Belge yüklendi: <meslek>"); Moyo doğrulama ya da yetki beyanı vermez; özellik lansmanda kapalı (bayrak `clinician_verification`) | aydinlatma-uzman, sozlesme-uzman, 45 §6.3 | `verify-doc` |
 | Uzman karşılama anketi | Ürün geliştirme, kimliksiz toplam | aydinlatma-uzman | `admin_kpi_clinician_survey` |
