@@ -172,6 +172,8 @@ select tst.check(public.nudge_try(tst.u('a1'), tst.rule('parent_child_none'), ''
 
 -- ---------------------------------------------------------------- bayrak açık: tek çalışma
 insert into public.feature_flags (key, enabled, rollout_pct) values ('nudges_server', true, 100);
+-- eğitim kuralları ebeveyn eğitimi bayrağına bağlı (proposed/20261123100000_mercek_updates.sql; kapalıyken: test_mercek_updates.sql)
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100) on conflict (key) do nothing;
 insert into tst.res values ('run1', public.nudge_run(tst.t0()));
 select tst.check(tst.r('run1') -> 'results' = '{"sent": 9, "holdout": 2, "skipped_pref": 1, "skipped_limit": 1}',
                  'çalışma: 9 gönderim, 2 karşılaştırma, 1 tercih, 1 sınır');
