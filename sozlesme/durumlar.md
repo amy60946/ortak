@@ -428,7 +428,7 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 | İstek başlığı | `x-clinic-id: <clinic uuid>` | ClinicApp'in seçili alanı (yalnız REST; Edge Function'larda yalnız `clinic-billing`) |
 | Kişisel uzman kodu | 8 karakter (`random_code` alfabesi), süresiz, yenilenebilir | Ayarlar › Kişisel kodun |
 
-## P20. Ebeveyn eğitimi (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; `akislar.md` 22)
+## P20. Ebeveyn eğitimi (`migrations/20261105200000_parent_lessons.sql`, uygulandı 5 Kasım 2026; `akislar.md` 22; **lansmanda kapalı**, bayrak `parent_training`: işlevler `feature_off` ipucuyla reddeder, `veritabani.md` 41)
 
 | Alan | Değerler | Türkçe |
 |---|---|---|
@@ -440,7 +440,7 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 | Hatalar (ipucu) | `lesson_not_found`, `lesson_not_started`, `date_range`, `link_not_visible`, `link_not_active`, `assignment_not_found` | |
 | Arayüz sözcükleri | "Bu haftanın becerisi", "Bu hafta dene", "Bugün uyguladım", "bu hafta n/5 gün", "Öğrendiğin beceriler", "Uzmanının önerisi", "Yakında" | seri, puan, "kaçırdın", "takip/izleme/kontrol" yok |
 
-## P21. Ebeveyn eğitimi (`migrations/20261110100000_parent_trainings.sql`, uygulandı 9 Kasım 2026; `akislar.md` 23)
+## P21. Ebeveyn eğitimi (`migrations/20261110100000_parent_trainings.sql`, uygulandı 9 Kasım 2026; `akislar.md` 23; **lansmanda kapalı**, bayrak `parent_training`: bildirimleri yazılmaz, tablolar istemciye kapalı, işlevler boş döner ya da reddeder, `veritabani.md` 41)
 
 | Alan | Değerler | Ekranda |
 |---|---|---|

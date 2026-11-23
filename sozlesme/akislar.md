@@ -678,7 +678,7 @@ Olaylar (ClinicApp): `workspace.switch` (`personal`), `workspace.create` (`kind`
 Eski ekip kodu yolu (`clinic_create_invite('clinician')`, `clinic_join_team`, kayıtta `team_code`) eski sürümler için sunucuda çalışır; yeni ClinicApp'te yok. Hukuk: klinik alanındaki danışanda veri sorumlusu klinik, bireysel alanda uzman (`hukuk_notlari.md` 23, avukata soru).
 
 
-## 22. Gelişim › aile üyesi: ebeveyn eğitimi (uygulandı 5 Kasım 2026; `migrations/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
+## 22. Gelişim › aile üyesi: ebeveyn eğitimi (**lansmanda kapalı**, bayrak `parent_training`, 27.4; uygulandı 5 Kasım 2026; `migrations/20261105200000_parent_lessons.sql`, `veritabani.md` 31, `durumlar.md` P20, taş `ekonomi.md` 5C)
 
 Amaç: ebeveynin kendi becerisi (ABA / davranışçı ebeveyn eğitimi tarzı kısa dersler; içerik sonra hazırlanır). Benchmark (5 Kasım 2026, ParentApp penceresi): Triple P (kısa oturum + ev ödevi), PCIT (günlük 5 dk ev pratiği), Good Inside (kısa video + senaryo), Kinedu / Lovevery (haftalık etkinlik), NOCD / Manatee (terapistin atadığı ödev), Duolingo / Khan (kısa ders, ilerleme), Joon Health (ebeveyn modülleri). İşleyiş referansıdır; içerik, karakter ve metin kopyalanmaz. **Kullanıcı kararları (5 Kasım 2026):** (a) "Bu haftanın becerisi" kartı: 3–5 dk ders + "Bu hafta dene" + 5 günlük nokta şeridi ("bu hafta 2/5 gün"; seri yok, kayıpsız), altında "Öğrendiğin beceriler"; uzmanın önerdiği ders "Uzmanının önerisi" etiketiyle önde. (b) Güneş Taşı uygulanan güne: "Bugün uyguladım" başına 1, haftada en çok 3, ebeveynin cüzdanına; hediyeyi ebeveyn bugünkü dükkândan seçer; dersi açmak taş getirmez. (c) Uzman yoksa ya da önermediyse ebeveyn kütüphaneden kendisi seçer; içerik gelene kadar "Yakında" kartı.
 
@@ -698,7 +698,7 @@ Kurallar: Dersler bilgi amaçlıdır, tanı ya da tedavi değildir; arayüzde pu
 
 Olaylar (ParentApp): `lesson.start` (`key`, `assigned`), `lesson.open` (`key`), `lesson.practice` (`key`, `on`, `stone`), `lesson.finish` (`key`).
 
-## 23. Ebeveyn eğitimi (uygulandı 9 Kasım 2026; ortak `migrations/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
+## 23. Ebeveyn eğitimi (**lansmanda kapalı**, bayrak `parent_training`, 27.4; uygulandı 9 Kasım 2026; ortak `migrations/20261110100000_parent_trainings.sql`, `veritabani.md` 32, `durumlar.md` P21)
 
 Kullanıcı isteği (9 Kasım 2026): rakibin "Parent training" ekranlarına ve kütüphanesine **sadık kal**; Takip planı aile programı (`care_modules`) ve 5 Kasım ders düzeniyle (22, `parent_lessons`) **birleştirilmedi**, "sonra değerlendiririz". İçerik `veri/ebeveyn_egitimi_kutuphane.json` (131 öğe: okuma, çoktan seçmeli test, açık uçlu; özgün Türkçe; gözden geçiren uzman bekliyor; video ve PDF yok).
 
@@ -866,4 +866,14 @@ Uyumluluk: eski Moyo yalnız `log_type` (ilk tür) alanını sorar; çok türlü
 
 ### 27.4 Ebeveyn eğitimi gizli (bayrak `parent_training`)
 
-Bayrak yoksa kapalı (`admin.md`). Kapalıyken Moyo Mercek'te danışan › Ebeveyn Eğitimi, Kaynak kütüphanesi'nden "Ebeveyn eğitimi olarak ata" ve eğitime giden yollar (Başlarken, tur, "Senin sıran" eğitim nedenleri, eğitim bildirimleri, cihaz içi eğitim hatırlatmaları), Moyo'da eğitim bölümleri (Ben › Görevlerin / Derslere devam et'in eğitim kısmı, Uzmanım'daki eğitim görevleri) gizlenir; veri ve işlevler durur. Sunucu bildirim motorunda eğitime yönelik kurallar (`clinic_training_none`, `clinic_training_draft`) bayrak kapalı kişiye gitmez (`nudge_rules.feature_flag`). Hangi ekranın gizleneceğini her uygulamanın penceresi kendi koduna göre belirler; Gelişim › Ben dersleri (22) ayrı özelliktir, bu bayrağa bağlanıp bağlanmayacağı Moyo penceresinin sorusudur. Kademeli açılış: önce tek kişiye `admin_set_user_flag(kullanıcı, 'parent_training', true, …)`, sonra `admin_set_flag('parent_training', true, yüzde, …)`.
+Bayrak yoksa kapalı (`admin.md`). **Kapsam (kullanıcı kararı 23 Kasım 2026: "eğitimle ilgili özellikler ve içerikler bütün platformlardan kaldırılsın, çalışmaz / görünmez olsun; ileride bir güncellemeyle yeniden açarız"):** uzmanın ebeveyn eğitimi (23) ve Moyo'nun kısa ebeveyn dersleri (22, Gelişim › Ben) birlikte bu bayrağa bağlıdır.
+
+| Katman | Bayrak kapalıyken | Kim |
+|---|---|---|
+| Moyo Mercek | danışan › Ebeveyn Eğitimi, Kaynak kütüphanesi (alt menü sekmesi, ana ekran satırı, "Ebeveyn eğitimi olarak ata"), Başlarken ve tur adımları, "Senin sıran" eğitim nedenleri, seans ayrıntısındaki eğitim bağlantısı, cihaz içi eğitim hatırlatmaları, üyelik paket listesindeki eğitim satırı, davet yardım metni ve hesap silme metnindeki eğitim sözleri gizli; karşılama anketinde "Aileye okuma, video ve çalışma kâğıdı göndermek" seçeneği yok (`veri/uzman_anketi.json`) | Moyo Mercek penceresi |
+| Moyo | Ben › Görevlerin / Derslere devam et / Önceki eğitimlerin, Uzmanım'daki eğitim görevleri, Gelişim › Ben dersleri, eğitim / ders bildirimine dokununca açılan yerler gizli | Moyo penceresi |
+| Sunucu (`proposed/20261123210000_parent_training_off.sql`, `veritabani.md` 41) | eğitim / ders bildirimleri (`training_assigned`, `training_mastered`, `training_reminder`, `training_activity`, `lesson_assigned`) yazılmaz, anlık bildirim gitmez; önceden yazılmışlar listede ve okunmamış sayısında görünmez; on eğitim / ders tablosu istemciye kapalı; aile ve uzmanın eğitim / ders işlevleri boş döner ya da reddeder (`feature_off`); bildirim motorunun eğitim kuralları (`clinic_training_none`, `clinic_training_draft`) gitmez; Moyo Mercek hunisinde "İlk Etkin eğitim" adımı yok (bayrak genelde açılınca geri gelir) | Koordinatör |
+| Tanıtım siteleri, mağaza görselleri | Mercek sitesi ve moyoapp.com.tr eğitimsiz (başlık, açılış, görseller, fiyat ve güvenlik sayfaları, Hakkımızda, Güven); M1 mağaza seti eğitimsiz | Moyo Mercek + tanıtım sayfaları penceresi; mağaza metni Marketing |
+| Yasal metinler | eğitim ve ders anlatımları taslaklardan çıktı; açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Açık rıza `uzman-paylasim-v1` değişmedi (`hukuk_notlari.md` S.7) | Koordinatör |
+
+Veri silinmez: kayıtlar durur, KVKK dökümü ve hesap silme eskisi gibi. Kademeli açılış: önce tek kişiye `admin_set_user_flag(kullanıcı, 'parent_training', true, …)` (uygulama, sunucu ve bildirim o kişi için açılır), sonra `admin_set_flag('parent_training', true, yüzde, …)`. Açmadan önce siteler, mağaza görselleri ve yasal metinler eğitimle yeniden güncellenir.

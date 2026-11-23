@@ -298,10 +298,12 @@ set role authenticated;
 select tst.as_mfa(tst.u('f3'));
 insert into tst.res values ('st', public.admin_nudge_stats('parent', current_date, current_date + 30)::jsonb);
 select tst.check(jsonb_array_length(tst.r('st')) = 8, 'Moyo: 8 kural satırı');
-select tst.check((select s - 'label' - 'category' from jsonb_array_elements(tst.r('st')) s where s ->> 'rule' = 'parent_child_none')
+select tst.check((select s - 'label' - 'category' - 'feature_flag' - 'flag_on' from jsonb_array_elements(tst.r('st')) s where s ->> 'rule' = 'parent_child_none')
                  = '{"rule": "parent_child_none", "enabled": true, "sent": 1, "opened": 1, "converted": 1, "holdout": 1, "holdout_converted": 0,
                      "lift_pct": 100.0, "skipped": {"limit": 1, "quiet": 0, "pref": 1}}'::jsonb,
                  'istatistik: gönderilen 1, açılan 1, geçen 1, karşılaştırma 1 (0 geçti) → fark 100 puan');
+select tst.check((select bool_and(s -> 'feature_flag' = 'null'::jsonb and (s ->> 'flag_on')::boolean) from jsonb_array_elements(tst.r('st')) s),
+                 'Moyo kuralları bayraksız (feature_flag boş, flag_on true)');
 select tst.check((select s -> 'lift_pct' from jsonb_array_elements(tst.r('st')) s where s ->> 'rule' = 'parent_inactive_7d') = 'null'::jsonb,
                  'karşılaştırma grubu yoksa fark null');
 select tst.check((select (s ->> 'sent')::int from jsonb_array_elements(public.admin_nudge_stats('clinic', current_date, current_date + 30)::jsonb) s

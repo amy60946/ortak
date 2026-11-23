@@ -954,3 +954,24 @@ Hatalar (ileti Türkçe, `hint` sabit anahtar): `no_access` (P0402 "Üyelik etki
 - `nudge_rules.feature_flag` (yeni sütun, boş olabilir): kural yalnız bu bayrağı açık kişiye gider (`flag_on`: kişiye istisna → genel bayrak + yüzde). `clinic_training_none` ve `clinic_training_draft` → `parent_training`; ötekiler boş. `nudge_try` bayrak kapalıysa `flag_off` döner ve kayıt yazmaz (bayrak açılınca kuralın süresi dolmamışsa gönderilir). `admin_nudge_rules()` `feature_flag`'i de döndürür. Moyo'da ebeveyn eğitimine / derslere yönelik kural yok.
 
 Ayrıca `finite_time_guard_attach()` yeni tabloya takılır.
+
+## 41. Ebeveyn eğitimi sunucuda kapalı (ÖNERİ `proposed/20261123210000_parent_training_off.sql`, 23 Kasım 2026; **uygulanmadı**; kullanıcı kararı 23 Kasım 2026; akış `akislar.md` 27.4, bayrak `admin.md`; test `test_parent_trainings.sql` 9, `test_parent_lessons.sql` son bölüm, `test_funnel_analytics.sql`)
+
+Bayrak `parent_training` (satır yoksa kapalı) uzmanın ebeveyn eğitimini (32) ve Moyo'nun kısa ebeveyn derslerini (31) sunucuda da açar / kapatır. Kişiye özel açılış (`user_flags`) o kişi için her şeyi açar.
+
+| Ne | Bayrak kapalıyken |
+|---|---|
+| `parent_training_on()` | çağıranın bayrağı (`flag_on(auth.uid(), 'parent_training')`); authenticated çağırır (politikalarda kullanılıyor) |
+| `parent_training_require()` | bayrak kapalıysa hata `feature_off` (42501); yalnız sunucu içi |
+| `parent_training_kinds()` | `training_assigned`, `training_mastered`, `training_reminder`, `training_activity`, `lesson_assigned` |
+| Tetikleyici `notifications_feature_gate` (BEFORE INSERT) | bu türlerden satır, **alıcının** bayrağı kapalıysa yazılmaz (anlık bildirim de gitmez) |
+| Politika "bildirim: kapalı özellik görünmez" (kısıtlayıcı, select) | bu türlerdeki eski satırlar listede, okunmamış sayısında ve canlı akışta görünmez; bayrak açılınca geri gelir |
+| Politika "eğitim: bayrak kapalıyken kapalı" (kısıtlayıcı, all) | `parent_trainings`, `parent_training_modules`, `parent_training_tasks`, `parent_training_logs`, `parent_training_todos`, `parent_training_data`, `parent_lessons`, `parent_lesson_assignments`, `parent_lesson_progress`, `parent_lesson_practice`: istemci okuyamaz, yazamaz (eski uygulama sürümü de) |
+| `training_family_actor`, `training_clinic_mine` | false → `family_training_module_complete`, `family_training_log`, `family_training_todo_set`, `clinic_training_remind` reddeder |
+| `parent_lesson_require` | `feature_off` → `family_lessons`, `parent_lesson_start`, `parent_lesson_open`, `parent_lesson_finish`, `parent_lesson_practice` reddeder |
+| `family_trainings`, `family_kept_trainings`, `clinic_parent_lessons` | boş liste |
+| `clinic_assign_lesson`, `clinic_withdraw_lesson` | `feature_off` |
+| `funnel_step_defs` (stable) | Moyo Mercek hunisinde `first_training` yalnız bayrak genelde açıkken (`feature_flag_global`) |
+| `admin_nudge_stats` | her kurala `feature_flag` ve `flag_on` (bayrak genelde açık mı) |
+
+Etkilenmeyen: sunucu işlevleri (KVKK dökümü `data_export_of`, hesap silme, "kayıtlar ailede kalır" tetikleyicileri) sahip yetkisiyle çalışır; veri silinmez.

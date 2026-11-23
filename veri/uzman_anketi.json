@@ -1,5 +1,5 @@
 {
-  "_doc": "Uzman karşılama anketi (kayıttan sonra bir kez, atlanamaz — kullanıcı kararı 28 Ekim 2026; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Meslekler 'group' ile 'groups' başlıkları altında listelenir (yalnız görünüm); liste 14 Kasım 2026'da kullanıcının verdiği Joon örneğine göre Türkiye'ye uyarlanarak genişledi (28 seçenek; eski anahtarlar korundu). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
+  "_doc": "Ebeveyn eğitimi lansmanda kapalı (kullanıcı kararı 23 Kasım 2026): 'features' içindeki parent_materials (\"Aileye okuma, video ve çalışma kâğıdı göndermek\") seçenekten çıktı; anahtar sunucuda geçerli kalır (eski yanıtlar), yönetim panelinin kopyası etiketi tutar; özellik açılınca geri eklenir. Uzman karşılama anketi (kayıttan sonra bir kez, atlanamaz — kullanıcı kararı 28 Ekim 2026; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Meslekler 'group' ile 'groups' başlıkları altında listelenir (yalnız görünüm); liste 14 Kasım 2026'da kullanıcının verdiği Joon örneğine göre Türkiye'ye uyarlanarak genişledi (28 seçenek; eski anahtarlar korundu). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
   "version": 1,
   "profession": {
     "title": "Mesleğin ne?",
@@ -63,8 +63,7 @@
       { "key": "parent_logging", "label": "Ebeveynin telefondan kısa gözlem kaydı", "icon": "phone-portrait-outline" },
       { "key": "reward_routines", "label": "Çocuğa ödüllü rutin ve görev sistemi", "icon": "star-outline" },
       { "key": "progress_report", "label": "Hedeflere göre ilerleme raporu", "icon": "bar-chart-outline" },
-      { "key": "report_export", "label": "Raporu PDF olarak almak", "icon": "document-text-outline" },
-      { "key": "parent_materials", "label": "Aileye okuma, video ve çalışma kâğıdı göndermek", "icon": "library-outline" }
+      { "key": "report_export", "label": "Raporu PDF olarak almak", "icon": "document-text-outline" }
     ]
   },
   "intent": {

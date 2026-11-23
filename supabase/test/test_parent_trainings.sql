@@ -15,6 +15,8 @@ grant usage on schema tst to authenticated;
 grant execute on all functions in schema tst to authenticated;
 
 -- anne a1 + baba a2 (aynı aile), başka aile b1; klinik sahibi d1, başka klinik e1
+insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, '{"nickname":"Baba"}'),
@@ -148,3 +150,64 @@ select tst.check(jsonb_array_length(public.family_trainings()) = 0, 'paylaşım 
 select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check((select count(*) from public.parent_training_logs) = 0, 'paylaşım bitince uzman kayıtları görmez');
 reset role;
+
+-- 9. bayrak kapalı (proposed/20261123210000_parent_training_off.sql): sunucuda da çalışmaz, görünmez; kişiye açılınca geri gelir
+create or replace function tst.fails(sql text, msg text) returns void language plpgsql as $$
+begin
+  begin
+    execute sql;
+  exception when others then
+    raise notice 'ok (beklenen hata): % → %', msg, sqlerrm;
+    return;
+  end;
+  raise exception 'TEST BAŞARISIZ (hata bekleniyordu): %', msg;
+end $$;
+grant execute on function tst.fails(text, text) to authenticated;
+create table if not exists tst.kv (k text primary key, v text);
+select tst.as_user(null);
+update public.clinic_links set status = 'active', revoked_at = null where id = '00000000-0000-0000-0000-0000000011a1';
+update public.parent_trainings set status = 'active', mastered_at = null where id = '00000000-0000-0000-0000-0000000070a1';
+delete from public.feature_flags where key = 'parent_training';
+insert into tst.kv select 'n_before', (select count(*) from public.notifications)::text;
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.check(not public.parent_training_on(), 'bayrak satırı yok: kapalı');
+select tst.check(jsonb_array_length(public.family_trainings()) = 0 and jsonb_array_length(public.family_kept_trainings()) = 0,
+                 'aile listesi boş');
+select tst.check((select count(*) from public.parent_trainings) = 0 and (select count(*) from public.parent_training_modules) = 0
+             and (select count(*) from public.parent_training_logs) = 0, 'aile tabloları okuyamaz');
+select tst.fails($$select public.family_training_module_complete('00000000-0000-0000-0000-0000000071a1')$$, 'aile modül tamamlayamaz');
+select tst.fails($$select public.family_training_log('00000000-0000-0000-0000-0000000072a1', current_date, 1)$$, 'aile uygulama kaydı yazamaz');
+select tst.fails($$select public.family_training_todo_set('00000000-0000-0000-0000-0000000073a1', true)$$, 'aile yapılacağı işaretleyemez');
+select tst.check((select count(*) from public.notifications where kind = any (public.parent_training_kinds())) = 0,
+                 'eski eğitim bildirimleri aileye görünmez (liste ve okunmamış sayısı)');
+select tst.check((select count(*) from public.notifications) > 0, 'öteki bildirimler görünür');
+select tst.as_user('00000000-0000-0000-0000-0000000000d1');
+select tst.check((select count(*) from public.parent_trainings) = 0 and (select count(*) from public.parent_training_data) = 0,
+                 'uzman eğitimleri okuyamaz');
+select tst.fails($$insert into public.parent_trainings (clinic_id, link_id, title)
+                   values (public.my_clinic_id(), '00000000-0000-0000-0000-0000000011a1', 'Yeni')$$, 'uzman eğitim oluşturamaz (eski sürüm de)');
+select tst.check((select count(*) from public.parent_trainings where id = '00000000-0000-0000-0000-0000000070a1') = 0, 'uzman güncelleyecek satırı da görmez');
+select tst.fails($$select public.clinic_training_remind('00000000-0000-0000-0000-0000000070a1')$$, 'uzman hatırlatma gönderemez');
+select tst.check((select count(*) from public.notifications where kind = 'training_activity') = 0, 'uzmana eski etkinlik bildirimi görünmez');
+reset role;
+-- sunucu tetikleyicisi yine çalışsa da (sahip yetkisiyle) bildirim yazılmaz
+select tst.as_user(null);
+update public.parent_trainings set status = 'mastered' where id = '00000000-0000-0000-0000-0000000070a1';
+select public.notify_parents((select family_id from public.clinic_links where id = '00000000-0000-0000-0000-0000000011a1'),
+  'lesson_assigned', 'Deneme', 'Deneme', '{}'::jsonb, null);
+select tst.check((select count(*) from public.notifications) = (select v::int from tst.kv where k = 'n_before'),
+                 'bayrak kapalıyken eğitim / ders bildirimi yazılmaz (anlık bildirim de gitmez)');
+-- yalnız bir kişiye açılınca o kişi görür, öteki görmez
+insert into public.user_flags (user_id, key, enabled, reason) values ('00000000-0000-0000-0000-0000000000a1', 'parent_training', true, 'deneme');
+set role authenticated;
+select tst.as_user('00000000-0000-0000-0000-0000000000a1');
+select tst.check(public.parent_training_on() and jsonb_array_length(public.family_trainings()) = 1, 'kişiye açılınca eğitim geri gelir');
+select tst.check((select count(*) from public.notifications where kind = any (public.parent_training_kinds())) > 0, 'kişiye açılınca eski bildirimler görünür');
+select tst.as_user('00000000-0000-0000-0000-0000000000a2');
+select tst.check(not public.parent_training_on() and jsonb_array_length(public.family_trainings()) = 0, 'öteki ebeveyn için kapalı kalır');
+reset role;
+select tst.check(not has_function_privilege('anon', 'public.parent_training_on()', 'execute')
+             and not has_function_privilege('authenticated', 'public.parent_training_require()', 'execute')
+             and not has_function_privilege('authenticated', 'public.feature_flag_global(text)', 'execute')
+             and not has_function_privilege('authenticated', 'public.notifications_feature_gate()', 'execute'), 'yardımcı yetkileri');
