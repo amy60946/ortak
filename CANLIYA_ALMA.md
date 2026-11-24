@@ -98,6 +98,7 @@ Karar: Resend ücretsiz (22 Ekim). Ücretsiz plan 1 alan adı verir; ikimize `mo
 - (Claude) Üç uygulamada görünür "Hesabımı sil" + web talep sayfası · ParentApp yapıldı (2 Kasım: Aile › Hesap'ta Çıkış Yap'ın altında ayrı satır)
 - (Claude) Oyun: bağlantı kopunca/aile silinince yerel kayıt temizliği
 - (Claude) Aktif abonelikte "Apple'dan iptal edin" uyarısı · ParentApp yapıldı (2 Kasım: sunucu + RevenueCat durumu, uygulama içi abonelik yönetimi; silme serbest)
+- (Claude) Silmeden önce şifre yeniden sorulur (kullanıcı isteği 24 Kasım 2026; `sozlesme/akislar.md` 28): Moyo ve Moyo Mercek son adımda şifreyi ister. Sunucu kuralı `proposed/20261124100000_delete_recent_login.sql`; bayrak `delete_recent_login` uygulamaların şifre soran sürümleri yayınlandıktan sonra açılır (önce tek hesapta denenir)
 
 ### 1.8 Ödeme (RevenueCat) — **iki uygulama için tek hesap, tek proje "Moyo"** (kullanıcı isteği 10 Kasım 2026; ParentApp + Klinik pencereleri birlikte)
 Karar: ParentApp ve ClinicApp ödemesi RevenueCat (22 Ekim; klinik sahibi birey olarak öder; iyzico yok). Ortaktaki `supabase/functions/billing-webhook` ikisini tek uçtan işler (aile → `family_subscriptions`, klinik → `billing_apply`). Proje genelinde entitlement ve offering listesi ortaktır: **ParentApp** entitlement `premium` + offering `default`; **ClinicApp** entitlement `clinic` + offering `clinic` (`getOfferings().all['clinic']`, `current` değil). İki uygulamada `appUserID` = Supabase kullanıcı kimliği. **Mağaza ücretsiz denemesi (intro offer) iki uygulamada da eklenmez:** deneme sunucuda ve kartsız (ParentApp 7 gün, ClinicApp 14 gün; ortak#172).
@@ -134,6 +135,7 @@ D. Uygulamalar ve deneme
 
 ### 1.10 Güvenlik ve işletme
 - ✓ RLS + sızma testleri, anon kapalı, hız sınırları
+- (Siz) **Sızdırılmış şifre koruması** (24 Kasım 2026; tarayıcının "bu şifre bir veri ihlalinde bulundu" uyarısı üzerine): Supabase › Authentication › Sign In / Providers › Email: **Prevent use of leaked passwords** açık (Pro plan ister), **Minimum password length** 8, **Password requirements** "Letters and digits". Üç uygulamayı ve yönetim panelini birden etkiler (tek proje). Var olan hesaplar etkilenmez; zayıf şifreli hesap girişte uygulamadan "şifreni yenile" önerisi alır (`akislar.md` 28)
 - (Siz + Claude) Staging Supabase projesi
 - (Siz) Günlük yedek + PITR + bir geri yükleme denemesi
 - (Claude) İzleme ve alarm (sunucu, Edge Function, webhook) — **yazıldı**: `ops_health` + Edge Function `health` + panel Sistem sağlığı + saatlik GitHub yoklaması (`.github/workflows/saglik.yml`); kalan: (Siz) SQL + `health` yayını, isteğe bağlı Sentry Uptime

@@ -368,11 +368,11 @@ Gün sayısı metne sabit yazılmaz (`{gün}`); deneme süresi aileye göre değ
 
 | Uygulama | Ekran | Bağlı belge |
 |---|---|---|
-| Moyo Ebeveyn | Davranış kaydı ekranının altı (sabit); ~~Uzmanım ekranının altı~~ (3 Kasım 2026 kullanıcı kararıyla kaldırıldı); Yardım ve iletişim | `kosullar-parentapp` |
+| Moyo Ebeveyn | ~~Davranış kaydı ekranının altı; Yardım ve iletişim~~ (**24 Kasım 2026 kullanıcı kararıyla kaldırıldı:** "yardım hizmeti değildir, acil durum, 112'yi ara gibi bilgilendirmelerin hepsi bütün uygulamalardan ve tanıtım sayfalarından kalksın"); ~~Uzmanım ekranının altı~~ (3 Kasım 2026) | `kosullar-parentapp` |
 
-> Moyo bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.
+> ~~Moyo bir acil yardım hizmeti değildir. Çocuğunun ya da başka birinin güvenliği tehlikedeyse hemen **112**'yi ara. Davranış kaydın uzmanına anında ulaşmayabilir.~~ (ekranlarda gösterilmez; sınır Moyo Ebeveyn Kullanım Koşulları 3.2'de ve Moyo Oyun Kullanım Koşulları 2.4'te durur)
 
-*Öneri (avukat dosyası, kullanıcı kararı bekler):* kısa biçim §15 satır 4 ("Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara."), davranış kaydı ekranında ve Yardım'da aynı metin.
+*Karar (kullanıcı, 24 Kasım 2026):* kısa biçim de (§15 satır 4) kullanılmaz; üç uygulamada ve tanıtım sayfalarında acil durum / 112 notu yok. Açık soru: kayıt onay satırındaki "acil durum hizmeti değildir" sözü (§15 satır 1) sözleşme onayının parçasıdır, kullanıcıya soruldu (`hukuk_notlari.md` T.3).
 
 **Moyo Mercek:** ekranlarda acil durum notu yok (kullanıcı kararı 3 Kasım 2026: uzman arayüzünde sınır uyarısı tekrarlanmaz). Sınır Uzman Hizmet Sözleşmesi 3.4 ve 3.4-a'da (acil durum ve kriz izleme hizmeti değildir; kayıtlar gecikmeyle ulaşabilir).
 
@@ -535,7 +535,7 @@ Kaynak: avukat dosyası ("takip platformu" konumu; `sozlesme/hukuk_notlari.md` M
 | 1 | Moyo Ebeveyn kayıt onayı: tek satır, kutuyla (§1.1) | "Moyo bir takip aracıdır; sağlık hizmeti, tanı ya da acil durum hizmeti değildir. Koşulları okudum ve kabul ediyorum." | Koruyucu maddelerin açıkça onaylanması | Öneri, kullanıcı kararı bekler |
 | 2 | Moyo Ebeveyn serbest metin alanları: not, davranış kaydı, onay notu (alan ipucu); ebeveyn eğitimi yanıtı yalnız bayrak `parent_training` açıkken | "Gözlemini yaz. Tanı, ilaç ya da sağlık bilgisi yazma." | Özel nitelikli veri girişini kaynağında azaltır; bugün yok | Öneri, kullanıcı kararı bekler |
 | 3 | Uzmanla paylaşım onayı (Moyo Ebeveyn; §12 sonu, `uzman-paylasim-v1` ekranı) | "Paylaşılanlar uygulamada bıraktığın kayıtlardır. Paylaşımı istediğin an kapatabilirsin." | Kayıtların kullanıcıya ait olduğunu, kararın ebeveynde olduğunu gösterir | Öneri, kullanıcı kararı bekler |
-| 4 | Davranış kaydı ekranı ve Yardım (Moyo Ebeveyn; §9) | "Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara." | Bugün yalnız bir ekranda; Yardım'da da durmalı | Öneri, kullanıcı kararı bekler (§9'daki uzun metnin kısa biçimi) |
+| 4 | Davranış kaydı ekranı ve Yardım (Moyo Ebeveyn; §9) | "Moyo acil durum hizmeti değildir. Acil durumda 112'yi ara." | Bugün yalnız bir ekranda; Yardım'da da durmalı | **Kaldırıldı (kullanıcı kararı 24 Kasım 2026, §9):** hiçbir ekranda gösterilmez |
 | 5 | Moyo Mercek kayıt onayı (§1.2) | "Moyo Mercek bir takip panelidir. Mesleki değerlendirme ve kayıt tutma yükümlülüğü sizdedir." | Rol ayrımının uzmanca onaylanması | Öneri, kullanıcı kararı bekler; 3 Kasım 2026 kararıyla çelişebilir |
 | 6 | Moyo Mercek not ve hedef alanları (§12) | "Çalışma notu. Tanı, ilaç ve kimlik bilgisi yazmayın; resmî kaydınızı kendi sisteminizde tutun." | Bugün yalnız "kimlik bilgisi yazma" | Öneri, kullanıcı kararı bekler; 3 Kasım 2026 kararıyla çelişebilir |
 | 7 | Dışa aktarılan rapor, ilerleme notu ve CSV'nin alt satırı (Moyo Mercek; §13) | "Ailenin uygulamada bıraktığı kayıtların özetidir; tanı ya da değerlendirme değildir." | — | **Uygulandı** (Moyo Mercek, 14 Kasım 2026) |

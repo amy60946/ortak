@@ -1,9 +1,9 @@
 {
-  "_doc": "Ebeveyn eğitimi lansmanda kapalı (kullanıcı kararı 23 Kasım 2026): 'features' içindeki parent_materials (\"Aileye okuma, video ve çalışma kâğıdı göndermek\") seçenekten çıktı; anahtar sunucuda geçerli kalır (eski yanıtlar), yönetim panelinin kopyası etiketi tutar; özellik açılınca geri eklenir. Uzman karşılama anketi (kayıttan sonra bir kez, atlanamaz — kullanıcı kararı 28 Ekim 2026; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Meslekler 'group' ile 'groups' başlıkları altında listelenir (yalnız görünüm); liste 14 Kasım 2026'da kullanıcının verdiği Joon örneğine göre Türkiye'ye uyarlanarak genişledi (28 seçenek; eski anahtarlar korundu). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
-  "version": 1,
+  "_doc": "Dil sadeleşti (kullanıcı isteği 24 Kasım 2026: günlük dil, devrik cümle yok; anahtarlar aynı, yalnız başlık / ipucu / etiket metinleri değişti; plan_templates etiketi Takip Planı kapalı olduğu için hazır rutine göre yazıldı). Ebeveyn eğitimi lansmanda kapalı (kullanıcı kararı 23 Kasım 2026): 'features' içindeki parent_materials (\"Aileye okuma, video ve çalışma kâğıdı göndermek\") seçenekten çıktı; anahtar sunucuda geçerli kalır (eski yanıtlar), yönetim panelinin kopyası etiketi tutar; özellik açılınca geri eklenir. Uzman karşılama anketi (kayıttan sonra bir kez, atlanamaz — kullanıcı kararı 28 Ekim 2026; kullanıcı isteği 27 Ekim 2026; sozlesme/akislar.md 15). Meslekler 'group' ile 'groups' başlıkları altında listelenir (yalnız görünüm); liste 14 Kasım 2026'da kullanıcının verdiği Joon örneğine göre Türkiye'ye uyarlanarak genişledi (28 seçenek; eski anahtarlar korundu). Anahtarlar sunucuda (clinician_survey_save) denetlenir; değişince SQL'deki listeler de güncellenir. ClinicApp kopyası src/data/survey.json (node tools/sync-survey.mjs <ortak>/veri/uzman_anketi.json). 'icon': Ionicons adı. Meslek anahtarları uzman_meslekleri.json ile aynıdır, ankete özgü ekler 'survey_only'.",
+  "version": 2,
   "profession": {
     "title": "Mesleğin ne?",
-    "hint": "Unvanına en yakın olanı seç. Sana uygun şablonları ve örnekleri öne çıkaralım.",
+    "hint": "Sana en yakın olanı seç. Örnekleri mesleğine göre gösteririz.",
     "groups": [
       { "key": "mental", "label": "Ruh sağlığı" },
       { "key": "medical", "label": "Hekim ve hemşire" },
@@ -44,36 +44,36 @@
     ]
   },
   "challenges": {
-    "title": "Ailelerle çalışırken en çok neyde zorlanıyorsun?",
-    "hint": "Birden çok seçebilirsin.",
+    "title": "Ailelerle çalışırken en çok ne zorluyor?",
+    "hint": "Birden fazla seçebilirsin.",
     "options": [
-      { "key": "home_followthrough", "label": "Ailenin evde düzenli uygulaması", "icon": "home-outline" },
-      { "key": "home_data", "label": "Evden güvenilir gözlem bilgisi almak", "icon": "clipboard-outline" },
-      { "key": "unpaid_time", "label": "Seans dışında aileye ayırdığım ücretsiz zaman", "icon": "time-outline" },
-      { "key": "no_system", "label": "Aile çalışması için düzenli bir sistemim olmaması", "icon": "folder-open-outline" },
-      { "key": "between_sessions", "label": "Seanslar arasında aileyle iletişim", "icon": "chatbubbles-outline" },
-      { "key": "progress_report", "label": "İlerlemeyi ölçmek ve aileye göstermek", "icon": "trending-up-outline" }
+      { "key": "home_followthrough", "label": "Aileler evde düzenli uygulamıyor", "icon": "home-outline" },
+      { "key": "home_data", "label": "Evde ne olduğunu tam öğrenemiyorum", "icon": "clipboard-outline" },
+      { "key": "unpaid_time", "label": "Seans dışında ailelere çok zaman ayırıyorum", "icon": "time-outline" },
+      { "key": "no_system", "label": "Aile takibini düzenli tutacak bir sistemim yok", "icon": "folder-open-outline" },
+      { "key": "between_sessions", "label": "Seanslar arasında aileyle iletişim kopuyor", "icon": "chatbubbles-outline" },
+      { "key": "progress_report", "label": "İlerlemeyi ölçmek ve aileye göstermek zor", "icon": "trending-up-outline" }
     ]
   },
   "features": {
-    "title": "Hangileri işine en çok yarar?",
-    "hint": "Birden çok seçebilirsin.",
+    "title": "Hangi özellikler işine yarar?",
+    "hint": "Birden fazla seçebilirsin.",
     "options": [
-      { "key": "plan_templates", "label": "Hazır hedef ve aile programı şablonları", "icon": "albums-outline" },
-      { "key": "parent_logging", "label": "Ebeveynin telefondan kısa gözlem kaydı", "icon": "phone-portrait-outline" },
-      { "key": "reward_routines", "label": "Çocuğa ödüllü rutin ve görev sistemi", "icon": "star-outline" },
-      { "key": "progress_report", "label": "Hedeflere göre ilerleme raporu", "icon": "bar-chart-outline" },
-      { "key": "report_export", "label": "Raporu PDF olarak almak", "icon": "document-text-outline" }
+      { "key": "plan_templates", "label": "Aileye hazır rutin önermek", "icon": "albums-outline" },
+      { "key": "parent_logging", "label": "Ebeveynin telefondan davranış kaydı girmesi", "icon": "phone-portrait-outline" },
+      { "key": "reward_routines", "label": "Çocuğun rutinlerini oyunla ve ödülle takip etmesi", "icon": "star-outline" },
+      { "key": "progress_report", "label": "Evdeki kayıtlardan ilerleme raporu almak", "icon": "bar-chart-outline" },
+      { "key": "report_export", "label": "Raporu PDF olarak indirmek", "icon": "document-text-outline" }
     ]
   },
   "intent": {
-    "title": "Seni ClinicApp'e ne getirdi?",
-    "hint": "En önemli nedenini seç; ilk adımı buna göre önereceğiz.",
+    "title": "Moyo Mercek'i neden denemek istiyorsun?",
+    "hint": "En önemli nedeni seç. İlk adımı buna göre öneririz.",
     "options": [
-      { "key": "trial", "label": "Birkaç ailede ücretsiz denemek", "icon": "flask-outline" },
-      { "key": "family", "label": "Çalıştığım bir aileyi bağlamak", "icon": "link-outline" },
-      { "key": "team", "label": "Kliniğimin ekibine katılmak", "icon": "people-outline" },
-      { "key": "org", "label": "Kliniğimde aile çalışmasını tek düzene almak", "icon": "business-outline" }
+      { "key": "trial", "label": "Birkaç aileyle ücretsiz denemek istiyorum", "icon": "flask-outline" },
+      { "key": "family", "label": "Çalıştığım bir aileyi eklemek istiyorum", "icon": "link-outline" },
+      { "key": "team", "label": "Çalıştığım kliniğin ekibine katılacağım", "icon": "people-outline" },
+      { "key": "org", "label": "Kliniğimde aile takibini tek yerden yürütmek istiyorum", "icon": "business-outline" }
     ]
   }
 }
