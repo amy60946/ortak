@@ -1,5 +1,5 @@
 {
- "_doc": "Hazır günlük rutinler (kullanıcı isteği 27 Ekim 2026; yaş grubuna göre yeniden yapılandırma kullanıcı kararı 28 Ekim 2026, akislar.md 5.4). Her rutin bir yaş grubu aralığı için ('ages': K ≤5 · A 6–8 · B 9–12 · C 13+, durumlar.md §4); aynı konunun ('theme') yaşa göre birden çok sürümü olabilir (ör. morning-k, morning, morning-c). Uygulamalar çocuğun yaş grubuna uyan sürümü gösterir; yaş grubu bilinmiyorsa hepsi, yaş grubuyla etiketli. Bir rutindeki her görevin katalog yaşları (veri/gorev_sablonlari.json 'ages') rutinin bütün yaş gruplarını kapsar: tools/check_routines.py denetler. Görevler gorev_sablonlari.json anahtarlarıyla; 'time' hatırlatma saati, 'repeat': weekdays = hafta içi (Pzt–Cum), daily = her gün, weekly = her görevin 'days' günleri (1 = Pzt … 7 = Paz). Rutin ebeveyne tek paket olarak önerilir; kabul edilince her görev ayrı görev olur (inceleme ve oyunda ayrı ayrı; akislar.md 5.4). Sürüm 1'in kimlikleri (morning, afterschool, evening, chores, family, weekend) korunur. ClinicApp kopyası src/data/routines.json (node tools/sync-routines.mjs <ortak>/veri/hazir_rutinler.json); ParentApp aynı dosyadan üretir.",
+ "_doc": "Ad değişikliği (kullanıcı kararı 24 Kasım 2026): \"Güne hazır sabah\" → \"Sabah rutini\", \"Sakin akşam\" → \"Sakin bir akşam\" (anahtarlar ve içerik aynı; ailede ekli eski rutinlerin adı değişmez). Hazır günlük rutinler (kullanıcı isteği 27 Ekim 2026; yaş grubuna göre yeniden yapılandırma kullanıcı kararı 28 Ekim 2026, akislar.md 5.4). Her rutin bir yaş grubu aralığı için ('ages': K ≤5 · A 6–8 · B 9–12 · C 13+, durumlar.md §4); aynı konunun ('theme') yaşa göre birden çok sürümü olabilir (ör. morning-k, morning, morning-c). Uygulamalar çocuğun yaş grubuna uyan sürümü gösterir; yaş grubu bilinmiyorsa hepsi, yaş grubuyla etiketli. Bir rutindeki her görevin katalog yaşları (veri/gorev_sablonlari.json 'ages') rutinin bütün yaş gruplarını kapsar: tools/check_routines.py denetler. Görevler gorev_sablonlari.json anahtarlarıyla; 'time' hatırlatma saati, 'repeat': weekdays = hafta içi (Pzt–Cum), daily = her gün, weekly = her görevin 'days' günleri (1 = Pzt … 7 = Paz). Rutin ebeveyne tek paket olarak önerilir; kabul edilince her görev ayrı görev olur (inceleme ve oyunda ayrı ayrı; akislar.md 5.4). Sürüm 1'in kimlikleri (morning, afterschool, evening, chores, family, weekend) korunur. ClinicApp kopyası src/data/routines.json (node tools/sync-routines.mjs <ortak>/veri/hazir_rutinler.json); ParentApp aynı dosyadan üretir.",
  "version": 2,
  "routines": [
   {
@@ -8,7 +8,7 @@
    "ages": [
     "K"
    ],
-   "title": "Güne hazır sabah",
+   "title": "Sabah rutini",
    "subtitle": "Okul ve kreş sabahları",
    "icon": "sunny-outline",
    "tint": "#FFF1D6",
@@ -47,7 +47,7 @@
     "A",
     "B"
    ],
-   "title": "Güne hazır sabah",
+   "title": "Sabah rutini",
    "subtitle": "Okul sabahları",
    "icon": "sunny-outline",
    "tint": "#FFF1D6",
@@ -85,7 +85,7 @@
    "ages": [
     "C"
    ],
-   "title": "Güne hazır sabah",
+   "title": "Sabah rutini",
    "subtitle": "Okul sabahları, kendi başına",
    "icon": "sunny-outline",
    "tint": "#FFF1D6",
@@ -226,7 +226,7 @@
    "ages": [
     "K"
    ],
-   "title": "Sakin akşam",
+   "title": "Sakin bir akşam",
    "subtitle": "Uyku öncesi",
    "icon": "moon-outline",
    "tint": "#ECE8FF",
@@ -265,7 +265,7 @@
     "A",
     "B"
    ],
-   "title": "Sakin akşam",
+   "title": "Sakin bir akşam",
    "subtitle": "Uyku öncesi",
    "icon": "moon-outline",
    "tint": "#ECE8FF",
@@ -303,7 +303,7 @@
    "ages": [
     "C"
    ],
-   "title": "Sakin akşam",
+   "title": "Sakin bir akşam",
    "subtitle": "Uyku öncesi, ekransız son yarım saat",
    "icon": "moon-outline",
    "tint": "#ECE8FF",

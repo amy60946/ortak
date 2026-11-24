@@ -877,3 +877,17 @@ Bayrak yoksa kapalı (`admin.md`). **Kapsam (kullanıcı kararı 23 Kasım 2026:
 | Yasal metinler | eğitim ve ders anlatımları taslaklardan çıktı; açılırken `hukuk/ek-ebeveyn-egitimi.md`'den geri eklenir (yeni sürüm). Açık rıza `uzman-paylasim-v1` değişmedi (`hukuk_notlari.md` S.7) | Koordinatör |
 
 Veri silinmez: kayıtlar durur, KVKK dökümü ve hesap silme eskisi gibi. Kademeli açılış: önce tek kişiye `admin_set_user_flag(kullanıcı, 'parent_training', true, …)` (uygulama, sunucu ve bildirim o kişi için açılır), sonra `admin_set_flag('parent_training', true, yüzde, …)`. Açmadan önce siteler, mağaza görselleri ve yasal metinler eğitimle yeniden güncellenir.
+
+## 28. Şifre güvenliği ve hesap silmede şifre (24 Kasım 2026; kullanıcı isteği; sunucu ÖNERİ `proposed/20261124100000_delete_recent_login.sql`, **uygulanmadı**; `veritabani.md` 42, bayrak `admin.md`, hukuk `hukuk_notlari.md` T.4–T.5)
+
+**Olgu:** şifreler yalnız Supabase Auth'a gider (HTTPS; `signUp`, `signInWithPassword`, `updateUser`) ve orada tek yönlü özet olarak saklanır. Bizim tablolarımızda, işlevlerimizde, kullanım kaydında (`track_events`) ve yönetim panelinde şifre yoktur; panel yalnız "şifre sıfırlama e-postası gönder" der. Tarayıcının "şifre bir veri ihlalinde bulundu" uyarısı tarayıcının kendi denetimidir (yazılan şifre başka sitelerin sızıntı listelerinde var); sitemizde bir sızıntıyı göstermez.
+
+| # | Kim | Adım | Sunucu |
+|---|---|---|---|
+| 1 | Kullanıcı (Supabase paneli) | Sızdırılmış şifre koruması + en az 8 karakter + harf ve rakam (`CANLIYA_ALMA.md` 1.10). Kayıt ve şifre değiştirmede sızdırılmış / zayıf şifre reddedilir | Auth hata kodu `weak_password` (nedenler `length`, `characters`, `pwned`) |
+| 2 | [P] [K] | Kayıt ve "Yeni şifre" ekranında `weak_password` nedenine göre metin: `pwned` → "Bu şifre başka sitelerdeki sızıntı listelerinde var. Güvenliğin için başka bir şifre seç."; öteki → "Şifre en az 8 karakter olmalı, harf ve rakam içermeli." Şifre alanlarında kayıtta `new-password`, girişte `current-password` (tarayıcı güçlü şifre önerebilsin; bugün böyle) | — |
+| 3 | [P] [K] | Girişte `signInWithPassword` yanıtında `weakPassword` gelirse (eski hesap, şifresi artık kurala uymuyor) giriş sürer, bir kez "Şifren güvenli değil; yenilemek ister misin?" önerisi (Şimdi yenile / Sonra) | — |
+| 4 | [P] [K] | **Hesabı sil, son adım:** uyarı metninden sonra şifre penceresi ("Hesabını silmek için şifreni gir"). Uygulama `signInWithPassword(e-posta, şifre)` çağırır; yanlışsa "Şifre yanlış" der ve silmez; doğruysa hemen `delete_account()` | `delete_account()`; bayrak `delete_recent_login` açıkken oturumda son 10 dakikada şifreyle giriş yoksa hata ipucu `recent_login_required` (uygulama şifre penceresini yeniden açar) |
+
+Sıra: önce uygulamaların şifre soran sürümleri yayınlanır, sonra SQL uygulanır ve bayrak önce tek hesapta, sonra herkese açılır. Bayrak kapalıyken eski sürümler eskisi gibi siler. Çocuk cihazının anonim hesabında şifre yoktur; denetim uygulanmaz.
+

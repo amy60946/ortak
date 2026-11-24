@@ -975,3 +975,13 @@ Bayrak `parent_training` (satır yoksa kapalı) uzmanın ebeveyn eğitimini (32)
 | `admin_nudge_stats` | her kurala `feature_flag` ve `flag_on` (bayrak genelde açık mı) |
 
 Etkilenmeyen: sunucu işlevleri (KVKK dökümü `data_export_of`, hesap silme, "kayıtlar ailede kalır" tetikleyicileri) sahip yetkisiyle çalışır; veri silinmez.
+
+## 42. Hesap silmede yeni giriş şartı (ÖNERİ `proposed/20261124100000_delete_recent_login.sql`, 24 Kasım 2026; **uygulanmadı**; akış `akislar.md` 28; test `test_delete_recent_login.sql`)
+
+| Ne | Davranış |
+|---|---|
+| `recent_password_login(p_minutes default 10) → boolean` | Çağıranın oturum belirtecindeki `amr` listesinde son `p_minutes` dakikada `password` yöntemi var mı (ileri tarihli ve bozuk kayıt sayılmaz). authenticated çağırır; yalnız kendi oturumunu söyler |
+| `delete_account()` | Bayrak `delete_recent_login` çağıran için açıksa ve hesap anonim değilse, `recent_password_login(10)` yoksa reddeder: 42501, ipucu `recent_login_required`. Bayrak kapalıyken önceki davranış |
+
+Şifre SQL'e gönderilmez (sunucu günlüklerine düşmez); denetim Supabase Auth'un imzaladığı oturum belirtecine dayanır.
+
