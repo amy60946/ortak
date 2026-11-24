@@ -49,7 +49,7 @@ grant all on tst.kv to authenticated;
 grant execute on all functions in schema tst to authenticated;
 
 insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
-  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (migrations/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, '{"nickname":"Baba"}'),
@@ -227,7 +227,7 @@ select tst.check(not has_function_privilege('anon', 'public.family_lessons()', '
   and not has_function_privilege('authenticated', 'public.parent_lesson_week_stones(uuid, uuid, date)', 'execute'),
   'anon çağıramaz; iç hesap istemciye kapalı');
 
--- bayrak kapalı (proposed/20261123210000_parent_training_off.sql): dersler sunucuda da çalışmaz, görünmez
+-- bayrak kapalı (migrations/20261123210000_parent_training_off.sql): dersler sunucuda da çalışmaz, görünmez
 reset role;
 select tst.as_user(null);
 delete from public.feature_flags where key = 'parent_training';

@@ -1,5 +1,5 @@
 -- Moyo Mercek 23 Kasım güncellemeleri (migrations/20261123100000_mercek_updates.sql):
---   1 seans ücreti (yazma, kapsam, geçersiz değer; aile yalnız aileye gösterilen randevuda görür: proposed/20261123200000)
+--   1 seans ücreti (yazma, kapsam, geçersiz değer; aile yalnız aileye gösterilen randevuda görür: migrations/20261123200000)
 --   2 çoklu kayıt türü (log_type ↔ log_types iki yönlü; olay formu seçili her türün alanını ister; olayda türlerin kopyası)
 --   3 raporu aileye gönder (bildirim, uzman listesi, aile arşivi ve sayfa, içerik biçimi, boyut, günlük sınır, ret yolları, RLS)
 --   4 ebeveyn eğitimi bayrağı: bildirim motorunun eğitim kuralları bayrak kapalıyken göndermez
@@ -165,7 +165,7 @@ select tst.check((select fee from public.clinic_sessions where id = tst.id('ser2
 select tst.expect(format('select public.clinic_session_update(%L, %L::jsonb, %L)', tst.id('ser1'), '{"fee": "x"}', 'one'), 'fee_invalid', 'düzeltmede geçersiz ücret');
 select tst.check((select fee from public.clinic_sessions where id = tst.id('ser1')) = 350, 'reddedilen düzeltme ücreti değiştirmez');
 
--- aile ücreti yalnız aileye gösterilen randevuda görür (proposed/20261123200000_session_fee_family.sql)
+-- aile ücreti yalnız aileye gösterilen randevuda görür (migrations/20261123200000_session_fee_family.sql)
 select tst.as_user(tst.u('a1'));
 select tst.check(json_array_length(public.family_sessions()) = 4, 'aile yalnız aileye gösterilen randevuları görür (s1 + seri 3)');
 select tst.check((select (e->>'fee')::numeric from json_array_elements(public.family_sessions()) e where (e->>'id')::uuid = tst.id('s1')) = 450.50

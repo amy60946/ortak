@@ -657,7 +657,7 @@ Seans uzmanın kendi kaydıdır. Tablolara **yalnız okuma** politikası var; ya
 | `clinic_waitlist_save(link, note?, remove?)`, `clinic_waitlist_offer(waitlist, starts_at, duration, room?, hours)` | uzman | bekleme listesi; teklif `status='offered'`, aileye `session_offer` |
 | `clinic_calendar_feed(action 'get'\|'rotate'\|'set'\|'delete', initials?)` | uzman | abonelik belirteci; adres `…/functions/v1/calendar-feed?t=<belirteç>` |
 | `clinic_calendar_source_save(url, label?, remove?)`, `clinic_external_event_mark(event, link?, kind, mode, ignore?)` | uzman | dış takvim; eşitleme Edge Function `calendar-import` (POST, oturumla) |
-| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders; `fee` (seans ücreti, TL ya da null; ÖNERİ `proposed/20261123200000_session_fee_family.sql`, 40.1) |
+| `family_sessions(from?, to?) → json[]` | ebeveyn | etkin paylaşımın görünür randevuları (−60 … +180 gün; süresi geçmiş teklif yok): id, link_id, child_id, child, clinician, clinic, starts_at, duration_min, kind, kind_label, mode, room, location, status, family_response, family_note, booked_by, offer_expires_at, series, reminders; `fee` (seans ücreti, TL ya da null; `migrations/20261123200000_session_fee_family.sql`, uygulandı 24 Kasım 2026, 40.1) |
 | `family_session_respond(id, 'ok'\|'unavailable', note?)` | ebeveyn | gelecekteki planlı seans; "uygun değil" uzmana `session_family_response` |
 | `family_offer_respond(id, accept) → 'planned'\|'cancelled'` | ebeveyn | boşalan saat teklifi; uzmana `session_offer_answered` |
 | `family_booking_slots(link) → [{starts_at, duration_min}]` | ebeveyn | klinik açtıysa sorumlu uzmanın `bookable` saatlerinden, dolu saatler, bildirim süresi ve ufuk dışı çıkarılarak (≤ 60) |
@@ -895,10 +895,10 @@ Edge Function `support` (Verify JWT kapalı): `POST /support` (form, değişmedi
 
 | Alan | Ne | Yazar | Okur |
 |---|---|---|---|
-| `clinic_sessions.fee` | `numeric(10,2)`, boş olabilir, 0–1.000.000 (TL); uzmanın elle yazdığı ücret. Ödeme / tahsilat / fatura yok | K (`clinic_session_create`, `clinic_session_update`) | K (tablo politikası "seans: klinik okur"; Moyo Mercek `select` listesine `fee` ekler); aile yalnız `family_sessions` ile, aileye gösterilen randevuda (ÖNERİ `20261123200000`) |
+| `clinic_sessions.fee` | `numeric(10,2)`, boş olabilir, 0–1.000.000 (TL); uzmanın elle yazdığı ücret. Ödeme / tahsilat / fatura yok | K (`clinic_session_create`, `clinic_session_update`) | K (tablo politikası "seans: klinik okur"; Moyo Mercek `select` listesine `fee` ekler); aile yalnız `family_sessions` ile, aileye gösterilen randevuda (`20261123200000`, uygulandı) |
 
 - `clinic_session_create(p)` ve `clinic_session_update(id, p, scope)`: `p.fee` sayı (`450.5`) ya da noktalı metin (`"450.50"`), en çok iki ondalık; boş metin ya da `null` → ücret yok; virgül, eksi, üç ondalık, 1.000.000 üstü → hata `fee_invalid` (22023). Oluştururken serideki her seansa aynı ücret; düzeltirken `fee` anahtarı varsa kapsamdaki her seansa (`one` yalnız bu, `following` bu ve serideki sonraki planlılar), anahtar yoksa ücret değişmez. Öteki her şey önceki tanımla aynı (29).
-- **Aile ücreti yalnız aileye gösterilen randevuda görür** (kullanıcı kararı 23 Kasım 2026; ÖNERİ `proposed/20261123200000_session_fee_family.sql`, **uygulanmadı**; o uygulanana dek aile görmez): `family_sessions` her randevuda `fee` döndürür (sayı ya da null). Aileye gösterilmeyen seans (`visible_to_family` false, danışansız blok, paylaşımı bitmiş) ve ücreti hiçbir yoldan gitmez; tabloda aileye politika yok. `family_session_respond`, `family_offer_respond`, `family_booking_slots`, `family_book_slot`, `session_notify_family` (bildirimde yalnız tarih / saat), `calendar_feed_events` (uzmanın kendi .ics'i) `fee` okumaz; KVKK dökümünde seans yok. Ücret bilgi alanıdır: ödeme, tahsilat, fatura yok. Test bunu, başka ailenin görmediğini ve `family_sessions` dışındaki `family_*` kaynaklarında `fee` geçmediğini denetler.
+- **Aile ücreti yalnız aileye gösterilen randevuda görür** (kullanıcı kararı 23 Kasım 2026; `migrations/20261123200000_session_fee_family.sql`, uygulandı 24 Kasım 2026): `family_sessions` her randevuda `fee` döndürür (sayı ya da null). Aileye gösterilmeyen seans (`visible_to_family` false, danışansız blok, paylaşımı bitmiş) ve ücreti hiçbir yoldan gitmez; tabloda aileye politika yok. `family_session_respond`, `family_offer_respond`, `family_booking_slots`, `family_book_slot`, `session_notify_family` (bildirimde yalnız tarih / saat), `calendar_feed_events` (uzmanın kendi .ics'i) `fee` okumaz; KVKK dökümünde seans yok. Ücret bilgi alanıdır: ödeme, tahsilat, fatura yok. Test bunu, başka ailenin görmediğini ve `family_sessions` dışındaki `family_*` kaynaklarında `fee` geçmediğini denetler.
 
 ### 40.2 Raporu aileye gönder
 
@@ -955,7 +955,7 @@ Hatalar (ileti Türkçe, `hint` sabit anahtar): `no_access` (P0402 "Üyelik etki
 
 Ayrıca `finite_time_guard_attach()` yeni tabloya takılır.
 
-## 41. Ebeveyn eğitimi sunucuda kapalı (ÖNERİ `proposed/20261123210000_parent_training_off.sql`, 23 Kasım 2026; **uygulanmadı**; kullanıcı kararı 23 Kasım 2026; akış `akislar.md` 27.4, bayrak `admin.md`; test `test_parent_trainings.sql` 9, `test_parent_lessons.sql` son bölüm, `test_funnel_analytics.sql`)
+## 41. Ebeveyn eğitimi sunucuda kapalı (`migrations/20261123210000_parent_training_off.sql`, uygulandı 24 Kasım 2026; kullanıcı kararı 23 Kasım 2026; akış `akislar.md` 27.4, bayrak `admin.md`; test `test_parent_trainings.sql` 9, `test_parent_lessons.sql` son bölüm, `test_funnel_analytics.sql`)
 
 Bayrak `parent_training` (satır yoksa kapalı) uzmanın ebeveyn eğitimini (32) ve Moyo'nun kısa ebeveyn derslerini (31) sunucuda da açar / kapatır. Kişiye özel açılış (`user_flags`) o kişi için her şeyi açar.
 

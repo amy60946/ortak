@@ -16,7 +16,7 @@ grant execute on all functions in schema tst to authenticated;
 
 -- anne a1 + baba a2 (aynı aile), başka aile b1; klinik sahibi d1, başka klinik e1
 insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
-  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (migrations/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, '{"nickname":"Baba"}'),
@@ -151,7 +151,7 @@ select tst.as_user('00000000-0000-0000-0000-0000000000d1');
 select tst.check((select count(*) from public.parent_training_logs) = 0, 'paylaşım bitince uzman kayıtları görmez');
 reset role;
 
--- 9. bayrak kapalı (proposed/20261123210000_parent_training_off.sql): sunucuda da çalışmaz, görünmez; kişiye açılınca geri gelir
+-- 9. bayrak kapalı (migrations/20261123210000_parent_training_off.sql): sunucuda da çalışmaz, görünmez; kişiye açılınca geri gelir
 create or replace function tst.fails(sql text, msg text) returns void language plpgsql as $$
 begin
   begin
