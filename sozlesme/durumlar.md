@@ -414,7 +414,7 @@ Tanışma sorularında sağlık sorusu yok (14 Kasım 2026; önce tanı ve ilaç
 | `clinic_waitlist.status` | `waiting`, `offered`, `booked`, `removed` | Bekliyor, Teklif gönderildi, Randevu aldı, Listeden çıktı |
 | Bildirim (ebeveyn, `app='parent'`) | `session_scheduled`, `session_changed`, `session_cancelled`, `session_offer` | `data.session_id`; dokununca Uzmanım › Randevular |
 | Bildirim (uzman, `app='clinic'`) | `session_family_response`, `session_booked`, `session_offer_answered` | `data.session_id`, `data.link_id`; dokununca Takvim'de o seans |
-| `clinic_sessions.fee` (`20261123100000`, uygulandı) | `numeric(10,2)`, boş ya da 0–1.000.000 TL | Seans ücreti (uzman elle yazar; aile yalnız aileye gösterilen randevuda `family_sessions` ile görür, ÖNERİ `20261123200000`; `veritabani.md` 40.1) |
+| `clinic_sessions.fee` (`20261123100000`, uygulandı) | `numeric(10,2)`, boş ya da 0–1.000.000 TL | Seans ücreti (uzman elle yazar; aile yalnız aileye gösterilen randevuda `family_sessions` ile görür, `20261123200000`, uygulandı; `veritabani.md` 40.1) |
 | Hatalar | `session_not_found`, `session_not_started`, `session_has_record`, `session_closed`, `slot_not_available`, `too_many_bookings`, `offer_expired`, `offer_not_found`, `link_not_visible`, `link_not_active`, `only_owner`, `only_owner_assigns`, `room_not_in_clinic`, `package_link_mismatch`, `calendar_url_not_allowed`, `too_many_sources`; `fee_invalid` (`20261123100000` (uygulandı): ücret sayı değil, eksi, ikiden çok ondalık ya da 1.000.000 üstü) | uygulama metinleri `clinic-app/src/lib/sessions.ts` ve ParentApp'te |
 
 ## P19. Çalışma alanları (`migrations/20261105090000_workspaces.sql`, uygulandı 5 Kasım 2026; `akislar.md` 21)

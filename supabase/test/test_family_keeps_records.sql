@@ -32,7 +32,7 @@ grant execute on all functions in schema tst to authenticated;
 -- Aile F: anne a1 + baba a2, çocuklar Mira (c001) ve Efe (c002). Aile G: komşu b1, çocuk Can (c003).
 -- Klinik D: tek kişilik uzman d1 (Mira, Efe, Can ile paylaşım). Klinik E: uzman e1 (Mira ile etkin paylaşım).
 insert into public.feature_flags (key, enabled, rollout_pct) values ('parent_training', true, 100)
-  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (proposed/20261123210000; kapalı hâli testin sonunda)
+  on conflict (key) do update set enabled = true, rollout_pct = 100;   -- ebeveyn eğitimi bayrağı (migrations/20261123210000; kapalı hâli testin sonunda)
 insert into auth.users (id, is_anonymous, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a1', false, '{"nickname":"Anne"}'),
   ('00000000-0000-0000-0000-0000000000a2', false, '{"nickname":"Baba"}'),
